@@ -50,6 +50,7 @@
     "react-beautiful-dnd": "13.0.0",
     "react-big-calendar": "0.24.3",
     "react-chartjs-2": "2.9.0",
+    "react-data-grid": "5.0.3",
     "react-dom": "16.13.1",
     "react-draggable": "4.3.1",
     "react-frame-component": "4.1.1",

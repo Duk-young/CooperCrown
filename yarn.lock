@@ -10966,6 +10966,11 @@ react-chartjs-2@2.9.0:
     lodash "^4.17.4"
     prop-types "^15.5.8"
 
+react-data-grid@5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-5.0.3.tgz#aeea3c3162bc33644072ae31243884b5dfe9d207"
+  integrity sha512-IYL48etG3vrr1dWnY6ybfGUagRySAJDwSavDsaM1HcZ+BJZ53id24PR/ZgUHBfyW6lfK+S1Sp4Ur6niU1y8G5g==
+
 react-dev-utils@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-10.2.1.tgz#f6de325ae25fa4d546d09df4bb1befdc6dd19c19"
