@@ -12,6 +12,7 @@ export const getProduct = (params) => async (dispatch) => {
       .collection('showRooms')
       .doc(params)
       .get();
+    debugger;
     const showRoom = { id: response.id, ...response.data() };
     dispatch({
       type: GET_PRODUCT,
