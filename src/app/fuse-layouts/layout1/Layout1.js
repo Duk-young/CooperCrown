@@ -180,9 +180,9 @@ function Layout1(props) {
 										config.footer.style !== 'fixed' && <FooterLayout1 />}
 								</FuseScrollbars>
 
-								{config.footer.display &&
+								{/* {config.footer.display &&
 									config.footer.position === 'below' &&
-									config.footer.style === 'fixed' && <FooterLayout1 />}
+									config.footer.style === 'fixed' && <FooterLayout1 />} */}
 
 								<SettingsPanel />
 							</div>
@@ -193,7 +193,7 @@ function Layout1(props) {
 						{config.footer.display && config.footer.position === 'above' && <FooterLayout1 />}
 					</div>
 
-					{config.rightSidePanel.display && <RightSideLayout1 />}
+					{/* {config.rightSidePanel.display && <RightSideLayout1 />} */}
 
 					<FuseMessage />
 				</div>

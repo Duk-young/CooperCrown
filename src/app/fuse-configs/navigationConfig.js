@@ -43,6 +43,30 @@ const navigationConfig = [
         ]
       },
       {
+        id: 'inventory',
+        title: 'Inventory',
+        translate: 'Inventory',
+        auth: authRoles.staff,
+        type: 'collapse',
+        icon: 'all_inbox',
+        children: [
+          {
+            id: 'inventory-list',
+            title: 'Lists',
+            auth: authRoles.staff,
+            type: 'item',
+            url: '/apps/inventory/lists'
+          }
+          // {
+          //   id: 'project-dashboard',
+          //   title: 'Project',
+          //   auth: authRoles.staff,
+          //   type: 'item',
+          //   url: '/apps/dashboards/project'
+          // }
+        ]
+      },
+      {
         id: 'Setting',
         title: 'Setting',
         translate: 'Setting',
