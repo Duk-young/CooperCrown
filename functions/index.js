@@ -1,6 +1,12 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
+const express = require('express')
+const app = express();
+const root = require("path").join(__dirname , 'build')
+
+app.use(express.static(root))
+
 
 exports.addAdminRole = functions.https.onCall((data, context) => {
   return admin
@@ -58,6 +64,13 @@ exports.addStaffRole = functions.https.onCall((data, context) => {
       return err;
     });
 });
+
+
+app.get('*',(req,res)=>{
+  res.sendFile(__dirname + '/build/index.html')
+})
+
+exports.app = functions.https.onRequest(app)
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
