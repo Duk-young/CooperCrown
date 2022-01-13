@@ -4,7 +4,7 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import { useForm, useDeepCompareEffect } from '@fuse/hooks';
 // import FuseUtils from '@fuse/utils';
-import _ from '@lodash';
+// import _ from '@lodash';
 import Button from '@material-ui/core/Button';
 // import { orange } from '@material-ui/core/colors';
 // import Icon from '@material-ui/core/Icon';
@@ -18,7 +18,7 @@ import withReducer from 'app/store/withReducer';
 // import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import * as Actions from '../store/actions';
 import reducer from '../store/reducers';
@@ -69,7 +69,7 @@ function LensPrice() {
   // const classes = useStyles(props);
   // const [tabValue, setTabValue] = useState(0);
   const [isLoading, setisLoading] = useState(false);
-  const { form, handleChange, setForm } = useForm(null);
+  const { form, setForm } = useForm(null);
 
   const routeParams = useParams();
 

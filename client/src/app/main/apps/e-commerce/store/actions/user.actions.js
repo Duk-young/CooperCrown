@@ -26,10 +26,9 @@ export const saveUser = (user) => async (dispatch) => {
   try {
     const createUser = firebaseService.functions.httpsCallable('createUser');
     const newUser = await createUser(user);
-    console.log(newUser);
-    const addStaffRole = firebaseService.functions.httpsCallable(
-      'addStaffRole'
-    );
+
+    const addStaffRole =
+      firebaseService.functions.httpsCallable('addStaffRole');
     await addStaffRole({ email: user.email });
     await firebaseService.firestoreDb
       .collection('users')

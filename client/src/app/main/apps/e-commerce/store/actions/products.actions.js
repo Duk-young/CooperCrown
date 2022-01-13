@@ -1,4 +1,3 @@
-import axios from 'axios';
 import firebaseService from 'app/services/firebaseService';
 
 export const GET_PRODUCTS = '[E-COMMERCE APP] GET PRODUCTS';

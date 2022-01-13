@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 
 const CompactInvoicePageConfig = {
   settings: {
@@ -6,12 +6,7 @@ const CompactInvoicePageConfig = {
       config: {}
     }
   },
-  routes: [
-    {
-      path: '/apps/inventory/lists',
-      component: React.lazy(() => import('./InventoryLists'))
-    }
-  ]
+  routes: []
 };
 
 export default CompactInvoicePageConfig;

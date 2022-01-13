@@ -11,6 +11,10 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./NewShowRoom/NewShowRoom'))
     },
     {
+      path: '/apps/e-commerce/insurance',
+      component: React.lazy(() => import('./Insurance/Insurance'))
+    },
+    {
       path: '/apps/e-commerce/showRooms',
       component: React.lazy(() => import('./products/Products'))
     },
@@ -23,15 +27,15 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./LensPrice/LensPrice'))
     },
     {
-      path: '/apps/e-commerce/customers/:customerId',
+      path: '/apps/e-commerce/create-customer',
       component: React.lazy(() =>
         import('./Customers/update-customer/UpdateCustomer')
       )
     },
     {
-      path: '/apps/e-commerce/customers/new',
+      path: '/apps/e-commerce/customers/:customerId',
       component: React.lazy(() =>
-        import('./Customers/create-customer/CreateCustomer')
+        import('./Customers/update-customer/UpdateCustomer')
       )
     },
     {
@@ -85,6 +89,34 @@ const ECommerceAppConfig = {
     {
       path: '/apps/e-commerce',
       component: () => <Redirect to="/apps/e-commerce/showRooms" />
+    },
+    {
+      path: '/apps/inventory/addframes/:frameId',
+      component: React.lazy(() => import('./Inventory/Frames/AddFrames'))
+    },
+    {
+      path: '/apps/inventory/addframes',
+      component: React.lazy(() => import('./Inventory/Frames/AddFrames'))
+    },
+    {
+      path: '/apps/inventory/addother/:otherId',
+      component: React.lazy(() => import('./Inventory/Other/AddOther'))
+    },
+    {
+      path: '/apps/inventory/addother',
+      component: React.lazy(() => import('./Inventory/Other/AddOther'))
+    },
+    {
+      path: '/apps/inventory/addlens/:lensId',
+      component: React.lazy(() => import('./Inventory/Lens/AddLens'))
+    },
+    {
+      path: '/apps/inventory/addlens',
+      component: React.lazy(() => import('./Inventory/Lens/AddLens'))
+    },
+    {
+      path: '/apps/inventory',
+      component: React.lazy(() => import('./Inventory/Inventory'))
     }
   ]
 };

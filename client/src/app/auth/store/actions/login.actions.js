@@ -64,7 +64,6 @@ export function submitLoginWithFireBase({ username, password }) {
             exact: true
           })
         );
-        console.log(user);
         return dispatch({
           type: LOGIN_SUCCESS
         });

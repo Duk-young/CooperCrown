@@ -1,4 +1,3 @@
-import _ from '@lodash';
 import TextField from '@material-ui/core/TextField';
 import {
   MuiPickersUtilsProvider,
@@ -18,22 +17,24 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import withReducer from 'app/store/withReducer';
 import React, { useEffect, useState } from 'react';
 import reducer from '../../store/reducers';
-import { firestore } from 'firebase';
-import { result } from 'lodash';
 
 function UpdateCustomerForm(props) {
-  const { form, handleChange, setInForm, error } = props;
-  const [rows, setRows] = useState('');
+  const { form, handleChange, error } = props;
+  // const [rows, setRows] = useState('');
+  const [state, setState] = useState(form?.state);
 
-  const defaultProps = {
+  const defaultFamilies = {
     options: top100Films,
     getOptionLabel: (option) => option.title
   };
 
-  const flatProps = {
-    options: top100Films.map((option) => option.title)
+  const defaultStates = {
+    options: states,
+    getOptionLabel: (option) => option.name || option
   };
-  console.log(rows.firstName);
+
+  useEffect(() => {}, [form]);
+
   return (
     <div className="p-16 sm:p-24 max-w-2xl">
       <div className="flex flex-col">
@@ -45,7 +46,6 @@ function UpdateCustomerForm(props) {
               required
               label="First Name"
               autoFocus
-              defaultValue={rows.firstName}
               id="first-name"
               name="firstName"
               value={form?.firstName}
@@ -116,7 +116,7 @@ function UpdateCustomerForm(props) {
                 control={<Radio />}
                 label="Female"
               />
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
+              <FormControlLabel value="Male" control={<Radio />} label="Male" />
               <FormControlLabel
                 value="other"
                 control={<Radio />}
@@ -132,47 +132,49 @@ function UpdateCustomerForm(props) {
             color="inherit">
             ETHNICITY
           </Typography>
-          <FormControl className="ml-32">
+          <FormControl className="ml-32 ">
             <Select
               labelId="demo-simple-select-autowidth-label"
               id="ethnicityId"
+              defaultValue={form?.ethnicity}
               value={form?.ethnicity}
               name="ethnicity"
               onChange={handleChange}
               error={error?.ethnicity}
               autoWidth>
-              <MenuItem value="">
-                <em>...</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirtykjdsfkjhsdkjfhskdfh</MenuItem>
+              <MenuItem value={'White'}>White</MenuItem>
+              <MenuItem value={'Black'}>Black</MenuItem>
+              <MenuItem value={'Asian'}>Asian</MenuItem>
+              <MenuItem value={'Amerindian'}>Amerindian</MenuItem>
+              <MenuItem value={'Hawaiian'}>Hawaiian</MenuItem>
+              <MenuItem value={'Mixed Ethnicity'}>Mixed Ethnicity</MenuItem>
             </Select>
             <FormHelperText>Select from the list</FormHelperText>
           </FormControl>
           <Typography
-            className="ml-20 username text-16 whitespace-no-wrap self-center"
+            className="ml-96 username text-16 whitespace-no-wrap self-center"
             color="inherit">
             State
           </Typography>
-          <FormControl className="ml-32">
-            <Select
-              labelId="demo-simple-select-autowidth-label"
+          <div
+            className="stateAutocomplete"
+            style={{ width: 300, marginLeft: 20 }}>
+            <Autocomplete
+              {...defaultStates}
               id="stateId"
               value={form?.state}
-              error={error?.state}
+              getOptionSelected={(option, value) => option.name === value}
+              inputValue={state}
+              onInputChange={(e, value) => setState(value)}
               name="state"
-              onChange={handleChange}
-              autoWidth>
-              <MenuItem value="">
-                <em>...</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirtykjdsfkjhsdkjfhskdfh</MenuItem>
-            </Select>
-            <FormHelperText>Select from the list</FormHelperText>
-          </FormControl>
+              onChange={(_, value) =>
+                handleChange({ target: { value: value?.name, name: 'state' } })
+              }
+              renderInput={(params) => (
+                <TextField {...params} label="State Name" margin="normal" />
+              )}
+            />
+          </div>
         </div>
         <TextField
           className="mt-10"
@@ -180,7 +182,7 @@ function UpdateCustomerForm(props) {
           label="Address"
           multiline
           rows={4}
-          defaultValue={result.address}
+          defaultValue={'House#'}
           error={error?.address}
           value={form?.address}
           onChange={handleChange}
@@ -192,7 +194,6 @@ function UpdateCustomerForm(props) {
           <div className="flex w-1/2">
             <TextField
               className="mt-8 mb-16"
-              error={form?.code === ''}
               required
               error={error?.city}
               label="City"
@@ -207,7 +208,6 @@ function UpdateCustomerForm(props) {
           <div className="flex w-1/2 pl-10">
             <TextField
               className="mt-8 mb-16"
-              error={form?.code === ''}
               required
               error={error?.zipCode}
               label="ZIP Code"
@@ -225,7 +225,6 @@ function UpdateCustomerForm(props) {
           <div className="flex w-1/3">
             <TextField
               className="mt-8 mb-16"
-              error={form?.code === ''}
               required
               label="Phone 1"
               id="phone1"
@@ -240,7 +239,6 @@ function UpdateCustomerForm(props) {
           <div className="flex w-1/3 pl-10">
             <TextField
               className="mt-8 mb-16"
-              error={form?.code === ''}
               required
               label="Phone 2"
               id="phone2"
@@ -254,7 +252,6 @@ function UpdateCustomerForm(props) {
           <div className="flex w-1/3 pl-10">
             <TextField
               className="mt-8 mb-16"
-              error={form?.code === ''}
               required
               label="Email"
               id="email"
@@ -281,12 +278,12 @@ function UpdateCustomerForm(props) {
         />
         <div style={{ width: 300 }}>
           <Autocomplete
-            {...defaultProps}
+            {...defaultFamilies}
             id="family"
             value={form?.family}
             name="family"
-            onChange={(event, value) =>
-              handleChange({ target: { value, name: 'family' } })
+            onChange={(_, value) =>
+              handleChange({ target: { value: value?.title, name: 'family' } })
             }
             renderInput={(params) => (
               <TextField {...params} label="Family Name" margin="normal" />
@@ -299,38 +296,265 @@ function UpdateCustomerForm(props) {
 }
 
 const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Pulp Fiction', year: 1994 },
-  { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-  { title: 'The Good, the Bad and the Ugly', year: 1966 },
-  { title: 'Fight Club', year: 1999 },
-  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-  { title: 'Forrest Gump', year: 1994 },
-  { title: 'Inception', year: 2010 },
-  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-  { title: 'Goodfellas', year: 1990 },
-  { title: 'The Matrix', year: 1999 },
-  { title: 'Seven Samurai', year: 1954 },
-  { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
-  { title: 'City of God', year: 2002 },
-  { title: 'Se7en', year: 1995 },
-  { title: 'The Silence of the Lambs', year: 1991 },
-  { title: "It's a Wonderful Life", year: 1946 },
-  { title: 'Life Is Beautiful', year: 1997 },
-  { title: 'The Usual Suspects', year: 1995 },
-  { title: 'Léon: The Professional', year: 1994 },
-  { title: 'Spirited Away', year: 2001 },
-  { title: 'Saving Private Ryan', year: 1998 },
-  { title: 'Once Upon a Time in the West', year: 1968 },
-  { title: 'American History X', year: 1998 },
-  { title: 'Interstellar', year: 2014 }
+  { title: 'The Shawshank Redemption' },
+  { title: 'The Godfather' },
+  { title: 'The Godfather: Part II' },
+  { title: 'The Dark Knight' },
+  { title: '12 Angry Men' },
+  { title: "Schindler's List" },
+  { title: 'Pulp Fiction' },
+  { title: 'The Lord of the Rings: The Return of the King' },
+  { title: 'The Good, the Bad and the Ugly' },
+  { title: 'Fight Club' },
+  { title: 'The Lord of the Rings: The Fellowship of the Ring' },
+  { title: 'Star Wars: Episode V - The Empire Strikes Back' },
+  { title: 'Forrest Gump' },
+  { title: 'Inception' },
+  { title: 'The Lord of the Rings: The Two Towers' },
+  { title: "One Flew Over the Cuckoo's Nest" },
+  { title: 'Goodfellas' },
+  { title: 'The Matrix' },
+  { title: 'Seven Samurai' },
+  { title: 'Star Wars: Episode IV - A New Hope' }
+];
+
+const states = [
+  {
+    name: 'Alabama',
+    abbreviation: 'AL'
+  },
+  {
+    name: 'Alaska',
+    abbreviation: 'AK'
+  },
+  {
+    name: 'American Samoa',
+    abbreviation: 'AS'
+  },
+  {
+    name: 'Arizona',
+    abbreviation: 'AZ'
+  },
+  {
+    name: 'Arkansas',
+    abbreviation: 'AR'
+  },
+  {
+    name: 'California',
+    abbreviation: 'CA'
+  },
+  {
+    name: 'Colorado',
+    abbreviation: 'CO'
+  },
+  {
+    name: 'Connecticut',
+    abbreviation: 'CT'
+  },
+  {
+    name: 'Delaware',
+    abbreviation: 'DE'
+  },
+  {
+    name: 'District Of Columbia',
+    abbreviation: 'DC'
+  },
+  {
+    name: 'Federated States Of Micronesia',
+    abbreviation: 'FM'
+  },
+  {
+    name: 'Florida',
+    abbreviation: 'FL'
+  },
+  {
+    name: 'Georgia',
+    abbreviation: 'GA'
+  },
+  {
+    name: 'Guam',
+    abbreviation: 'GU'
+  },
+  {
+    name: 'Hawaii',
+    abbreviation: 'HI'
+  },
+  {
+    name: 'Idaho',
+    abbreviation: 'ID'
+  },
+  {
+    name: 'Illinois',
+    abbreviation: 'IL'
+  },
+  {
+    name: 'Indiana',
+    abbreviation: 'IN'
+  },
+  {
+    name: 'Iowa',
+    abbreviation: 'IA'
+  },
+  {
+    name: 'Kansas',
+    abbreviation: 'KS'
+  },
+  {
+    name: 'Kentucky',
+    abbreviation: 'KY'
+  },
+  {
+    name: 'Louisiana',
+    abbreviation: 'LA'
+  },
+  {
+    name: 'Maine',
+    abbreviation: 'ME'
+  },
+  {
+    name: 'Marshall Islands',
+    abbreviation: 'MH'
+  },
+  {
+    name: 'Maryland',
+    abbreviation: 'MD'
+  },
+  {
+    name: 'Massachusetts',
+    abbreviation: 'MA'
+  },
+  {
+    name: 'Michigan',
+    abbreviation: 'MI'
+  },
+  {
+    name: 'Minnesota',
+    abbreviation: 'MN'
+  },
+  {
+    name: 'Mississippi',
+    abbreviation: 'MS'
+  },
+  {
+    name: 'Missouri',
+    abbreviation: 'MO'
+  },
+  {
+    name: 'Montana',
+    abbreviation: 'MT'
+  },
+  {
+    name: 'Nebraska',
+    abbreviation: 'NE'
+  },
+  {
+    name: 'Nevada',
+    abbreviation: 'NV'
+  },
+  {
+    name: 'New Hampshire',
+    abbreviation: 'NH'
+  },
+  {
+    name: 'New Jersey',
+    abbreviation: 'NJ'
+  },
+  {
+    name: 'New Mexico',
+    abbreviation: 'NM'
+  },
+  {
+    name: 'New York',
+    abbreviation: 'NY'
+  },
+  {
+    name: 'North Carolina',
+    abbreviation: 'NC'
+  },
+  {
+    name: 'North Dakota',
+    abbreviation: 'ND'
+  },
+  {
+    name: 'Northern Mariana Islands',
+    abbreviation: 'MP'
+  },
+  {
+    name: 'Ohio',
+    abbreviation: 'OH'
+  },
+  {
+    name: 'Oklahoma',
+    abbreviation: 'OK'
+  },
+  {
+    name: 'Oregon',
+    abbreviation: 'OR'
+  },
+  {
+    name: 'Palau',
+    abbreviation: 'PW'
+  },
+  {
+    name: 'Pennsylvania',
+    abbreviation: 'PA'
+  },
+  {
+    name: 'Puerto Rico',
+    abbreviation: 'PR'
+  },
+  {
+    name: 'Rhode Island',
+    abbreviation: 'RI'
+  },
+  {
+    name: 'South Carolina',
+    abbreviation: 'SC'
+  },
+  {
+    name: 'South Dakota',
+    abbreviation: 'SD'
+  },
+  {
+    name: 'Tennessee',
+    abbreviation: 'TN'
+  },
+  {
+    name: 'Texas',
+    abbreviation: 'TX'
+  },
+  {
+    name: 'Utah',
+    abbreviation: 'UT'
+  },
+  {
+    name: 'Vermont',
+    abbreviation: 'VT'
+  },
+  {
+    name: 'Virgin Islands',
+    abbreviation: 'VI'
+  },
+  {
+    name: 'Virginia',
+    abbreviation: 'VA'
+  },
+  {
+    name: 'Washington',
+    abbreviation: 'WA'
+  },
+  {
+    name: 'West Virginia',
+    abbreviation: 'WV'
+  },
+  {
+    name: 'Wisconsin',
+    abbreviation: 'WI'
+  },
+  {
+    name: 'Wyoming',
+    abbreviation: 'WY'
+  }
 ];
 
 export default withReducer('eCommerceApp', reducer)(UpdateCustomerForm);

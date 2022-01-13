@@ -1,5 +1,4 @@
 import { authRoles } from 'app/auth';
-import MaterialUIComponentsNavigation from 'app/main/documentation/material-ui-components/MaterialUIComponentsNavigation';
 import i18next from 'i18next';
 import ar from './navigation-i18n/ar';
 import en from './navigation-i18n/en';
@@ -47,24 +46,9 @@ const navigationConfig = [
         title: 'Inventory',
         translate: 'Inventory',
         auth: authRoles.staff,
-        type: 'collapse',
+        type: 'item',
         icon: 'all_inbox',
-        children: [
-          {
-            id: 'inventory-list',
-            title: 'Lists',
-            auth: authRoles.staff,
-            type: 'item',
-            url: '/apps/inventory/lists'
-          }
-          // {
-          //   id: 'project-dashboard',
-          //   title: 'Project',
-          //   auth: authRoles.staff,
-          //   type: 'item',
-          //   url: '/apps/dashboards/project'
-          // }
-        ]
+        url: '/apps/inventory'
       },
       {
         id: 'customers',
@@ -74,6 +58,15 @@ const navigationConfig = [
         auth: authRoles.staff,
         icon: 'group',
         url: '/apps/e-commerce/customers'
+      },
+      {
+        id: 'insurance',
+        title: 'insurance',
+        translate: 'Insurance',
+        type: 'item',
+        auth: authRoles.staff,
+        icon: 'group',
+        url: '/apps/e-commerce/insurance'
       },
       {
         id: 'calendar',

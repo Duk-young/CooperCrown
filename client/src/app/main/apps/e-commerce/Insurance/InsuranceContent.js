@@ -7,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import { withRouter } from 'react-router';
@@ -36,7 +35,7 @@ const useStyles = makeStyles({
   }
 });
 
-const CustomersContent = (props) => {
+const InsuranceContent = (props) => {
   const classes = useStyles();
   const [isLoading, setisLoading] = useState(false);
   const [rows, setRows] = useState([]);
@@ -96,19 +95,6 @@ const CustomersContent = (props) => {
                 <StyledTableCell>{row.zipCode}</StyledTableCell>
                 <StyledTableCell>{row.phone1}</StyledTableCell>
                 <StyledTableCell>{row.email}</StyledTableCell>
-                <StyledTableCell>
-                  <Button
-                    className="whitespace-no-wrap normal-case"
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/customers/${row.customerId}`
-                      );
-                    }}>
-                    Edit
-                  </Button>
-                </StyledTableCell>
               </StyledTableRow>
             ))}
         </TableBody>
@@ -117,4 +103,4 @@ const CustomersContent = (props) => {
   );
 };
 
-export default withRouter(CustomersContent);
+export default withRouter(InsuranceContent);

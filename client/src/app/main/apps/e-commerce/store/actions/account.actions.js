@@ -1,6 +1,6 @@
 import FuseUtils from '@fuse/utils';
 import { showMessage } from 'app/store/actions/fuse';
-import * as Actions from './index';
+// import * as Actions from './index';
 
 import firebaseService from 'app/services/firebaseService';
 export const GET_ACCOUNT = '[E-COMMERCE APP] GET ACCOUNT';
@@ -22,7 +22,6 @@ export const getAccount = (params) => async (dispatch) => {
   }
 };
 export const updateAccount = (data) => async (dispatch) => {
-
   const uuid = data.id;
   delete data.id;
   try {

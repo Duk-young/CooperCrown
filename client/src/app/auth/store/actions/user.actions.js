@@ -139,7 +139,6 @@ export function setUserData(user) {
          */
     dispatch(FuseActions.setDefaultSettings(user.data.settings));
     
-    console.log(user);
     dispatch(
       Actions.updateNavigationItem('Account-Setting', {
         title: 'Account Setting',

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import ReactDataGrid from 'react-data-grid';
-import { tableRows, createColData } from './Grid';
+import { createColData, tableRows } from './Grid';
 
 function LensGrid() {
   // const columns = createColData(42);
+
   const [rows, setRow] = useState(tableRows);
   const [columns, setColumns] = useState(createColData(42));
 
@@ -24,7 +25,7 @@ function LensGrid() {
         columns={columns}
         rowGetter={(i) => rows[i]}
         rowsCount={rows.length}
-        // minHeight={550}
+        minHeight={550}
         enableCellSelect={true}
         onGridRowsUpdated={onGridRowsUpdated}
       />

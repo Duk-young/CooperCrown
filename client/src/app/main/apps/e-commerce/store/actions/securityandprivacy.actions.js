@@ -1,6 +1,6 @@
 import FuseUtils from '@fuse/utils';
 import { showMessage } from 'app/store/actions/fuse';
-import * as Actions from './index';
+// import * as Actions from './index';
 import firebaseService from 'app/services/firebaseService';
 import * as authActions from 'app/auth/store/actions';
 export const GET_ACCOUNT = '[E-COMMERCE APP] GET ACCOUNT';

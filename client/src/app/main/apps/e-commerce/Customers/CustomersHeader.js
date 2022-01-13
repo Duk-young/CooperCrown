@@ -6,9 +6,8 @@ import Paper from '@material-ui/core/Paper';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import * as Actions from '../store/actions';
+import { useSelector } from 'react-redux';
+import { withRouter } from 'react-router';
 
 function CustomersHeader(props) {
   const mainTheme = useSelector(({ fuse }) => fuse.settings.mainTheme);
@@ -50,8 +49,7 @@ function CustomersHeader(props) {
       </div>
       <FuseAnimate animation="transition.slideRightIn" delay={300}>
         <Button
-          component={Link}
-          to="/apps/e-commerce/customers/new"
+          onClick={() => props.history.push('/apps/e-commerce/create-customer')}
           className="whitespace-no-wrap normal-case"
           variant="contained"
           color="secondary">
@@ -63,4 +61,4 @@ function CustomersHeader(props) {
   );
 }
 
-export default CustomersHeader;
+export default withRouter(CustomersHeader);

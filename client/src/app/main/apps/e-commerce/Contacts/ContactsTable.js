@@ -8,8 +8,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import FuseLoading from '@fuse/core/FuseLoading';
-
-import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -74,9 +72,9 @@ function ContactsTable(props) {
     setSelected([]);
   }
 
-  function handleClick(item) {
-    props.history.push(`/apps/e-commerce/contact/${item.id}`);
-  }
+  // function handleClick(item) {
+  //   props.history.push(`/apps/e-commerce/contact/${item.id}`);
+  // }
 
   function handleCheck(event, id) {
     const selectedIndex = selected.indexOf(id);
@@ -170,7 +168,6 @@ function ContactsTable(props) {
                         variant="contained"
                         color="secondary"
                         onClick={() => {
-
                           props.history.push(
                             `/apps/e-commerce/contact/${n.id}`
                           );

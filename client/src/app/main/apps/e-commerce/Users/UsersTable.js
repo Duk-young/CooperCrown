@@ -2,14 +2,12 @@ import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
 import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
-import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import FuseLoading from '@fuse/core/FuseLoading';
 
-import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -72,9 +70,9 @@ function UsersTable(props) {
     setSelected([]);
   }
 
-  function handleClick(item) {
-    props.history.push(`/apps/e-commerce/discount/${item.id}`);
-  }
+  // function handleClick(item) {
+  //   props.history.push(`/apps/e-commerce/discount/${item.id}`);
+  // }
   function handleCheck(event, id) {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
