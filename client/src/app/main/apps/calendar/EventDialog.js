@@ -17,6 +17,7 @@ import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Actions from './store/actions';
+import { firestore } from 'firebase';
 
 const defaultFormState = {
   id: FuseUtils.generateGUID(),
@@ -86,10 +87,23 @@ function EventDialog(props) {
     closeComposeDialog();
   }
 
-  function handleRemove() {
-    dispatch(Actions.removeEvent(form.id));
+  const handleRemove = async () => {
+    try {
+      const query = await firestore()
+        .collection('appointments')
+        .where('appointmentId', '==', Number(form.appointmentId))
+        .limit(1)
+        .get();
+
+      let result = query.docs[0].data();
+      result.id = query.docs[0].id;
+      await firestore().collection('appointments').doc(result.id).delete();
+      dispatch(Actions.getEvents());
+    } catch (error) {
+      console.log(error);
+    }
     closeComposeDialog();
-  }
+  };
 
   return (
     <Dialog
@@ -101,7 +115,7 @@ function EventDialog(props) {
       <AppBar position="static">
         <Toolbar className="flex w-full">
           <Typography variant="subtitle1" color="inherit">
-            {eventDialog.type === 'new' ? 'New Event' : 'Edit Event'}
+            {eventDialog.type === 'new' ? 'New Event' : 'Event Details'}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -117,52 +131,30 @@ function EventDialog(props) {
             }}
             name="title"
             value={form.title}
-            onChange={handleChange}
+            disabled
             variant="outlined"
             autoFocus
             required
             fullWidth
           />
 
-          <FormControlLabel
-            className="mt-8 mb-16"
-            label="All Day"
-            control={
-              <Switch
-                checked={form.allDay}
-                id="allDay"
-                name="allDay"
-                onChange={handleChange}
-              />
-            }
-          />
-
           <DateTimePicker
-            label="Start"
+            label="Appointment Time"
             inputVariant="outlined"
             value={start}
-            onChange={(date) => setInForm('start', date)}
+            disabled
             className="mt-8 mb-16 w-full"
             maxDate={end}
           />
 
-          <DateTimePicker
-            label="End"
-            inputVariant="outlined"
-            value={end}
-            onChange={(date) => setInForm('end', date)}
-            className="mt-8 mb-16 w-full"
-            minDate={start}
-          />
-
           <TextField
             className="mt-8 mb-16"
-            id="desc"
-            label="Description"
+            id="medicalHistory"
+            label="Medical History"
             type="text"
-            name="desc"
-            value={form.desc}
-            onChange={handleChange}
+            name="medicalHistory"
+            value={form.medicalHistory}
+            disabled
             multiline
             rows={5}
             variant="outlined"
@@ -182,13 +174,13 @@ function EventDialog(props) {
           </DialogActions>
         ) : (
           <DialogActions className="justify-between px-8 sm:px-16">
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               type="submit"
               disabled={!canBeSubmitted()}>
               Save
-            </Button>
+            </Button> */}
             <IconButton onClick={handleRemove}>
               <Icon>delete</Icon>
             </IconButton>

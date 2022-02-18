@@ -8,6 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import { withRouter } from 'react-router';
@@ -36,53 +38,99 @@ const useStyles = makeStyles({
   }
 });
 
-const Frames = (props) => {
+const ShowRoomInventory = (props) => {
   const classes = useStyles();
   const [isLoading, setisLoading] = useState(false);
   const [rows, setRows] = useState([]);
   const [images, setImages] = useState([]);
+  const [showRooms, setShowRooms] = useState();
 
   const handleClick = async (item) => {
     const query = await firestore()
-      .collection('frames')
-      .where('frameId', '==', Number(item))
+      .collection('showRoomInventory')
+      .where('showRoomInventoryId', '==', Number(item))
       .limit(1)
       .get();
 
     let result = query.docs[0].data();
-    setImages(result.images.urls);
+    setImages(result?.images?.urls);
+  };
+
+  const fetchShowRoomInventory = async (value) => {
+    setImages([]);
+    let test = [];
+    if (value) {
+      if (value.showRoomInventoryId === null) {
+        console.log('Showroom Id is not avvailable');
+      } else {
+        setisLoading(false);
+        const querySnapshot = await firestore()
+          .collection('showRoomInventory')
+          .where('showRoomId', '==', value.showRoomId)
+          .get();
+
+        querySnapshot.forEach((doc) => {
+          test.push(doc.data());
+          setRows(test);
+        });
+        setisLoading(true);
+      }
+    }
+  };
+
+  const defaultShowrooms = {
+    options: showRooms,
+    getOptionLabel: (option) => option.locationName || option
   };
 
   useEffect(() => {
     setisLoading(false);
-    const fetchFrames = async () => {
-      await firestore()
-        .collection('frames')
-        .get()
-        .then((querySnapshot) => {
-          let test = [];
-          querySnapshot.forEach((doc) => {
-            test.push(doc.data());
-          });
-          setRows(test);
-          setisLoading(true);
-        });
+
+    const fetchShowRoom = async () => {
+      let showroomdata = [];
+      const querySnapshot = await firestore().collection('showRooms').get();
+
+      querySnapshot.forEach((doc) => {
+        showroomdata.push(doc.data());
+        setShowRooms(showroomdata);
+      });
     };
-    fetchFrames();
+
+    fetchShowRoom();
+    setisLoading(true);
   }, []);
   if (!isLoading) return <FuseLoading />;
-  return (
+  return !rows ? (
+    <></>
+  ) : (
     <Fragment>
+      <div className="stateAutocomplete" style={{ width: 300, marginLeft: 20 }}>
+        <Autocomplete
+          {...defaultShowrooms}
+          id="showRoomId"
+          getOptionSelected={(option, value) =>
+            option.locationName === value.locationName
+          }
+          name="showRoom"
+          onChange={(_, value) => {
+            setRows([]);
+            fetchShowRoomInventory(value);
+          }}
+          renderInput={(params) => (
+            <TextField {...params} label="Show Room Name" margin="normal" />
+          )}
+        />
+      </div>
       <div className="flex flex-row">
-        {images.map((img, index) => (
+        {images?.map((img, index) => (
           <div className="mb-8 w-224 mr-6 ">
             <img
               className="w-full border-grey-300 border-1 relative shadow-1 rounded-4"
-              src={img.url}
-              key={img.name}
+              src={img?.url}
+              key={img?.name}
               alt={''}
             />
-            <div className="truncate">{img.name.split('.', 1)}</div>
+            <div>{img?.name}</div>
           </div>
         ))}
       </div>
@@ -92,7 +140,7 @@ const Frames = (props) => {
         variant="contained"
         color="primary"
         onClick={() => {
-          props.history.push('/apps/inventory/addframes');
+          props.history.push('/apps/inventory/addshowroominventory');
         }}>
         Add Inventory
       </Button>
@@ -113,11 +161,13 @@ const Frames = (props) => {
           </TableHead>
           <TableBody>
             {rows
-              .sort((a, b) => (a.frameId < b.frameId ? -1 : 1))
+              .sort((a, b) =>
+                a.showRoomInventoryId < b.showRoomInventoryId ? -1 : 1
+              )
               .map((row) => (
                 <StyledTableRow
-                  onClick={(event) => handleClick(row.frameId)}
-                  key={row.frameId}
+                  onClick={(event) => handleClick(row.showRoomInventoryId)}
+                  key={row.showRoomInventoryId}
                   className="cursor-pointer">
                   <StyledTableCell component="th" scope="row">
                     {row.sku}
@@ -138,7 +188,7 @@ const Frames = (props) => {
                       color="secondary"
                       onClick={() => {
                         props.history.push(
-                          `/apps/inventory/addframes/${row.frameId}`
+                          `/apps/inventory/addshowroominventory/${row.showRoomInventoryId}`
                         );
                       }}>
                       Edit
@@ -153,4 +203,4 @@ const Frames = (props) => {
   );
 };
 
-export default withRouter(Frames);
+export default withRouter(ShowRoomInventory);

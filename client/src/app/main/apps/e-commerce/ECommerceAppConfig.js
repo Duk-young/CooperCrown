@@ -33,6 +33,26 @@ const ECommerceAppConfig = {
       )
     },
     {
+      path: '/apps/e-commerce/customers/profile/viewexam/:examId',
+      component: React.lazy(() => import('./Exams/Exams'))
+    },
+    {
+      path: '/apps/e-commerce/customers/profile/:customerId',
+      component: React.lazy(() => import('./Customers/CustomersProfile'))
+    },
+    {
+      path: '/apps/e-commerce/customers/addRx/:customerId',
+      component: React.lazy(() => import('./Prescriptions/Prescriptions'))
+    },
+    {
+      path: '/apps/e-commerce/customers/addExam/:customerId',
+      component: React.lazy(() => import('./Exams/Exams'))
+    },
+    {
+      path: '/apps/e-commerce/customers/addAppointment/:customerId',
+      component: React.lazy(() => import('./Appointments/Appointments'))
+    },
+    {
       path: '/apps/e-commerce/customers/:customerId',
       component: React.lazy(() =>
         import('./Customers/update-customer/UpdateCustomer')
@@ -105,6 +125,18 @@ const ECommerceAppConfig = {
     {
       path: '/apps/inventory/addother',
       component: React.lazy(() => import('./Inventory/Other/AddOther'))
+    },
+    {
+      path: '/apps/inventory/addshowroominventory/:showRoomInventoryId',
+      component: React.lazy(() =>
+        import('./Inventory/ShowRoom Inventory/AddShowRoomInventory')
+      )
+    },
+    {
+      path: '/apps/inventory/addshowroominventory',
+      component: React.lazy(() =>
+        import('./Inventory/ShowRoom Inventory/AddShowRoomInventory')
+      )
     },
     {
       path: '/apps/inventory/addlens/:lensId',

@@ -8,6 +8,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import { withRouter } from 'react-router';
@@ -97,17 +101,50 @@ const CustomersContent = (props) => {
                 <StyledTableCell>{row.phone1}</StyledTableCell>
                 <StyledTableCell>{row.email}</StyledTableCell>
                 <StyledTableCell>
-                  <Button
-                    className="whitespace-no-wrap normal-case"
-                    variant="contained"
-                    color="secondary"
+                  <IconButton
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/customers/profile/${row.customerId}`
+                      );
+                    }}
+                    aria-label="view">
+                    <PageviewOutlinedIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
                     onClick={() => {
                       props.history.push(
                         `/apps/e-commerce/customers/${row.customerId}`
                       );
-                    }}>
-                    Edit
+                    }}
+                    aria-label="edit">
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+
+                  <Button
+                    className="whitespace-no-wrap normal-case ml-24"
+                    variant="contained"
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/customers/addAppointment/${row.customerId}`
+                      );
+                    }}
+                    color="secondary"
+                    size="large"
+                    startIcon={<AddToQueueIcon />}>
+                    Appointment
                   </Button>
+
+                  {/* <Button
+                    className="whitespace-no-wrap normal-case ml-24"
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/customers/addAppointment/${row.customerId}`
+                      );
+                    }}>
+                    Appointment
+                  </Button> */}
                 </StyledTableCell>
               </StyledTableRow>
             ))}

@@ -41,7 +41,7 @@ const OutOfStock = (props) => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    setisLoading(false);
+    // setisLoading(false);
     const fetchData = async () => {
       let test = [];
       let queryOther = await firestore()
@@ -72,7 +72,7 @@ const OutOfStock = (props) => {
     };
     fetchData();
     console.log(rows);
-  }, []);
+  }, [rows]);
   if (!isLoading) return <FuseLoading />;
   return !rows ? (
     <></>

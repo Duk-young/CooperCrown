@@ -14,6 +14,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { KeyboardTimePicker } from '@material-ui/pickers';
 import withReducer from 'app/store/withReducer';
 import React, { useEffect, useState } from 'react';
 import reducer from '../../store/reducers';
@@ -25,7 +26,7 @@ function UpdateCustomerForm(props) {
 
   const defaultFamilies = {
     options: top100Films,
-    getOptionLabel: (option) => option.title
+    getOptionLabel: (option) => option.title || option
   };
 
   const defaultStates = {
@@ -280,6 +281,11 @@ function UpdateCustomerForm(props) {
           <Autocomplete
             {...defaultFamilies}
             id="family"
+            freeSolo
+            inputValue={form?.family}
+            // onInputChange={(_, value) =>
+            //   handleChange({ target: { value, name: 'family' } })
+            // }
             value={form?.family}
             name="family"
             onChange={(_, value) =>

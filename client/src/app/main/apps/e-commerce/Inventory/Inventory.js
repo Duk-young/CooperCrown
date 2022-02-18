@@ -1,7 +1,9 @@
 import Frames from './Frames/Frames';
+import Search from './Search/Search';
 import Other from './Other/Other';
 import Lens from './Lens/Lens';
 import OutOfStock from './Out Of Stock/OutOfStock';
+import ShowRoomInventory from './ShowRoom Inventory/ShowRoomInventory';
 import DemoContent from '@fuse/core/DemoContent';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import { makeStyles } from '@material-ui/core/styles';
@@ -60,7 +62,7 @@ function Inventory() {
           {selectedTab === 1 && (
             <div>
               <h3 className="mb-16">CONTACT LENS</h3>
-              <DemoContent />
+              <Search />
             </div>
           )}
           {selectedTab === 2 && (
@@ -80,8 +82,7 @@ function Inventory() {
           )}
           {selectedTab === 5 && (
             <div>
-              <h3 className="mb-16">SHOWROOM</h3>
-              <DemoContent />
+              <ShowRoomInventory />
             </div>
           )}
         </div>

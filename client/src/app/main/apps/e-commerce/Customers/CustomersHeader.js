@@ -33,7 +33,7 @@ function CustomersHeader(props) {
               elevation={1}>
               <Icon color="action">search</Icon>
 
-              <Input
+              {/* <Input
                 placeholder="Search"
                 className="flex flex-1 mx-8"
                 disableUnderline
@@ -42,7 +42,7 @@ function CustomersHeader(props) {
                 inputProps={{
                   'aria-label': 'Search'
                 }}
-              />
+              /> */}
             </Paper>
           </FuseAnimate>
         </ThemeProvider>

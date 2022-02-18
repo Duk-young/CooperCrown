@@ -82,7 +82,7 @@ function UpdateCustomer(props) {
     // if (!validate()) return;
     if (form.customerId) {
       setisLoading(true);
-
+      console.log(form);
       try {
         const ref = firestore().collection('customers').doc(form?.id);
 
