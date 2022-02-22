@@ -114,69 +114,140 @@ const AddPrescription = (props) => {
   );
 
   useEffect(() => {
-    setisLoading(true);
-    const id = routeParams.customerId;
-    const fetchCustomer = async () => {
-      const queryCustomer = await firestore()
-        .collection('customers')
-        .where('customerId', '==', Number(id))
-        .limit(1)
-        .get();
+    if (routeParams.prescriptionId) {
+      setisLoading(true);
 
-      let resultCustomer = queryCustomer.docs[0].data();
-      resultCustomer.dob = resultCustomer.dob && resultCustomer.dob.toDate();
-      resultCustomer.id = queryCustomer.docs[0].id;
-      setCustomer(resultCustomer);
+      const prescriptionId = routeParams.prescriptionId;
+      const fetchCustomer = async () => {
+        const queryEditPrescription = await firestore()
+          .collection('prescriptions')
+          .where('prescriptionId', '==', Number(prescriptionId))
+          .limit(1)
+          .get();
 
-      const queryPrescription = await firestore()
-        .collection('prescriptions')
-        .where('customerId', '==', Number(id))
-        .get();
+        let resultEditPrescription = queryEditPrescription.docs[0].data();
+        resultEditPrescription.prescriptionDate =
+          resultEditPrescription.prescriptionDate &&
+          resultEditPrescription.prescriptionDate.toDate();
+        resultEditPrescription.id = queryEditPrescription.docs[0].id;
+        setForm(resultEditPrescription);
 
-      let resultPrescription = [];
-      queryPrescription.forEach((doc) => {
-        resultPrescription.push(doc.data());
-      });
-      setFilteredPrescription(resultPrescription);
+        const queryCustomer = await firestore()
+          .collection('customers')
+          .where('customerId', '==', Number(resultEditPrescription.customerId))
+          .limit(1)
+          .get();
 
-      setisLoading(false);
-    };
-    fetchCustomer();
+        let resultCustomer = queryCustomer.docs[0].data();
+        resultCustomer.dob = resultCustomer.dob && resultCustomer.dob.toDate();
+        resultCustomer.id = queryCustomer.docs[0].id;
+        setCustomer(resultCustomer);
+
+        const queryPrescription = await firestore()
+          .collection('prescriptions')
+          .get();
+
+        let resultPrescription = [];
+        queryPrescription.forEach((doc) => {
+          resultPrescription.push(doc.data());
+        });
+        setFilteredPrescription(resultPrescription);
+        setisLoading(false);
+      };
+      fetchCustomer();
+    } else {
+      setisLoading(true);
+
+      const id = routeParams.customerId;
+      const fetchCustomer = async () => {
+        const queryCustomer = await firestore()
+          .collection('customers')
+          .where('customerId', '==', Number(id))
+          .limit(1)
+          .get();
+
+        let resultCustomer = queryCustomer.docs[0].data();
+        resultCustomer.dob = resultCustomer.dob && resultCustomer.dob.toDate();
+        resultCustomer.id = queryCustomer.docs[0].id;
+        setCustomer(resultCustomer);
+
+        const queryPrescription = await firestore()
+          .collection('prescriptions')
+          .get();
+
+        let resultPrescription = [];
+        queryPrescription.forEach((doc) => {
+          resultPrescription.push(doc.data());
+        });
+        setFilteredPrescription(resultPrescription);
+
+        setisLoading(false);
+      };
+      fetchCustomer();
+    }
   }, []);
   if (isLoading) return <FuseLoading />;
 
   const onSubmit = async () => {
-    setisLoading(true);
+    if (form.prescriptionId) {
+      setisLoading(true);
+      console.log(form);
+      try {
+        const ref = firestore().collection('prescriptions').doc(form?.id);
 
-    try {
-      const prescriptionId = (
-        await firestore().collection('dbConfig').doc('dbConfig').get()
-      ).data();
-
-      await firestore()
-        .collection('prescriptions')
-        .add({
+        let data = {
           ...form,
-          prescriptionId: prescriptionId?.prescriptionId + 1,
-          customerId: customer.customerId,
-          prescriptionDate: firestore.Timestamp.fromDate(new Date())
-        });
+          prescriptionDate: firestore.Timestamp.fromDate(form?.prescriptionDate)
+        };
+        delete data.id;
+        await ref.set(data);
 
-      await firestore()
-        .collection('dbConfig')
-        .doc('dbConfig')
-        .update({ prescriptionId: prescriptionId?.prescriptionId + 1 });
-      dispatch(
-        MessageActions.showMessage({
-          message: 'Prescription Saved Successfully'
-        })
-      );
+        dispatch(
+          MessageActions.showMessage({
+            message: 'Prescription updated successfully'
+          })
+        );
+        props.history.push(
+          `/apps/e-commerce/customers/profile/${form?.customerId}`
+        );
+      } catch (error) {
+        console.log(error);
+      }
 
-      props.history.push('/apps/e-commerce/customers');
-    } catch (error) {
-      console.log(error);
+      setisLoading(false);
+    } else {
+      setisLoading(true);
+
+      try {
+        const prescriptionId = (
+          await firestore().collection('dbConfig').doc('dbConfig').get()
+        ).data();
+
+        await firestore()
+          .collection('prescriptions')
+          .add({
+            ...form,
+            prescriptionId: prescriptionId?.prescriptionId + 1,
+            customerId: customer.customerId,
+            prescriptionDate: firestore.Timestamp.fromDate(new Date())
+          });
+
+        await firestore()
+          .collection('dbConfig')
+          .doc('dbConfig')
+          .update({ prescriptionId: prescriptionId?.prescriptionId + 1 });
+        dispatch(
+          MessageActions.showMessage({
+            message: 'Prescription Saved Successfully'
+          })
+        );
+
+        props.history.push('/apps/e-commerce/customers');
+      } catch (error) {
+        console.log(error);
+      }
+      setisLoading(false);
     }
-    setisLoading(false);
   };
 
   return !customer ? (
@@ -1050,7 +1121,7 @@ const AddPrescription = (props) => {
                 </div>
               </div>
               <div className="flex flex-row p-8 w-2/3 mt-10 px-60 justify-around">
-                <div className="p-8 flex-1">
+                <div className=" flex-1">
                   <Autocomplete
                     options={prescription}
                     getOptionLabel={(option) =>
@@ -1078,13 +1149,14 @@ const AddPrescription = (props) => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
+                        label="Company"
                         variant="outlined"
                         margin="normal"
                       />
                     )}
                   />
                 </div>
-                <div className="p-8 flex-1">
+                <div className="pl-8 flex-1">
                   <Autocomplete
                     options={prescription}
                     getOptionLabel={(option) =>
@@ -1113,12 +1185,13 @@ const AddPrescription = (props) => {
                       <TextField
                         {...params}
                         variant="outlined"
+                        label="Model"
                         margin="normal"
                       />
                     )}
                   />
                 </div>
-                <div className="p-8 flex-1">
+                <div className="pl-8 flex-1">
                   <Autocomplete
                     options={prescription}
                     getOptionLabel={(option) =>
@@ -1147,6 +1220,7 @@ const AddPrescription = (props) => {
                       <TextField
                         {...params}
                         variant="outlined"
+                        label="Modality"
                         margin="normal"
                       />
                     )}
@@ -1160,6 +1234,37 @@ const AddPrescription = (props) => {
                   color="secondary"
                   onClick={!form ? undefined : onSubmit}>
                   Save Contact Lens Rx
+                </Button>
+              </div>
+            </div>
+          </FuseAnimate>
+        )}
+
+        {form?.prescriptionType === 'medicationRx' && (
+          <FuseAnimate animation="transition.slideLeftIn" delay={500}>
+            <div className="p-16 sm:p-24 w-full  shadow-4 rounded-20">
+              <h1 className="underline p-10">Medication Rx</h1>
+              <TextField
+                className="mt-10 "
+                fullWidth
+                InputProps={{ style: { fontSize: 20 } }}
+                InputLabelProps={{ style: { fontSize: 20 } }}
+                id="outlined-multiline-static"
+                label="Comments"
+                multiline
+                rows={4}
+                value={form?.medicationComments}
+                onChange={handleChange}
+                name={'medicationComments'}
+                variant="outlined"
+              />
+              <div className="flex mt-10 px-60">
+                <Button
+                  className="whitespace-no-wrap normal-case"
+                  variant="contained"
+                  color="secondary"
+                  onClick={!form ? undefined : onSubmit}>
+                  Save Medication Rx
                 </Button>
               </div>
             </div>

@@ -133,18 +133,6 @@ const CustomersContent = (props) => {
                     startIcon={<AddToQueueIcon />}>
                     Appointment
                   </Button>
-
-                  {/* <Button
-                    className="whitespace-no-wrap normal-case ml-24"
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/customers/addAppointment/${row.customerId}`
-                      );
-                    }}>
-                    Appointment
-                  </Button> */}
                 </StyledTableCell>
               </StyledTableRow>
             ))}

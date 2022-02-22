@@ -3,21 +3,82 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import Icon from '@material-ui/core/Icon';
 import { withRouter } from 'react-router';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useParams, Link } from 'react-router-dom';
 import { useForm } from '@fuse/hooks';
 import PrintIcon from '@material-ui/icons/Print';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { green } from '@material-ui/core/colors';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import Button from '@material-ui/core/Button';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import Typography from '@material-ui/core/Typography';
 
+const GreenCheckbox = withStyles({
+  root: {
+    color: green[400],
+    '&$checked': {
+      color: green[600]
+    }
+  },
+  checked: {}
+})((props) => <Checkbox color="default" {...props} />);
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+    fontSize: 12,
+    padding: 0,
+    paddingTop: 5,
+    paddingBottom: 5,
+    textAlign: 'center'
+  },
+  body: {
+    fontSize: 12,
+    padding: 0,
+    paddingTop: 5,
+    paddingBottom: 5,
+    textAlign: 'center'
+  }
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover
+    }
+  }
+}))(TableRow);
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 450
+  }
+});
+
 const CustomerProfile = (props) => {
   const [isLoading, setisLoading] = useState(true);
+  const classes = useStyles();
   const [customer, setCustomer] = useState({});
   const [exam, setExam] = useState([]);
   const [prescription, setPrescription] = useState([]);
+  const [disabledState, setDisabledState] = useState(true);
+  const [prescriptionType, setPrescriptionType] = useState('eyeglassesRx');
   const [filteredPrescription, setFilteredPrescription] = useState([]);
   const { form, handleChange, setForm } = useForm(null);
   const routeParams = useParams();
@@ -131,8 +192,8 @@ const CustomerProfile = (props) => {
                       let eyeglassesRx = prescription.filter(
                         (word) => word.prescriptionType === 'eyeglassesRx'
                       );
-                      console.log(eyeglassesRx);
                       setFilteredPrescription(eyeglassesRx);
+                      setPrescriptionType('eyeglassesRx');
                     }}>
                     Glasses
                   </Button>
@@ -143,6 +204,7 @@ const CustomerProfile = (props) => {
                       );
                       console.log(contactLensRx);
                       setFilteredPrescription(contactLensRx);
+                      setPrescriptionType('contactLensRx');
                     }}>
                     Contacts
                   </Button>
@@ -153,64 +215,246 @@ const CustomerProfile = (props) => {
                       );
                       console.log(medicationRx);
                       setFilteredPrescription(medicationRx);
+                      setPrescriptionType('medicationRx');
                     }}>
                     Medical
                   </Button>
                 </ButtonGroup>
               </div>
-
-              <div className="flex flex-1 ">
-                <div className="flex flex-col">
-                  {filteredPrescription
-                    .sort((a, b) =>
-                      a.prescriptionId > b.prescriptionId ? -1 : 1
-                    )
-                    .map((row) => (
-                      <Typography
-                        className="normal-case flex items-center sm:mb-12"
-                        component={Link}
-                        role="button"
-                        to={`/apps/e-commerce/customers/profile/viewexam/${row.examId}`}
-                        color="inherit">
-                        <div className="flex flex-row">
-                          <h3 className="ml-12">
-                            {row.prescriptionDate.toDate().toDateString()}
-                          </h3>
-                          <h3 className="ml-12">{row.prescriptionId}</h3>
-                          <h3 className="ml-12">{row.prescriptionType}</h3>
-                        </div>
-                      </Typography>
-                    ))}
+              {prescriptionType === 'eyeglassesRx' && (
+                <div className="flex flex-1 overflow-scroll">
+                  <div className="flex flex-col ">
+                    <TableContainer component={Paper}>
+                      <Table
+                        className={classes.table}
+                        stickyHeader
+                        aria-label="customized table">
+                        <TableHead>
+                          <TableRow style={{ height: 10 }}>
+                            <StyledTableCell>Date</StyledTableCell>
+                            <StyledTableCell>SPH</StyledTableCell>
+                            <StyledTableCell>CYL</StyledTableCell>
+                            <StyledTableCell>AXIS</StyledTableCell>
+                            <StyledTableCell>ADD</StyledTableCell>
+                            <StyledTableCell>Options</StyledTableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {filteredPrescription
+                            .sort((a, b) =>
+                              a.prescriptionId > b.prescriptionId ? -1 : 1
+                            )
+                            .map((row) => (
+                              <StyledTableRow
+                                key={row.prescriptionId}
+                                style={{ height: 10 }}>
+                                <StyledTableCell>
+                                  {row.prescriptionDate.toDate().toDateString()}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <div className="flex flex-col">
+                                    <div>{row.eyeglassesSphereOd}</div>
+                                    <div>{row.eyeglassesSphereOs}</div>
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <div className="flex flex-col">
+                                    <div>{row.eyeglassesCylinderOd}</div>
+                                    <div>{row.eyeglassesCylinderOs}</div>
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <div className="flex flex-col">
+                                    <div>{row.eyeglassesAxisOd}</div>
+                                    <div>{row.eyeglassesAxisOs}</div>
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <div className="flex flex-col">
+                                    <div>{row.eyeglassesAddOd}</div>
+                                    <div>{row.eyeglassesAddOs}</div>
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <IconButton
+                                    disabled={true}
+                                    onClick={() => {
+                                      props.history.push(
+                                        `/apps/e-commerce/customers/profile/${row.customerId}`
+                                      );
+                                    }}
+                                    aria-label="view">
+                                    <PageviewOutlinedIcon fontSize="small" />
+                                  </IconButton>
+                                  <IconButton
+                                    onClick={() => {
+                                      props.history.push(
+                                        `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
+                                      );
+                                    }}
+                                    aria-label="edit">
+                                    <EditIcon fontSize="small" />
+                                  </IconButton>
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="flex justify-around">
-                <Button
-                  variant="contained"
-                  disabled={true}
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/customers/addExam/${customer?.customerId}`
-                    );
-                  }}
-                  color="secondary"
-                  size="large"
-                  startIcon={<PrintIcon />}>
-                  Print
-                </Button>
-                <Button
-                  disabled={true}
-                  variant="contained"
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/customers/addExam/${customer?.customerId}`
-                    );
-                  }}
-                  color="secondary"
-                  size="large"
-                  startIcon={<EditOutlinedIcon />}>
-                  Edit
-                </Button>
+              {prescriptionType === 'contactLensRx' && (
+                <div className="flex flex-1 overflow-scroll">
+                  <div className="flex flex-col ">
+                    <TableContainer component={Paper}>
+                      <Table
+                        className={classes.table}
+                        stickyHeader
+                        aria-label="customized table">
+                        <TableHead>
+                          <TableRow style={{ height: 10 }}>
+                            <StyledTableCell>Date</StyledTableCell>
+                            <StyledTableCell>SPH</StyledTableCell>
+                            <StyledTableCell>CYL</StyledTableCell>
+                            <StyledTableCell>AXIS</StyledTableCell>
+                            <StyledTableCell>ADD</StyledTableCell>
+                            <StyledTableCell>Options</StyledTableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {filteredPrescription
+                            .sort((a, b) =>
+                              a.prescriptionId > b.prescriptionId ? -1 : 1
+                            )
+                            .map((row) => (
+                              <StyledTableRow
+                                key={row.prescriptionId}
+                                style={{ height: 10 }}>
+                                <StyledTableCell>
+                                  {row.prescriptionDate.toDate().toDateString()}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <div className="flex flex-col">
+                                    <div>{row.contactLensSphereOd}</div>
+                                    <div>{row.contactLensSphereOs}</div>
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <div className="flex flex-col">
+                                    <div>{row.contactLensCylinderOd}</div>
+                                    <div>{row.contactLensCylinderOs}</div>
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <div className="flex flex-col">
+                                    <div>{row.contactLensAxisOd}</div>
+                                    <div>{row.contactLensAxisOs}</div>
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <div className="flex flex-col">
+                                    <div>{row.contactLensAddOd}</div>
+                                    <div>{row.contactLensAddOs}</div>
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <IconButton
+                                    disabled={true}
+                                    onClick={() => {
+                                      props.history.push(
+                                        `/apps/e-commerce/customers/profile/${row.customerId}`
+                                      );
+                                    }}
+                                    aria-label="view">
+                                    <PageviewOutlinedIcon fontSize="small" />
+                                  </IconButton>
+                                  <IconButton
+                                    onClick={() => {
+                                      props.history.push(
+                                        `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
+                                      );
+                                    }}
+                                    aria-label="edit">
+                                    <EditIcon fontSize="small" />
+                                  </IconButton>
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                </div>
+              )}
+
+              {prescriptionType === 'medicationRx' && (
+                <div className="flex flex-1 overflow-scroll">
+                  <div className="flex flex-col ">
+                    <TableContainer component={Paper}>
+                      <Table
+                        className={classes.table}
+                        stickyHeader
+                        aria-label="customized table">
+                        <TableHead>
+                          <TableRow style={{ height: 10 }}>
+                            <StyledTableCell>Date</StyledTableCell>
+                            <StyledTableCell>Medication</StyledTableCell>
+
+                            <StyledTableCell>Options</StyledTableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {filteredPrescription
+                            .sort((a, b) =>
+                              a.prescriptionId > b.prescriptionId ? -1 : 1
+                            )
+                            .map((row) => (
+                              <StyledTableRow
+                                key={row.prescriptionId}
+                                style={{ height: 10 }}>
+                                <StyledTableCell>
+                                  {row?.prescriptionDate
+                                    .toDate()
+                                    .toDateString()}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <div className="w-136 truncate">
+                                    {row?.medicationComments}
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <IconButton
+                                    disabled={true}
+                                    onClick={() => {
+                                      props.history.push(
+                                        `/apps/e-commerce/customers/profile/${row.customerId}`
+                                      );
+                                    }}
+                                    aria-label="view">
+                                    <PageviewOutlinedIcon fontSize="small" />
+                                  </IconButton>
+                                  <IconButton
+                                    onClick={() => {
+                                      props.history.push(
+                                        `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
+                                      );
+                                    }}
+                                    aria-label="edit">
+                                    <EditIcon fontSize="small" />
+                                  </IconButton>
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end">
                 <Button
                   variant="contained"
                   onClick={() => {
@@ -225,29 +469,66 @@ const CustomerProfile = (props) => {
                 </Button>
               </div>
             </div>
-            <div className="p-12 w-1/3 h-320 border-grey-400 border-solid border-1 rounded-20 shadow-10 ">
+            <div className="flex flex-col p-12 w-1/3 h-320 border-grey-400 border-solid border-1 rounded-20 shadow-10 ">
               <h2 className="font-700 text-center">EXAM HISTORY</h2>
-              <div
-                className="h-200 flex-wrap overflow-scroll bg-scroll"
-                onScroll={(e) => e.stopPropagation()}>
-                {exam
-                  .sort((a, b) => (a.examId > b.examId ? -1 : 1))
-                  .map((row) => (
-                    <Typography
-                      className="normal-case flex items-center sm:mb-12"
-                      component={Link}
-                      role="button"
-                      to={`/apps/e-commerce/customers/profile/viewexam/${row.examId}`}
-                      color="inherit">
-                      <div className="flex flex-row">
-                        <h3 className="ml-12">
-                          {row.examTime.toDate().toDateString()}
-                        </h3>
-                        <h3 className="ml-12">Comprehensive Exam</h3>
-                      </div>
-                    </Typography>
-                  ))}
+
+              <div className="flex flex-1 overflow-scroll">
+                <div className="flex flex-col ">
+                  <TableContainer component={Paper}>
+                    <Table
+                      className={classes.table}
+                      stickyHeader
+                      aria-label="customized table">
+                      <TableHead>
+                        <TableRow style={{ height: 10 }}>
+                          <StyledTableCell>Date</StyledTableCell>
+                          <StyledTableCell>Exam Type</StyledTableCell>
+
+                          <StyledTableCell>Options</StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {exam
+                          .sort((a, b) => (a.examId > b.examId ? -1 : 1))
+                          .map((row) => (
+                            <StyledTableRow
+                              key={row.examId}
+                              style={{ height: 10 }}>
+                              <StyledTableCell>
+                                {row?.examTime?.toDate().toDateString()}
+                              </StyledTableCell>
+                              <StyledTableCell>
+                                Comprehensive Exam
+                              </StyledTableCell>
+                              <StyledTableCell>
+                                {/* <IconButton
+                                    disabled={true}
+                                    onClick={() => {
+                                      props.history.push(
+                                        `/apps/e-commerce/customers/profile/${row.customerId}`
+                                      );
+                                    }}
+                                    aria-label="view">
+                                    <PageviewOutlinedIcon fontSize="small" />
+                                  </IconButton> */}
+                                <IconButton
+                                  onClick={() => {
+                                    props.history.push(
+                                      `/apps/e-commerce/customers/profile/viewexam/${row.examId}`
+                                    );
+                                  }}
+                                  aria-label="edit">
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
               </div>
+
               <div className="flex justify-end">
                 <Button
                   className="justify-center ml-160"
