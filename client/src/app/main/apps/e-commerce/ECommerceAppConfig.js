@@ -33,6 +33,10 @@ const ECommerceAppConfig = {
       )
     },
     {
+      path: '/apps/e-commerce/customers/profile/editinsurance/:insuranceId',
+      component: React.lazy(() => import('./Insurance/AddInsurance'))
+    },
+    {
       path: '/apps/e-commerce/customers/profile/editprescription/:prescriptionId',
       component: React.lazy(() => import('./Prescriptions/Prescriptions'))
     },
@@ -44,10 +48,13 @@ const ECommerceAppConfig = {
       path: '/apps/e-commerce/customers/profile/:customerId',
       component: React.lazy(() => import('./Customers/CustomersProfile'))
     },
-
     {
       path: '/apps/e-commerce/customers/addRx/:customerId',
       component: React.lazy(() => import('./Prescriptions/Prescriptions'))
+    },
+    {
+      path: '/apps/e-commerce/customers/addinsurance/:customerId',
+      component: React.lazy(() => import('./Insurance/AddInsurance'))
     },
     {
       path: '/apps/e-commerce/customers/addExam/:customerId',

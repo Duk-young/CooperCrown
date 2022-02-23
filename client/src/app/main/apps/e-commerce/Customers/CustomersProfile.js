@@ -43,16 +43,12 @@ const StyledTableCell = withStyles((theme) => ({
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
     fontSize: 12,
-    padding: 0,
-    paddingTop: 5,
-    paddingBottom: 5,
+    padding: 5,
     textAlign: 'center'
   },
   body: {
     fontSize: 12,
     padding: 0,
-    paddingTop: 5,
-    paddingBottom: 5,
     textAlign: 'center'
   }
 }))(TableCell);
@@ -77,6 +73,7 @@ const CustomerProfile = (props) => {
   const [customer, setCustomer] = useState({});
   const [exam, setExam] = useState([]);
   const [prescription, setPrescription] = useState([]);
+  const [insurances, setInsurances] = useState([]);
   const [disabledState, setDisabledState] = useState(true);
   const [prescriptionType, setPrescriptionType] = useState('eyeglassesRx');
   const [filteredPrescription, setFilteredPrescription] = useState([]);
@@ -121,6 +118,18 @@ const CustomerProfile = (props) => {
         resultPrescription.push(doc.data());
       });
       setPrescription(resultPrescription);
+
+      const queryInsurance = await firestore()
+        .collection('insurances')
+        .where('customerId', '==', Number(id))
+        .get();
+
+      let resultInsurance = [];
+      queryInsurance.forEach((doc) => {
+        resultInsurance.push(doc.data());
+      });
+      setInsurances(resultInsurance);
+      console.log(resultInsurance);
       setisLoading(false);
     };
 
@@ -128,7 +137,7 @@ const CustomerProfile = (props) => {
     fetchExams();
   }, []);
   if (isLoading) return <FuseLoading />;
-  return !customer || !exam || !prescription ? (
+  return !customer || !exam || !prescription || !insurances ? (
     <></>
   ) : (
     <FusePageCarded
@@ -158,7 +167,7 @@ const CustomerProfile = (props) => {
       content={
         <div className="flex flex-col w-full">
           <div className="flex flex-row p-16 sm:p-24 w-full">
-            <div className="p-12 w-1/2 h-auto border-grey-400 border-solid border-1 rounded-20 shadow-10">
+            <div className="p-12 w-1/2 h-auto  rounded-20 shadow-10">
               <h1>Customer Info</h1>
               <h2>{`Name: ${customer?.firstName} ${customer.lastName}\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Customer Id: ${customer.customerId}`}</h2>
               <h2>{`DOB: ${customer?.dob.toDateString()}`}</h2>
@@ -173,14 +182,82 @@ const CustomerProfile = (props) => {
               <h2>{`Email: ${customer?.email}`}</h2>
               <h2>{`Other: ${customer?.other}`}</h2>
             </div>
-            <div className="p-12 ml-10 w-1/2 h-auto border-grey-400 border-solid border-1 rounded-20 shadow-10">
+            <div className="p-12 ml-10 w-1/2 h-auto  rounded-20 shadow-10">
               <h1>Family Tree to be implemented Soon</h1>
             </div>
           </div>
 
           <div className="flex flex-row p-16 sm:p-24 w-full">
-            <div className="p-12 w-1/3 h-320 border-grey-400 border-solid border-1 rounded-20 shadow-10"></div>
-            <div className="flex flex-col p-12 w-1/3 h-320 border-grey-400 border-solid border-1 rounded-20 shadow-10">
+            <div className="flex flex-col p-12 w-1/3 h-320  rounded-20 shadow-10">
+              <h2 className="font-700 text-center">INSURANCE</h2>
+
+              <div className="flex flex-1 overflow-scroll">
+                <div className="flex flex-col ">
+                  <TableContainer component={Paper}>
+                    <Table
+                      className={classes.table}
+                      stickyHeader
+                      aria-label="customized table">
+                      <TableHead>
+                        <TableRow style={{ height: 10 }}>
+                          <StyledTableCell>Insurance</StyledTableCell>
+                          <StyledTableCell>Holder</StyledTableCell>
+                          <StyledTableCell>Policy #</StyledTableCell>
+                          <StyledTableCell>Options</StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {insurances
+                          .sort((a, b) =>
+                            a.insuranceId > b.insuranceId ? -1 : 1
+                          )
+                          .map((row) => (
+                            <StyledTableRow
+                              key={row.insuranceId}
+                              style={{ height: 10 }}>
+                              <StyledTableCell>
+                                {row.insuranceCompany}
+                              </StyledTableCell>
+                              <StyledTableCell>
+                                {row.primaryHolder}
+                              </StyledTableCell>
+                              <StyledTableCell>{row.policyNo}</StyledTableCell>
+                              <StyledTableCell>
+                                <IconButton
+                                  onClick={() => {
+                                    props.history.push(
+                                      `/apps/e-commerce/customers/profile/editinsurance/${row.insuranceId}`
+                                    );
+                                  }}
+                                  aria-label="edit">
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <Button
+                  className="justify-center ml-160"
+                  variant="contained"
+                  onClick={() => {
+                    props.history.push(
+                      `/apps/e-commerce/customers/addinsurance/${customer?.customerId}`
+                    );
+                  }}
+                  color="secondary"
+                  size="large"
+                  startIcon={<AddCircleOutlineOutlinedIcon />}>
+                  Add Insurance
+                </Button>
+              </div>
+            </div>
+            <div className="flex flex-col p-12 ml-6 w-1/3 h-320  rounded-20 shadow-10">
               <h2 className="font-700 text-center">Rx</h2>
               <div className="flex justify-center">
                 <ButtonGroup
@@ -202,7 +279,7 @@ const CustomerProfile = (props) => {
                       let contactLensRx = prescription.filter(
                         (word) => word.prescriptionType === 'contactLensRx'
                       );
-                      console.log(contactLensRx);
+
                       setFilteredPrescription(contactLensRx);
                       setPrescriptionType('contactLensRx');
                     }}>
@@ -213,7 +290,7 @@ const CustomerProfile = (props) => {
                       let medicationRx = prescription.filter(
                         (word) => word.prescriptionType === 'medicationRx'
                       );
-                      console.log(medicationRx);
+
                       setFilteredPrescription(medicationRx);
                       setPrescriptionType('medicationRx');
                     }}>
@@ -249,7 +326,14 @@ const CustomerProfile = (props) => {
                                 key={row.prescriptionId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
-                                  {row.prescriptionDate.toDate().toDateString()}
+                                  {`${row?.prescriptionDate
+                                    ?.toDate()
+                                    .getDate()}-${
+                                    row?.prescriptionDate?.toDate().getMonth() +
+                                    1
+                                  }-${row?.prescriptionDate
+                                    ?.toDate()
+                                    .getFullYear()}`}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <div className="flex flex-col">
@@ -333,7 +417,14 @@ const CustomerProfile = (props) => {
                                 key={row.prescriptionId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
-                                  {row.prescriptionDate.toDate().toDateString()}
+                                  {`${row?.prescriptionDate
+                                    ?.toDate()
+                                    .getDate()}-${
+                                    row?.prescriptionDate?.toDate().getMonth() +
+                                    1
+                                  }-${row?.prescriptionDate
+                                    ?.toDate()
+                                    .getFullYear()}`}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <div className="flex flex-col">
@@ -415,9 +506,14 @@ const CustomerProfile = (props) => {
                                 key={row.prescriptionId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
-                                  {row?.prescriptionDate
-                                    .toDate()
-                                    .toDateString()}
+                                  {`${row?.prescriptionDate
+                                    ?.toDate()
+                                    .getDate()}-${
+                                    row?.prescriptionDate?.toDate().getMonth() +
+                                    1
+                                  }-${row?.prescriptionDate
+                                    ?.toDate()
+                                    .getFullYear()}`}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <div className="w-136 truncate">
@@ -469,7 +565,7 @@ const CustomerProfile = (props) => {
                 </Button>
               </div>
             </div>
-            <div className="flex flex-col p-12 w-1/3 h-320 border-grey-400 border-solid border-1 rounded-20 shadow-10 ">
+            <div className="flex flex-col ml-6 p-12 w-1/3 h-320  rounded-20 shadow-10 ">
               <h2 className="font-700 text-center">EXAM HISTORY</h2>
 
               <div className="flex flex-1 overflow-scroll">
@@ -495,30 +591,22 @@ const CustomerProfile = (props) => {
                               key={row.examId}
                               style={{ height: 10 }}>
                               <StyledTableCell>
-                                {row?.examTime?.toDate().toDateString()}
+                                {`${row?.examTime?.toDate().getDate()}-${
+                                  row?.examTime?.toDate().getMonth() + 1
+                                }-${row?.examTime?.toDate().getFullYear()}`}
                               </StyledTableCell>
                               <StyledTableCell>
                                 Comprehensive Exam
                               </StyledTableCell>
                               <StyledTableCell>
-                                {/* <IconButton
-                                    disabled={true}
-                                    onClick={() => {
-                                      props.history.push(
-                                        `/apps/e-commerce/customers/profile/${row.customerId}`
-                                      );
-                                    }}
-                                    aria-label="view">
-                                    <PageviewOutlinedIcon fontSize="small" />
-                                  </IconButton> */}
                                 <IconButton
                                   onClick={() => {
                                     props.history.push(
                                       `/apps/e-commerce/customers/profile/viewexam/${row.examId}`
                                     );
                                   }}
-                                  aria-label="edit">
-                                  <EditIcon fontSize="small" />
+                                  aria-label="view">
+                                  <PageviewOutlinedIcon fontSize="small" />
                                 </IconButton>
                               </StyledTableCell>
                             </StyledTableRow>
