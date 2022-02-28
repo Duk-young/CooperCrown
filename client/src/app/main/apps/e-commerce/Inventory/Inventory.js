@@ -4,7 +4,9 @@ import Other from './Other/Other';
 import Lens from './Lens/Lens';
 import OutOfStock from './Out Of Stock/OutOfStock';
 import ShowRoomInventory from './ShowRoom Inventory/ShowRoomInventory';
-import DemoContent from '@fuse/core/DemoContent';
+import Icon from '@material-ui/core/Icon';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import Typography from '@material-ui/core/Typography';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import { makeStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
@@ -32,7 +34,16 @@ function Inventory() {
       }}
       header={
         <div className="py-24">
-          <h2>Inventory</h2>
+          <div className="flex items-center">
+            <FuseAnimate animation="transition.expandIn" delay={300}>
+              <Icon className="text-32">people</Icon>
+            </FuseAnimate>
+            <FuseAnimate animation="transition.slideLeftIn" delay={300}>
+              <Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h6">
+                Inventory
+              </Typography>
+            </FuseAnimate>
+          </div>
         </div>
       }
       contentToolbar={
@@ -45,7 +56,7 @@ function Inventory() {
           scrollButtons="off"
           className="w-full h-64">
           <Tab className="h-64" label="FRAMES" />
-          <Tab className="h-64" label="CONTACT LENS" />
+          <Tab disabled className="h-64" label="CONTACT LENS" />
           <Tab className="h-64" label="LENS" />
           <Tab className="h-64" label="OTHER" />
           <Tab className="h-64" label="OUT OF STOCK" />

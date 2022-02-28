@@ -21,7 +21,6 @@ import reducer from '../../store/reducers';
 
 function UpdateCustomerForm(props) {
   const { form, handleChange, error } = props;
-  // const [rows, setRows] = useState('');
   const [state, setState] = useState(form?.state);
 
   const defaultFamilies = {

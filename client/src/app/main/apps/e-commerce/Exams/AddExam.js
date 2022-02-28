@@ -128,9 +128,6 @@ const AddExam = (props) => {
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
 
-        console.log(form.examTime);
-        console.log(typeof form.examTime);
-
         await firestore()
           .collection('exams')
           .add({
@@ -140,6 +137,11 @@ const AddExam = (props) => {
             examId: examId?.examId + 1,
             customerId: customer.customerId
           });
+
+        await firestore()
+          .collection('customers')
+          .doc(customer.id)
+          .update({ lastExam: firestore.Timestamp.fromDate(form?.examTime) });
 
         await firestore()
           .collection('dbConfig')

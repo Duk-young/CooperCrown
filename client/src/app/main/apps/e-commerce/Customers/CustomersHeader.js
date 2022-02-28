@@ -1,10 +1,9 @@
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import Input from '@material-ui/core/Input';
-import Paper from '@material-ui/core/Paper';
-import { ThemeProvider } from '@material-ui/core/styles';
+import FuseAnimate from '@fuse/core/FuseAnimate';
 import Typography from '@material-ui/core/Typography';
+import { ThemeProvider } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';

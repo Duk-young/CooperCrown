@@ -7,6 +7,10 @@ import FuseAnimate from '@fuse/core/FuseAnimate';
 import { useForm } from '@fuse/hooks';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -68,15 +72,8 @@ function AddShowRoomInventory(props) {
       result.date = result.date && result.date.toDate();
       result.id = query.docs[0].id;
       setForm(result);
-      // const showRoomQuery = await firestore()
-      //   .collection('showRooms')
-      //   .where('showRoomId', '==', Number(result?.showRoomId))
-      //   .limit(1)
-      //   .get();
-      // let resultShowRoom = showRoomQuery.docs[0].data();
-      // setShowRoomsLabels(resultShowRoom);
-      // console.log(result, resultShowRoom, id);
-      setImages(result.images.urls);
+
+      setImages(result?.images.urls);
     };
 
     const fetchShowRoom = async () => {
@@ -85,8 +82,8 @@ function AddShowRoomInventory(props) {
 
       querySnapshot.forEach((doc) => {
         showroomdata.push(doc.data());
-        setShowRooms(showroomdata);
       });
+      setShowRooms(showroomdata);
     };
 
     if (id) {
@@ -95,6 +92,7 @@ function AddShowRoomInventory(props) {
       setisLoading(false);
     } else {
       setForm({});
+      fetchShowRoom();
       setisLoading(false);
     }
   }, [routeParams, setForm]);
@@ -106,6 +104,7 @@ function AddShowRoomInventory(props) {
   const onSubmit = async () => {
     if (form.showRoomInventoryId) {
       setisLoading(true);
+      console.log(form);
 
       try {
         const ref = firestore().collection('showRoomInventory').doc(form?.id);
@@ -129,7 +128,7 @@ function AddShowRoomInventory(props) {
           ...form,
           date: firestore.Timestamp.fromDate(form?.date),
           images: { urls },
-          initialQuantity: form.quantity
+          initialQuantity: form?.quantity
         };
 
         await ref.set(data);
@@ -217,30 +216,23 @@ function AddShowRoomInventory(props) {
             <div
               className="stateAutocomplete"
               style={{ width: 300, marginLeft: 20 }}>
-              <Autocomplete
-                {...defaultShowrooms}
-                id="showRoomId"
-                value={form?.showRoomId}
-                // inputValue={showRoomsLabels}
-                // onInputChange={(e, value) => setShowRoomsLabels(value)}
-                inputValue={(option, value) => option.showRoomId === value}
-                getOptionSelected={(option, value) =>
-                  option.showRoomId === value
-                }
-                name="showRoom"
-                onChange={(_, value) =>
-                  handleChange({
-                    target: { value: value?.showRoomId, name: 'showRoomId' }
-                  })
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Show Room Name"
-                    margin="normal"
-                  />
-                )}
-              />
+              <FormControl className="ml-32 ">
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="showRoomId"
+                  defaultValue={form?.showRoomId}
+                  value={form?.showRoomId}
+                  name="showRoomId"
+                  onChange={handleChange}
+                  autoWidth>
+                  {showRooms.map((row) => (
+                    <MenuItem value={row?.showRoomId}>
+                      {row?.locationName}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Select Showroom from the list</FormHelperText>
+              </FormControl>
             </div>
             <div className="flex flex-row items-center flex-wrap">
               <div className="flex ">
