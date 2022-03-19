@@ -1,6 +1,6 @@
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import Fab from '@material-ui/core/Fab';
-import Icon from '@material-ui/core/Icon';
+// import FuseAnimate from '@fuse/core/FuseAnimate';
+// import Fab from '@material-ui/core/Fab';
+// import Icon from '@material-ui/core/Icon';
 import { makeStyles } from '@material-ui/core/styles';
 import withReducer from 'app/store/withReducer';
 import clsx from 'clsx';

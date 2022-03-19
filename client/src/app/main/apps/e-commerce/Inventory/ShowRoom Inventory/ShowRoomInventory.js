@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Panel, SearchBox } from 'react-instantsearch-dom';
 import { connectHits } from 'react-instantsearch-dom';
@@ -15,9 +15,6 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import { withRouter } from 'react-router';
 import '../../Customers/Search.css';
@@ -138,70 +135,7 @@ const useStyles = makeStyles({
 });
 
 const ShowRoomInventory = (props) => {
-  const classes = useStyles();
-  const [isLoading, setisLoading] = useState(false);
-  const [rows, setRows] = useState([]);
-  const [images, setImages] = useState([]);
-  const [showRooms, setShowRooms] = useState();
-
-  const handleClick = async (item) => {
-    const query = await firestore()
-      .collection('showRoomInventory')
-      .where('showRoomInventoryId', '==', Number(item))
-      .limit(1)
-      .get();
-
-    let result = query.docs[0].data();
-    setImages(result?.images?.urls);
-  };
-
-  const fetchShowRoomInventory = async (value) => {
-    setImages([]);
-    let test = [];
-    if (value) {
-      if (value.showRoomInventoryId === null) {
-        console.log('Showroom Id is not available');
-      } else {
-        setisLoading(false);
-        const querySnapshot = await firestore()
-          .collection('showRoomInventory')
-          .where('showRoomId', '==', value.showRoomId)
-          .get();
-
-        querySnapshot.forEach((doc) => {
-          test.push(doc.data());
-          setRows(test);
-        });
-        setisLoading(true);
-      }
-    }
-  };
-
-  const defaultShowrooms = {
-    options: showRooms,
-    getOptionLabel: (option) => option.locationName || option
-  };
-
-  useEffect(() => {
-    setisLoading(false);
-
-    const fetchShowRoom = async () => {
-      let showroomdata = [];
-      const querySnapshot = await firestore().collection('showRooms').get();
-
-      querySnapshot.forEach((doc) => {
-        showroomdata.push(doc.data());
-        setShowRooms(showroomdata);
-      });
-    };
-
-    fetchShowRoom();
-    setisLoading(true);
-  }, []);
-  if (!isLoading) return <FuseLoading />;
-  return !rows ? (
-    <></>
-  ) : (
+  return (
     <div className="flex flex-col w-full h-full">
       <InstantSearch searchClient={searchClient} indexName="showRoomInventory">
         <TableContainer component={Paper} className="flex flex-col w-full ">

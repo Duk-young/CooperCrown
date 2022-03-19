@@ -14,7 +14,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { KeyboardTimePicker } from '@material-ui/pickers';
 import withReducer from 'app/store/withReducer';
 import React, { useEffect, useState } from 'react';
 import reducer from '../../store/reducers';

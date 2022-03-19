@@ -14,7 +14,6 @@ import Select from '@material-ui/core/Select';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import { v4 as uuidv4 } from 'uuid';
 import { firestore, storage } from 'firebase';
 import {
@@ -47,17 +46,12 @@ const useStyles = makeStyles((theme) => ({
 function AddShowRoomInventory(props) {
   const classes = useStyles();
   const [images, setImages] = useState([]);
-  const [showRoomsLabels, setShowRoomsLabels] = useState({});
+
   const dispatch = useDispatch();
   const { form, handleChange, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
   const [showRooms, setShowRooms] = useState();
   const routeParams = useParams();
-
-  const defaultShowrooms = {
-    options: showRooms,
-    getOptionLabel: (option) => option.locationName || option
-  };
 
   useEffect(() => {
     const id = routeParams.showRoomInventoryId;

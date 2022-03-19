@@ -543,3 +543,7 @@ a[class^='ais-'] {
   height: 100%;
   width: 100%;
 }
+
+.MuiPaper-root-480 {
+  background-color: white;
+}

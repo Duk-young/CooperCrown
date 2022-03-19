@@ -5,10 +5,10 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
-import Switch from '@material-ui/core/Switch';
+// import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -33,7 +33,7 @@ function EventDialog(props) {
   const eventDialog = useSelector(
     ({ calendarApp }) => calendarApp.events.eventDialog
   );
-  const { form, handleChange, setForm, setInForm } = useForm(defaultFormState);
+  const { form, setForm } = useForm(defaultFormState);
   const start = moment(form.start, 'MM/DD/YYYY');
   const end = moment(form.end, 'MM/DD/YYYY');
 

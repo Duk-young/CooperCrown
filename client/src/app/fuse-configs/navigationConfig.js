@@ -42,6 +42,15 @@ const navigationConfig = [
         ]
       },
       {
+        id: 'orders',
+        title: 'Orders',
+        translate: 'Orders',
+        auth: authRoles.staff,
+        type: 'item',
+        icon: 'all_inbox',
+        url: '/apps/e-commerce/orders'
+      },
+      {
         id: 'inventory',
         title: 'Inventory',
         translate: 'Inventory',

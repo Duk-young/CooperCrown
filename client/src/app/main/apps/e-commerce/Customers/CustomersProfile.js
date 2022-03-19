@@ -3,12 +3,7 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import Icon from '@material-ui/core/Icon';
 import { withRouter } from 'react-router';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useParams, Link } from 'react-router-dom';
-import { useForm } from '@fuse/hooks';
-import PrintIcon from '@material-ui/icons/Print';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Table from '@material-ui/core/Table';
@@ -18,25 +13,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { green } from '@material-ui/core/colors';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
-import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import Button from '@material-ui/core/Button';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import Typography from '@material-ui/core/Typography';
-
-const GreenCheckbox = withStyles({
-  root: {
-    color: green[400],
-    '&$checked': {
-      color: green[600]
-    }
-  },
-  checked: {}
-})((props) => <Checkbox color="default" {...props} />);
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -74,10 +57,8 @@ const CustomerProfile = (props) => {
   const [exam, setExam] = useState([]);
   const [prescription, setPrescription] = useState([]);
   const [insurances, setInsurances] = useState([]);
-  const [disabledState, setDisabledState] = useState(true);
   const [prescriptionType, setPrescriptionType] = useState('eyeglassesRx');
   const [filteredPrescription, setFilteredPrescription] = useState([]);
-  const { form, handleChange, setForm } = useForm(null);
   const routeParams = useParams();
 
   useEffect(() => {
@@ -129,13 +110,12 @@ const CustomerProfile = (props) => {
         resultInsurance.push(doc.data());
       });
       setInsurances(resultInsurance);
-      console.log(resultInsurance);
       setisLoading(false);
     };
 
     fetchCustomer();
     fetchExams();
-  }, []);
+  }, [routeParams.customerId]);
   if (isLoading) return <FuseLoading />;
   return !customer || !exam || !prescription || !insurances ? (
     <></>

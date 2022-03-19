@@ -6,7 +6,7 @@ function LensGrid() {
   // const columns = createColData(42);
 
   const [rows, setRow] = useState(tableRows);
-  const [columns, setColumns] = useState(createColData(42));
+  const [columns] = useState(createColData(42));
 
   const onGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const newRows = rows;

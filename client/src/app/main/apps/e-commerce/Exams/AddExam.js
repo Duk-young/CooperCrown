@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import { withRouter } from 'react-router';
@@ -15,9 +15,7 @@ import { useDispatch } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import SaveIcon from '@material-ui/icons/Save';
-import FuseAnimate from '@fuse/core/FuseAnimate';
 import Button from '@material-ui/core/Button';
 import { useForm } from '@fuse/hooks';
 import {
@@ -660,7 +658,7 @@ const AddExam = (props) => {
               <div className="flex flex-row">
                 <h3 className="pt-4 font-700">Time:</h3>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <Grid container justifyContent="start">
+                  <Grid container>
                     <KeyboardTimePicker
                       className="m-0 px-24"
                       margin="normal"
@@ -950,7 +948,7 @@ const AddExam = (props) => {
             />
             <h3 className="font-700 ml-10">@ Time</h3>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid container justifyContent="start">
+              <Grid container>
                 <KeyboardTimePicker
                   className="m-0 px-24"
                   margin="normal"
@@ -2487,7 +2485,7 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Other</h3>
             </div>
             <div className="flex-1">
-              <h3 className="font-700 text-center"></h3>
+              <h3 className="hidden font-700 text-center">Hidden</h3>
             </div>
             <div className="flex-1">
               <h3 className="font-700 text-center">Other</h3>
@@ -2880,7 +2878,7 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Other</h3>
             </div>
             <div className="flex-1">
-              <h3 className="font-700 text-center"></h3>
+              <h3 className="hidden font-700 text-center">hidden</h3>
             </div>
             <div className="flex-1">
               <h3 className="font-700 text-center">Other</h3>

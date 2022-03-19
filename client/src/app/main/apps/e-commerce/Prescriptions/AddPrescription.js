@@ -4,9 +4,6 @@ import { firestore } from 'firebase';
 import { withRouter } from 'react-router';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useParams } from 'react-router-dom';
-import Checkbox from '@material-ui/core/Checkbox';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
 import { useForm } from '@fuse/hooks';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -118,7 +115,7 @@ const AddPrescription = (props) => {
       setisLoading(true);
 
       const prescriptionId = routeParams.prescriptionId;
-      const fetchCustomer = async () => {
+      const fetchDetails = async () => {
         const queryEditPrescription = await firestore()
           .collection('prescriptions')
           .where('prescriptionId', '==', Number(prescriptionId))
@@ -152,14 +149,20 @@ const AddPrescription = (props) => {
           resultPrescription.push(doc.data());
         });
         setFilteredPrescription(resultPrescription);
+        let rX = resultPrescription.filter(
+          (word) =>
+            word.prescriptionType === resultPrescription.prescriptionType
+        );
+
+        setPrescription(rX);
         setisLoading(false);
       };
-      fetchCustomer();
+      fetchDetails();
     } else {
       setisLoading(true);
 
       const id = routeParams.customerId;
-      const fetchCustomer = async () => {
+      const fetchDetails = async () => {
         const queryCustomer = await firestore()
           .collection('customers')
           .where('customerId', '==', Number(id))
@@ -170,7 +173,7 @@ const AddPrescription = (props) => {
         resultCustomer.dob = resultCustomer.dob && resultCustomer.dob.toDate();
         resultCustomer.id = queryCustomer.docs[0].id;
         setCustomer(resultCustomer);
-
+        console.log(resultCustomer);
         const queryPrescription = await firestore()
           .collection('prescriptions')
           .get();
@@ -183,9 +186,9 @@ const AddPrescription = (props) => {
 
         setisLoading(false);
       };
-      fetchCustomer();
+      fetchDetails();
     }
-  }, []);
+  }, [routeParams.customerId]);
   if (isLoading) return <FuseLoading />;
 
   const onSubmit = async () => {
@@ -222,7 +225,7 @@ const AddPrescription = (props) => {
         const prescriptionId = (
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
-
+        console.log(form);
         await firestore()
           .collection('prescriptions')
           .add({
@@ -250,7 +253,7 @@ const AddPrescription = (props) => {
     }
   };
 
-  return !customer ? (
+  return !customer || !filteredPrescription || !prescription ? (
     <></>
   ) : (
     <div className="flex flex-col w-full">
@@ -281,7 +284,7 @@ const AddPrescription = (props) => {
                   let eyeglassesRx = filteredPrescription.filter(
                     (word) => word.prescriptionType === 'eyeglassesRx'
                   );
-                  console.log(eyeglassesRx);
+
                   setPrescription(eyeglassesRx);
                 }}
                 control={<Radio />}
@@ -292,7 +295,7 @@ const AddPrescription = (props) => {
                   let contactLensRx = filteredPrescription.filter(
                     (word) => word.prescriptionType === 'contactLensRx'
                   );
-                  console.log(contactLensRx);
+
                   setPrescription(contactLensRx);
                 }}
                 value="contactLensRx"
@@ -315,7 +318,7 @@ const AddPrescription = (props) => {
               <h1 className="underline p-10">Eyeglasses Rx</h1>
               <div className="flex flex-row px-60">
                 <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700"></h3>
+                  <h3 className="text-center font-700">`${}`</h3>
                 </div>
                 <div className="p-8 h-auto flex-1">
                   <h3 className="text-center font-700">Sphere</h3>
@@ -342,7 +345,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesSphereOd ? item.eyeglassesSphereOd : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesSphereOd || option
                     }
@@ -360,7 +369,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesSphereOd,
+                          value: value,
                           name: 'eyeglassesSphereOd'
                         }
                       })
@@ -372,7 +381,15 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesCylinderOd
+                            ? item.eyeglassesCylinderOd
+                            : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesCylinderOd || option
                     }
@@ -390,7 +407,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesCylinderOd,
+                          value: value,
                           name: 'eyeglassesCylinderOd'
                         }
                       })
@@ -402,7 +419,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesAxisOd ? item.eyeglassesAxisOd : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesAxisOd || option
                     }
@@ -420,7 +443,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesAxisOd,
+                          value: value,
                           name: 'eyeglassesAxisOd'
                         }
                       })
@@ -432,7 +455,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesAddOd ? item.eyeglassesAddOd : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesAddOd || option
                     }
@@ -450,7 +479,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesAddOd,
+                          value: value,
                           name: 'eyeglassesAddOd'
                         }
                       })
@@ -462,7 +491,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesPrismOd ? item.eyeglassesPrismOd : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesPrismOd || option
                     }
@@ -480,7 +515,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesPrismOd,
+                          value: value,
                           name: 'eyeglassesPrismOd'
                         }
                       })
@@ -492,7 +527,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesVaOd ? item.eyeglassesVaOd : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesVaOd || option
                     }
@@ -510,7 +551,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesVaOd,
+                          value: value,
                           name: 'eyeglassesVaOd'
                         }
                       })
@@ -528,7 +569,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesSphereOs ? item.eyeglassesSphereOs : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesSphereOs || option
                     }
@@ -546,7 +593,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesSphereOs,
+                          value: value,
                           name: 'eyeglassesSphereOs'
                         }
                       })
@@ -558,7 +605,15 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesCylinderOs
+                            ? item.eyeglassesCylinderOs
+                            : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesCylinderOs || option
                     }
@@ -576,7 +631,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesCylinderOs,
+                          value: value,
                           name: 'eyeglassesCylinderOs'
                         }
                       })
@@ -588,7 +643,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesAxisOs ? item.eyeglassesAxisOs : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesAxisOs || option
                     }
@@ -606,7 +667,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesAxisOs,
+                          value: value,
                           name: 'eyeglassesAxisOs'
                         }
                       })
@@ -618,7 +679,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesAddOs ? item.eyeglassesAddOs : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesAddOs || option
                     }
@@ -636,7 +703,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesAddOs,
+                          value: value,
                           name: 'eyeglassesAddOs'
                         }
                       })
@@ -648,7 +715,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesPrismOs ? item.eyeglassesPrismOs : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesPrismOs || option
                     }
@@ -666,7 +739,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesPrismOs,
+                          value: value,
                           name: 'eyeglassesPrismOs'
                         }
                       })
@@ -678,7 +751,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.eyeglassesVaOs ? item.eyeglassesVaOs : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.eyeglassesVaOs || option
                     }
@@ -696,7 +775,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.eyeglassesVaOs,
+                          value: value,
                           name: 'eyeglassesVaOs'
                         }
                       })
@@ -728,7 +807,7 @@ const AddPrescription = (props) => {
               <h1 className="underline p-10">Contact Lens Rx</h1>
               <div className="flex flex-row px-60">
                 <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700"></h3>
+                  <h3 className="hidden text-center font-700">Hi</h3>
                 </div>
                 <div className="p-8 h-auto flex-1">
                   <h3 className="text-center font-700">Sphere</h3>
@@ -755,7 +834,15 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensSphereOd
+                            ? item.contactLensSphereOd
+                            : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensSphereOd || option
                     }
@@ -773,7 +860,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensSphereOd,
+                          value: value,
                           name: 'contactLensSphereOd'
                         }
                       })
@@ -785,7 +872,15 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensCylinderOd
+                            ? item.contactLensCylinderOd
+                            : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensCylinderOd || option
                     }
@@ -803,7 +898,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensCylinderOd,
+                          value: value,
                           name: 'contactLensCylinderOd'
                         }
                       })
@@ -815,7 +910,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensAxisOd ? item.contactLensAxisOd : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensAxisOd || option
                     }
@@ -833,7 +934,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensAxisOd,
+                          value: value,
                           name: 'contactLensAxisOd'
                         }
                       })
@@ -845,7 +946,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensAddOd ? item.contactLensAddOd : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensAddOd || option
                     }
@@ -863,7 +970,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensAddOd,
+                          value: value,
                           name: 'contactLensAddOd'
                         }
                       })
@@ -875,7 +982,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensDiaOd ? item.contactLensDiaOd : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensDiaOd || option
                     }
@@ -893,7 +1006,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensDiaOd,
+                          value: value,
                           name: 'contactLensDiaOd'
                         }
                       })
@@ -905,7 +1018,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensBcOd ? item.contactLensBcOd : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensBcOd || option
                     }
@@ -923,7 +1042,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensBcOd,
+                          value: value,
                           name: 'contactLensBcOd'
                         }
                       })
@@ -941,7 +1060,15 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensSphereOs
+                            ? item.contactLensSphereOs
+                            : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensSphereOs || option
                     }
@@ -959,7 +1086,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensSphereOs,
+                          value: value,
                           name: 'contactLensSphereOs'
                         }
                       })
@@ -971,7 +1098,15 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensCylinderOs
+                            ? item.contactLensCylinderOs
+                            : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensCylinderOs || option
                     }
@@ -989,7 +1124,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensCylinderOs,
+                          value: value,
                           name: 'contactLensCylinderOs'
                         }
                       })
@@ -1001,7 +1136,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensAxisOs ? item.contactLensAxisOs : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensAxisOs || option
                     }
@@ -1019,7 +1160,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensAxisOs,
+                          value: value,
                           name: 'contactLensAxisOs'
                         }
                       })
@@ -1031,7 +1172,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensAddOs ? item.contactLensAddOs : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensAddOs || option
                     }
@@ -1049,7 +1196,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensAddOs,
+                          value: value,
                           name: 'contactLensAddOs'
                         }
                       })
@@ -1061,7 +1208,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensDiaOs ? item.contactLensDiaOs : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensDiaOs || option
                     }
@@ -1079,7 +1232,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensDiaOs,
+                          value: value,
                           name: 'contactLensDiaOs'
                         }
                       })
@@ -1091,7 +1244,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensBcOs ? item.contactLensBcOs : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensBcOs || option
                     }
@@ -1109,7 +1268,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensBcOs,
+                          value: value,
                           name: 'contactLensBcOs'
                         }
                       })
@@ -1123,7 +1282,13 @@ const AddPrescription = (props) => {
               <div className="flex flex-row p-8 w-2/3 mt-10 px-60 justify-around">
                 <div className=" flex-1">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensCompany ? item.contactLensCompany : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensCompany || option
                     }
@@ -1141,7 +1306,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensCompany,
+                          value: value,
                           name: 'contactLensCompany'
                         }
                       })
@@ -1158,7 +1323,13 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="pl-8 flex-1">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensModel ? item.contactLensModel : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensModel || option
                     }
@@ -1176,7 +1347,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensModel,
+                          value: value,
                           name: 'contactLensModel'
                         }
                       })
@@ -1193,7 +1364,15 @@ const AddPrescription = (props) => {
                 </div>
                 <div className="pl-8 flex-1">
                   <Autocomplete
-                    options={prescription}
+                    options={[
+                      ...new Set(
+                        prescription.map((item) =>
+                          item.contactLensModality
+                            ? item.contactLensModality
+                            : ''
+                        )
+                      )
+                    ]}
                     getOptionLabel={(option) =>
                       option?.contactLensModality || option
                     }
@@ -1211,7 +1390,7 @@ const AddPrescription = (props) => {
                     onChange={(_, value) =>
                       handleChange({
                         target: {
-                          value: value?.contactLensModality,
+                          value: value,
                           name: 'contactLensModality'
                         }
                       })

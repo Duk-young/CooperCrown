@@ -71,6 +71,18 @@ const ECommerceAppConfig = {
       )
     },
     {
+      path: '/apps/e-commerce/orders/vieworder/:orderId',
+      component: React.lazy(() => import('./Orders/AddOrder'))
+    },
+    {
+      path: '/apps/e-commerce/orders/addorder/:customerId',
+      component: React.lazy(() => import('./Orders/AddOrder'))
+    },
+    {
+      path: '/apps/e-commerce/orders',
+      component: React.lazy(() => import('./Orders/Orders'))
+    },
+    {
       path: '/apps/e-commerce/customers',
       component: React.lazy(() => import('./Customers/Customers'))
     },

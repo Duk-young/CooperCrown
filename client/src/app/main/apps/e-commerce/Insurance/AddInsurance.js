@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Fab } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -59,7 +59,6 @@ function AddInsurance(props) {
     } else {
       setisLoading(true);
 
-      const id = routeParams.customerId;
       const fetchInsurance = async () => {
         const queryInsurances = await firestore()
           .collection('insurances')
@@ -69,13 +68,25 @@ function AddInsurance(props) {
         queryInsurances.forEach((doc) => {
           resultInsurances.push(doc.data());
         });
-        setInsurances(resultInsurances);
+
+        let resArr = [];
+        resultInsurances.filter(function (item) {
+          var i = resArr.findIndex(
+            (x) => x.insuranceCompany === item.insuranceCompany
+          );
+          if (i <= -1) {
+            resArr.push(item);
+          }
+          return null;
+        });
+
+        setInsurances(resArr);
         setForm([]);
         setisLoading(false);
       };
       fetchInsurance();
     }
-  }, []);
+  }, [routeParams.customerId]);
   if (isLoading) return <FuseLoading />;
 
   const onSubmit = async () => {

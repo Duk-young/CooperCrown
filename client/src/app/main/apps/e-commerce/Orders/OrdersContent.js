@@ -12,16 +12,15 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
-import AddToQueueIcon from '@material-ui/icons/AddToQueue';
+import SearchDialouge from './SearchDialouge';
+import FuseAnimate from '@fuse/core/FuseAnimate';
 // import FuseLoading from '@fuse/core/FuseLoading';
 import { withRouter } from 'react-router';
-import './Search.css';
-import './Themes.css';
-import './App.mobile.css';
+import '../Customers/Search.css';
+import '../Customers/Themes.css';
+import '../Customers/App.mobile.css';
 
 const searchClient = algoliasearch(
   '5AS4E06TDY',
@@ -32,16 +31,14 @@ const Hits = ({ hits }) => (
   <Table aria-label="customized table">
     <TableHead>
       <TableRow>
-        <StyledTableCell>ID</StyledTableCell>
+        <StyledTableCell>Order ID</StyledTableCell>
+        <StyledTableCell>Date</StyledTableCell>
         <StyledTableCell>First Name</StyledTableCell>
         <StyledTableCell>Last Name</StyledTableCell>
-        <StyledTableCell>D.O.B</StyledTableCell>
-        <StyledTableCell>Last Exam</StyledTableCell>
-        <StyledTableCell>Gender</StyledTableCell>
-        <StyledTableCell>State</StyledTableCell>
-        <StyledTableCell>Zip Code</StyledTableCell>
-        <StyledTableCell>Phone</StyledTableCell>
-        <StyledTableCell>Email</StyledTableCell>
+        <StyledTableCell>Customer ID</StyledTableCell>
+        <StyledTableCell>Type</StyledTableCell>
+        <StyledTableCell>Location</StyledTableCell>
+        <StyledTableCell>Status</StyledTableCell>
         <StyledTableCell>Options</StyledTableCell>
       </TableRow>
     </TableHead>
@@ -49,49 +46,29 @@ const Hits = ({ hits }) => (
       {hits.map((hit) => (
         <StyledTableRow key={hit.objectID} hover>
           <StyledTableCell component="th" scope="row">
-            {hit.customerId}
-          </StyledTableCell>
-          <StyledTableCell>{hit.firstName}</StyledTableCell>
-          <StyledTableCell>{hit.lastName}</StyledTableCell>
-          <StyledTableCell>
-            {moment(hit.dob).format('DD MMM YYYY')}
+            {hit?.orderId}
           </StyledTableCell>
           <StyledTableCell>
-            {hit.lastExam
-              ? moment(hit?.lastExam).format('DD MMM YYYY')
-              : 'No Exam'}
+            {moment(hit?.orderDate).format('MM-DD-YYYY')}
           </StyledTableCell>
-          <StyledTableCell>{hit.gender}</StyledTableCell>
-          <StyledTableCell>{hit.state}</StyledTableCell>
-          <StyledTableCell>{hit.zipCode}</StyledTableCell>
-          <StyledTableCell>{hit.phone1}</StyledTableCell>
-          <StyledTableCell>{hit.email}</StyledTableCell>
+          <StyledTableCell>{hit?.firstName}</StyledTableCell>
+          <StyledTableCell>{hit?.lastName}</StyledTableCell>
+          <StyledTableCell>{hit?.customerId}</StyledTableCell>
+          <StyledTableCell>
+            {hit?.prescriptionType === 'eyeglassesRx' && 'Eyeglasses'}
+            {hit?.prescriptionType === 'contactLensRx' && 'Contact Lens'}
+            {hit?.prescriptionType === 'medicationRx' && 'Medication'}
+          </StyledTableCell>
+          <StyledTableCell>{hit?.locationName}</StyledTableCell>
+          <StyledTableCell>{hit?.orderStatus}</StyledTableCell>
+
           <StyledTableCell>
             <Link
-              to={`/apps/e-commerce/customers/profile/${hit.customerId}`}
+              to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}
               className="btn btn-primary">
               <IconButton aria-label="view">
                 <PageviewOutlinedIcon fontSize="small" />
               </IconButton>
-            </Link>
-            <Link
-              to={`/apps/e-commerce/customers/${hit.customerId}`}
-              className="btn btn-primary">
-              <IconButton aria-label="edit">
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Link>
-            <Link
-              to={`/apps/e-commerce/customers/addAppointment/${hit.customerId}`}
-              className="btn btn-primary">
-              <Button
-                className="whitespace-no-wrap normal-case ml-24"
-                variant="contained"
-                color="secondary"
-                size="large"
-                startIcon={<AddToQueueIcon />}>
-                Appointment
-              </Button>
             </Link>
           </StyledTableCell>
         </StyledTableRow>
@@ -108,7 +85,8 @@ const StyledTableCell = withStyles((theme) => ({
     textAlign: 'center'
   },
   body: {
-    fontSize: 14
+    fontSize: 14,
+    textAlign: 'center'
   }
 }))(TableCell);
 
@@ -116,14 +94,11 @@ const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover
-    },
-    '&:hover': {
-      backgroundColor: 'lightyellow !important'
     }
   }
 }))(TableRow);
 
-const CustomersContent = (props) => {
+const OrdersContent = (props) => {
   // const classes = useStyles();
   // const [isLoading, setisLoading] = useState(false);
 
@@ -133,13 +108,13 @@ const CustomersContent = (props) => {
       <TableContainer
         component={Paper}
         className="flex flex-col w-full p-20 rounded-32 shadow-20">
-        <InstantSearch searchClient={searchClient} indexName="customers">
+        <InstantSearch searchClient={searchClient} indexName="orders">
           <div className="flex flex-row">
             <div className="flex flex-col flex-1"></div>
             <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12">
               <SearchBox
                 translations={{
-                  placeholder: 'Searh for customers...'
+                  placeholder: 'Searh for orders...'
                 }}
                 submit={
                   <svg
@@ -162,7 +137,11 @@ const CustomersContent = (props) => {
                 }
               />
             </div>
-            <div className="flex flex-col flex-1"></div>
+            <div className="flex flex-row flex-1 justify-center">
+              <FuseAnimate animation="transition.slideRightIn" delay={300}>
+                <SearchDialouge />
+              </FuseAnimate>
+            </div>
           </div>
           <CustomHits />
         </InstantSearch>
@@ -171,4 +150,4 @@ const CustomersContent = (props) => {
   );
 };
 
-export default withRouter(CustomersContent);
+export default withRouter(OrdersContent);

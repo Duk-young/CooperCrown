@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Panel, SearchBox } from 'react-instantsearch-dom';
 import { connectHits } from 'react-instantsearch-dom';
@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
-import FuseLoading from '@fuse/core/FuseLoading';
+// import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import { withRouter } from 'react-router';
 import '../../Customers/Search.css';
@@ -136,9 +136,9 @@ const useStyles = makeStyles({
 });
 
 const Frames = (props) => {
-  const [isLoading, setisLoading] = useState(false);
+  // const [isLoading, setisLoading] = useState(false);
 
-  if (isLoading) return <FuseLoading />;
+  // if (isLoading) return <FuseLoading />;
   return (
     <div className="flex flex-col w-full h-full">
       <InstantSearch searchClient={searchClient} indexName="frames">

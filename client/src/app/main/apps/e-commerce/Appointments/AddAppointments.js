@@ -3,9 +3,6 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import { withRouter } from 'react-router';
 import { useParams } from 'react-router-dom';
-import Checkbox from '@material-ui/core/Checkbox';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
 import { useForm } from '@fuse/hooks';
 import DateFnsUtils from '@date-io/date-fns';
 import TextField from '@material-ui/core/TextField';
@@ -20,33 +17,10 @@ import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import Button from '@material-ui/core/Button';
 
-const GreenCheckbox = withStyles({
-  root: {
-    color: green[400],
-    '&$checked': {
-      color: green[600]
-    }
-  },
-  checked: {}
-})((props) => <Checkbox color="default" {...props} />);
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200
-  }
-}));
-
 const AddAppointments = (props) => {
   const [isLoading, setisLoading] = useState(true);
   const [customer, setCustomer] = useState({});
-  const { form, handleChange, setForm } = useForm(null);
-  const [open, setOpen] = React.useState(false);
+  const { form, handleChange } = useForm(null);
   const routeParams = useParams();
   const dispatch = useDispatch();
 
@@ -67,7 +41,7 @@ const AddAppointments = (props) => {
       setisLoading(false);
     };
     fetchCustomer();
-  }, []);
+  }, [routeParams.customerId]);
   if (isLoading) return <FuseLoading />;
 
   const onSubmit = async () => {
