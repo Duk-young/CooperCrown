@@ -1,43 +1,80 @@
-import FusePageCarded from '@fuse/core/FusePageCarded';
-import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import { useForm } from '@fuse/hooks';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import Icon from '@material-ui/core/Icon';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { ToastContainer, toast, Zoom } from 'react-toastify';
+import _ from '@lodash';
 import 'react-toastify/dist/ReactToastify.css';
-import withReducer from 'app/store/withReducer';
-import React, { useCallback, useState, useEffect } from 'react';
-import FuseLoading from '@fuse/core/FuseLoading';
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import reducer from '../store/reducers';
-import { useDispatch } from 'react-redux';
 import { firestore } from 'firebase';
+import { Link } from 'react-router-dom';
+import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { useForm } from '@fuse/hooks';
+import { useParams } from 'react-router-dom';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import AddIcon from '@material-ui/icons/Add';
+import Checkbox from '@material-ui/core/Checkbox';
+import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 import CustomAutocomplete1 from './Autocomplete';
 import DiscountAutocomplete from './DiscountAutocomplete';
-import CustomAutocomplete from '../ReusableComponents/Autocomplete';
+import Fab from '@material-ui/core/Fab';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FramesTable from './FramesTable';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import FuseLoading from '@fuse/core/FuseLoading';
+import FusePageCarded from '@fuse/core/FusePageCarded';
+import Icon from '@material-ui/core/Icon';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import Paper from '@material-ui/core/Paper';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import React, { useCallback, useState, useEffect } from 'react';
+import ReceiveOrderPayment from './ReceiveOrderPayment';
+import reducer from '../store/reducers';
 import SearchFrameDialouge from './SearchFrameDialouge';
 import SearchInsuranceDialouge from './SearchInsuranceDialouge';
-import FramesTable from './FramesTable';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import _ from '@lodash';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import withReducer from 'app/store/withReducer';
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white
+  },
+  body: {
+    fontSize: 14
+  }
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover
+    },
+    '&:hover': {
+      backgroundColor: 'lightyellow !important'
+    }
+  }
+}))(TableRow);
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 700
+  }
+});
 
 function AddOrder(props) {
   const [isLoading, setisLoading] = useState(true);
   const [customer, setCustomer] = useState({});
   const [showroom, setShowroom] = useState([]);
   const [discounts, setDiscounts] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [eyeglasses, setEyeglasses] = useState([]);
   const [prevEyeglasses, setPrevEyeglasses] = useState([]);
   const [selectedFrame, setSelectedFrame] = useState({});
@@ -46,6 +83,7 @@ function AddOrder(props) {
   const [prescription, setPrescription] = useState([]);
   const [disabledState, setDisabledState] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openOrderPayment, setOpenOrderPayment] = useState(false);
 
   const routeParams = useParams();
   const dispatch = useDispatch();
@@ -65,14 +103,15 @@ function AddOrder(props) {
 
   const handleClose = () => {
     setOpen(false);
-    onSubmit();
+  };
+  const handleOrderPaymentClose = () => {
+    setOpenOrderPayment(false);
   };
 
   const onSubmit = async () => {
-    if (form.orderId) {
+    if (form?.orderId) {
       setisLoading(true);
-      console.log(prevEyeglasses);
-      console.log(eyeglasses);
+
       try {
         const ref = firestore().collection('orders').doc(form?.id);
         let data = {
@@ -194,16 +233,13 @@ function AddOrder(props) {
           .where('orderId', '==', Number(orderId))
           .limit(1)
           .get();
-
         let resultOrder = queryOrder.docs[0].data();
         resultOrder.orderDate =
           resultOrder.orderDate && resultOrder.orderDate.toDate();
         resultOrder.id = queryOrder.docs[0].id;
         setForm(resultOrder);
-        console.log(resultOrder);
         setEyeglasses(resultOrder?.eyeglasses);
         setPrevEyeglasses(resultOrder?.eyeglasses);
-
         const queryCustomer = await firestore()
           .collection('customers')
           .where('customerId', '==', Number(resultOrder.customerId))
@@ -213,12 +249,10 @@ function AddOrder(props) {
         resultCustomer.dob = resultCustomer.dob && resultCustomer.dob.toDate();
         resultCustomer.id = queryCustomer.docs[0].id;
         setCustomer(resultCustomer);
-
         const queryPrescription = await firestore()
           .collection('prescriptions')
           .where('customerId', '==', Number(resultOrder.customerId))
           .get();
-
         let resultPrescription = [];
         queryPrescription.forEach((doc) => {
           resultPrescription.push(doc.data());
@@ -229,25 +263,27 @@ function AddOrder(props) {
           resultPrescriptionString.push(doc);
         });
         setPrescription(resultPrescriptionString);
-
-        const queryShowroom = await firestore()
-          .collection('showRooms')
-
-          .get();
-
+        const queryShowroom = await firestore().collection('showRooms').get();
         let resultShowroom = [];
         queryShowroom.forEach((doc) => {
           resultShowroom.push(doc.data());
         });
         setShowroom(resultShowroom);
-
         const queryDiscounts = await firestore().collection('discounts').get();
-
         let resultDiscounts = [];
         queryDiscounts.forEach((doc) => {
           resultDiscounts.push(doc.data());
         });
         setDiscounts(resultDiscounts);
+        const queryPayments = await firestore()
+          .collection('orderPayments')
+          .where('orderId', '==', Number(orderId))
+          .get();
+        let resultPayments = [];
+        queryPayments.forEach((doc) => {
+          resultPayments.push(doc.data());
+        });
+        setPayments(resultPayments);
         setisLoading(false);
       };
       fetchDetails();
@@ -302,7 +338,7 @@ function AddOrder(props) {
       };
       fetchDetails();
     }
-  }, [routeParams.customerId]);
+  }, []);
   if (isLoading) return <FuseLoading />;
 
   return (
@@ -1114,12 +1150,144 @@ function AddOrder(props) {
                               </div>
                             </div>
                           ))}
-                          {selectedFrame?.saleType !== undefined && (
-                            <div>
-                              <div className="flex flex-row justify-between">
-                                <h2 className="mt-6 underline font-700">
-                                  Sub-Total:
+
+                          <div>
+                            <div className="flex flex-row justify-between">
+                              <h2 className="mt-6 underline font-700">
+                                Sub-Total:
+                              </h2>
+                              <h2 className="mt-6 font-700">
+                                $
+                                {(
+                                  eyeglasses.reduce(
+                                    (a, b) => +a + +b.lensRate,
+                                    0
+                                  ) +
+                                  eyeglasses.reduce(
+                                    (a, b) => +a + +b.frameRate,
+                                    0
+                                  )
+                                ).toLocaleString()}
+                              </h2>
+                            </div>
+                            <div className="flex flex-row justify-between">
+                              <h2 className="mt-6 pt-12 ">Additional Cost</h2>
+                              <div>
+                                <FormControl
+                                  className="mt-6"
+                                  disabled={disabledState}
+                                  fullWidth
+                                  variant="outlined">
+                                  <InputLabel htmlFor="outlined-adornment-amount">
+                                    Additional Cost
+                                  </InputLabel>
+                                  <OutlinedInput
+                                    id="outlined-adornment-amount"
+                                    value={form?.additionalCost || +0}
+                                    name={'additionalCost'}
+                                    onChange={handleChange}
+                                    startAdornment={
+                                      <InputAdornment position="start">
+                                        $
+                                      </InputAdornment>
+                                    }
+                                    labelWidth={60}
+                                    type="number"
+                                  />
+                                </FormControl>
+                              </div>
+                            </div>
+                            <div className="flex flex-row justify-between">
+                              <div className="flex flex-col w-1/2">
+                                <DiscountAutocomplete
+                                  list={discounts}
+                                  form={form}
+                                  setForm={setForm}
+                                  handleChange={handleChange}
+                                  id="code"
+                                  freeSolo={false}
+                                  label="Select Discount"
+                                />
+                              </div>
+                              <div>
+                                <FormControl
+                                  className="mt-6"
+                                  disabled={true}
+                                  fullWidth
+                                  variant="outlined">
+                                  <InputLabel htmlFor="outlined-adornment-amount">
+                                    Amount
+                                  </InputLabel>
+                                  <OutlinedInput
+                                    id="outlined-adornment-amount"
+                                    value={form?.discount || 0}
+                                    name={'discount'}
+                                    onChange={handleChange}
+                                    startAdornment={
+                                      <InputAdornment position="start">
+                                        $
+                                      </InputAdornment>
+                                    }
+                                    labelWidth={60}
+                                    type="number"
+                                  />
+                                </FormControl>
+                              </div>
+                            </div>
+                            <div className="flex flex-row justify-between">
+                              <h2 className="mt-6 underline font-700">
+                                Grand Total:
+                              </h2>
+                              {form?.additionalCost && form?.discount && (
+                                <h2 className="mt-6 font-700">
+                                  $
+                                  {(
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.lensRate,
+                                      0
+                                    ) +
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.frameRate,
+                                      0
+                                    ) +
+                                    +form?.additionalCost -
+                                    +form?.discount
+                                  ).toLocaleString()}
                                 </h2>
+                              )}
+                              {form?.additionalCost && !form?.discount && (
+                                <h2 className="mt-6 font-700">
+                                  $
+                                  {(
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.lensRate,
+                                      0
+                                    ) +
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.frameRate,
+                                      0
+                                    ) +
+                                    +form?.additionalCost
+                                  ).toLocaleString()}
+                                </h2>
+                              )}
+                              {!form?.additionalCost && form?.discount && (
+                                <h2 className="mt-6 font-700">
+                                  $
+                                  {(
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.lensRate,
+                                      0
+                                    ) +
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.frameRate,
+                                      0
+                                    ) -
+                                    +form?.discount
+                                  ).toLocaleString()}
+                                </h2>
+                              )}
+                              {!form?.additionalCost && !form?.discount && (
                                 <h2 className="mt-6 font-700">
                                   $
                                   {(
@@ -1133,149 +1301,87 @@ function AddOrder(props) {
                                     )
                                   ).toLocaleString()}
                                 </h2>
-                              </div>
-                              <div className="flex flex-row justify-between">
-                                <h2 className="mt-6 pt-12 underline font-700">
-                                  Additional Cost
-                                </h2>
-                                <div>
-                                  <FormControl
-                                    className="mt-6"
-                                    disabled={disabledState}
-                                    fullWidth
-                                    variant="outlined">
-                                    <InputLabel htmlFor="outlined-adornment-amount">
-                                      Additional Cost
-                                    </InputLabel>
-                                    <OutlinedInput
-                                      id="outlined-adornment-amount"
-                                      value={form?.additionalCost}
-                                      name={'additionalCost'}
-                                      onChange={handleChange}
-                                      startAdornment={
-                                        <InputAdornment position="start">
-                                          $
-                                        </InputAdornment>
-                                      }
-                                      labelWidth={60}
-                                      type="number"
-                                    />
-                                  </FormControl>
-                                </div>
-                              </div>
-                              <div className="flex flex-row justify-between">
-                                <div className="flex flex-col w-1/2">
-                                  <DiscountAutocomplete
-                                    list={discounts}
-                                    form={form}
-                                    setForm={setForm}
-                                    handleChange={handleChange}
-                                    id="code"
-                                    freeSolo={false}
-                                    label="Select Discount"
+                              )}
+                            </div>
+                            <div className="flex flex-row justify-between">
+                              <h2 className="pt-20">Insurance Amount:</h2>
+                              <div>
+                                <FormControl
+                                  className="mt-6"
+                                  disabled={disabledState}
+                                  fullWidth
+                                  variant="outlined">
+                                  <InputLabel htmlFor="outlined-adornment-amount">
+                                    Amount
+                                  </InputLabel>
+                                  <OutlinedInput
+                                    id="outlined-adornment-amount"
+                                    value={form?.insuranceCost || 0}
+                                    name={'insuranceCost'}
+                                    onChange={handleChange}
+                                    startAdornment={
+                                      <InputAdornment position="start">
+                                        $
+                                      </InputAdornment>
+                                    }
+                                    labelWidth={60}
+                                    type="number"
                                   />
-                                </div>
-                                <div>
-                                  <FormControl
-                                    className="mt-6"
-                                    disabled={true}
-                                    fullWidth
-                                    variant="outlined">
-                                    <InputLabel htmlFor="outlined-adornment-amount">
-                                      Amount
-                                    </InputLabel>
-                                    <OutlinedInput
-                                      id="outlined-adornment-amount"
-                                      value={form?.discount}
-                                      name={'discount'}
-                                      onChange={handleChange}
-                                      startAdornment={
-                                        <InputAdornment position="start">
-                                          $
-                                        </InputAdornment>
-                                      }
-                                      labelWidth={60}
-                                      type="number"
-                                    />
-                                  </FormControl>
-                                </div>
-                              </div>
-                              <div className="flex flex-row justify-between">
-                                <h2 className="mt-6 underline font-700">
-                                  Grand Total:
-                                </h2>
-                                {form?.additionalCost && form?.discount && (
-                                  <h2 className="mt-6 font-700">
-                                    $
-                                    {(
-                                      eyeglasses.reduce(
-                                        (a, b) => +a + +b.lensRate,
-                                        0
-                                      ) +
-                                      eyeglasses.reduce(
-                                        (a, b) => +a + +b.frameRate,
-                                        0
-                                      ) +
-                                      +form?.additionalCost -
-                                      +form?.discount
-                                    ).toLocaleString()}
-                                  </h2>
-                                )}
-                                {form?.additionalCost && !form?.discount && (
-                                  <h2 className="mt-6 font-700">
-                                    $
-                                    {(
-                                      eyeglasses.reduce(
-                                        (a, b) => +a + +b.lensRate,
-                                        0
-                                      ) +
-                                      eyeglasses.reduce(
-                                        (a, b) => +a + +b.frameRate,
-                                        0
-                                      ) +
-                                      +form?.additionalCost
-                                    ).toLocaleString()}
-                                  </h2>
-                                )}
-                                {!form?.additionalCost && form?.discount && (
-                                  <h2 className="mt-6 font-700">
-                                    $
-                                    {(
-                                      eyeglasses.reduce(
-                                        (a, b) => +a + +b.lensRate,
-                                        0
-                                      ) +
-                                      eyeglasses.reduce(
-                                        (a, b) => +a + +b.frameRate,
-                                        0
-                                      ) -
-                                      +form?.discount
-                                    ).toLocaleString()}
-                                  </h2>
-                                )}
-                                {!form?.additionalCost && !form?.discount && (
-                                  <h2 className="mt-6 font-700">
-                                    $
-                                    {(
-                                      eyeglasses.reduce(
-                                        (a, b) => +a + +b.lensRate,
-                                        0
-                                      ) +
-                                      eyeglasses.reduce(
-                                        (a, b) => +a + +b.frameRate,
-                                        0
-                                      )
-                                    ).toLocaleString()}
-                                  </h2>
-                                )}
+                                </FormControl>
                               </div>
                             </div>
-                          )}
+                            <div className="flex flex-row justify-between">
+                              <h2 className="mt-6 ">Total Payments:</h2>
+                              <h2 className="mt-6">
+                                $ {payments.reduce((a, b) => +a + +b.amount, 0)}
+                              </h2>
+                            </div>
+                            <div className="flex flex-row justify-between">
+                              <h2 className="mt-6 underline font-700">
+                                Balance Due:
+                              </h2>
+                              <h2 className="mt-6 font-700">
+                                ${' '}
+                                {eyeglasses.reduce(
+                                  (a, b) => +a + +b?.frameRate,
+                                  0
+                                ) +
+                                  eyeglasses.reduce(
+                                    (a, b) => +a + +b?.lensRate,
+                                    0
+                                  ) -
+                                  (form?.insuranceCost
+                                    ? +form?.insuranceCost
+                                    : 0) +
+                                  (form?.additionalCost
+                                    ? +form?.additionalCost
+                                    : 0) -
+                                  (form?.discount ? +form?.discount : 0) -
+                                  payments.reduce((a, b) => +a + +b.amount, 0)}
+                              </h2>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col mt-10 px-60 w-full rounded-20">
-                      <div className="flex flex-row mb-10">
+                    <div className="flex flex-col mt-10 px-6 w-full rounded-20">
+                      <div className="flex flex-row justify-center">
+                        <SearchInsuranceDialouge
+                          form={form}
+                          handleClose={handleClose}
+                          open={open}
+                          customer={customer}
+                          onSubmit={onSubmit}
+                        />
+                        <ReceiveOrderPayment
+                          mainForm={form}
+                          openOrderPayment={openOrderPayment}
+                          handleOrderPaymentClose={handleOrderPaymentClose}
+                          eyeglasses={eyeglasses}
+                          payments={payments}
+                        />
+                      </div>
+                      <div className="flex flex-row mb-10 justify-between">
                         <Fab
                           onClick={() => {
                             let count = 1;
@@ -1328,48 +1434,11 @@ function AddOrder(props) {
                           <AddIcon />
                           Add Frame
                         </Fab>
-                        <div className="flex flex-row justify-center">
-                          <SearchInsuranceDialouge
-                            form={form}
-                            setForm={setForm}
-                            handleClose={handleClose}
-                            open={open}
-                            customer={customer}
-                          />
-                        </div>
+
                         <Fab
                           onClick={() => {
                             if (eyeglasses.length) {
-                              let insuranceCost = 0;
-                              eyeglasses.map((row) => {
-                                if (
-                                  row?.orderFrameInsurance &&
-                                  row?.orderLensInsurance
-                                ) {
-                                  insuranceCost =
-                                    insuranceCost +
-                                    +row?.frameRate +
-                                    +row?.lensRate;
-                                } else if (
-                                  !row?.orderFrameInsurance &&
-                                  row?.orderLensInsurance
-                                ) {
-                                  insuranceCost =
-                                    insuranceCost + +row?.lensRate;
-                                } else if (
-                                  row?.orderFrameInsurance &&
-                                  !row?.orderLensInsurance
-                                ) {
-                                  insuranceCost =
-                                    insuranceCost + +row?.frameRate;
-                                }
-                              });
-                              setForm({
-                                ...form,
-                                insuranceCost: insuranceCost
-                              });
-
-                              if (insuranceCost > 0) {
+                              if (form?.insuranceCost > 0) {
                                 setOpen(true);
                               } else {
                                 onSubmit();
@@ -1387,7 +1456,6 @@ function AddOrder(props) {
                               });
                             }
                           }}
-                          className="ml-288"
                           disabled={disabledState}
                           variant="extended"
                           color="secondary"
@@ -1397,13 +1465,84 @@ function AddOrder(props) {
                             ? 'Place Order'
                             : 'Update Order'}
                         </Fab>
+
+                        {routeParams?.orderId && (
+                          <div className="flex flex-row justify-start mt-10">
+                            <Fab
+                              onClick={() => {
+                                setOpenOrderPayment(true);
+                                console.log(openOrderPayment);
+                              }}
+                              variant="extended"
+                              color="primary"
+                              aria-label="add">
+                              <AddIcon />
+                              Receive Payment
+                            </Fab>
+                          </div>
+                        )}
                       </div>
-                      <FramesTable
-                        eyeglasses={eyeglasses}
-                        setSelectedFrame={setSelectedFrame}
-                        setEyeglasses={setEyeglasses}
-                        setDisabledState={setDisabledState}
-                      />
+                      <div className="flex flex-row w-full">
+                        <div className="flex flex-col w-2/3">
+                          <h1 className="ml-10 font-700">Eyeglasses Detail:</h1>
+                          <FramesTable
+                            eyeglasses={eyeglasses}
+                            setSelectedFrame={setSelectedFrame}
+                            setEyeglasses={setEyeglasses}
+                            setDisabledState={setDisabledState}
+                          />
+                        </div>
+
+                        {routeParams?.orderId && (
+                          <div className="flex flex-col w-1/3 ">
+                            <h1 className="ml-10 font-700">Payment History</h1>
+                            <div className="flex flex-col h-320 ">
+                              <TableContainer
+                                component={Paper}
+                                className="flex flex-col w-full m-2 rounded-12 shadow-4 overflow-scroll">
+                                <Table
+                                  stickyHeader
+                                  aria-label="customized table">
+                                  <TableHead>
+                                    <TableRow>
+                                      <StyledTableCell>
+                                        Payment ID
+                                      </StyledTableCell>
+                                      <StyledTableCell>
+                                        Payment Date
+                                      </StyledTableCell>
+                                      <StyledTableCell>Amount</StyledTableCell>
+                                      <StyledTableCell>
+                                        Extra Notes
+                                      </StyledTableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {payments.map((hit) => (
+                                      <StyledTableRow key={hit.orderPaymentId}>
+                                        <StyledTableCell>
+                                          {hit?.orderPaymentId}
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                          {hit?.paymentDate
+                                            .toDate()
+                                            .toDateString()}
+                                        </StyledTableCell>
+                                        <StyledTableCell>{`$ ${Number(
+                                          hit?.amount
+                                        ).toLocaleString()}`}</StyledTableCell>
+                                        <StyledTableCell>
+                                          {hit?.extraNotes}
+                                        </StyledTableCell>
+                                      </StyledTableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </FuseAnimate>

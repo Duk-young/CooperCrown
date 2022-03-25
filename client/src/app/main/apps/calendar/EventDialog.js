@@ -1,23 +1,23 @@
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Switch from '@material-ui/core/Switch';
+import { DateTimePicker } from '@material-ui/pickers';
+import { firestore } from 'firebase';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
-import FuseUtils from '@fuse/utils/FuseUtils';
+import * as Actions from './store/actions';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FuseUtils from '@fuse/utils/FuseUtils';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
-// import Switch from '@material-ui/core/Switch';
+import moment from 'moment';
+import React, { useCallback, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { DateTimePicker } from '@material-ui/pickers';
-import moment from 'moment';
-import React, { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import * as Actions from './store/actions';
-import { firestore } from 'firebase';
 
 const defaultFormState = {
   id: FuseUtils.generateGUID(),
@@ -130,7 +130,7 @@ function EventDialog(props) {
               shrink: true
             }}
             name="title"
-            value={form.title}
+            value={form?.title}
             disabled
             variant="outlined"
             autoFocus
@@ -153,7 +153,7 @@ function EventDialog(props) {
             label="Medical History"
             type="text"
             name="medicalHistory"
-            value={form.medicalHistory}
+            value={form?.medicalHistory}
             disabled
             multiline
             rows={5}

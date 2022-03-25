@@ -69,6 +69,7 @@ const Hits = ({ hits }) => {
               <StyledTableCell>Material</StyledTableCell>
               <StyledTableCell>Shape</StyledTableCell>
               <StyledTableCell>Size</StyledTableCell>
+              <StyledTableCell> Initial Quanitity</StyledTableCell>
               <StyledTableCell>Quantity</StyledTableCell>
               <StyledTableCell></StyledTableCell>
             </TableRow>
@@ -91,6 +92,7 @@ const Hits = ({ hits }) => {
                   <StyledTableCell>{hit.material}</StyledTableCell>
                   <StyledTableCell>{hit.shape}</StyledTableCell>
                   <StyledTableCell>{`  ${hit.sizeX}-${hit.sizeY}-${hit.sizeZ}   `}</StyledTableCell>
+                  <StyledTableCell>{hit.initialQuantity}</StyledTableCell>
                   <StyledTableCell>{hit.quantity}</StyledTableCell>
                   <StyledTableCell>
                     <Link

@@ -43,36 +43,38 @@ const Hits = ({ hits }) => (
       </TableRow>
     </TableHead>
     <TableBody>
-      {hits.map((hit) => (
-        <StyledTableRow key={hit.objectID} hover>
-          <StyledTableCell component="th" scope="row">
-            {hit?.orderId}
-          </StyledTableCell>
-          <StyledTableCell>
-            {moment(hit?.orderDate).format('MM-DD-YYYY')}
-          </StyledTableCell>
-          <StyledTableCell>{hit?.firstName}</StyledTableCell>
-          <StyledTableCell>{hit?.lastName}</StyledTableCell>
-          <StyledTableCell>{hit?.customerId}</StyledTableCell>
-          <StyledTableCell>
-            {hit?.prescriptionType === 'eyeglassesRx' && 'Eyeglasses'}
-            {hit?.prescriptionType === 'contactLensRx' && 'Contact Lens'}
-            {hit?.prescriptionType === 'medicationRx' && 'Medication'}
-          </StyledTableCell>
-          <StyledTableCell>{hit?.locationName}</StyledTableCell>
-          <StyledTableCell>{hit?.orderStatus}</StyledTableCell>
+      {hits
+        .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
+        .map((hit) => (
+          <StyledTableRow key={hit.objectID} hover>
+            <StyledTableCell component="th" scope="row">
+              {hit?.orderId}
+            </StyledTableCell>
+            <StyledTableCell>
+              {moment(hit?.orderDate).format('MM-DD-YYYY')}
+            </StyledTableCell>
+            <StyledTableCell>{hit?.firstName}</StyledTableCell>
+            <StyledTableCell>{hit?.lastName}</StyledTableCell>
+            <StyledTableCell>{hit?.customerId}</StyledTableCell>
+            <StyledTableCell>
+              {hit?.prescriptionType === 'eyeglassesRx' && 'Eyeglasses'}
+              {hit?.prescriptionType === 'contactLensRx' && 'Contact Lens'}
+              {hit?.prescriptionType === 'medicationRx' && 'Medication'}
+            </StyledTableCell>
+            <StyledTableCell>{hit?.locationName}</StyledTableCell>
+            <StyledTableCell>{hit?.orderStatus}</StyledTableCell>
 
-          <StyledTableCell>
-            <Link
-              to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}
-              className="btn btn-primary">
-              <IconButton aria-label="view">
-                <PageviewOutlinedIcon fontSize="small" />
-              </IconButton>
-            </Link>
-          </StyledTableCell>
-        </StyledTableRow>
-      ))}
+            <StyledTableCell>
+              <Link
+                to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}
+                className="btn btn-primary">
+                <IconButton aria-label="view">
+                  <PageviewOutlinedIcon fontSize="small" />
+                </IconButton>
+              </Link>
+            </StyledTableCell>
+          </StyledTableRow>
+        ))}
     </TableBody>
   </Table>
 );

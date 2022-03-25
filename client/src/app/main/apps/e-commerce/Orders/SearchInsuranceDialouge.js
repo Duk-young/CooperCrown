@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import { blue } from '@material-ui/core/colors';
 import { firestore } from 'firebase';
-import PropTypes from 'prop-types';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import { useDispatch } from 'react-redux';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import AddIcon from '@material-ui/icons/Add';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Fab from '@material-ui/core/Fab';
+import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import { blue } from '@material-ui/core/colors';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -47,34 +51,114 @@ const useStyles = makeStyles({
 
 export default function SearchInsuranceDialouge(props) {
   const classes = useStyles();
-  const { form, open, handleClose, customer } = props;
-
+  const { form, open, handleClose, customer, onSubmit } = props;
+  const dispatch = useDispatch();
   const [hits, setHits] = useState([]);
+  const [selectedInsurances, setSelectedInsurances] = useState([]);
+  const [disabledState, setDisabledState] = useState(false);
+  const [insuranceError, setInsuranceError] = useState(false);
 
-  const onSubmit = async (hit) => {
+  const onSubmitInsurance = async () => {
     try {
-      const dbConfig = (
-        await firestore().collection('dbConfig').doc('dbConfig').get()
-      ).data();
-
-      await firestore()
-        .collection('insuranceClaims')
-        .add({
-          orderDate: firestore.Timestamp.fromDate(new Date()),
-          insuranceClaimId: dbConfig?.insuranceClaimId + 1,
-          orderId: dbConfig?.orderId + 1,
-          customerId: customer?.customerId,
-          firstName: customer?.firstName,
-          lastName: customer?.lastName,
-          insuranceCompany: hit?.insuranceCompany,
-          policyNo: hit?.policyNo,
-          claimStatus: 'Unclaimed'
+      if (form?.orderId) {
+        const queryExisting = await firestore()
+          .collection('insuranceClaims')
+          .where('orderId', '==', Number(form?.orderId))
+          .get();
+        queryExisting.forEach((doc) => {
+          doc.ref.delete();
         });
 
-      await firestore()
-        .collection('dbConfig')
-        .doc('dbConfig')
-        .update({ insuranceClaimId: dbConfig?.insuranceClaimId + 1 });
+        const dbConfig = (
+          await firestore().collection('dbConfig').doc('dbConfig').get()
+        ).data();
+        let newOrderId = dbConfig?.orderId + 1;
+
+        const queryExisting1 = await firestore()
+          .collection('insuranceClaims')
+          .where('orderId', '==', Number(newOrderId))
+          .get();
+        queryExisting1.forEach((doc) => {
+          doc.ref.delete();
+        });
+
+        for (let i = 0; i < selectedInsurances?.length; i++) {
+          const dbConfigLoop = (
+            await firestore().collection('dbConfig').doc('dbConfig').get()
+          ).data();
+
+          await firestore()
+            .collection('insuranceClaims')
+            .add({
+              orderDate: firestore.Timestamp.fromDate(new Date()),
+              insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1,
+              orderId: form?.orderId,
+              customerId: customer?.customerId,
+              firstName: customer?.firstName,
+              lastName: customer?.lastName,
+              insuranceCompany: selectedInsurances[i]?.insuranceCompany,
+              policyNo: selectedInsurances[i]?.policyNo,
+              insuranceCost: form?.insuranceCost,
+              claimStatus: 'Unclaimed'
+            });
+
+          await firestore()
+            .collection('dbConfig')
+            .doc('dbConfig')
+            .update({ insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1 });
+        }
+        dispatch(
+          MessageActions.showMessage({
+            message: 'Insurance Claim Saved Successfully...'
+          })
+        );
+        setDisabledState(true);
+      } else {
+        const dbConfig = (
+          await firestore().collection('dbConfig').doc('dbConfig').get()
+        ).data();
+        let newOrderId = dbConfig?.orderId + 1;
+
+        const queryExisting = await firestore()
+          .collection('insuranceClaims')
+          .where('orderId', '==', Number(newOrderId))
+          .get();
+        queryExisting.forEach((doc) => {
+          doc.ref.delete();
+        });
+
+        for (let i = 0; i < selectedInsurances?.length; i++) {
+          const dbConfigLoop = (
+            await firestore().collection('dbConfig').doc('dbConfig').get()
+          ).data();
+
+          await firestore()
+            .collection('insuranceClaims')
+            .add({
+              orderDate: firestore.Timestamp.fromDate(new Date()),
+              insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1,
+              orderId: newOrderId,
+              customerId: customer?.customerId,
+              firstName: customer?.firstName,
+              lastName: customer?.lastName,
+              insuranceCompany: selectedInsurances[i]?.insuranceCompany,
+              policyNo: selectedInsurances[i]?.policyNo,
+              insuranceCost: form?.insuranceCost,
+              claimStatus: 'Unclaimed'
+            });
+
+          await firestore()
+            .collection('dbConfig')
+            .doc('dbConfig')
+            .update({ insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1 });
+        }
+        dispatch(
+          MessageActions.showMessage({
+            message: 'Insurance Claim Saved Successfully...'
+          })
+        );
+        setDisabledState(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -94,7 +178,7 @@ export default function SearchInsuranceDialouge(props) {
       setHits(test);
     };
     fetchData();
-  }, [hits]);
+  }, []);
 
   return !hits ? (
     <></>
@@ -106,9 +190,9 @@ export default function SearchInsuranceDialouge(props) {
       aria-labelledby="simple-dialog-title"
       open={open}>
       <DialogTitle className={classes.title} id="simple-dialog-title">
-        Select Frame
+        Select Insurance
       </DialogTitle>
-      <div className="flex w-full ">
+      <div className="flex flex-col w-full ">
         <TableContainer
           component={Paper}
           className="flex flex-col w-full p-20 rounded-32 shadow-20">
@@ -123,7 +207,7 @@ export default function SearchInsuranceDialouge(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {hits.map((hit) => (
+              {hits.map((hit, index) => (
                 <StyledTableRow key={hit.insuranceId}>
                   <StyledTableCell>{hit?.primaryHolder}</StyledTableCell>
                   <StyledTableCell>{hit?.insuranceCompany}</StyledTableCell>
@@ -136,8 +220,10 @@ export default function SearchInsuranceDialouge(props) {
                       color="secondary"
                       size="large"
                       onClick={() => {
-                        onSubmit(hit);
-                        handleClose();
+                        let newHits = hits;
+                        newHits.splice(index, 1);
+                        setHits([...newHits]);
+                        selectedInsurances.push(hit);
                       }}
                       startIcon={<AddToQueueIcon />}>
                       Select
@@ -148,6 +234,38 @@ export default function SearchInsuranceDialouge(props) {
             </TableBody>
           </Table>
         </TableContainer>
+        <div className="my-10 flex flex-row justify-around">
+          <Fab
+            onClick={() => {
+              if (selectedInsurances?.length) {
+                onSubmitInsurance();
+              } else {
+                setInsuranceError(
+                  'Please select atleast one Insurance Company!'
+                );
+              }
+            }}
+            variant="extended"
+            disabled={disabledState}
+            color="primary"
+            aria-label="add">
+            <AddIcon />
+            Save Insurance Claims!
+          </Fab>
+          <Fab
+            onClick={() => {
+              onSubmit();
+              handleClose();
+            }}
+            variant="extended"
+            disabled={!disabledState}
+            color="primary"
+            aria-label="add">
+            <AddIcon />
+            Place Order
+          </Fab>
+        </div>
+        {insuranceError && <h3 className="p-6 bg-red-100">{insuranceError}</h3>}
       </div>
     </Dialog>
   );

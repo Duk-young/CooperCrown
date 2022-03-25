@@ -48,8 +48,10 @@ const FramesTable = (props) => {
   return !eyeglasses ? (
     <></>
   ) : (
-    <div className="rounded-32">
-      <TableContainer component={Paper}>
+    <div className="flex flex-col h-320 ">
+      <TableContainer
+        className="flex flex-col w-full m-2 rounded-12 shadow-4 overflow-scroll"
+        component={Paper}>
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
             <TableRow>

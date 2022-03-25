@@ -1,84 +1,91 @@
-import React from 'react';
-import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
+import '../Customers/App.mobile.css';
+import '../Customers/Search.css';
+import '../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
+import { firestore } from 'firebase';
+import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
+import { Link, useParams } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
+import algoliasearch from 'algoliasearch/lite';
+import FuseLoading from '@fuse/core/FuseLoading';
+import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import Paper from '@material-ui/core/Paper';
+import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
-import { withRouter } from 'react-router';
-import '../Customers/Search.css';
-import '../Customers/Themes.css';
-import '../Customers/App.mobile.css';
 
 const searchClient = algoliasearch(
   '5AS4E06TDY',
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
-const Hits = ({ hits }) => (
-  <Table aria-label="customized table">
-    <TableHead>
-      <TableRow>
-        <StyledTableCell>Date</StyledTableCell>
-        <StyledTableCell>Order ID</StyledTableCell>
-        <StyledTableCell>Customer ID</StyledTableCell>
-        <StyledTableCell>Name</StyledTableCell>
-        <StyledTableCell>Insurance</StyledTableCell>
-        <StyledTableCell>Policy No.</StyledTableCell>
-        <StyledTableCell>Claim Amount</StyledTableCell>
-        <StyledTableCell>Received Amount</StyledTableCell>
-        <StyledTableCell>Status</StyledTableCell>
-        <StyledTableCell>Options</StyledTableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {hits.map((hit) => (
-        <StyledTableRow key={hit.objectID} hover>
-          <StyledTableCell component="th" scope="row">
-            {moment(hit?.orderDate).format('MM-DD-YYYY')}
-          </StyledTableCell>
-          <StyledTableCell>{hit?.orderId}</StyledTableCell>
-          <StyledTableCell>{hit?.customerId}</StyledTableCell>
-          <StyledTableCell>{`${hit?.firstName} ${hit?.lastName}`}</StyledTableCell>
-          <StyledTableCell>{hit?.insuranceCompany}</StyledTableCell>
-          <StyledTableCell>{hit?.policyNo}</StyledTableCell>
-          <StyledTableCell>{`$ ${hit?.insuranceCost}`}</StyledTableCell>
-          <StyledTableCell>
-            {hit?.receivedAmount ? hit?.receivedAmount : `$ 0`}
-          </StyledTableCell>
-          <StyledTableCell>{hit?.claimStatus}</StyledTableCell>
-          <StyledTableCell>
-            <Link
-              to={`/apps/e-commerce/customers/profile/${hit.customerId}`}
-              className="btn btn-primary">
-              <IconButton aria-label="view">
-                <PageviewOutlinedIcon fontSize="small" />
-              </IconButton>
-            </Link>
-            <Link
-              to={`/apps/e-commerce/customers/${hit.customerId}`}
-              className="btn btn-primary">
-              <IconButton aria-label="edit">
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Link>
-          </StyledTableCell>
-        </StyledTableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
-const CustomHits = connectHits(Hits);
+const CustomHits = connectHits(({ hits, payments }) => {
+  return (
+    <Table aria-label="customized table">
+      <TableHead>
+        <TableRow>
+          <StyledTableCell>Date</StyledTableCell>
+          <StyledTableCell>Order ID</StyledTableCell>
+          <StyledTableCell>Customer ID</StyledTableCell>
+          <StyledTableCell>Name</StyledTableCell>
+          <StyledTableCell>Insurance</StyledTableCell>
+          <StyledTableCell>Policy No.</StyledTableCell>
+          <StyledTableCell>Claim Amount</StyledTableCell>
+          <StyledTableCell>Received Amount</StyledTableCell>
+          <StyledTableCell>Status</StyledTableCell>
+          <StyledTableCell>Options</StyledTableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {hits
+          .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
+          .map((hit) => (
+            <StyledTableRow key={hit.objectID} hover>
+              <StyledTableCell component="th" scope="row">
+                {moment(hit?.orderDate).format('MM-DD-YYYY')}
+              </StyledTableCell>
+              <StyledTableCell>
+                <Link to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}>
+                  <IconButton aria-label="view">{hit?.orderId}</IconButton>
+                </Link>
+              </StyledTableCell>
+              <StyledTableCell>{hit?.customerId}</StyledTableCell>
+              <StyledTableCell>{`${hit?.firstName} ${hit?.lastName}`}</StyledTableCell>
+              <StyledTableCell>{hit?.insuranceCompany}</StyledTableCell>
+              <StyledTableCell>{hit?.policyNo}</StyledTableCell>
+              <StyledTableCell>{`$ ${hit?.insuranceCost}`}</StyledTableCell>
+              <StyledTableCell>
+                ${' '}
+                {payments
+                  .filter(
+                    ({ insuranceClaimId }) =>
+                      insuranceClaimId === hit?.insuranceClaimId
+                  )
+                  .reduce((a, b) => +a + +b.amount, 0)}
+              </StyledTableCell>
+              <StyledTableCell>{hit?.claimStatus}</StyledTableCell>
+              <StyledTableCell>
+                <Link
+                  to={`/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`}
+                  className="btn btn-primary">
+                  <IconButton aria-label="view">
+                    <PageviewOutlinedIcon fontSize="small" />
+                  </IconButton>
+                </Link>
+              </StyledTableCell>
+            </StyledTableRow>
+          ))}
+      </TableBody>
+    </Table>
+  );
+});
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -104,6 +111,28 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const InsuranceContent = (props) => {
+  const [isLoading, setisLoading] = useState(true);
+  const [payments, setPayments] = useState([]);
+  const routeParams = useParams();
+
+  useEffect(() => {
+    setisLoading(true);
+    const id = routeParams.insuranceClaimId;
+    const fetchData = async () => {
+      const queryPayments = await firestore()
+        .collection('insurancePayments')
+        .get();
+      let resultPayments = [];
+      queryPayments.forEach((doc) => {
+        resultPayments.push(doc.data());
+      });
+      setPayments(resultPayments);
+      setisLoading(false);
+    };
+
+    fetchData();
+  }, [routeParams.insuranceClaimId]);
+  if (isLoading) return <FuseLoading />;
   return (
     <div className="flex w-full ">
       <TableContainer
@@ -140,7 +169,7 @@ const InsuranceContent = (props) => {
             </div>
             <div className="flex flex-col flex-1"></div>
           </div>
-          <CustomHits />
+          <CustomHits payments={payments} />
         </InstantSearch>
       </TableContainer>
     </div>
