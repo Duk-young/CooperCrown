@@ -61,24 +61,12 @@ export default function SearchInsuranceDialouge(props) {
   const onSubmitInsurance = async () => {
     try {
       if (form?.orderId) {
+        setDisabledState(true);
         const queryExisting = await firestore()
           .collection('insuranceClaims')
           .where('orderId', '==', Number(form?.orderId))
           .get();
         queryExisting.forEach((doc) => {
-          doc.ref.delete();
-        });
-
-        const dbConfig = (
-          await firestore().collection('dbConfig').doc('dbConfig').get()
-        ).data();
-        let newOrderId = dbConfig?.orderId + 1;
-
-        const queryExisting1 = await firestore()
-          .collection('insuranceClaims')
-          .where('orderId', '==', Number(newOrderId))
-          .get();
-        queryExisting1.forEach((doc) => {
           doc.ref.delete();
         });
 
@@ -112,8 +100,8 @@ export default function SearchInsuranceDialouge(props) {
             message: 'Insurance Claim Saved Successfully...'
           })
         );
-        setDisabledState(true);
       } else {
+        setDisabledState(true);
         const dbConfig = (
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
@@ -157,7 +145,6 @@ export default function SearchInsuranceDialouge(props) {
             message: 'Insurance Claim Saved Successfully...'
           })
         );
-        setDisabledState(true);
       }
     } catch (error) {
       console.log(error);

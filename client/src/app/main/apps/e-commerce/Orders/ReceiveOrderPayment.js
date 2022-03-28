@@ -11,6 +11,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
@@ -100,6 +102,24 @@ export default function ReceiveOrderPayment(props) {
           </FormHelperText>
         </FormControl>
 
+        <FormControl variant="outlined">
+          <Select
+            labelId="demo-simple-select-autowidth-label"
+            defaultValue={form?.paymentMode}
+            value={form?.paymentMode}
+            name="paymentMode"
+            onChange={handleChange}
+            autoWidth>
+            <MenuItem value={'Cash'}>Cash</MenuItem>
+            <MenuItem value={'Credit Card'}>Credit Card</MenuItem>
+            <MenuItem value={'Cheque'}>Cheque</MenuItem>
+            <MenuItem value={'Store Credit / Gift Card'}>
+              Store Credit / Gift Card
+            </MenuItem>
+          </Select>
+          <FormHelperText>Select Payment Method...</FormHelperText>
+        </FormControl>
+
         <TextField
           className="mt-8 mb-16"
           id="extraNotes"
@@ -116,19 +136,49 @@ export default function ReceiveOrderPayment(props) {
         <Fab
           onClick={() => {
             if (form?.amount > 0) {
-              let balance =
-                eyeglasses.reduce((a, b) => +a + +b?.frameRate, 0) +
-                eyeglasses.reduce((a, b) => +a + +b?.lensRate, 0) -
-                +mainForm?.insuranceCost +
-                +mainForm?.additionalCost -
-                +mainForm?.discount -
-                payments.reduce((a, b) => +a + +b.amount, 0);
-              if (balance >= form?.amount) {
-                onSubmit();
+              if (mainForm?.prescriptionType === 'eyeglassesRx') {
+                let balance =
+                  eyeglasses.reduce((a, b) => +a + +b?.frameRate, 0) +
+                  eyeglasses.reduce((a, b) => +a + +b?.lensRate, 0) -
+                  (mainForm?.insuranceCost ? +mainForm?.insuranceCost : 0) +
+                  (mainForm?.additionalCost ? +mainForm?.additionalCost : 0) -
+                  (mainForm?.discount ? +mainForm?.discount : 0) -
+                  payments.reduce((a, b) => +a + +b.amount, 0);
+                if (balance >= form?.amount) {
+                  onSubmit();
+                } else {
+                  setError(
+                    'Balance amount is less than the receiving or Invalid Value!'
+                  );
+                }
+              } else if (mainForm?.prescriptionType === 'contactLensRx') {
+                let balance =
+                  eyeglasses.reduce((a, b) => +a + +b?.contactLensRate, 0) -
+                  (mainForm?.insuranceCost ? +mainForm?.insuranceCost : 0) +
+                  (mainForm?.additionalCost ? +mainForm?.additionalCost : 0) -
+                  (mainForm?.discount ? +mainForm?.discount : 0) -
+                  payments.reduce((a, b) => +a + +b.amount, 0);
+                if (balance >= form?.amount) {
+                  onSubmit();
+                } else {
+                  setError(
+                    'Balance amount is less than the receiving or Invalid Value!'
+                  );
+                }
               } else {
-                setError(
-                  'Balance amount is less than the receiving or Invalid Value!'
-                );
+                let balance =
+                  eyeglasses.reduce((a, b) => +a + +b?.price, 0) -
+                  (mainForm?.insuranceCost ? +mainForm?.insuranceCost : 0) +
+                  (mainForm?.additionalCost ? +mainForm?.additionalCost : 0) -
+                  (mainForm?.discount ? +mainForm?.discount : 0) -
+                  payments.reduce((a, b) => +a + +b.amount, 0);
+                if (balance >= form?.amount) {
+                  onSubmit();
+                } else {
+                  setError(
+                    'Balance amount is less than the receiving or Invalid Value!'
+                  );
+                }
               }
             } else {
               setError('Amount cannot be empty!');

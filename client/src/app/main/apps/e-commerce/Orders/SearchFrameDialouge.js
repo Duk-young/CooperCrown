@@ -64,7 +64,6 @@ const CustomHits = connectHits(({ hits, form, setForm, handleClose }) => {
                       frameColour: hit?.colour,
                       frameRetailRate: hit?.retailRate,
                       frameWsRate: hit?.ws,
-                      lensRate: 80,
                       frameQuantity: hit?.quantity,
                       saleType: undefined
                     });

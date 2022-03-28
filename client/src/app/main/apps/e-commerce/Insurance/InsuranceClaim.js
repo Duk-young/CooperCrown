@@ -1,20 +1,22 @@
 import { firestore } from 'firebase';
+import { useDispatch } from 'react-redux';
+import { useForm } from '@fuse/hooks';
 import { useParams, Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
+import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import React, { useEffect, useState } from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import ReceiveInsurancePayment from './ReceiveInsurancePayment';
-import { useForm } from '@fuse/hooks';
+import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -55,6 +57,7 @@ const InsuranceClaim = (props) => {
   const [open, setOpen] = useState(false);
   const { form, handleChange, setForm } = useForm({});
   const routeParams = useParams();
+  const dispatch = useDispatch();
 
   const handleClose = () => {
     setOpen(false);
@@ -68,6 +71,11 @@ const InsuranceClaim = (props) => {
     };
 
     await ref.set(data);
+    dispatch(
+      MessageActions.showMessage({
+        message: 'Status changed Successfully'
+      })
+    );
   };
 
   useEffect(() => {
@@ -137,6 +145,14 @@ const InsuranceClaim = (props) => {
               <h2>{`Insurance Company: ${form?.insuranceCompany}`}</h2>
               <h2>{`Policy No: ${form?.policyNo}`}</h2>
               <h2>{`Claim Amount : $ ${form?.insuranceCost}`}</h2>
+              <h2>{`Total Payments : $ ${payments.reduce(
+                (a, b) => +a + +b.amount,
+                0
+              )}`}</h2>
+              <h2>{`Balance Due : $ ${
+                +form?.insuranceCost -
+                payments.reduce((a, b) => +a + +b.amount, 0)
+              }`}</h2>
               <div className="flex flex-row justify-around mt-10">
                 <Fab
                   onClick={() => {
@@ -198,6 +214,7 @@ const InsuranceClaim = (props) => {
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Payment Date</StyledTableCell>
+                      <StyledTableCell>Payment Method</StyledTableCell>
                       <StyledTableCell>Amount</StyledTableCell>
                       <StyledTableCell>Extra Notes</StyledTableCell>
                     </TableRow>
@@ -208,6 +225,7 @@ const InsuranceClaim = (props) => {
                         <StyledTableCell>
                           {hit?.paymentDate.toDate().toDateString()}
                         </StyledTableCell>
+                        <StyledTableCell>{hit?.paymentMode}</StyledTableCell>
                         <StyledTableCell>{`$ ${Number(
                           hit?.amount
                         ).toLocaleString()}`}</StyledTableCell>

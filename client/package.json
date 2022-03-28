@@ -77,6 +77,7 @@
     "react-table": "7.0.4",
     "react-text-mask": "5.4.3",
     "react-timezone-picker": "^1.0.8",
+    "react-to-print": "^2.14.4",
     "react-toastify": "^8.1.0",
     "react-virtualized": "9.21.2",
     "react-window": "1.8.5",

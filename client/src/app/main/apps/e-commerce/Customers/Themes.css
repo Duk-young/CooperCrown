@@ -547,3 +547,59 @@ a[class^='ais-'] {
 .MuiPaper-root-480 {
   background-color: white;
 }
+
+.page-header,
+.page-header-space {
+  height: 125px;
+}
+
+.page-header-space {
+  display: none;
+}
+
+.page-footer,
+.page-footer-space {
+  height: 190px;
+}
+
+.page-footer {
+  position: fixed;
+  bottom: 0;
+  display: none;
+}
+.footercopy {
+  color: white;
+}
+
+.page-header {
+  top: 0mm;
+}
+
+.page {
+  page-break-after: always;
+}
+
+@media print {
+  tfoot {
+    display: table-footer-group;
+  }
+  .page-header {
+    position: fixed;
+    padding-right: 35px;
+    padding-top: 10px;
+  }
+  .page-footer {
+    position: fixed;
+    display: flex;
+  }
+  .page-header-space {
+    display: flex;
+  }
+  .page-footer-space {
+    display: flex;
+    height: 190px;
+  }
+  .footercopy {
+    color: white;
+  }
+}

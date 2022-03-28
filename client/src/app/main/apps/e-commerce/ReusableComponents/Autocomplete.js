@@ -4,13 +4,15 @@ import { withRouter } from 'react-router';
 import React, { useState } from 'react';
 
 const CustomAutocomplete = (props) => {
-  const { list, form, handleChange, id, freeSolo, inputType, label } = props;
+  const { list, form, handleChange, id, freeSolo, inputType, label, disabled } =
+    props;
   const [input, setInput] = useState(form[id]);
   return (
     <Autocomplete
       options={[...new Set(list?.map((item) => (item[id] ? item[id] : '')))]}
       getOptionLabel={(option) => option[id] || option}
       id={id}
+      disabled={disabled}
       value={form[id]}
       inputValue={input}
       freeSolo={freeSolo}

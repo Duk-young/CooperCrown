@@ -5,14 +5,24 @@ import React, { useState } from 'react';
 import { firestore } from 'firebase';
 
 const CustomAutocomplete1 = (props) => {
-  const { list, form, handleChange, id, freeSolo, inputType, label, setForm } =
-    props;
+  const {
+    list,
+    form,
+    handleChange,
+    id,
+    freeSolo,
+    inputType,
+    label,
+    setForm,
+    disabled
+  } = props;
   const [input, setInput] = useState(form[id] ? form[id] : '');
   return (
     <Autocomplete
       options={[...new Set(list?.map((item) => (item[id] ? item[id] : '')))]}
       getOptionLabel={(option) => option[id] || option}
       id={id}
+      disabled={disabled}
       value={form[id] ? form[id] : ''}
       inputValue={input}
       freeSolo={freeSolo}

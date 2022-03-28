@@ -11,6 +11,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
@@ -92,6 +94,24 @@ export default function ReceiveInsurancePayment(props) {
           <FormHelperText id="filled-weight-helper-text">
             {error}{' '}
           </FormHelperText>
+        </FormControl>
+
+        <FormControl variant="outlined">
+          <Select
+            labelId="demo-simple-select-autowidth-label"
+            defaultValue={form?.paymentMode}
+            value={form?.paymentMode}
+            name="paymentMode"
+            onChange={handleChange}
+            autoWidth>
+            <MenuItem value={'Cash'}>Cash</MenuItem>
+            <MenuItem value={'Credit Card'}>Credit Card</MenuItem>
+            <MenuItem value={'Cheque'}>Cheque</MenuItem>
+            <MenuItem value={'Store Credit / Gift Card'}>
+              Store Credit / Gift Card
+            </MenuItem>
+          </Select>
+          <FormHelperText>Select Payment Method...</FormHelperText>
         </FormControl>
 
         <TextField

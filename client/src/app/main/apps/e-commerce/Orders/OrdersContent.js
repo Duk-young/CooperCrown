@@ -9,6 +9,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
@@ -48,6 +49,7 @@ const Hits = ({ hits }) => (
         .map((hit) => (
           <StyledTableRow key={hit.objectID} hover>
             <StyledTableCell component="th" scope="row">
+              {hit?.rushOrder && <LabelImportantIcon color="secondary" />}{' '}
               {hit?.orderId}
             </StyledTableCell>
             <StyledTableCell>
