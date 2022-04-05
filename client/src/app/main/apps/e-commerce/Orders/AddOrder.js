@@ -14,6 +14,12 @@ import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import CustomAutocomplete1 from './Autocomplete';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import DiscountAutocomplete from './DiscountAutocomplete';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
@@ -92,9 +98,19 @@ function AddOrder(props) {
   const [openOrderReceipt, setOpenOrderReceipt] = useState(false);
   const [contactLens, setContactLens] = useState([]);
   const [services, setServices] = useState([]);
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const [openAlert1, setOpenAlert1] = React.useState(false);
+
+  const handleCloseAlert1 = () => {
+    setOpenAlert1(false);
+  };
 
   const routeParams = useParams();
   const dispatch = useDispatch();
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
 
   const deleteExistingInsurance = async () => {
     if (form?.orderId) {
@@ -503,20 +519,54 @@ function AddOrder(props) {
         }}
         header={
           <div className="mt-24">
-            <Typography
-              className="normal-case flex items-center sm:mb-12"
-              component={Link}
-              role="button"
-              to="/apps/e-commerce/orders"
-              color="inherit">
+            <IconButton
+              onClick={() => {
+                if (disabledState) {
+                  props.history.push(`/apps/e-commerce/orders`);
+                } else {
+                  setOpenAlert1(true);
+                }
+              }}>
               <Icon className="text-20">arrow_back</Icon>
-              <span className="mx-4">Orders</span>
-            </Typography>
+              <span className="mx-4 text-12">Orders</span>
+            </IconButton>
             <div className="flex flex-row">
               <Icon className="text-20 mt-4">listalt</Icon>
               <Typography className="text-16 pl-16 sm:text-20 truncate">
                 New Order
               </Typography>
+            </div>
+            <div>
+              <Dialog
+                fullWidth
+                maxWidth="sm"
+                open={openAlert1}
+                onClose={handleCloseAlert1}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">
+                  <h2>Discard Changes?</h2>
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    All the Changes will be lost. Are you sure?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseAlert1} color="secondary">
+                    Disagree
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleCloseAlert1();
+                      props.history.push(`/apps/e-commerce/orders`);
+                    }}
+                    color="secondary"
+                    autoFocus>
+                    Agree
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </div>
           </div>
         }
@@ -1664,15 +1714,50 @@ function AddOrder(props) {
                           Add Frame
                         </Fab>
 
+                        <div>
+                          <Dialog
+                            fullWidth
+                            maxWidth="sm"
+                            open={openAlert}
+                            onClose={handleCloseAlert}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description">
+                            <DialogTitle id="alert-dialog-title" color="white">
+                              {'Save Changes?'}
+                            </DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description">
+                                Are you sure?
+                              </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button
+                                onClick={handleCloseAlert}
+                                color="secondary">
+                                Disagree
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  handleCloseAlert();
+                                  if (form?.insuranceCost > 0) {
+                                    setOpen(true);
+                                  } else {
+                                    deleteExistingInsurance();
+                                    onSubmit();
+                                  }
+                                }}
+                                color="secondary"
+                                autoFocus>
+                                Agree
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </div>
+
                         <Fab
                           onClick={() => {
                             if (eyeglasses.length) {
-                              if (form?.insuranceCost > 0) {
-                                setOpen(true);
-                              } else {
-                                deleteExistingInsurance();
-                                onSubmit();
-                              }
+                              setOpenAlert(true);
                             } else {
                               toast.error('Please Add atleast One Pair', {
                                 position: 'bottom-right',
@@ -2487,14 +2572,50 @@ function AddOrder(props) {
                           Add Contact Lens
                         </Fab>
 
+                        <div>
+                          <Dialog
+                            fullWidth
+                            maxWidth="sm"
+                            open={openAlert}
+                            onClose={handleCloseAlert}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description">
+                            <DialogTitle id="alert-dialog-title" color="white">
+                              {'Save Changes?'}
+                            </DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description">
+                                Are you sure?
+                              </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button
+                                onClick={handleCloseAlert}
+                                color="secondary">
+                                Disagree
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  handleCloseAlert();
+                                  if (form?.insuranceCost > 0) {
+                                    setOpen(true);
+                                  } else {
+                                    deleteExistingInsurance();
+                                    onSubmit();
+                                  }
+                                }}
+                                color="secondary"
+                                autoFocus>
+                                Agree
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </div>
+
                         <Fab
                           onClick={() => {
                             if (eyeglasses.length) {
-                              if (form?.insuranceCost > 0) {
-                                setOpen(true);
-                              } else {
-                                onSubmit();
-                              }
+                              setOpenAlert(true);
                             } else {
                               toast.error('Please Add atleast One Pair', {
                                 position: 'bottom-right',

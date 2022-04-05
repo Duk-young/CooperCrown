@@ -1,13 +1,37 @@
-import FusePageCarded from '@fuse/core/FusePageCarded';
 import AddPrescription from './AddPrescription';
-import withReducer from 'app/store/withReducer';
-import Typography from '@material-ui/core/Typography';
+import CustomAlert from '../ReusableComponents/CustomAlert';
+import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
-import { Link } from 'react-router-dom';
-import React from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
+import Typography from '@material-ui/core/Typography';
+import { useParams } from 'react-router-dom';
+import withReducer from 'app/store/withReducer';
+import { firestore } from 'firebase';
 
-function Prescriptions() {
+function Prescriptions(props) {
+  const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
+  const [fetchedId, setFetchedId] = useState(0);
+  const routeParams = useParams();
+
+  useEffect(() => {
+    if (routeParams.prescriptionId) {
+      const prescriptionId = routeParams.prescriptionId;
+      const fetchDetails = async () => {
+        const queryEditPrescription = await firestore()
+          .collection('prescriptions')
+          .where('prescriptionId', '==', Number(prescriptionId))
+          .limit(1)
+          .get();
+
+        let resultEditPrescription = queryEditPrescription.docs[0].data();
+        setFetchedId(resultEditPrescription?.customerId);
+      };
+      fetchDetails();
+    }
+  }, [routeParams.customerId]);
+
   return (
     <FusePageCarded
       classes={{
@@ -16,21 +40,37 @@ function Prescriptions() {
       }}
       header={
         <div className="mt-24">
-          <Typography
-            className="normal-case flex items-center sm:mb-12"
-            component={Link}
-            role="button"
-            to="/apps/e-commerce/customers"
-            color="inherit">
+          <IconButton
+            onClick={() => {
+              setOpenAlertOnBack(true);
+            }}>
             <Icon className="text-20">arrow_back</Icon>
-            <span className="mx-4">Customers</span>
-          </Typography>
+            <span className="mx-4 text-12">Customer's Profile</span>
+          </IconButton>
+
           <div className="flex flex-row">
             <Icon className="text-20 mt-4">listalt</Icon>
             <Typography className="text-16 pl-16 sm:text-20 truncate">
               Prescription Details
             </Typography>
           </div>
+          <CustomAlert
+            open={openAlertOnBack}
+            setOpen={setOpenAlertOnBack}
+            text1="Discard Changes?"
+            text2="All the changes will be lost. Are you sure?"
+            customFunction={() => {
+              if (routeParams.customerId) {
+                props.history.push(
+                  `/apps/e-commerce/customers/profile/${routeParams.customerId}`
+                );
+              } else {
+                props.history.push(
+                  `/apps/e-commerce/customers/profile/${fetchedId}`
+                );
+              }
+            }}
+          />
         </div>
       }
       content={<AddPrescription />}

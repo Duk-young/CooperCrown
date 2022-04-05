@@ -95,29 +95,6 @@ const AddExam = (props) => {
 
   const onSubmit = async () => {
     if (form.examId) {
-      setisLoading(true);
-
-      // try {
-      //   const ref = firestore().collection('customers').doc(form?.id);
-
-      //   let data = {
-      //     ...form,
-      //     dob: firestore.Timestamp.fromDate(form?.dob)
-      //   };
-      //   delete data.id;
-      //   await ref.set(data);
-
-      //   dispatch(
-      //     MessageActions.showMessage({
-      //       message: 'Customer updated successfully'
-      //     })
-      //   );
-      //   props.history.push('/apps/e-commerce/customers');
-      // } catch (error) {
-      //   console.log(error);
-      // }
-
-      setisLoading(false);
     } else {
       setisLoading(true);
 
@@ -145,6 +122,11 @@ const AddExam = (props) => {
           .collection('dbConfig')
           .doc('dbConfig')
           .update({ examId: examId?.examId + 1 });
+
+        await firestore()
+          .collection('customers')
+          .doc(customer?.id)
+          .update({ medicalHistory: customer?.medicalHistory });
         dispatch(
           MessageActions.showMessage({
             message: 'Exam Details saved to firebase'
@@ -183,7 +165,12 @@ const AddExam = (props) => {
             multiline
             rows={6}
             value={customer?.medicalHistory}
-            onChange={handleChange}
+            onChange={(e) => {
+              setCustomer({
+                ...customer,
+                medicalHistory: e.target.value
+              });
+            }}
             name={'medicalHistory'}
             variant="outlined"
           />
@@ -3179,33 +3166,33 @@ const AddExam = (props) => {
           </div>
 
           <div className="flex flex-row">
-            <div className="flex-1 flex flex-row">
-              <FormControl component="fieldset">
-                <RadioGroup
-                  className="pl-32"
-                  row
-                  aria-label="fovealLightReflex"
-                  name="fovealLightReflex"
-                  value={form?.fovealLightReflex}
-                  onChange={handleChange}>
-                  <FormControlLabel
-                    value="yes"
+            <div className="flex-1 flex flex-row justify-around">
+              <FormControlLabel
+                control={
+                  <GreenCheckbox
+                    checked={form?.fovealLightReflexOd}
+                    onChange={handleChange}
                     disabled={disabledState}
-                    control={<Radio />}
-                    label="Yes"
+                    name="fovealLightReflexOd"
                   />
-                  <h3 className="font-700 text-center pl-48 pt-8">
-                    Foveal Light Reflex{' '}
-                  </h3>
-                  <FormControlLabel
-                    className="pl-32"
-                    value="no"
+                }
+                label="Yes"
+              />
+              <h3 className="font-700 text-center pt-10">
+                Foveal Light Reflex{' '}
+              </h3>
+
+              <FormControlLabel
+                control={
+                  <GreenCheckbox
+                    checked={form?.fovealLightReflexOs}
+                    onChange={handleChange}
                     disabled={disabledState}
-                    control={<Radio />}
-                    label="No"
+                    name="fovealLightReflexOs"
                   />
-                </RadioGroup>
-              </FormControl>
+                }
+                label="Yes"
+              />
             </div>
           </div>
 
@@ -3596,7 +3583,7 @@ const AddExam = (props) => {
             <h2 className="p-6 font-700">Discussed:</h2>
           </div>
 
-          <div className="flex flex-row justify-around">
+          <div className="flex flex-row justify-between">
             <FormControlLabel
               control={
                 <GreenCheckbox
@@ -3654,7 +3641,7 @@ const AddExam = (props) => {
             />
           </div>
 
-          <div className="flex flex-row justify-around">
+          <div className="flex flex-row justify-between">
             <FormControlLabel
               control={
                 <GreenCheckbox

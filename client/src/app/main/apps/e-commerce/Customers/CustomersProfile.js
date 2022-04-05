@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
-import Icon from '@material-ui/core/Icon';
-import { withRouter } from 'react-router';
 import { useParams, Link } from 'react-router-dom';
-import FusePageCarded from '@fuse/core/FusePageCarded';
+import { withRouter } from 'react-router';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
+import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import EditIcon from '@material-ui/icons/Edit';
+import Fab from '@material-ui/core/Fab';
+import FuseLoading from '@fuse/core/FuseLoading';
+import FusePageCarded from '@fuse/core/FusePageCarded';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import Paper from '@material-ui/core/Paper';
+import React, { useEffect, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
-import Button from '@material-ui/core/Button';
-import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import Typography from '@material-ui/core/Typography';
 
 const StyledTableCell = withStyles((theme) => ({
@@ -59,6 +60,7 @@ const CustomerProfile = (props) => {
   const [insurances, setInsurances] = useState([]);
   const [prescriptionType, setPrescriptionType] = useState('eyeglassesRx');
   const [filteredPrescription, setFilteredPrescription] = useState([]);
+  const [familyMembers, setFamilyMembers] = useState([]);
   const routeParams = useParams();
 
   useEffect(() => {
@@ -75,6 +77,15 @@ const CustomerProfile = (props) => {
       resultCustomer.dob = resultCustomer.dob && resultCustomer.dob.toDate();
       resultCustomer.id = queryCustomer.docs[0].id;
       setCustomer(resultCustomer);
+      const queryFamilyMembers = await firestore()
+        .collection('customers')
+        .where('family', '==', resultCustomer?.family)
+        .get();
+      let resultFamilyMembers = [];
+      queryFamilyMembers.forEach((doc) => {
+        resultFamilyMembers.push(doc.data());
+      });
+      setFamilyMembers(resultFamilyMembers);
     };
 
     const fetchExams = async () => {
@@ -100,6 +111,12 @@ const CustomerProfile = (props) => {
       });
       setPrescription(resultPrescription);
 
+      let eyeglassesRx = resultPrescription.filter(
+        (word) => word.prescriptionType === 'eyeglassesRx'
+      );
+      setFilteredPrescription(eyeglassesRx);
+      setPrescriptionType('eyeglassesRx');
+
       const queryInsurance = await firestore()
         .collection('insurances')
         .where('customerId', '==', Number(id))
@@ -110,6 +127,7 @@ const CustomerProfile = (props) => {
         resultInsurance.push(doc.data());
       });
       setInsurances(resultInsurance);
+
       setisLoading(false);
     };
 
@@ -161,9 +179,52 @@ const CustomerProfile = (props) => {
               <h2>{`Phone 2: ${customer?.phone2}`}</h2>
               <h2>{`Email: ${customer?.email}`}</h2>
               <h2>{`Other: ${customer?.other}`}</h2>
+              <Fab
+                onClick={() => {
+                  props.history.push(
+                    `/apps/e-commerce/customers/${customer?.customerId}`
+                  );
+                }}
+                variant="extended"
+                color="secondary"
+                aria-label="add">
+                <IconButton aria-label="edit">
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                Edit
+              </Fab>
             </div>
             <div className="p-12 ml-10 w-1/2 h-auto  rounded-20 shadow-10">
-              <h1>Family Tree to be implemented Soon</h1>
+              <h1>Family Tree:</h1>
+              <div className="flex flex-col w-full h-288">
+                <TableContainer
+                  className="flex flex-col w-full"
+                  component={Paper}>
+                  <Table stickyHeader aria-label="customized table">
+                    <TableHead>
+                      <TableRow style={{ height: 10 }}>
+                        <StyledTableCell>Sr#</StyledTableCell>
+                        <StyledTableCell>Name</StyledTableCell>
+
+                        <StyledTableCell>ID</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {familyMembers
+                        .sort((a, b) => (a.customerId > b.customerId ? -1 : 1))
+                        .map((row, index) => (
+                          <StyledTableRow
+                            key={row.customerId}
+                            style={{ height: 10 }}>
+                            <StyledTableCell>{index + 1}</StyledTableCell>
+                            <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
+                            <StyledTableCell>{row?.customerId}</StyledTableCell>
+                          </StyledTableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
             </div>
           </div>
 

@@ -1,27 +1,27 @@
-import React from 'react';
-import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
+// import FuseLoading from '@fuse/core/FuseLoading';
+import './App.mobile.css';
+import './Search.css';
+import './Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
-import { withStyles } from '@material-ui/core/styles';
-import moment from 'moment';
+import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import { withStyles } from '@material-ui/core/styles';
+import AddToQueueIcon from '@material-ui/icons/AddToQueue';
+import algoliasearch from 'algoliasearch/lite';
+import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+import moment from 'moment';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import Paper from '@material-ui/core/Paper';
+import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
-import AddToQueueIcon from '@material-ui/icons/AddToQueue';
-// import FuseLoading from '@fuse/core/FuseLoading';
-import { withRouter } from 'react-router';
-import './Search.css';
-import './Themes.css';
-import './App.mobile.css';
 
 const searchClient = algoliasearch(
   '5AS4E06TDY',
@@ -54,11 +54,11 @@ const Hits = ({ hits }) => (
           <StyledTableCell>{hit.firstName}</StyledTableCell>
           <StyledTableCell>{hit.lastName}</StyledTableCell>
           <StyledTableCell>
-            {moment(hit.dob).format('DD MMM YYYY')}
+            {moment(hit.dob).format('MM-DD-YYYY')}
           </StyledTableCell>
           <StyledTableCell>
             {hit.lastExam
-              ? moment(hit?.lastExam).format('DD MMM YYYY')
+              ? moment(hit?.lastExam).format('MM-DD-YYYY')
               : 'No Exam'}
           </StyledTableCell>
           <StyledTableCell>{hit.gender}</StyledTableCell>

@@ -69,6 +69,11 @@ const AddAppointments = (props) => {
         .collection('dbConfig')
         .doc('dbConfig')
         .update({ appointmentId: appointmentId?.appointmentId + 1 });
+
+      await firestore()
+        .collection('customers')
+        .doc(customer?.id)
+        .update({ medicalHistory: customer?.medicalHistory });
       dispatch(
         MessageActions.showMessage({
           message: 'Appointment Saved Successfully'
@@ -151,8 +156,13 @@ const AddAppointments = (props) => {
             label="Medical History"
             multiline
             rows={15}
-            value={form?.medicalHistory}
-            onChange={handleChange}
+            value={customer?.medicalHistory}
+            onChange={(e) => {
+              setCustomer({
+                ...customer,
+                medicalHistory: e.target.value
+              });
+            }}
             name={'medicalHistory'}
             variant="outlined"
           />

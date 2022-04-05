@@ -1,27 +1,28 @@
-import FusePageCarded from '@fuse/core/FusePageCarded';
-import withReducer from 'app/store/withReducer';
-import Typography from '@material-ui/core/Typography';
-import Icon from '@material-ui/core/Icon';
-import { useForm } from '@fuse/hooks';
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import { v4 as uuidv4 } from 'uuid';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 import { Fab } from '@material-ui/core';
-import { red } from '@material-ui/core/colors';
-import { makeStyles } from '@material-ui/core/styles';
-import FuseLoading from '@fuse/core/FuseLoading';
-import { useDispatch } from 'react-redux';
+import { firestore, storage } from 'firebase';
 import { Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import { red } from '@material-ui/core/colors';
+import { useDispatch } from 'react-redux';
+import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import AddIcon from '@material-ui/icons/Add';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import FuseLoading from '@fuse/core/FuseLoading';
+import FusePageCarded from '@fuse/core/FusePageCarded';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 import React, { useEffect, useState } from 'react';
 import reducer from '../store/reducers';
-import { firestore, storage } from 'firebase';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import withReducer from 'app/store/withReducer';
+import PieChart from '../Reports/PieChart';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {}
@@ -201,7 +202,7 @@ function AddInsurance(props) {
           <></>
         ) : (
           <FuseAnimate animation="transition.slideRightIn" delay={500}>
-            <div className="p-16 sm:p-24 w-full shadow-10 rounded-20 ">
+            <div className="p-16 sm:p-24 w-full">
               <h1 className="underline p-10">Insurance Details</h1>
 
               <div className="flex flex-row px-60">
@@ -354,6 +355,15 @@ function AddInsurance(props) {
                     </label>
                   </div>
                 </div>
+              </div>
+              <div className="widget flex w-full sm:w-1/2 p-12">
+                <PieChart criteria="ethnicity" />
+              </div>
+              <div className="widget flex w-full sm:w-1/2 p-12">
+                <PieChart criteria="state" />
+              </div>
+              <div className="widget flex w-full sm:w-1/2 p-12">
+                <PieChart criteria="gender" />
               </div>
             </div>
           </FuseAnimate>

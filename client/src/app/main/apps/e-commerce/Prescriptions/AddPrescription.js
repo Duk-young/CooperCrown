@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import Button from '@material-ui/core/Button';
+import CustomAlert from '../ReusableComponents/CustomAlert';
 
 const AddPrescription = (props) => {
   const [isLoading, setisLoading] = useState(true);
@@ -21,6 +22,7 @@ const AddPrescription = (props) => {
   const { form, handleChange, setForm } = useForm(null);
   const [filteredPrescription, setFilteredPrescription] = useState([]);
   const [prescription, setPrescription] = useState([]);
+  const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
   const routeParams = useParams();
   const dispatch = useDispatch();
 
@@ -792,10 +794,21 @@ const AddPrescription = (props) => {
                     className="whitespace-no-wrap normal-case"
                     variant="contained"
                     color="secondary"
-                    onClick={!form ? undefined : onSubmit}>
+                    onClick={() => {
+                      if (form) {
+                        setOpenAlertOnSave(true);
+                      }
+                    }}>
                     Save Eyeglasses Rx
                   </Button>
                 </FuseAnimate>
+                <CustomAlert
+                  open={openAlertOnSave}
+                  setOpen={setOpenAlertOnSave}
+                  text1="Save Changes?"
+                  text2="Are you sure?"
+                  customFunction={onSubmit}
+                />
               </div>
             </div>
           </FuseAnimate>
@@ -1411,9 +1424,20 @@ const AddPrescription = (props) => {
                   className="whitespace-no-wrap normal-case"
                   variant="contained"
                   color="secondary"
-                  onClick={!form ? undefined : onSubmit}>
+                  onClick={() => {
+                    if (form) {
+                      setOpenAlertOnSave(true);
+                    }
+                  }}>
                   Save Contact Lens Rx
                 </Button>
+                <CustomAlert
+                  open={openAlertOnSave}
+                  setOpen={setOpenAlertOnSave}
+                  text1="Save Changes?"
+                  text2="Are you sure?"
+                  customFunction={onSubmit}
+                />
               </div>
             </div>
           </FuseAnimate>
@@ -1442,9 +1466,20 @@ const AddPrescription = (props) => {
                   className="whitespace-no-wrap normal-case"
                   variant="contained"
                   color="secondary"
-                  onClick={!form ? undefined : onSubmit}>
+                  onClick={() => {
+                    if (form) {
+                      setOpenAlertOnSave(true);
+                    }
+                  }}>
                   Save Medication Rx
                 </Button>
+                <CustomAlert
+                  open={openAlertOnSave}
+                  setOpen={setOpenAlertOnSave}
+                  text1="Save Changes?"
+                  text2="Are you sure?"
+                  customFunction={onSubmit}
+                />
               </div>
             </div>
           </FuseAnimate>

@@ -172,6 +172,18 @@ function ProductsTable(props) {
                     </TableCell>
 
                     <TableCell component="th" scope="row">
+                      {n.email}
+                    </TableCell>
+
+                    <TableCell component="th" scope="row">
+                      {n.phoneNo}
+                    </TableCell>
+
+                    <TableCell component="th" scope="row">
+                      {n.faxNo}
+                    </TableCell>
+
+                    <TableCell component="th" scope="row">
                       {n.zipCode}
                     </TableCell>
                     <TableCell component="th" scope="row">

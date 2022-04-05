@@ -1,29 +1,37 @@
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { green } from '@material-ui/core/colors';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import { useForm } from '@fuse/hooks';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import FuseLoading from '@fuse/core/FuseLoading';
 import { Fab } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { v4 as uuidv4 } from 'uuid';
 import { firestore, storage } from 'firebase';
+import { green } from '@material-ui/core/colors';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
+import { useForm } from '@fuse/hooks';
+import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import AddIcon from '@material-ui/icons/Add';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import CustomAlert from '../../ReusableComponents/CustomAlert';
+import DateFnsUtils from '@date-io/date-fns';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import FuseLoading from '@fuse/core/FuseLoading';
+import FusePageCarded from '@fuse/core/FusePageCarded';
+import Grid from '@material-ui/core/Grid';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import React, { useState, useEffect } from 'react';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import Grid from '@material-ui/core/Grid';
-import FusePageCarded from '@fuse/core/FusePageCarded';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import React, { useState, useEffect } from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 const GreenCheckbox = withStyles({
   root: {
@@ -46,6 +54,12 @@ function AddFrames(props) {
   const { form, handleChange, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
   const routeParams = useParams();
+  const [openAlert, setOpenAlert] = useState(false);
+  const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
 
   useEffect(() => {
     const id = routeParams.frameId;
@@ -69,7 +83,7 @@ function AddFrames(props) {
       setForm({});
       setisLoading(false);
     }
-  }, [routeParams, setForm]);
+  }, []);
 
   if (isLoading) {
     return <FuseLoading />;
@@ -170,8 +184,54 @@ function AddFrames(props) {
         root: classes.layoutRoot
       }}
       header={
-        <div className="py-24">
-          <h1>Frames Details</h1>
+        <div className="mt-24">
+          <IconButton
+            onClick={() => {
+              setOpenAlert(true);
+            }}>
+            <Icon className="text-20">arrow_back</Icon>
+            <span className="mx-4 text-12">Customers</span>
+          </IconButton>
+
+          <div className="flex flex-row">
+            <Icon className="text-20 mt-4">listalt</Icon>
+            <Typography className="text-16 pl-16 sm:text-20 truncate">
+              Frame's Details
+            </Typography>
+          </div>
+
+          <div>
+            <Dialog
+              fullWidth
+              maxWidth="sm"
+              open={openAlert}
+              onClose={handleCloseAlert}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description">
+              <DialogTitle id="alert-dialog-title">
+                <h2>Discard Changes?</h2>
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  All the Changes will be lost. Are you sure?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseAlert} color="secondary">
+                  Disagree
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleCloseAlert();
+                    props.history.push(`/apps/inventory`);
+                  }}
+                  color="secondary"
+                  autoFocus>
+                  Agree
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         </div>
       }
       contentToolbar={
@@ -497,10 +557,21 @@ function AddFrames(props) {
                 className="whitespace-no-wrap normal-case"
                 variant="contained"
                 color="secondary"
-                onClick={!form ? undefined : onSubmit}>
+                onClick={() => {
+                  if (form) {
+                    setOpenAlertOnSave(true);
+                  }
+                }}>
                 Save Details
               </Button>
             </FuseAnimate>
+            <CustomAlert
+              open={openAlertOnSave}
+              setOpen={setOpenAlertOnSave}
+              text1="Save Changes?"
+              text2="Are you sure?"
+              customFunction={onSubmit}
+            />
           </div>
         )
       }

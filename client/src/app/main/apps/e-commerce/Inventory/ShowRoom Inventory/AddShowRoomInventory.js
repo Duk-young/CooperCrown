@@ -27,7 +27,10 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import React, { useState, useEffect } from 'react';
 import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
+import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CustomAlert from '../../ReusableComponents/CustomAlert';
 
 const GreenCheckbox = withStyles({
   root: {
@@ -51,6 +54,8 @@ function AddShowRoomInventory(props) {
   const { form, handleChange, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
   const [showRooms, setShowRooms] = useState();
+  const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
+  const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
   const routeParams = useParams();
 
   useEffect(() => {
@@ -193,8 +198,30 @@ function AddShowRoomInventory(props) {
         root: classes.layoutRoot
       }}
       header={
-        <div className="py-24">
-          <h1>Show Room Inventory Details</h1>
+        <div className="mt-24">
+          <IconButton
+            onClick={() => {
+              setOpenAlertOnBack(true);
+            }}>
+            <Icon className="text-20">arrow_back</Icon>
+            <span className="mx-4 text-12">Inventory</span>
+          </IconButton>
+
+          <div className="flex flex-row">
+            <Icon className="text-20 mt-4">listalt</Icon>
+            <Typography className="text-16 pl-16 sm:text-20 truncate">
+              Showroom Inventory Details
+            </Typography>
+          </div>
+          <CustomAlert
+            open={openAlertOnBack}
+            setOpen={setOpenAlertOnBack}
+            text1="Discard Changes?"
+            text2="All the changes will be lost. Are you sure?"
+            customFunction={() => {
+              props.history.push('/apps/inventory');
+            }}
+          />
         </div>
       }
       contentToolbar={
@@ -541,10 +568,21 @@ function AddShowRoomInventory(props) {
                 className="whitespace-no-wrap normal-case"
                 variant="contained"
                 color="secondary"
-                onClick={!form ? undefined : onSubmit}>
+                onClick={() => {
+                  if (form) {
+                    setOpenAlertOnSave(true);
+                  }
+                }}>
                 Save Details
               </Button>
             </FuseAnimate>
+            <CustomAlert
+              open={openAlertOnSave}
+              setOpen={setOpenAlertOnSave}
+              text1="Save Changes?"
+              text2="Are you sure?"
+              customFunction={onSubmit}
+            />
           </div>
         )
       }

@@ -45,6 +45,27 @@ const rows = [
     sort: true
   },
   {
+    id: 'email',
+    align: 'left',
+    disablePadding: false,
+    label: 'Email',
+    sort: true
+  },
+  {
+    id: 'phoneNo',
+    align: 'left',
+    disablePadding: false,
+    label: 'Phone No',
+    sort: true
+  },
+  {
+    id: 'faxNo',
+    align: 'left',
+    disablePadding: false,
+    label: 'Fax No',
+    sort: true
+  },
+  {
     id: 'Zip-Code',
     align: 'left',
     disablePadding: false,

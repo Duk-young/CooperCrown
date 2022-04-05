@@ -11,12 +11,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Confirmation = (props) => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+export default function CustomAlert(props) {
+  const { open, setOpen, text1, text2, customFunction } = props;
 
   const handleClose = () => {
     setOpen(false);
@@ -24,10 +20,9 @@ const Confirmation = (props) => {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Slide in alert dialog
-      </Button>
       <Dialog
+        fullWidth
+        maxWidth="sm"
         open={open}
         TransitionComponent={Transition}
         keepMounted
@@ -35,23 +30,27 @@ const Confirmation = (props) => {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description">
         <DialogTitle id="alert-dialog-slide-title">
-          {"Use Google's location service?"}
+          <h2>{text1}</h2>
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            {text2}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="secondary">
             Disagree
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button
+            onClick={() => {
+              handleClose();
+              customFunction();
+            }}
+            color="secondary">
             Agree
           </Button>
         </DialogActions>
       </Dialog>
     </div>
   );
-};
+}

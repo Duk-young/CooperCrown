@@ -196,7 +196,7 @@ function NewShowRoom(props) {
             {tabValue === 0 && (
               <div>
                 <TextField
-                  className="mt-8 mb-16"
+                  className="mt-8 "
                   error={form.locationName === ''}
                   required
                   label="Location Name"
@@ -210,7 +210,7 @@ function NewShowRoom(props) {
                 />
 
                 <TextField
-                  className="mt-8 mb-16"
+                  className="mt-8 "
                   id="locationAddress"
                   name="locationAddress"
                   onChange={handleChange}
@@ -223,7 +223,7 @@ function NewShowRoom(props) {
                   fullWidth
                 />
                 <TextField
-                  className="mt-8 mb-16"
+                  className="mt-8 "
                   required
                   label="City"
                   type="text"
@@ -235,7 +235,7 @@ function NewShowRoom(props) {
                   fullWidth
                 />
                 <TextField
-                  className="mt-8 mb-16"
+                  className="mt-8 "
                   required
                   label="State"
                   id="State"
@@ -246,8 +246,43 @@ function NewShowRoom(props) {
                   variant="outlined"
                   fullWidth
                 />
+                <div className="flex flex-row justify-between w-full">
+                  <TextField
+                    className="mt-8  pr-4"
+                    required
+                    label="Phone No."
+                    id="phoneNo"
+                    name="phoneNo"
+                    value={form.phoneNo}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <TextField
+                    className="mt-8 "
+                    required
+                    label="Fax No."
+                    id="faxNo"
+                    name="faxNo"
+                    value={form.faxNo}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                </div>
                 <TextField
-                  className="mt-8 mb-16"
+                  className="mt-8 "
+                  required
+                  label="Email"
+                  id="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                />
+                <TextField
+                  className="mt-8 "
                   required
                   label="Zip Code"
                   id="zipCode"
@@ -258,7 +293,28 @@ function NewShowRoom(props) {
                   variant="outlined"
                   fullWidth
                 />
-                {/*  */}
+                <TextField
+                  className="mt-8 "
+                  required
+                  label="Other 1"
+                  id="other1"
+                  name="other1"
+                  value={form.other1}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                />
+                <TextField
+                  className="mt-8 "
+                  required
+                  label="Other 2"
+                  id="other2"
+                  name="other2"
+                  value={form.other2}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                />
               </div>
             )}
           </div>
