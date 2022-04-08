@@ -53,10 +53,15 @@ const CustomHits = connectHits(({ hits, payments }) => {
               </StyledTableCell>
               <StyledTableCell>
                 <Link to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}>
-                  <IconButton aria-label="view">{hit?.orderId}</IconButton>
+                  <h3>{hit?.orderId}</h3>
                 </Link>
               </StyledTableCell>
-              <StyledTableCell>{hit?.customerId}</StyledTableCell>
+              <StyledTableCell>
+                <Link
+                  to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
+                  <h3>{hit?.customerId}</h3>
+                </Link>
+              </StyledTableCell>
               <StyledTableCell>{`${hit?.firstName} ${hit?.lastName}`}</StyledTableCell>
               <StyledTableCell>{hit?.insuranceCompany}</StyledTableCell>
               <StyledTableCell>{hit?.policyNo}</StyledTableCell>

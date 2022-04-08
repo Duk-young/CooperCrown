@@ -98,8 +98,24 @@ function AddOrder(props) {
   const [openOrderReceipt, setOpenOrderReceipt] = useState(false);
   const [contactLens, setContactLens] = useState([]);
   const [services, setServices] = useState([]);
-  const [openAlert, setOpenAlert] = React.useState(false);
-  const [openAlert1, setOpenAlert1] = React.useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [openAlert1, setOpenAlert1] = useState(false);
+  const [lensTypeNames, setLensTypeNames] = useState(false);
+
+  const handleStatusChange = async (e) => {
+    const ref = firestore().collection('orders').doc(form?.id);
+    let data = {
+      ...form,
+      orderStatus: e.target.value
+    };
+
+    await ref.set(data);
+    dispatch(
+      MessageActions.showMessage({
+        message: 'Status changed Successfully'
+      })
+    );
+  };
 
   const handleCloseAlert1 = () => {
     setOpenAlert1(false);
@@ -128,12 +144,12 @@ function AddOrder(props) {
     const lensPrices = (
       await firestore().collection('lensPrice').doc('lensPrice').get()
     ).data();
-    if (selectedFrame?.lensType) {
+    if (selectedFrame?.lensTypeName) {
       if (
         selectedFrame?.eyeglassesSphereOd &&
         selectedFrame?.eyeglassesCylinderOd
       ) {
-        lensPrices[selectedFrame?.lensType].map((row) => {
+        lensPrices[selectedFrame?.lensTypeName].map((row) => {
           if (row?.id === Number(selectedFrame?.eyeglassesSphereOd)) {
             if (row[selectedFrame?.eyeglassesCylinderOd]) {
               setSelectedFrame({
@@ -317,7 +333,7 @@ function AddOrder(props) {
             customerId: customer?.customerId,
             firstName: customer?.firstName,
             lastName: customer?.lastName,
-            orderStatus: 'In Process',
+            orderStatus: 'Order Received',
             eyeglasses: eyeglasses
           });
 
@@ -437,6 +453,16 @@ function AddOrder(props) {
           resultServices.push(doc.data());
         });
         setServices(resultServices);
+
+        const lensPrice = (
+          await firestore().collection('lensPrice').doc('lensPrice').get()
+        ).data();
+        var keys = Object.keys(lensPrice);
+        let lensTypeNames = [];
+        keys.forEach((row) => {
+          lensTypeNames.push({ lensTypeName: row.replace(/"/g, '') });
+        });
+        setLensTypeNames(lensTypeNames);
         setisLoading(false);
       };
       fetchDetails();
@@ -502,6 +528,16 @@ function AddOrder(props) {
           resultServices.push(doc.data());
         });
         setServices(resultServices);
+
+        const lensPrice = (
+          await firestore().collection('lensPrice').doc('lensPrice').get()
+        ).data();
+        var keys = Object.keys(lensPrice);
+        let lensTypeNames = [];
+        keys.forEach((row) => {
+          lensTypeNames.push({ lensTypeName: row.replace(/"/g, '') });
+        });
+        setLensTypeNames(lensTypeNames);
 
         setisLoading(false);
       };
@@ -582,6 +618,48 @@ function AddOrder(props) {
                 <h2>{`Email: ${customer.email}`}</h2>
                 <h2>{`DOB: ${customer?.dob?.toDateString()}`}</h2>
                 <h2>{`Sex: ${customer.gender}`}</h2>
+
+                {disabledState && (
+                  <div className="flex flex-row justify-center">
+                    <Typography
+                      className="username text-16 whitespace-no-wrap self-center font-700 underline"
+                      color="inherit">
+                      Order Status
+                    </Typography>
+                    <FormControl className="ml-32 ">
+                      <Select
+                        labelId="demo-simple-select-autowidth-label"
+                        id="ethnicityId"
+                        defaultValue={form?.orderStatus}
+                        value={form?.orderStatus}
+                        name="orderStatus"
+                        onChange={(e) => {
+                          handleChange(e);
+                          handleStatusChange(e);
+                        }}
+                        autoWidth>
+                        <MenuItem value={'Order Received'}>
+                          Order Received
+                        </MenuItem>
+                        <MenuItem value={'In Process'}>In Process</MenuItem>
+                        <MenuItem value={'Shipped to Showroom'}>
+                          Shipped to Showroom
+                        </MenuItem>
+                        <MenuItem value={'Awaiting Pickup'}>
+                          Awaiting Pickup
+                        </MenuItem>
+                        <MenuItem value={'Partially Picked Up'}>
+                          Partially Picked Up
+                        </MenuItem>
+                        <MenuItem value={'Picked Up/Completed'}>
+                          Picked Up/Completed
+                        </MenuItem>
+                        <MenuItem value={'Redo'}>Redo</MenuItem>
+                      </Select>
+                      <FormHelperText>Select from the list</FormHelperText>
+                    </FormControl>
+                  </div>
+                )}
               </div>
               <div className="p-8 w-2/3 h-auto relative">
                 <h1>Order Details</h1>
@@ -1228,74 +1306,51 @@ function AddOrder(props) {
                                   <FormControlLabel
                                     disabled={disabledState}
                                     value="distance"
-                                    control={
-                                      <Radio
-                                        onClick={() => {
-                                          setSelectedFrame({
-                                            ...selectedFrame,
-                                            lensRate: undefined
-                                          });
-                                        }}
-                                      />
-                                    }
+                                    control={<Radio />}
                                     label="Distance"
                                   />
                                   <FormControlLabel
                                     value="read"
                                     disabled={disabledState}
-                                    control={
-                                      <Radio
-                                        onClick={() => {
-                                          setSelectedFrame({
-                                            ...selectedFrame,
-                                            lensRate: undefined
-                                          });
-                                        }}
-                                      />
-                                    }
+                                    control={<Radio />}
                                     label="Read"
                                   />
                                   <FormControlLabel
                                     value="fTop"
                                     disabled={disabledState}
-                                    control={
-                                      <Radio
-                                        onClick={() => {
-                                          setSelectedFrame({
-                                            ...selectedFrame,
-                                            lensRate: undefined
-                                          });
-                                        }}
-                                      />
-                                    }
+                                    control={<Radio />}
                                     label="F. Top"
                                   />
                                   <FormControlLabel
                                     value="progressive"
                                     disabled={disabledState}
-                                    control={
-                                      <Radio
-                                        onClick={() => {
-                                          setSelectedFrame({
-                                            ...selectedFrame,
-                                            lensRate: undefined
-                                          });
-                                        }}
-                                      />
-                                    }
+                                    control={<Radio />}
                                     label="Progressive"
                                   />
                                 </RadioGroup>
                               </FormControl>
-                              <Fab
-                                onClick={fetchLensRate}
-                                disabled={disabledState}
-                                variant="extended"
-                                color="secondary"
-                                aria-label="add">
-                                Fetch
-                              </Fab>
                             </div>
+                          </div>
+                          <div className="flex flex-row">
+                            <div className="flex flex-col px-10 w-1/2">
+                              <CustomAutocomplete
+                                list={lensTypeNames}
+                                form={selectedFrame}
+                                setForm={setSelectedFrame}
+                                handleChange={handleSelectedFrameChange}
+                                id="lensTypeName"
+                                freeSolo={false}
+                                label="Select Lens Type"
+                              />
+                            </div>
+                            <Fab
+                              onClick={fetchLensRate}
+                              disabled={disabledState}
+                              variant="extended"
+                              color="secondary"
+                              aria-label="add">
+                              Fetch Rate
+                            </Fab>
                           </div>
                           <TextField
                             className="mt-4"

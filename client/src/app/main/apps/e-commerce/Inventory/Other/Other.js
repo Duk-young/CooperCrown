@@ -36,7 +36,7 @@ const Hits = ({ hits }) => {
             <TableRow>
               <StyledTableCell>SKU</StyledTableCell>
               <StyledTableCell>Brand</StyledTableCell>
-              <StyledTableCell>Product Description</StyledTableCell>
+              <StyledTableCell>Model</StyledTableCell>
               <StyledTableCell>Colour</StyledTableCell>
               <StyledTableCell>Material</StyledTableCell>
               <StyledTableCell>Shape</StyledTableCell>

@@ -94,51 +94,101 @@ const AddExam = (props) => {
   if (isLoading) return <FuseLoading />;
 
   const onSubmit = async () => {
-    if (form.examId) {
-    } else {
-      setisLoading(true);
+    setisLoading(true);
 
-      try {
-        const examId = (
-          await firestore().collection('dbConfig').doc('dbConfig').get()
-        ).data();
+    try {
+      const dbConfig = (
+        await firestore().collection('dbConfig').doc('dbConfig').get()
+      ).data();
 
-        await firestore()
-          .collection('exams')
-          .add({
-            ...form,
-            examTime: firestore.Timestamp.fromDate(form?.examTime),
-            bpTime: firestore.Timestamp.fromDate(form?.bpTime),
-            examId: examId?.examId + 1,
-            customerId: customer.customerId
-          });
+      await firestore()
+        .collection('exams')
+        .add({
+          ...form,
+          examTime: firestore.Timestamp.fromDate(form?.examTime),
+          bpTime: firestore.Timestamp.fromDate(form?.bpTime),
+          examId: dbConfig?.examId + 1,
+          customerId: customer.customerId
+        });
 
-        await firestore()
-          .collection('customers')
-          .doc(customer.id)
-          .update({ lastExam: firestore.Timestamp.fromDate(form?.examTime) });
+      await firestore()
+        .collection('customers')
+        .doc(customer.id)
+        .update({
+          lastExam: firestore.Timestamp.fromDate(form?.examTime),
+          medicalHistory: customer?.medicalHistory
+        });
 
-        await firestore()
-          .collection('dbConfig')
-          .doc('dbConfig')
-          .update({ examId: examId?.examId + 1 });
+      await firestore()
+        .collection('dbConfig')
+        .doc('dbConfig')
+        .update({ examId: dbConfig?.examId + 1 });
 
-        await firestore()
-          .collection('customers')
-          .doc(customer?.id)
-          .update({ medicalHistory: customer?.medicalHistory });
-        dispatch(
-          MessageActions.showMessage({
-            message: 'Exam Details saved to firebase'
-          })
-        );
+      await firestore()
+        .collection('prescriptions')
+        .add({
+          prescriptionType: 'eyeglassesRx',
+          eyeglassesSphereOd: form?.egRxOdSphere ? form?.egRxOdSphere : '',
+          eyeglassesCylinderOd: form?.egRxOdCylinder
+            ? form?.egRxOdCylinder
+            : '',
+          eyeglassesAxisOd: form?.egRxOdAxis ? form?.egRxOdAxis : '',
+          eyeglassesAddOd: form?.egRxOdAdd ? form?.egRxOdAdd : '',
+          eyeglassesPrismOd: form?.egRxOdPrismBase ? form?.egRxOdPrismBase : '',
+          eyeglassesVaOd: form?.egRxOdVa1 ? form?.egRxOdVa1 : '',
+          eyeglassesSphereOs: form?.egRxOsSphere ? form?.egRxOsSphere : '',
+          eyeglassesCylinderOs: form?.egRxOsCylinder
+            ? form?.egRxOsCylinder
+            : '',
+          eyeglassesAxisOs: form?.egRxOsAxis ? form?.egRxOsAxis : '',
+          eyeglassesAddOs: form?.egRxOsAdd ? form?.egRxOsAdd : '',
+          eyeglassesPrismOs: form?.egRxOsPrismBase ? form?.egRxOsPrismBase : '',
+          eyeglassesVaOs: form?.egRxOsVa1 ? form?.egRxOsVa1 : '',
+          prescriptionId: dbConfig?.prescriptionId + 1,
+          customerId: customer.customerId,
+          prescriptionDate: firestore.Timestamp.fromDate(new Date())
+        });
 
-        props.history.push('/apps/e-commerce/customers');
-      } catch (error) {
-        console.log(error);
-      }
-      setisLoading(false);
+      await firestore()
+        .collection('prescriptions')
+        .add({
+          prescriptionType: 'contactLensRx',
+          contactLensSphereOd: form?.clrxOdSphere ? form?.clrxOdSphere : '',
+          contactLensCylinderOd: form?.clrxOdCylinder
+            ? form?.clrxOdCylinder
+            : '',
+          contactLensAxisOd: form?.clrxOdAxis ? form?.clrxOdAxis : '',
+          contactLensDiaOd: form?.clrxOdDia ? form?.clrxOdDia : '',
+          contactLensBcOd: form?.clrxOdBc ? form?.clrxOdBc : '',
+          contactLensSphereOs: form?.clrxOsSphere ? form?.clrxOsSphere : '',
+          contactLensCylinderOs: form?.clrxOsCylinder
+            ? form?.clrxOsCylinder
+            : '',
+          contactLensAxisOs: form?.clrxOsAxis ? form?.clrxOsAxis : '',
+          contactLensDiaOs: form?.clrxOsDia ? form?.clrxOsDia : '',
+          contactLensBcOs: form?.clrxOsBc ? form?.clrxOsBc : '',
+          contactLensModel: form?.clrxOdBrand ? form?.clrxOdBrand : '',
+          prescriptionId: dbConfig?.prescriptionId + 2,
+          customerId: customer.customerId,
+          prescriptionDate: firestore.Timestamp.fromDate(new Date())
+        });
+
+      await firestore()
+        .collection('dbConfig')
+        .doc('dbConfig')
+        .update({ prescriptionId: dbConfig?.prescriptionId + 2 });
+
+      dispatch(
+        MessageActions.showMessage({
+          message: 'Exam Details saved to firebase'
+        })
+      );
+
+      props.history.push('/apps/e-commerce/customers');
+    } catch (error) {
+      console.log(error);
     }
+    setisLoading(false);
   };
 
   return !customer ? (
@@ -1720,9 +1770,6 @@ const AddExam = (props) => {
             <div className="p-8 h-auto flex-1">
               <h3 className="text-center font-700">Add</h3>
             </div>
-            <div className="p-8 h-auto flex-1">
-              <h3 className="text-center font-700">VA</h3>
-            </div>
           </div>
           <div className="flex flex-row px-60">
             <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -1793,6 +1840,7 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
+                type="number"
               />
             </div>
             <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -1831,26 +1879,6 @@ const AddExam = (props) => {
                 }}
                 type="number"
               />
-            </div>
-            <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-              <div className="flex flex-row justify-center">
-                <h3 className="text-center font-700">20/</h3>
-                <TextField
-                  size="small"
-                  style={{ width: 50 }}
-                  id="standard-basic"
-                  disabled={disabledState}
-                  value={form?.egRxOdVa2}
-                  onChange={handleChange}
-                  name={'egRxOdVa2'}
-                  InputProps={{
-                    inputProps: {
-                      style: { textAlign: 'center' }
-                    }
-                  }}
-                  type="number"
-                />
-              </div>
             </div>
           </div>
 
@@ -1923,6 +1951,7 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
+                type="number"
               />
             </div>
             <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -1961,26 +1990,6 @@ const AddExam = (props) => {
                 }}
                 type="number"
               />
-            </div>
-            <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-              <div className="flex flex-row justify-center">
-                <h3 className="text-center font-700">20/</h3>
-                <TextField
-                  size="small"
-                  style={{ width: 50 }}
-                  id="standard-basic"
-                  disabled={disabledState}
-                  value={form?.egRxOsVa2}
-                  onChange={handleChange}
-                  name={'egRxOsVa2'}
-                  InputProps={{
-                    inputProps: {
-                      style: { textAlign: 'center' }
-                    }
-                  }}
-                  type="number"
-                />
-              </div>
             </div>
           </div>
           <div className="flex flex-row px-60">

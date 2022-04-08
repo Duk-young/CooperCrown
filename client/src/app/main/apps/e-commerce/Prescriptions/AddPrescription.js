@@ -227,7 +227,7 @@ const AddPrescription = (props) => {
         const prescriptionId = (
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
-        console.log(form);
+
         await firestore()
           .collection('prescriptions')
           .add({

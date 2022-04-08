@@ -1,9 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Fab from '@material-ui/core/Fab';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import { useForm } from '@fuse/hooks';
 import { DataGrid } from '@material-ui/data-grid';
 import EditIcon from '@material-ui/icons/Edit';
@@ -11,10 +7,14 @@ import { firestore } from 'firebase';
 import { useDispatch } from 'react-redux';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+import AddLensTypeDialog from './AddLensTypeDialog';
+import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 
 export default function TableGrid() {
   const [rows, setRows] = useState([]);
   const [disabledState, setDisabledState] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [lensTypes, setLensTypes] = useState([]);
   const { form, handleChange, setForm } = useForm({});
   const dispatch = useDispatch();
 
@@ -22,14 +22,18 @@ export default function TableGrid() {
     const lensPrices = (
       await firestore().collection('lensPrice').doc('lensPrice').get()
     ).data();
-    setRows(lensPrices[e.target.value]);
+    setRows(lensPrices[form?.a]);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const onSubmit = async () => {
     await firestore()
       .collection('lensPrice')
       .doc('lensPrice')
-      .update({ [form?.lensType]: rows });
+      .update({ [form?.a]: rows });
 
     dispatch(
       MessageActions.showMessage({
@@ -53,6 +57,22 @@ export default function TableGrid() {
     setRows(array);
   };
 
+  useEffect(() => {
+    const fetchDetails = async () => {
+      const lensPrice = (
+        await firestore().collection('lensPrice').doc('lensPrice').get()
+      ).data();
+      var keys = Object.keys(lensPrice);
+      let lensTypes = [];
+      keys.forEach((row) => {
+        lensTypes.push({ a: row.replace(/"/g, '') });
+      });
+      setLensTypes(lensTypes);
+    };
+
+    fetchDetails();
+  }, []);
+
   const useStyles = makeStyles((theme) =>
     createStyles({
       root: {
@@ -70,7 +90,7 @@ export default function TableGrid() {
   const columns = [
     { field: 'id', headerName: 'ID', width: 75, sortable: false },
     {
-      field: '0.0',
+      field: '0',
       headerName: '0.0',
       width: 75,
       type: 'number',
@@ -86,7 +106,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-0.50',
+      field: '-0.5',
       headerName: '-0.50',
       width: 75,
       type: 'number',
@@ -102,7 +122,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-1.00',
+      field: '-1',
       headerName: '-1.00',
       width: 75,
       type: 'number',
@@ -118,7 +138,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-1.50',
+      field: '-1.5',
       headerName: '-1.50',
       width: 75,
       type: 'number',
@@ -134,7 +154,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-2.00',
+      field: '-2',
       headerName: '-2.00',
       width: 75,
       type: 'number',
@@ -150,7 +170,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-2.50',
+      field: '-2.5',
       headerName: '-2.50',
       width: 75,
       type: 'number',
@@ -166,7 +186,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-3.00',
+      field: '-3',
       headerName: '-3.00',
       width: 75,
       type: 'number',
@@ -182,7 +202,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-3.50',
+      field: '-3.5',
       headerName: '-3.50',
       width: 75,
       type: 'number',
@@ -198,7 +218,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-4.00',
+      field: '-4',
       headerName: '-4.00',
       width: 75,
       type: 'number',
@@ -214,7 +234,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-4.50',
+      field: '-4.5',
       headerName: '-4.50',
       width: 75,
       type: 'number',
@@ -230,7 +250,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-5.00',
+      field: '-5',
       headerName: '-5.00',
       width: 75,
       type: 'number',
@@ -246,7 +266,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-5.50',
+      field: '-5.5',
       headerName: '-5.50',
       width: 75,
       type: 'number',
@@ -262,7 +282,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-6.00',
+      field: '-6',
       headerName: '-6.00',
       width: 75,
       type: 'number',
@@ -278,7 +298,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-6.50',
+      field: '-6.5',
       headerName: '-6.50',
       width: 75,
       type: 'number',
@@ -294,7 +314,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-7.00',
+      field: '-7',
       headerName: '-7.00',
       width: 75,
       type: 'number',
@@ -310,7 +330,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-7.50',
+      field: '-7.5',
       headerName: '-7.50',
       width: 75,
       type: 'number',
@@ -326,7 +346,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-8.00',
+      field: '-8',
       headerName: '-8.00',
       width: 75,
       type: 'number',
@@ -342,7 +362,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-8.50',
+      field: '-8.5',
       headerName: '-8.50',
       width: 75,
       type: 'number',
@@ -358,7 +378,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-9.00',
+      field: '-9',
       headerName: '-9.00',
       width: 75,
       type: 'number',
@@ -374,7 +394,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-9.50',
+      field: '-9.5',
       headerName: '-9.50',
       width: 75,
       type: 'number',
@@ -390,7 +410,7 @@ export default function TableGrid() {
       sortable: false
     },
     {
-      field: '-10.00',
+      field: '-10',
       headerName: '-10.00',
       width: 90,
       type: 'number',
@@ -401,25 +421,26 @@ export default function TableGrid() {
   const classes = useStyles();
   return (
     <div style={{ height: 600, width: '100%' }}>
-      <FormControl className="ml-32 ">
-        <Select
-          labelId="demo-simple-select-autowidth-label"
-          id="ethnicityId"
-          defaultValue={form?.lensType}
-          value={form?.lensType}
-          name="lensType"
-          onChange={(e) => {
-            handleChange(e);
-            handleTypeChange(e);
-          }}
-          autoWidth>
-          <MenuItem value={'distance'}>Distance</MenuItem>
-          <MenuItem value={'read'}>Read</MenuItem>
-          <MenuItem value={'fTop'}>F. Top</MenuItem>
-          <MenuItem value={'progressive'}>Progressive</MenuItem>
-        </Select>
-        <FormHelperText>Select Lens Type from the list...</FormHelperText>
-      </FormControl>
+      <div className="flex flex-row px-10 w-full">
+        <div className="flex flex-col px-10 w-1/2">
+          <CustomAutocomplete
+            list={lensTypes}
+            form={form}
+            setForm={setForm}
+            handleChange={handleChange}
+            id="a"
+            freeSolo={false}
+            label="Select Lens Type"
+          />
+        </div>
+        <Fab
+          onClick={handleTypeChange}
+          variant="extended"
+          color="primary"
+          aria-label="add">
+          Fetch Details!
+        </Fab>
+      </div>
       <DataGrid
         onCellEditCommit={handleCommit}
         className={classes.root}
@@ -432,6 +453,7 @@ export default function TableGrid() {
         hideFooterPagination={true}
       />
       <div className="flex flex-row p-6 justify-between w-1/3">
+        <AddLensTypeDialog open={open} handleClose={handleClose} />
         <Fab
           onClick={() => {
             setDisabledState(true);
@@ -450,6 +472,17 @@ export default function TableGrid() {
             color="primary"
             aria-label="add">
             Save Changes!
+          </Fab>
+        )}
+        {!disabledState && (
+          <Fab
+            onClick={() => {
+              setOpen(true);
+            }}
+            variant="extended"
+            color="primary"
+            aria-label="add">
+            Add New Lens Type
           </Fab>
         )}
       </div>

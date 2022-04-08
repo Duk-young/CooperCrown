@@ -83,11 +83,11 @@ const OutOfStock = (props) => {
           <TableHead>
             <TableRow>
               <StyledTableCell>SKU</StyledTableCell>
-              <StyledTableCell>Brand</StyledTableCell>
-              <StyledTableCell>Product Description</StyledTableCell>
-              <StyledTableCell>Enter Date</StyledTableCell>
-              <StyledTableCell>Sold Out Date</StyledTableCell>
-              <StyledTableCell>Initial Quantity</StyledTableCell>
+              <StyledTableCell>BRAND</StyledTableCell>
+              <StyledTableCell>MODEL</StyledTableCell>
+              <StyledTableCell>ENTER DATE</StyledTableCell>
+              <StyledTableCell>SOLD OUT DATE</StyledTableCell>
+              <StyledTableCell>INITIAL QUANTITY</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>

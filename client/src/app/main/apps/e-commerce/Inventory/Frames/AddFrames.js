@@ -279,7 +279,7 @@ function AddFrames(props) {
                   className="mt-8 mb-16"
                   //   error={error?.lastName}
                   required
-                  label="Product Description"
+                  label="Model Name"
                   id="productDescription"
                   name="productDescription"
                   value={form?.productDescription}
@@ -335,7 +335,7 @@ function AddFrames(props) {
                   className="mt-8 mb-16"
                   //   error={error?.lastName}
                   required
-                  label="Size X"
+                  label="AB"
                   id="sizeX"
                   name="sizeX"
                   value={form?.sizeX}
@@ -349,7 +349,7 @@ function AddFrames(props) {
                   className="mt-8 mb-16"
                   //   error={error?.lastName}
                   required
-                  label="Size Y"
+                  label="Br"
                   id="sizeY"
                   name="sizeY"
                   value={form?.sizeY}
@@ -363,7 +363,7 @@ function AddFrames(props) {
                   className="mt-8 mb-16"
                   //   error={error?.lastName}
                   required
-                  label="Size Z"
+                  label="ED"
                   id="sizeZ"
                   name="sizeZ"
                   value={form?.sizeZ}

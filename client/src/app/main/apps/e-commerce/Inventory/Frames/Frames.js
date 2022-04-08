@@ -64,7 +64,7 @@ const Hits = ({ hits }) => {
             <TableRow style={{ height: 10 }}>
               <StyledTableCell>SKU</StyledTableCell>
               <StyledTableCell>Brands</StyledTableCell>
-              <StyledTableCell>Product Description</StyledTableCell>
+              <StyledTableCell>Model</StyledTableCell>
               <StyledTableCell>Colour</StyledTableCell>
               <StyledTableCell>Material</StyledTableCell>
               <StyledTableCell>Shape</StyledTableCell>

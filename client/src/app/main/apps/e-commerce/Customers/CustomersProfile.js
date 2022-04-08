@@ -16,6 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import React, { useEffect, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
+import moment from 'moment';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
@@ -367,14 +368,9 @@ const CustomerProfile = (props) => {
                                 key={row.prescriptionId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
-                                  {`${row?.prescriptionDate
-                                    ?.toDate()
-                                    .getDate()}-${
-                                    row?.prescriptionDate?.toDate().getMonth() +
-                                    1
-                                  }-${row?.prescriptionDate
-                                    ?.toDate()
-                                    .getFullYear()}`}
+                                  {moment(
+                                    row?.prescriptionDate.toDate()
+                                  ).format('MM-DD-YYYY')}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <div className="flex flex-col">
@@ -458,14 +454,9 @@ const CustomerProfile = (props) => {
                                 key={row.prescriptionId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
-                                  {`${row?.prescriptionDate
-                                    ?.toDate()
-                                    .getDate()}-${
-                                    row?.prescriptionDate?.toDate().getMonth() +
-                                    1
-                                  }-${row?.prescriptionDate
-                                    ?.toDate()
-                                    .getFullYear()}`}
+                                  {moment(
+                                    row?.prescriptionDate.toDate()
+                                  ).format('MM-DD-YYYY')}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <div className="flex flex-col">
@@ -547,14 +538,9 @@ const CustomerProfile = (props) => {
                                 key={row.prescriptionId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
-                                  {`${row?.prescriptionDate
-                                    ?.toDate()
-                                    .getDate()}-${
-                                    row?.prescriptionDate?.toDate().getMonth() +
-                                    1
-                                  }-${row?.prescriptionDate
-                                    ?.toDate()
-                                    .getFullYear()}`}
+                                  {moment(
+                                    row?.prescriptionDate.toDate()
+                                  ).format('MM-DD-YYYY')}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <div className="w-136 truncate">
@@ -632,9 +618,9 @@ const CustomerProfile = (props) => {
                               key={row.examId}
                               style={{ height: 10 }}>
                               <StyledTableCell>
-                                {`${row?.examTime?.toDate().getDate()}-${
-                                  row?.examTime?.toDate().getMonth() + 1
-                                }-${row?.examTime?.toDate().getFullYear()}`}
+                                {moment(row?.examTime.toDate()).format(
+                                  'MM-DD-YYYY'
+                                )}
                               </StyledTableCell>
                               <StyledTableCell>
                                 Comprehensive Exam

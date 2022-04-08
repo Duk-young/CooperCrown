@@ -1,29 +1,12 @@
 import FuseAnimate from '@fuse/core/FuseAnimate';
-import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import { useForm, useDeepCompareEffect } from '@fuse/hooks';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { Grid } from '@material-ui/core';
-import * as Actions from '../store/actions';
+import React from 'react';
 import reducer from '../store/reducers';
 import TableGrid from './TableGrid';
 
 function LensPrice() {
-  const dispatch = useDispatch();
-  const product = useSelector(({ eCommerceApp }) => eCommerceApp.product);
-  const [lensType, setLensType] = useState('');
-
-  const [isLoading, setisLoading] = useState(false);
-  const { form, setForm } = useForm(null);
-
-  const routeParams = useParams();
-
   return (
     <FusePageCarded
       classes={{
@@ -54,24 +37,7 @@ function LensPrice() {
       }
       content={
         <div className="p-16 sm:p-24 ">
-          <Grid container>
-            {/* <Grid item xs={12} md={4}>
-              <TextField
-                className="mt-8 mb-16"
-                required
-                label="Lens Type"
-                placeholder="Enter Lens Type"
-                autoFocus
-                value={lensType}
-                onChange={(e) => setLensType(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </Grid> */}
-            <Grid xs={12}>
-              <TableGrid />
-            </Grid>
-          </Grid>
+          <TableGrid />
         </div>
       }
       innerScroll

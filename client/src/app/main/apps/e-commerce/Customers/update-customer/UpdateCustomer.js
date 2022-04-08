@@ -2,7 +2,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 import { firestore } from 'firebase';
 import { Link, useParams } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast, Zoom } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useTheme } from '@material-ui/core/styles';

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import withReducer from 'app/store/withReducer';
 import clsx from 'clsx';
 import moment from 'moment';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -16,6 +16,7 @@ import CalendarHeader from './CalendarHeader';
 import EventDialog from './EventDialog';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
+import NewAppointmentDialog from './NewAppointmentDialog';
 
 const localizer = momentLocalizer(moment);
 
@@ -25,6 +26,10 @@ const allViews = Object.keys(Views).map((k) => Views[k]);
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    '& .rbc-event-label': {
+      display: 'none'
+    },
+
     '& .rbc-header': {
       padding: '12px 6px',
       fontWeight: 600,
@@ -169,7 +174,7 @@ const useStyles = makeStyles((theme) => ({
 function CalendarApp(props) {
   const dispatch = useDispatch();
   const events = useSelector(({ calendarApp }) => calendarApp.events.entities);
-
+  const [open, setOpen] = useState(false);
   const classes = useStyles(props);
   const headerEl = useRef(null);
 
@@ -210,13 +215,12 @@ function CalendarApp(props) {
         resizable
         onEventResize={resizeEvent}
         defaultView={Views.MONTH}
-        defaultDate={new Date(2022, 1, 1)}
+        defaultDate={new Date()}
         startAccessor="start"
         endAccessor="end"
         views={allViews}
-        step={30}
-        timeslots={2}
-        formats={{ eventTimeRangeFormat: timeRangeFormat }}
+        step={15}
+        timeslots={4}
         showMultiDayTimes
         components={{
           toolbar: (_props) => {
@@ -233,14 +237,14 @@ function CalendarApp(props) {
         onSelectEvent={(event) => {
           dispatch(Actions.openEditEventDialog(event));
         }}
-        // onSelectSlot={(slotInfo) =>
-        //   dispatch(
-        //     Actions.openNewEventDialog({
-        //       start: slotInfo.start.toLocaleString(),
-        //       end: slotInfo.end.toLocaleString()
-        //     })
-        //   )
-        // }
+        onSelectSlot={(slotInfo) => {
+          dispatch(
+            Actions.openNewEventDialog({
+              start: slotInfo.start.toLocaleString(),
+              end: slotInfo.end.toLocaleString()
+            })
+          );
+        }}
       />
       {/* <FuseAnimate animation="transition.expandIn" delay={500}>
         <Fab
@@ -259,6 +263,7 @@ function CalendarApp(props) {
         </Fab>
       </FuseAnimate> */}
       <EventDialog />
+      <NewAppointmentDialog />
     </div>
   );
 }
@@ -266,14 +271,19 @@ function CalendarApp(props) {
 function Event({ event }) {
   return (
     <span>
-      <strong>{`${event.start.getHours()}: ${event.start.getMinutes()} `}</strong>
+      <strong>{`${event.start.toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      })} - ${event.end.toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      })} `}</strong>
       {event?.title && event.title}
     </span>
   );
 }
-
-let timeRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'hh:mm', culture);
 
 export default withReducer('calendarApp', reducer)(CalendarApp);
 

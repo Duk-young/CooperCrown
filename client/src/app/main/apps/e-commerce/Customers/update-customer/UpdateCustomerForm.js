@@ -237,7 +237,6 @@ function UpdateCustomerForm(props) {
             label="Address"
             multiline
             rows={4}
-            defaultValue={'House#'}
             error={error?.address}
             value={form?.address}
             onChange={handleChange}
