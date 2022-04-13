@@ -87,6 +87,15 @@ const navigationConfig = [
         url: '/apps/calendar'
       },
       {
+        id: 'reports',
+        title: 'Reports',
+        translate: 'Reports',
+        type: 'item',
+        auth: authRoles.staff,
+        icon: 'assessment',
+        url: '/apps/e-commerce/reports'
+      },
+      {
         id: 'Setting',
         title: 'Setting',
         translate: 'Setting',

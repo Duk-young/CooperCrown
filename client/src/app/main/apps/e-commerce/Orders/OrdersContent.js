@@ -57,7 +57,11 @@ const Hits = ({ hits }) => (
             </StyledTableCell>
             <StyledTableCell>{hit?.firstName}</StyledTableCell>
             <StyledTableCell>{hit?.lastName}</StyledTableCell>
-            <StyledTableCell>{hit?.customerId}</StyledTableCell>
+            <StyledTableCell>
+              <Link to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
+                <h3 className="text-black">{hit?.customerId}</h3>
+              </Link>
+            </StyledTableCell>
             <StyledTableCell>
               {hit?.prescriptionType === 'eyeglassesRx' && 'Eyeglasses'}
               {hit?.prescriptionType === 'contactLensRx' && 'Contact Lens'}

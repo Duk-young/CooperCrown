@@ -17,6 +17,7 @@ import EventDialog from './EventDialog';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import NewAppointmentDialog from './NewAppointmentDialog';
+import CustomWeek from './CustomWeek';
 
 const localizer = momentLocalizer(moment);
 
@@ -174,7 +175,6 @@ const useStyles = makeStyles((theme) => ({
 function CalendarApp(props) {
   const dispatch = useDispatch();
   const events = useSelector(({ calendarApp }) => calendarApp.events.entities);
-  const [open, setOpen] = useState(false);
   const classes = useStyles(props);
   const headerEl = useRef(null);
 
@@ -218,7 +218,12 @@ function CalendarApp(props) {
         defaultDate={new Date()}
         startAccessor="start"
         endAccessor="end"
-        views={allViews}
+        views={{
+          day: true,
+          month: true,
+          week: true,
+          CustomWeek: CustomWeek
+        }}
         step={15}
         timeslots={4}
         showMultiDayTimes

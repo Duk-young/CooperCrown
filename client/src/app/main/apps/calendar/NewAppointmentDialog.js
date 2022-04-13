@@ -1,47 +1,44 @@
+import '../e-commerce/Customers/App.mobile.css';
+import '../e-commerce/Customers/Search.css';
+import '../e-commerce/Customers/Themes.css';
+import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
+import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
+import { withStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
+import { useHistory } from 'react-router-dom';
 import * as Actions from './store/actions';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddIcon from '@material-ui/icons/Add';
+import AddToQueueIcon from '@material-ui/icons/AddToQueue';
+import algoliasearch from 'algoliasearch/lite';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import DateFnsUtils from '@date-io/date-fns';
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
+import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import Button from '@material-ui/core/Button';
-import AddToQueueIcon from '@material-ui/icons/AddToQueue';
-import { useHistory } from 'react-router-dom';
 import moment from 'moment';
+import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import React, { useState, useEffect } from 'react';
+import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
-import { connectHits } from 'react-instantsearch-dom';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import DateFnsUtils from '@date-io/date-fns';
-import Grid from '@material-ui/core/Grid';
-import React, { useState, useEffect } from 'react';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import '../e-commerce/Customers/Themes.css';
-import '../e-commerce/Customers/Search.css';
-import '../e-commerce/Customers/App.mobile.css';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -91,19 +88,6 @@ const CustomHits = connectHits(({ hits, form }) => {
                 startIcon={<AddToQueueIcon />}>
                 Select
               </Button>
-
-              {/* <Link
-                to={`/apps/e-commerce/customers/addAppointment/${hit.customerId}`}
-                className="btn btn-primary">
-                <Button
-                  className="whitespace-no-wrap normal-case ml-24"
-                  variant="contained"
-                  color="secondary"
-                  size="large"
-                  startIcon={<AddToQueueIcon />}>
-                  Select
-                </Button>
-              </Link> */}
             </StyledTableCell>
           </StyledTableRow>
         ))}

@@ -22,7 +22,6 @@ import reducer from '../store/reducers';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import PieChart from '../Reports/PieChart';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {}
@@ -355,15 +354,6 @@ function AddInsurance(props) {
                     </label>
                   </div>
                 </div>
-              </div>
-              <div className="widget flex w-full sm:w-1/2 p-12">
-                <PieChart criteria="ethnicity" />
-              </div>
-              <div className="widget flex w-full sm:w-1/2 p-12">
-                <PieChart criteria="state" />
-              </div>
-              <div className="widget flex w-full sm:w-1/2 p-12">
-                <PieChart criteria="gender" />
               </div>
             </div>
           </FuseAnimate>

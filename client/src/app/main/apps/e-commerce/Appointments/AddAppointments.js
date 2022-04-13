@@ -122,8 +122,9 @@ const AddAppointments = (props) => {
       <div className="flex flex-row p-16 sm:p-24 w-full">
         <div className="p-8 w-1/3 h-auto border-grey-400 border-solid border-1">
           <ToastContainer />
-          <h1>Patient Details</h1>
-          <h2>{`Name: ${customer.firstName} ${customer.lastName} Customer Id: ${customer.customerId}`}</h2>
+          <h1 className="underline font-700">Patient Details</h1>
+          <h2>{`Customer Id: ${customer.customerId}`}</h2>
+          <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
           <h2>{`Address: ${customer.address}, ${customer.state}, ${customer.zipCode}`}</h2>
           <h2>{`Phone: ${customer.phone1}`}</h2>
           <h2>{`Email: ${customer.email}`}</h2>

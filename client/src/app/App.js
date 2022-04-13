@@ -4,7 +4,11 @@ import FuseAuthorization from '@fuse/core/FuseAuthorization';
 import FuseLayout from '@fuse/core/FuseLayout';
 import FuseTheme from '@fuse/core/FuseTheme';
 import history from '@history';
-import { createGenerateClassName, jssPreset, StylesProvider } from '@material-ui/core/styles';
+import {
+  createGenerateClassName,
+  jssPreset,
+  StylesProvider
+} from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { create } from 'jss';
 import jssExtend from 'jss-plugin-extend';
@@ -18,37 +22,36 @@ import routes from './fuse-configs/routesConfig';
 import store from './store';
 
 const jss = create({
-	...jssPreset(),
-	plugins: [...jssPreset().plugins, jssExtend(), rtl()],
-	insertionPoint: document.getElementById('jss-insertion-point')
+  ...jssPreset(),
+  plugins: [...jssPreset().plugins, jssExtend(), rtl()],
+  insertionPoint: document.getElementById('jss-insertion-point')
 });
 
 const generateClassName = createGenerateClassName();
 
 const App = () => {
-	return (
-		<AppContext.Provider
-			value={{
-				routes
-			}}
-		>
-			<StylesProvider jss={jss} generateClassName={generateClassName}>
-				<Provider store={store}>
-					<MuiPickersUtilsProvider utils={MomentUtils}>
-						<Auth>
-							<Router history={history}>
-								<FuseAuthorization>
-									<FuseTheme>
-										<FuseLayout />
-									</FuseTheme>
-								</FuseAuthorization>
-							</Router>
-						</Auth>
-					</MuiPickersUtilsProvider>
-				</Provider>
-			</StylesProvider>
-		</AppContext.Provider>
-	);
+  return (
+    <AppContext.Provider
+      value={{
+        routes
+      }}>
+      <StylesProvider jss={jss} generateClassName={generateClassName}>
+        <Provider store={store}>
+          <MuiPickersUtilsProvider utils={MomentUtils}>
+            <Auth>
+              <Router history={history}>
+                <FuseAuthorization>
+                  <FuseTheme>
+                    <FuseLayout />
+                  </FuseTheme>
+                </FuseAuthorization>
+              </Router>
+            </Auth>
+          </MuiPickersUtilsProvider>
+        </Provider>
+      </StylesProvider>
+    </AppContext.Provider>
+  );
 };
 
 export default App;

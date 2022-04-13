@@ -18,6 +18,7 @@ import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import { useForm } from '@fuse/hooks';
+import Sketch from './Sketch';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker
@@ -117,6 +118,8 @@ const AddExam = (props) => {
         .update({
           lastExam: firestore.Timestamp.fromDate(form?.examTime),
           medicalHistory: customer?.medicalHistory
+            ? customer?.medicalHistory
+            : ''
         });
 
       await firestore()
@@ -197,8 +200,9 @@ const AddExam = (props) => {
     <div className="flex flex-col w-full">
       <div className="flex flex-row p-16 sm:p-24 w-full">
         <div className="p-8 w-2/3 h-auto border-grey-400 border-solid border-1">
-          <h1>Customer Info</h1>
-          <h2>{`Name: ${customer.firstName} ${customer.lastName} Customer Id: ${customer.customerId}`}</h2>
+          <h1 className="underline font-700">Customer Info</h1>
+          <h2>{`Customer Id: ${customer.customerId}`}</h2>
+          <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
           <h2>{`Address: ${customer.address}, ${customer.state}, ${customer.zipCode}`}</h2>
           <h2>{`Phone: ${customer.phone1}`}</h2>
           <h2>{`Email: ${customer.email}`}</h2>
@@ -3363,9 +3367,9 @@ const AddExam = (props) => {
       </div>
 
       <div className="flex flex-row px-16  sm:px-24 w-full">
-        <div className="p-8 w-1/3 h-auto border-grey-400 border-solid border-1 justify-between">
-          <div className="flex flex-row">
-            <h2 className="p-6 font-700">Sketch Element to be made by Jimmy</h2>
+        <div className="p-8 w-1/3 min-w-400 h-auto border-grey-400 border-solid border-1 justify-between">
+          <div className="flex flex-row justify-center min-w-400">
+            <Sketch form={form} setForm={setForm} />
           </div>
         </div>
         <div className="p-8 w-2/3 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3786,11 +3790,8 @@ const AddExam = (props) => {
           </FormControl>
         </div>
         <div className="p-8 w-1/2 h-auto border-grey-400 border-solid border-1 justify-between">
-          <div className="flex flex-row">
-            <h2 className="p-6 font-700">Sketch Element to be made by Jimmy</h2>
-
+          <div className="flex flex-row justify-center">
             <Button
-              className="justify-center ml-160"
               variant="contained"
               onClick={!form ? undefined : onSubmit}
               disabled={form?.examId ? true : false}

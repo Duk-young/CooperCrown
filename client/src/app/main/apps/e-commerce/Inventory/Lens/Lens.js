@@ -34,11 +34,11 @@ const Hits = ({ hits }) => {
           <TableHead>
             <TableRow>
               <StyledTableCell>SKU</StyledTableCell>
-              <StyledTableCell>Lens Material</StyledTableCell>
-              <StyledTableCell>Sphere</StyledTableCell>
-              <StyledTableCell>Cylinder</StyledTableCell>
-              <StyledTableCell>Quantity</StyledTableCell>
-              <StyledTableCell></StyledTableCell>
+              <StyledTableCell>LENS MATERIAL</StyledTableCell>
+              <StyledTableCell>SPHERE</StyledTableCell>
+              <StyledTableCell>CYLINDER</StyledTableCell>
+              <StyledTableCell>QUANTITY</StyledTableCell>
+              <StyledTableCell>OPTIONS</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>

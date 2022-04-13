@@ -161,7 +161,7 @@ function UpdateCustomerForm(props) {
                 value={form?.gender}
                 onChange={handleChange}>
                 <FormControlLabel
-                  value="female"
+                  value="Female"
                   control={<Radio />}
                   label="Female"
                 />
@@ -204,32 +204,6 @@ function UpdateCustomerForm(props) {
               </Select>
               <FormHelperText>Select from the list</FormHelperText>
             </FormControl>
-            <Typography
-              className="ml-96 username text-16 whitespace-no-wrap self-center"
-              color="inherit">
-              State
-            </Typography>
-            <div
-              className="stateAutocomplete"
-              style={{ width: 300, marginLeft: 20 }}>
-              <Autocomplete
-                {...defaultStates}
-                id="stateId"
-                value={form?.state}
-                getOptionSelected={(option, value) => option.name === value}
-                inputValue={state}
-                onInputChange={(e, value) => setState(value)}
-                name="state"
-                onChange={(_, value) =>
-                  handleChange({
-                    target: { value: value?.name, name: 'state' }
-                  })
-                }
-                renderInput={(params) => (
-                  <TextField {...params} label="State Name" margin="normal" />
-                )}
-              />
-            </div>
           </div>
           <TextField
             className="mt-10"
@@ -245,7 +219,7 @@ function UpdateCustomerForm(props) {
           />
 
           <div className="flex flex-row items-center flex-wrap">
-            <div className="flex w-1/2">
+            <div className="flex w-1/3">
               <TextField
                 className="mt-8 mb-16"
                 required
@@ -259,7 +233,27 @@ function UpdateCustomerForm(props) {
                 fullWidth
               />
             </div>
-            <div className="flex w-1/2 pl-10">
+            <div className="flex flex-col w-1/3 p-4">
+              <Autocomplete
+                {...defaultStates}
+                id="stateId"
+                value={form?.state}
+                fullWidth
+                getOptionSelected={(option, value) => option.name === value}
+                inputValue={state}
+                onInputChange={(e, value) => setState(value)}
+                name="state"
+                onChange={(_, value) =>
+                  handleChange({
+                    target: { value: value?.name, name: 'state' }
+                  })
+                }
+                renderInput={(params) => (
+                  <TextField {...params} label="State Name" margin="normal" />
+                )}
+              />
+            </div>
+            <div className="flex w-1/3 pl-10">
               <TextField
                 className="mt-8 mb-16"
                 required

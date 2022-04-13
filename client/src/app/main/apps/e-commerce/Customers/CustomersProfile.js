@@ -167,8 +167,9 @@ const CustomerProfile = (props) => {
         <div className="flex flex-col w-full">
           <div className="flex flex-row p-16 sm:p-24 w-full">
             <div className="p-12 w-1/2 h-auto  rounded-20 shadow-10">
-              <h1>Customer Info</h1>
-              <h2>{`Name: ${customer?.firstName} ${customer.lastName}\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Customer Id: ${customer.customerId}`}</h2>
+              <h1 className="underline font-700">Customer Info</h1>
+              <h2>{`Customer Id: ${customer.customerId}`}</h2>
+              <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
               <h2>{`DOB: ${customer?.dob.toDateString()}`}</h2>
               <h2>{`Sex: ${customer?.gender}`}</h2>
               <h2>{`Ethnicity: ${customer?.ethnicity}`}</h2>
@@ -205,8 +206,9 @@ const CustomerProfile = (props) => {
                     <TableHead>
                       <TableRow style={{ height: 10 }}>
                         <StyledTableCell>Sr#</StyledTableCell>
-                        <StyledTableCell>Name</StyledTableCell>
-
+                        <StyledTableCell>NAME</StyledTableCell>
+                        <StyledTableCell>BIRTHDAY</StyledTableCell>
+                        <StyledTableCell>GENDER</StyledTableCell>
                         <StyledTableCell>ID</StyledTableCell>
                       </TableRow>
                     </TableHead>
@@ -219,7 +221,18 @@ const CustomerProfile = (props) => {
                             style={{ height: 10 }}>
                             <StyledTableCell>{index + 1}</StyledTableCell>
                             <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
-                            <StyledTableCell>{row?.customerId}</StyledTableCell>
+                            <StyledTableCell>
+                              {moment(row.dob.toDate()).format('MM-DD-YYYY')}
+                            </StyledTableCell>
+                            <StyledTableCell>{row?.gender}</StyledTableCell>
+                            <StyledTableCell>
+                              <Link
+                                to={`/apps/e-commerce/customers/profile/${row.customerId}`}>
+                                <h3 className="text-black">
+                                  {row?.customerId}
+                                </h3>
+                              </Link>
+                            </StyledTableCell>
                           </StyledTableRow>
                         ))}
                     </TableBody>

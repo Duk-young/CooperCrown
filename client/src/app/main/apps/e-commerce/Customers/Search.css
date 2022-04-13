@@ -10,18 +10,11 @@ h2 {
 }
 
 body {
-  font-family: Open Sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol';
+  
   -webkit-font-smoothing: antialiased;
 }
 
-h2 {
-  color: #21243d;
-  font-family: Hind, sans-serif;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
+
 
 /* Header */
 
@@ -132,9 +125,7 @@ mark {
   padding-top: 2rem;
 }
 
-.ais-Panel-header {
-  font-family: Hind, sans-serif;
-}
+
 
 /* Search box */
 

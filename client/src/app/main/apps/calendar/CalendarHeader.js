@@ -98,6 +98,10 @@ const viewNamesObj = {
     title: 'Day',
     icon: 'view_day'
   },
+  CustomWeek: {
+    title: 'Custom Work week',
+    icon: 'view_array'
+  },
   agenda: {
     title: 'Agenda',
     icon: 'view_agenda'
@@ -110,6 +114,7 @@ class CalendarHeader extends Toolbar {
     const { view } = this.props;
 
     if (viewNames.length > 1) {
+      console.log(this.props);
       return viewNames.map((name) => (
         <Tooltip title={viewNamesObj[name].title} key={name}>
           <div>

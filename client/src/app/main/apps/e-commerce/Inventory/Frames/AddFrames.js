@@ -28,6 +28,7 @@ import IconButton from '@material-ui/core/IconButton';
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import BarcodeDialog from '../BarcodeDialog';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
@@ -56,9 +57,14 @@ function AddFrames(props) {
   const routeParams = useParams();
   const [openAlert, setOpenAlert] = useState(false);
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
+  const [openBarcodeDialog, setOpenBarcodeDialog] = useState(false);
 
   const handleCloseAlert = () => {
     setOpenAlert(false);
+  };
+
+  const handleBarCodeDilogClose = () => {
+    setOpenBarcodeDialog(false);
   };
 
   useEffect(() => {
@@ -190,7 +196,7 @@ function AddFrames(props) {
               setOpenAlert(true);
             }}>
             <Icon className="text-20">arrow_back</Icon>
-            <span className="mx-4 text-12">Customers</span>
+            <span className="mx-4 text-12">Inventory</span>
           </IconButton>
 
           <div className="flex flex-row">
@@ -245,10 +251,9 @@ function AddFrames(props) {
         ) : (
           <div className="p-16 sm:p-24 ">
             <div className="flex flex-row items-center flex-wrap">
-              <div className="flex ">
+              <div className="flex flex-row">
                 <TextField
-                  className="mt-8 w-200 mb-16"
-                  //   error={error?.firstName}
+                  className="mt-8 w-160 mb-16"
                   required
                   label="SKU"
                   autoFocus
@@ -259,11 +264,27 @@ function AddFrames(props) {
                   variant="outlined"
                   fullWidth
                 />
+                <BarcodeDialog
+                  open={openBarcodeDialog}
+                  handleClose={handleBarCodeDilogClose}
+                  form={form}
+                  setForm={setForm}
+                  setImages={setImages}
+                  inventory={'frames'}
+                />
+                <IconButton
+                  onClick={() => {
+                    setOpenBarcodeDialog(true);
+                  }}
+                  key="barcode"
+                  aria-label="Barcode"
+                  color="inherit">
+                  <img src="https://img.icons8.com/ios/30/000000/barcode-scanner.png" />
+                </IconButton>
               </div>
-              <div className="flex w-200 pl-10">
+              <div className="flex w-160">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Brand"
                   id="brand"
@@ -274,10 +295,9 @@ function AddFrames(props) {
                   fullWidth
                 />
               </div>
-              <div className="flex w-288 pl-10">
+              <div className="flex w-192 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Model Name"
                   id="productDescription"
@@ -288,10 +308,9 @@ function AddFrames(props) {
                   fullWidth
                 />
               </div>
-              <div className="flex w-128 pl-10">
+              <div className="flex w-192 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Colour"
                   id="colour"
@@ -302,10 +321,9 @@ function AddFrames(props) {
                   fullWidth
                 />
               </div>
-              <div className="flex  pl-10">
+              <div className="flex w-192 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Material"
                   id="material"
@@ -316,10 +334,9 @@ function AddFrames(props) {
                   fullWidth
                 />
               </div>
-              <div className="flex  pl-10">
+              <div className="flex w-160 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Shape"
                   id="shape"
@@ -333,43 +350,57 @@ function AddFrames(props) {
               <div className="flex w-96 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
-                  label="AB"
+                  label="A"
                   id="sizeX"
                   name="sizeX"
                   value={form?.sizeX}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
+                  type="number"
                 />
               </div>
               <div className="flex w-96 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
-                  label="Br"
+                  label="B"
                   id="sizeY"
                   name="sizeY"
                   value={form?.sizeY}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
+                  type="number"
                 />
               </div>
               <div className="flex w-96 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
-                  label="ED"
+                  label="Br"
                   id="sizeZ"
                   name="sizeZ"
                   value={form?.sizeZ}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
+                  type="number"
+                />
+              </div>
+              <div className="flex w-96 pl-10">
+                <TextField
+                  className="mt-8 mb-16"
+                  required
+                  label="ED"
+                  id="sizeZ2"
+                  name="sizeZ2"
+                  value={form?.sizeZ2}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  type="number"
                 />
               </div>
             </div>
@@ -396,7 +427,6 @@ function AddFrames(props) {
               <div className="flex w-200 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Made In"
                   id="madeIn"
@@ -410,7 +440,6 @@ function AddFrames(props) {
               <div className="flex w-512 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Supplier"
                   id="supplier"
@@ -424,7 +453,6 @@ function AddFrames(props) {
               <div className="flex pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Quantity"
                   type="number"
@@ -439,7 +467,6 @@ function AddFrames(props) {
               <div className="flex pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="W.S $"
                   id="ws"
@@ -453,7 +480,6 @@ function AddFrames(props) {
               <div className="flex  pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Retail $"
                   id="retailRate"

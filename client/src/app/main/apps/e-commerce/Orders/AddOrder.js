@@ -333,6 +333,10 @@ function AddOrder(props) {
             customerId: customer?.customerId,
             firstName: customer?.firstName,
             lastName: customer?.lastName,
+            dob: customer?.dob ? customer?.dob : '',
+            gender: customer?.gender ? customer?.gender : '',
+            ethnicity: customer?.ethnicity ? customer?.ethnicity : '',
+            state: customer?.state ? customer?.state : '',
             orderStatus: 'Order Received',
             eyeglasses: eyeglasses
           });
@@ -611,8 +615,9 @@ function AddOrder(props) {
             <ToastContainer />
             <div className="flex flex-row p-16 sm:p-24 w-full">
               <div className="p-8 w-1/3 h-auto shadow-3 rounded-12">
-                <h1>Patient Details</h1>
-                <h2>{`Name: ${customer.firstName} ${customer.lastName} Customer Id: ${customer.customerId}`}</h2>
+                <h1 className="underline font-700">Patient Details:</h1>
+                <h2>{`Customer Id: ${customer.customerId}`}</h2>
+                <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
                 <h2>{`Address: ${customer.address}, ${customer.state}, ${customer.zipCode}`}</h2>
                 <h2>{`Phone: ${customer.phone1}`}</h2>
                 <h2>{`Email: ${customer.email}`}</h2>

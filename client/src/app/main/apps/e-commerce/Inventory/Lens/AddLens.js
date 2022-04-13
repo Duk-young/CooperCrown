@@ -19,6 +19,7 @@ import IconButton from '@material-ui/core/IconButton';
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import BarcodeDialog from '../BarcodeDialog';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
@@ -45,7 +46,13 @@ function AddOther(props) {
   const [isLoading, setisLoading] = useState(false);
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
+  const [openBarcodeDialog, setOpenBarcodeDialog] = useState(false);
+  const [images, setImages] = useState([]);
   const routeParams = useParams();
+
+  const handleBarCodeDilogClose = () => {
+    setOpenBarcodeDialog(false);
+  };
 
   useEffect(() => {
     const id = routeParams.lensId;
@@ -181,7 +188,6 @@ function AddOther(props) {
               <div className="flex w-1/4 ">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.firstName}
                   required
                   label="SKU"
                   autoFocus
@@ -192,12 +198,28 @@ function AddOther(props) {
                   variant="outlined"
                   fullWidth
                 />
+                <BarcodeDialog
+                  open={openBarcodeDialog}
+                  handleClose={handleBarCodeDilogClose}
+                  form={form}
+                  setForm={setForm}
+                  setImages={setImages}
+                  inventory={'lens'}
+                />
+                <IconButton
+                  onClick={() => {
+                    setOpenBarcodeDialog(true);
+                  }}
+                  key="barcode"
+                  aria-label="Barcode"
+                  color="inherit">
+                  <img src="https://img.icons8.com/ios/30/000000/barcode-scanner.png" />
+                </IconButton>
               </div>
 
               <div className="flex w-1/4 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Lens Material"
                   id="material"
@@ -211,7 +233,6 @@ function AddOther(props) {
               <div className="flex w-1/4 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Sphere"
                   id="sphere"
@@ -225,7 +246,6 @@ function AddOther(props) {
               <div className="flex w-1/4 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Cylinder"
                   id="cylinder"
@@ -260,7 +280,6 @@ function AddOther(props) {
               <div className="flex w-200 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Made In"
                   id="madeIn"
@@ -274,7 +293,6 @@ function AddOther(props) {
               <div className="flex w-512 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Supplier"
                   id="supplier"
@@ -288,7 +306,6 @@ function AddOther(props) {
               <div className="flex pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Quantity"
                   type="number"
@@ -303,7 +320,6 @@ function AddOther(props) {
               <div className="flex pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="W.S $"
                   id="ws"
@@ -317,7 +333,6 @@ function AddOther(props) {
               <div className="flex  pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Retail $"
                   id="retailRate"

@@ -10,6 +10,7 @@ import { withRouter } from 'react-router';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
 import CustomAlert from '../../ReusableComponents/CustomAlert';
+import emailjs from 'emailjs-com';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
@@ -24,6 +25,7 @@ import withReducer from 'app/store/withReducer';
 function UpdateCustomer(props) {
   const [error] = useState(null);
   const [familyMembers, setFamilyMembers] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [isLoading, setisLoading] = useState(true);
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
@@ -56,12 +58,29 @@ function UpdateCustomer(props) {
       });
       setFamilyMembers(resultFamilyMembers);
 
+      const queryCustomers = await firestore().collection('customers').get();
+      let resultCustomers = [];
+      queryCustomers.forEach((doc) => {
+        resultCustomers.push(doc.data());
+      });
+      setCustomers(resultCustomers);
+
       setisLoading(false);
+    };
+
+    const fetchDetails = async () => {
+      const queryCustomers = await firestore().collection('customers').get();
+      let resultCustomers = [];
+      queryCustomers.forEach((doc) => {
+        resultCustomers.push(doc.data());
+      });
+      setCustomers(resultCustomers);
     };
 
     if (id) fetchCustomer();
     else {
       setForm({});
+      fetchDetails();
       setisLoading(false);
     }
   }, [routeParams.customerId, setForm]);
@@ -69,16 +88,16 @@ function UpdateCustomer(props) {
   // const validate = () => {
   //   const result = Joi.validate(form, schema);
 
-  //   toast.error('Please Fill Required Fields!', {
-  //     position: 'bottom-right',
-  //     autoClose: 5000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,
-  //     draggable: true,
-  //     progress: undefined,
-  //     transition: Zoom
-  //   });
+  // toast.error('Please Fill Required Fields!', {
+  //   position: 'bottom-right',
+  //   autoClose: 5000,
+  //   hideProgressBar: false,
+  //   closeOnClick: true,
+  //   pauseOnHover: true,
+  //   draggable: true,
+  //   progress: undefined,
+  //   transition: Zoom
+  // });
   //   if (result?.error?.details) {
   //     setError({
   //       [result?.error?.details[0]?.context?.label]: true
@@ -144,6 +163,22 @@ function UpdateCustomer(props) {
           })
         );
 
+        emailjs
+          .send(
+            'service_yul7h3c',
+            'template_k68omtc',
+            {
+              name: `${form?.firstName} ${form?.lastName}`,
+              from_name: 'Cooper Crown',
+              message: 'Hello Friends',
+              receiver: form?.email
+            },
+            'bYFxhbkbmnFQsUvjC'
+          )
+          .then((error) => {
+            console.log(error);
+          });
+
         props.history.push('/apps/e-commerce/customers');
       } catch (error) {
         console.log(error);
@@ -153,7 +188,8 @@ function UpdateCustomer(props) {
   };
 
   return (
-    form && (
+    form &&
+    customers && (
       <FusePageCarded
         classes={{
           toolbar: 'p-0',
@@ -212,7 +248,31 @@ function UpdateCustomer(props) {
                 color="secondary"
                 onClick={() => {
                   if (form) {
-                    setOpenAlertOnSave(true);
+                    let count = 0;
+                    customers.map((row) => {
+                      if (
+                        row?.firstName === form?.firstName &&
+                        row?.lastName === form?.lastName &&
+                        row?.dob === firestore.Timestamp.fromDate(form?.dob) &&
+                        row?.phone1 === form?.phone1
+                      ) {
+                        count++;
+                      }
+                    });
+                    if (count > 0) {
+                      toast.error('Customer already exists!', {
+                        position: 'bottom-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    } else {
+                      setOpenAlertOnSave(true);
+                    }
                   }
                 }}>
                 Save Customer

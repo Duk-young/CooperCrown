@@ -31,6 +31,7 @@ import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CustomAlert from '../../ReusableComponents/CustomAlert';
+import BarcodeDialog from '../BarcodeDialog';
 
 const GreenCheckbox = withStyles({
   root: {
@@ -56,7 +57,12 @@ function AddShowRoomInventory(props) {
   const [showRooms, setShowRooms] = useState();
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
+  const [openBarcodeDialog, setOpenBarcodeDialog] = useState(false);
   const routeParams = useParams();
+
+  const handleBarCodeDilogClose = () => {
+    setOpenBarcodeDialog(false);
+  };
 
   useEffect(() => {
     const id = routeParams.showRoomInventoryId;
@@ -258,8 +264,7 @@ function AddShowRoomInventory(props) {
             <div className="flex flex-row items-center flex-wrap">
               <div className="flex ">
                 <TextField
-                  className="mt-8 w-200 mb-16"
-                  //   error={error?.firstName}
+                  className="mt-8 w-160 mb-16"
                   required
                   label="SKU"
                   autoFocus
@@ -270,11 +275,27 @@ function AddShowRoomInventory(props) {
                   variant="outlined"
                   fullWidth
                 />
+                <BarcodeDialog
+                  open={openBarcodeDialog}
+                  handleClose={handleBarCodeDilogClose}
+                  form={form}
+                  setForm={setForm}
+                  setImages={setImages}
+                  inventory={'showRoomInventory'}
+                />
+                <IconButton
+                  onClick={() => {
+                    setOpenBarcodeDialog(true);
+                  }}
+                  key="barcode"
+                  aria-label="Barcode"
+                  color="inherit">
+                  <img src="https://img.icons8.com/ios/30/000000/barcode-scanner.png" />
+                </IconButton>
               </div>
-              <div className="flex w-200 pl-10">
+              <div className="flex w-160 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Brand"
                   id="brand"
@@ -285,10 +306,9 @@ function AddShowRoomInventory(props) {
                   fullWidth
                 />
               </div>
-              <div className="flex w-288 pl-10">
+              <div className="flex w-160 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Model Name"
                   id="productDescription"
@@ -302,7 +322,6 @@ function AddShowRoomInventory(props) {
               <div className="flex w-128 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Colour"
                   id="colour"
@@ -316,7 +335,6 @@ function AddShowRoomInventory(props) {
               <div className="flex  pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Material"
                   id="material"
@@ -330,7 +348,6 @@ function AddShowRoomInventory(props) {
               <div className="flex  pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Shape"
                   id="shape"
@@ -344,43 +361,57 @@ function AddShowRoomInventory(props) {
               <div className="flex w-96 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
-                  label="AB"
+                  label="A"
                   id="sizeX"
                   name="sizeX"
                   value={form?.sizeX}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
+                  type="number"
                 />
               </div>
               <div className="flex w-96 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
-                  label="Br"
+                  label="B"
                   id="sizeY"
                   name="sizeY"
                   value={form?.sizeY}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
+                  type="number"
                 />
               </div>
               <div className="flex w-96 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
-                  label="ED"
+                  label="Br"
                   id="sizeZ"
                   name="sizeZ"
                   value={form?.sizeZ}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
+                  type="number"
+                />
+              </div>
+              <div className="flex w-96 pl-10">
+                <TextField
+                  className="mt-8 mb-16"
+                  required
+                  label="ED"
+                  id="sizeZ2"
+                  name="sizeZ2"
+                  value={form?.sizeZ2}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  type="number"
                 />
               </div>
             </div>
@@ -407,7 +438,6 @@ function AddShowRoomInventory(props) {
               <div className="flex w-200 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Made In"
                   id="madeIn"
@@ -421,7 +451,6 @@ function AddShowRoomInventory(props) {
               <div className="flex w-512 pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Supplier"
                   id="supplier"
@@ -435,7 +464,6 @@ function AddShowRoomInventory(props) {
               <div className="flex pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Quantity"
                   type="number"
@@ -450,7 +478,6 @@ function AddShowRoomInventory(props) {
               <div className="flex pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="W.S $"
                   id="ws"
@@ -464,7 +491,6 @@ function AddShowRoomInventory(props) {
               <div className="flex  pl-10">
                 <TextField
                   className="mt-8 mb-16"
-                  //   error={error?.lastName}
                   required
                   label="Retail $"
                   id="retailRate"

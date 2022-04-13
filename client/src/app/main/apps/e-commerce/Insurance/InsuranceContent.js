@@ -31,16 +31,16 @@ const CustomHits = connectHits(({ hits, payments }) => {
     <Table aria-label="customized table">
       <TableHead>
         <TableRow>
-          <StyledTableCell>Date</StyledTableCell>
-          <StyledTableCell>Order ID</StyledTableCell>
-          <StyledTableCell>Customer ID</StyledTableCell>
-          <StyledTableCell>Name</StyledTableCell>
-          <StyledTableCell>Insurance</StyledTableCell>
-          <StyledTableCell>Policy No.</StyledTableCell>
-          <StyledTableCell>Claim Amount</StyledTableCell>
-          <StyledTableCell>Received Amount</StyledTableCell>
-          <StyledTableCell>Status</StyledTableCell>
-          <StyledTableCell>Options</StyledTableCell>
+          <StyledTableCell>DATE</StyledTableCell>
+          <StyledTableCell>ORDER ID</StyledTableCell>
+          <StyledTableCell>CUSTOMER ID</StyledTableCell>
+          <StyledTableCell>NAME</StyledTableCell>
+          <StyledTableCell>INSURANCE</StyledTableCell>
+          <StyledTableCell>POLICY No.</StyledTableCell>
+          <StyledTableCell>CLAIM AMOUNT</StyledTableCell>
+          <StyledTableCell>RECEIVED AMOUNT</StyledTableCell>
+          <StyledTableCell>STATUS</StyledTableCell>
+          <StyledTableCell>OPTIONS</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -53,13 +53,13 @@ const CustomHits = connectHits(({ hits, payments }) => {
               </StyledTableCell>
               <StyledTableCell>
                 <Link to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}>
-                  <h3>{hit?.orderId}</h3>
+                  <h3 className="text-black">{hit?.orderId}</h3>
                 </Link>
               </StyledTableCell>
               <StyledTableCell>
                 <Link
                   to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
-                  <h3>{hit?.customerId}</h3>
+                  <h3 className="text-black">{hit?.customerId}</h3>
                 </Link>
               </StyledTableCell>
               <StyledTableCell>{`${hit?.firstName} ${hit?.lastName}`}</StyledTableCell>

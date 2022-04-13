@@ -63,15 +63,15 @@ const Hits = ({ hits }) => {
           <TableHead>
             <TableRow style={{ height: 10 }}>
               <StyledTableCell>SKU</StyledTableCell>
-              <StyledTableCell>Brands</StyledTableCell>
-              <StyledTableCell>Model</StyledTableCell>
-              <StyledTableCell>Colour</StyledTableCell>
-              <StyledTableCell>Material</StyledTableCell>
-              <StyledTableCell>Shape</StyledTableCell>
-              <StyledTableCell>Size</StyledTableCell>
-              <StyledTableCell> Initial Quanitity</StyledTableCell>
-              <StyledTableCell>Quantity</StyledTableCell>
-              <StyledTableCell></StyledTableCell>
+              <StyledTableCell>BRANDS</StyledTableCell>
+              <StyledTableCell>MODEL</StyledTableCell>
+              <StyledTableCell>COLOUR</StyledTableCell>
+              <StyledTableCell>MATERIAL</StyledTableCell>
+              <StyledTableCell>SHAPE</StyledTableCell>
+              <StyledTableCell>SIZE</StyledTableCell>
+              <StyledTableCell>INITIAL QUANTITY</StyledTableCell>
+              <StyledTableCell>QUANTITY</StyledTableCell>
+              <StyledTableCell>OPTIONS</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -91,7 +91,9 @@ const Hits = ({ hits }) => {
                   <StyledTableCell>{hit.colour}</StyledTableCell>
                   <StyledTableCell>{hit.material}</StyledTableCell>
                   <StyledTableCell>{hit.shape}</StyledTableCell>
-                  <StyledTableCell>{`  ${hit.sizeX}-${hit.sizeY}-${hit.sizeZ}   `}</StyledTableCell>
+                  <StyledTableCell>{`  ${hit.sizeX}-${hit.sizeY}-${hit.sizeZ}-${
+                    hit?.sizeZ2 ? hit?.sizeZ2 : ''
+                  }   `}</StyledTableCell>
                   <StyledTableCell>{hit.initialQuantity}</StyledTableCell>
                   <StyledTableCell>{hit.quantity}</StyledTableCell>
                   <StyledTableCell>

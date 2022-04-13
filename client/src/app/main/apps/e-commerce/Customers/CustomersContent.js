@@ -33,16 +33,16 @@ const Hits = ({ hits }) => (
     <TableHead>
       <TableRow>
         <StyledTableCell>ID</StyledTableCell>
-        <StyledTableCell>First Name</StyledTableCell>
-        <StyledTableCell>Last Name</StyledTableCell>
+        <StyledTableCell>FIRST NAME</StyledTableCell>
+        <StyledTableCell>LAST NAME</StyledTableCell>
         <StyledTableCell>D.O.B</StyledTableCell>
-        <StyledTableCell>Last Exam</StyledTableCell>
-        <StyledTableCell>Gender</StyledTableCell>
-        <StyledTableCell>State</StyledTableCell>
-        <StyledTableCell>Zip Code</StyledTableCell>
-        <StyledTableCell>Phone</StyledTableCell>
-        <StyledTableCell>Email</StyledTableCell>
-        <StyledTableCell>Options</StyledTableCell>
+        <StyledTableCell>LAST EXAM</StyledTableCell>
+        <StyledTableCell>GENDER</StyledTableCell>
+        <StyledTableCell>STATE</StyledTableCell>
+        <StyledTableCell>ZIP CODE</StyledTableCell>
+        <StyledTableCell>PHONE</StyledTableCell>
+        <StyledTableCell>EMAIL</StyledTableCell>
+        <StyledTableCell>OPTIONS</StyledTableCell>
       </TableRow>
     </TableHead>
     <TableBody>
