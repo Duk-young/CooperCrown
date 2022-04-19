@@ -144,6 +144,14 @@ const navigationConfig = [
             exact: true
           },
           {
+            id: 'emailTemplates',
+            title: 'Email Templates',
+            type: 'item',
+            auth: authRoles.staff,
+            url: '/apps/e-commerce/emailtemplates',
+            exact: true
+          },
+          {
             id: 'priceSetting',
             title: 'Price Setting',
             translate: 'Price Setting',

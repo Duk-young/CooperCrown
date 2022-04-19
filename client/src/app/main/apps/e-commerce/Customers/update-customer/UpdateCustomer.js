@@ -29,6 +29,7 @@ function UpdateCustomer(props) {
   const [isLoading, setisLoading] = useState(true);
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
+  const [templates, setTemplates] = useState({});
   const { form, handleChange, setForm } = useForm(null);
   const dispatch = useDispatch();
   const routeParams = useParams();
@@ -75,6 +76,14 @@ function UpdateCustomer(props) {
         resultCustomers.push(doc.data());
       });
       setCustomers(resultCustomers);
+
+      const queryTemplates = (
+        await firestore()
+          .collection('emailTemplates')
+          .doc('emailTemplates')
+          .get()
+      ).data();
+      setTemplates(queryTemplates?.templates);
     };
 
     if (id) fetchCustomer();
@@ -170,7 +179,7 @@ function UpdateCustomer(props) {
             {
               name: `${form?.firstName} ${form?.lastName}`,
               from_name: 'Cooper Crown',
-              message: 'Hello Friends',
+              message: templates?.newCustomer,
               receiver: form?.email
             },
             'bYFxhbkbmnFQsUvjC'
