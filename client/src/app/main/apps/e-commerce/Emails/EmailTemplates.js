@@ -102,7 +102,7 @@ function EmailTemplates() {
       content={
         form && (
           <div className="flex flex-col w-full">
-            <div className="flex flex-row w-full px-20 py-10 justify-between">
+            <div className="flex flex-row w-full px-20 justify-between">
               <div className="flex w-1/2">
                 <TextField
                   className="mt-8 "
@@ -114,7 +114,7 @@ function EmailTemplates() {
                   value={form?.birthday}
                   onChange={handleChange}
                   multiline
-                  rows={15}
+                  rows={8}
                   variant="outlined"
                   fullWidth
                 />
@@ -130,13 +130,13 @@ function EmailTemplates() {
                   value={form?.specialMessage}
                   onChange={handleChange}
                   multiline
-                  rows={15}
+                  rows={8}
                   variant="outlined"
                   fullWidth
                 />
               </div>
             </div>
-            <div className="flex flex-row w-full p-20 justify-between">
+            <div className="flex flex-row w-full px-20 justify-between">
               <div className="flex w-1/2">
                 <TextField
                   className="mt-8 "
@@ -148,7 +148,7 @@ function EmailTemplates() {
                   value={form?.examExpiry}
                   onChange={handleChange}
                   multiline
-                  rows={15}
+                  rows={8}
                   variant="outlined"
                   fullWidth
                 />
@@ -164,11 +164,27 @@ function EmailTemplates() {
                   value={form?.newCustomer}
                   onChange={handleChange}
                   multiline
-                  rows={15}
+                  rows={8}
                   variant="outlined"
                   fullWidth
                 />
               </div>
+            </div>
+            <div className="flex flex-row w-full px-20 justify-between">
+              <TextField
+                className="mt-8 mb-10"
+                disabled={disabledState}
+                id="terms"
+                label="Terms & Conditions"
+                type="text"
+                name="terms"
+                value={form?.terms}
+                onChange={handleChange}
+                multiline
+                rows={12}
+                variant="outlined"
+                fullWidth
+              />
             </div>
             <div className="flex flex-row w-1/3 justify-around">
               {disabledState && (

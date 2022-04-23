@@ -104,6 +104,9 @@ function AddOrder(props) {
   const [openAlert1, setOpenAlert1] = useState(false);
   const [lensTypeNames, setLensTypeNames] = useState(false);
 
+  const routeParams = useParams();
+  const dispatch = useDispatch();
+
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
     var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
@@ -132,9 +135,6 @@ function AddOrder(props) {
   const handleCloseAlert1 = () => {
     setOpenAlert1(false);
   };
-
-  const routeParams = useParams();
-  const dispatch = useDispatch();
 
   const handleCloseAlert = () => {
     setOpenAlert(false);

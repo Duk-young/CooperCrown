@@ -565,7 +565,7 @@ a[class^='ais-'] {
 .page-footer {
   position: fixed;
   bottom: 0;
-  display: none;
+  display: flex;
 }
 .footercopy {
   color: white;
@@ -591,7 +591,7 @@ a[class^='ais-'] {
   }
   .page-footer {
     position: fixed;
-    display: flex;
+    display: none;
   }
   .page-header-space {
     display: flex;
@@ -603,4 +603,6 @@ a[class^='ais-'] {
   .footercopy {
     color: white;
   }
+
+  
 }

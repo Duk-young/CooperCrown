@@ -67,6 +67,7 @@ export default function OrderReceipt(props) {
   const [selectedInsurances, setSelectedInsurances] = useState([]);
   const [disabledState, setDisabledState] = useState(false);
   const [insuranceError, setInsuranceError] = useState(false);
+  const [templates, setTemplates] = useState([]);
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
@@ -82,114 +83,21 @@ export default function OrderReceipt(props) {
     return phoneNumberString;
   }
 
-  //   const onSubmitInsurance = async () => {
-  //     try {
-  //       if (form?.orderId) {
-  //         setDisabledState(true);
-  //         const queryExisting = await firestore()
-  //           .collection('insuranceClaims')
-  //           .where('orderId', '==', Number(form?.orderId))
-  //           .get();
-  //         queryExisting.forEach((doc) => {
-  //           doc.ref.delete();
-  //         });
-
-  //         for (let i = 0; i < selectedInsurances?.length; i++) {
-  //           const dbConfigLoop = (
-  //             await firestore().collection('dbConfig').doc('dbConfig').get()
-  //           ).data();
-
-  //           await firestore()
-  //             .collection('insuranceClaims')
-  //             .add({
-  //               orderDate: firestore.Timestamp.fromDate(new Date()),
-  //               insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1,
-  //               orderId: form?.orderId,
-  //               customerId: customer?.customerId,
-  //               firstName: customer?.firstName,
-  //               lastName: customer?.lastName,
-  //               insuranceCompany: selectedInsurances[i]?.insuranceCompany,
-  //               policyNo: selectedInsurances[i]?.policyNo,
-  //               insuranceCost: form?.insuranceCost,
-  //               claimStatus: 'Unclaimed'
-  //             });
-
-  //           await firestore()
-  //             .collection('dbConfig')
-  //             .doc('dbConfig')
-  //             .update({ insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1 });
-  //         }
-  //         dispatch(
-  //           MessageActions.showMessage({
-  //             message: 'Insurance Claim Saved Successfully...'
-  //           })
-  //         );
-  //       } else {
-  //         setDisabledState(true);
-  //         const dbConfig = (
-  //           await firestore().collection('dbConfig').doc('dbConfig').get()
-  //         ).data();
-  //         let newOrderId = dbConfig?.orderId + 1;
-
-  //         const queryExisting = await firestore()
-  //           .collection('insuranceClaims')
-  //           .where('orderId', '==', Number(newOrderId))
-  //           .get();
-  //         queryExisting.forEach((doc) => {
-  //           doc.ref.delete();
-  //         });
-
-  //         for (let i = 0; i < selectedInsurances?.length; i++) {
-  //           const dbConfigLoop = (
-  //             await firestore().collection('dbConfig').doc('dbConfig').get()
-  //           ).data();
-
-  //           await firestore()
-  //             .collection('insuranceClaims')
-  //             .add({
-  //               orderDate: firestore.Timestamp.fromDate(new Date()),
-  //               insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1,
-  //               orderId: newOrderId,
-  //               customerId: customer?.customerId,
-  //               firstName: customer?.firstName,
-  //               lastName: customer?.lastName,
-  //               insuranceCompany: selectedInsurances[i]?.insuranceCompany,
-  //               policyNo: selectedInsurances[i]?.policyNo,
-  //               insuranceCost: form?.insuranceCost,
-  //               claimStatus: 'Unclaimed'
-  //             });
-
-  //           await firestore()
-  //             .collection('dbConfig')
-  //             .doc('dbConfig')
-  //             .update({ insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1 });
-  //         }
-  //         dispatch(
-  //           MessageActions.showMessage({
-  //             message: 'Insurance Claim Saved Successfully...'
-  //           })
-  //         );
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       let test = [];
-  //       let queryInsurance = await firestore()
-  //         .collection('insurances')
-  //         .where('customerId', '==', Number(customer?.customerId))
-  //         .get();
-  //       queryInsurance.forEach((doc) => {
-  //         test.push(doc.data());
-  //       });
-
-  //       setHits(test);
-  //     };
-  //     fetchData();
-  //   }, []);
+  useEffect(() => {
+    const fetchDetails = async () => {
+      const queryTemplates = (
+        await firestore()
+          .collection('emailTemplates')
+          .doc('emailTemplates')
+          .get()
+      ).data();
+      const terms = queryTemplates?.templates?.terms
+        ? queryTemplates?.templates?.terms.split('<br>')
+        : '';
+      setTemplates(terms.length ? terms : []);
+    };
+    fetchDetails();
+  }, []);
 
   return (
     <Dialog
@@ -199,40 +107,7 @@ export default function OrderReceipt(props) {
       aria-labelledby="simple-dialog-title"
       open={openOrderReceipt}>
       <div>
-        <div ref={componentRef} className="p-20">
-          {/* style="text-align: center" */}
-          {/* <div className="page-header">
-            I'm The Header
-            <br />
-            <button
-              type="button"
-              onClick="window.print()"
-              // style="background: pink"
-            >
-              PRINT ME!
-            </button>
-          </div> */}
-
-          <div className="page-footer">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis
-            eget velit aliquet sagittis id consectetur purus. Imperdiet dui
-            accumsan sit amet nulla. Pulvinar elementum integer enim neque
-            volutpat ac tincidunt vitae semper. Sed velit dignissim sodales ut
-            eu sem integer vitae justo. Nisl suscipit adipiscing bibendum est
-            ultricies integer quis auctor elit. Risus nec feugiat in fermentum
-            posuere urna nec tincidunt. Nunc consequat interdum varius sit amet
-            mattis vulputate enim. In pellentesque massa placerat duis ultricies
-            lacus sed turpis tincidunt. Vitae semper quis lectus nulla at
-            volutpat diam ut venenatis. Urna condimentum mattis pellentesque id.
-            Mauris a diam maecenas sed enim ut sem. Cras sed felis eget velit
-            aliquet sagittis id. Viverra maecenas accumsan lacus vel facilisis.
-            Turpis egestas maecenas pharetra convallis posuere morbi leo urna.
-            Feugiat in fermentum posuere urna. Imperdiet dui accumsan sit amet
-            nulla facilisi morbi. Cursus risus at ultrices mi tempus imperdiet
-            nulla.
-          </div>
-
+        <div ref={componentRef}>
           <table>
             <thead>
               <tr>
@@ -247,17 +122,17 @@ export default function OrderReceipt(props) {
               <tr>
                 <td>
                   {/* <!--*** CONTENT GOES HERE ***--> */}
-                  <div className="page-header flex flex-row w-full">
-                    <div className="w-1/3 border-b-1 border-black ">
+                  <div className="page-header flex flex-row w-full border-b-1 border-black">
+                    <div className="w-1/3  ">
                       {' '}
                       <h2>{new Date().toDateString()}</h2>{' '}
                     </div>
-                    <div className="flex flex-row justify-center pt-2 w-1/3 border-b-1 border-black ">
-                      <div className="w-128 h-w-128">
+                    <div className="flex flex-row justify-center pt-2 w-1/3  ">
+                      <div className="w-128">
                         <img src={logo} alt="" />
                       </div>
                     </div>
-                    <div className="flex flex-col w-1/3 border-b-1 border-black ">
+                    <div className="flex flex-col w-1/3  ">
                       <h2 className="font-serif text-right">
                         225 Broad Ave. Ste 206
                       </h2>
@@ -805,25 +680,32 @@ export default function OrderReceipt(props) {
                     </div>
                   )}
 
-                  <div className="footercopy">
+                  <div className="flex flex-row footercopy">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                     do eiusmod tempor incididunt ut labore et dolore magna
                     aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing
                     elit, sed do eiusmod tempor incididunt ut labore et dolore
                     magna aliqua.
                   </div>
+                  <h2 className=" ml-10 underline font-700">
+                    Terms & Conditions
+                  </h2>
+                  {templates.map((row) => (
+                    <div className="ml-20">{row}</div>
+                  ))}
+                  {/* <div>{message}</div> */}
                 </td>
               </tr>
             </tbody>
 
-            <tfoot>
+            {/* <tfoot>
               <tr>
-                <td>
-                  {/* <!--place holder for the fixed-position footer--> */}
-                  <div className="page-footer-space"></div>
+                <td> */}
+            {/* <!--place holder for the fixed-position footer--> */}
+            {/* <div className="page-footer-space"></div>
                 </td>
               </tr>
-            </tfoot>
+            </tfoot> */}
           </table>
         </div>
         <Fab
