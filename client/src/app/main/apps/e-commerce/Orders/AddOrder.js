@@ -573,7 +573,7 @@ function AddOrder(props) {
           <div className="mt-24">
             <IconButton
               onClick={() => {
-                if (disabledState) {
+                if (disabledState || eyeglasses.length === 0) {
                   props.history.push(`/apps/e-commerce/orders`);
                 } else {
                   setOpenAlert1(true);

@@ -12,6 +12,7 @@ import { firestore } from 'firebase';
 
 function Prescriptions(props) {
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
+  const [changeOccured, setChangeOccured] = useState(false);
   const [fetchedId, setFetchedId] = useState(0);
   const routeParams = useParams();
 
@@ -42,7 +43,17 @@ function Prescriptions(props) {
         <div className="mt-24">
           <IconButton
             onClick={() => {
-              setOpenAlertOnBack(true);
+              if (changeOccured) {
+                setOpenAlertOnBack(true);
+              } else if (routeParams.customerId) {
+                props.history.push(
+                  `/apps/e-commerce/customers/profile/${routeParams.customerId}`
+                );
+              } else {
+                props.history.push(
+                  `/apps/e-commerce/customers/profile/${fetchedId}`
+                );
+              }
             }}>
             <Icon className="text-20">arrow_back</Icon>
             <span className="mx-4 text-12">Customer's Profile</span>
@@ -73,7 +84,7 @@ function Prescriptions(props) {
           />
         </div>
       }
-      content={<AddPrescription />}
+      content={<AddPrescription setChangeOccured={setChangeOccured} />}
       innerScroll
     />
   );

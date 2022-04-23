@@ -341,8 +341,7 @@ function UpdateCustomerForm(props) {
                       row?.lastName === form?.lastName &&
                       row?.dob.toDate().getDate() === form?.dob.getDate() &&
                       row?.dob.toDate().getMonth() === form?.dob.getMonth() &&
-                      row?.dob.toDate().getYear() === form?.dob.getYear() &&
-                      row?.phone1 === form?.phone1
+                      row?.dob.toDate().getYear() === form?.dob.getYear()
                     ) {
                       count++;
                     }

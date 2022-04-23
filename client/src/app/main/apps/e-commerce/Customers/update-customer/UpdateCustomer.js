@@ -210,7 +210,14 @@ function UpdateCustomer(props) {
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
                 <IconButton
                   onClick={() => {
-                    setOpenAlertOnBack(true);
+                    if (
+                      Object.keys(form).length === 0 &&
+                      form.constructor === Object
+                    ) {
+                      props.history.push('/apps/e-commerce/customers');
+                    } else {
+                      setOpenAlertOnBack(true);
+                    }
                   }}>
                   <Icon className="text-20">
                     {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}

@@ -151,7 +151,14 @@ function AddOther(props) {
         <div className="mt-24">
           <IconButton
             onClick={() => {
-              setOpenAlertOnBack(true);
+              if (
+                Object.keys(form).length === 0 &&
+                form.constructor === Object
+              ) {
+                props.history.push(`/apps/inventory`);
+              } else {
+                setOpenAlertOnBack(true);
+              }
             }}>
             <Icon className="text-20">arrow_back</Icon>
             <span className="mx-4 text-12">Inventory</span>

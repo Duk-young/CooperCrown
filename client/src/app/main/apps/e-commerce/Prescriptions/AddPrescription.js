@@ -17,6 +17,7 @@ import Button from '@material-ui/core/Button';
 import CustomAlert from '../ReusableComponents/CustomAlert';
 
 const AddPrescription = (props) => {
+  const { setChangeOccured } = props;
   const [isLoading, setisLoading] = useState(true);
   const [customer, setCustomer] = useState({});
   const { form, handleChange, setForm } = useForm(null);
@@ -125,7 +126,7 @@ const AddPrescription = (props) => {
   useEffect(() => {
     if (routeParams.prescriptionId) {
       setisLoading(true);
-
+      setChangeOccured(true);
       const prescriptionId = routeParams.prescriptionId;
       const fetchDetails = async () => {
         const queryEditPrescription = await firestore()
@@ -206,7 +207,7 @@ const AddPrescription = (props) => {
   const onSubmit = async () => {
     if (form.prescriptionId) {
       setisLoading(true);
-      console.log(form);
+
       try {
         const ref = firestore().collection('prescriptions').doc(form?.id);
 
@@ -299,6 +300,7 @@ const AddPrescription = (props) => {
                   );
 
                   setPrescription(eyeglassesRx);
+                  setChangeOccured(true);
                 }}
                 control={<Radio />}
                 label="Eyeglasses Rx"
@@ -310,12 +312,16 @@ const AddPrescription = (props) => {
                   );
 
                   setPrescription(contactLensRx);
+                  setChangeOccured(true);
                 }}
                 value="contactLensRx"
                 control={<Radio />}
                 label="Contact Lens Rx"
               />
               <FormControlLabel
+                onClick={() => {
+                  setChangeOccured(true);
+                }}
                 value="medicationRx"
                 control={<Radio />}
                 label="Medication Rx"

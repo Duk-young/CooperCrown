@@ -22,6 +22,7 @@ import reducer from '../store/reducers';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import CustomAlert from '../ReusableComponents/CustomAlert';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {}
@@ -38,6 +39,7 @@ function AddInsurance(props) {
   const [insuranceCompanyInput, setInsuranceCompanyInput] = useState(
     form?.insuranceCompany
   );
+  const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
 
   useEffect(() => {
     if (routeParams.insuranceId) {
@@ -81,7 +83,7 @@ function AddInsurance(props) {
         });
 
         setInsurances(resArr);
-        setForm([]);
+        setForm({});
         setisLoading(false);
       };
       fetchInsurance();
@@ -179,21 +181,46 @@ function AddInsurance(props) {
       }}
       header={
         <div className="mt-24">
-          <Typography
-            className="normal-case flex items-center sm:mb-12"
-            component={Link}
-            role="button"
-            to="/apps/e-commerce/customers"
-            color="inherit">
+          <IconButton
+            onClick={() => {
+              if (
+                Object.keys(form).length === 0 &&
+                form.constructor === Object
+              ) {
+                props.history.push(
+                  `/apps/e-commerce/customers/profile/${routeParams.customerId}`
+                );
+              } else {
+                setOpenAlertOnBack(true);
+              }
+            }}>
             <Icon className="text-20">arrow_back</Icon>
-            <span className="mx-4">Customers</span>
-          </Typography>
+            <span className="mx-4 text-12">Customer's Profile</span>
+          </IconButton>
+
           <div className="flex flex-row">
             <Icon className="text-20 mt-4">listalt</Icon>
             <Typography className="text-16 pl-16 sm:text-20 truncate">
               Adding Insurance Info
             </Typography>
           </div>
+          <CustomAlert
+            open={openAlertOnBack}
+            setOpen={setOpenAlertOnBack}
+            text1="Discard Changes?"
+            text2="All the changes will be lost. Are you sure?"
+            customFunction={() => {
+              if (routeParams?.customerId) {
+                props.history.push(
+                  `/apps/e-commerce/customers/profile/${routeParams.customerId}`
+                );
+              } else {
+                props.history.push(
+                  `/apps/e-commerce/customers/profile/${form?.customerId}`
+                );
+              }
+            }}
+          />
         </div>
       }
       content={
