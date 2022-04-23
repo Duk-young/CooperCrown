@@ -320,26 +320,19 @@ const CustomerProfile = (props) => {
                   <Table stickyHeader aria-label="customized table">
                     <TableHead>
                       <TableRow style={{ height: 10 }}>
-                        <StyledTableCell>Sr#</StyledTableCell>
+                        <StyledTableCell>ID</StyledTableCell>
                         <StyledTableCell>NAME</StyledTableCell>
                         <StyledTableCell>BIRTHDAY</StyledTableCell>
                         <StyledTableCell>GENDER</StyledTableCell>
-                        <StyledTableCell>ID</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {familyMembers
                         .sort((a, b) => (a.customerId > b.customerId ? -1 : 1))
-                        .map((row, index) => (
+                        .map((row) => (
                           <StyledTableRow
                             key={row.customerId}
                             style={{ height: 10 }}>
-                            <StyledTableCell>{index + 1}</StyledTableCell>
-                            <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
-                            <StyledTableCell>
-                              {moment(row.dob.toDate()).format('MM/DD/YYYY')}
-                            </StyledTableCell>
-                            <StyledTableCell>{row?.gender}</StyledTableCell>
                             <StyledTableCell>
                               <Link
                                 to={`/apps/e-commerce/customers/profile/${row.customerId}`}>
@@ -348,6 +341,11 @@ const CustomerProfile = (props) => {
                                 </h3>
                               </Link>
                             </StyledTableCell>
+                            <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
+                            <StyledTableCell>
+                              {moment(row.dob.toDate()).format('MM/DD/YYYY')}
+                            </StyledTableCell>
+                            <StyledTableCell>{row?.gender}</StyledTableCell>
                           </StyledTableRow>
                         ))}
                     </TableBody>

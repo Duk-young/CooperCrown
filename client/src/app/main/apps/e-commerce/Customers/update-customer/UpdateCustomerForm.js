@@ -9,14 +9,15 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 import Paper from '@material-ui/core/Paper';
+import moment from 'moment';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useEffect, useState } from 'react';
@@ -387,10 +388,10 @@ function UpdateCustomerForm(props) {
                 aria-label="customized table">
                 <TableHead>
                   <TableRow style={{ height: 10 }}>
-                    <StyledTableCell>Sr#</StyledTableCell>
-                    <StyledTableCell>Name</StyledTableCell>
-
                     <StyledTableCell>ID</StyledTableCell>
+                    <StyledTableCell>NAME</StyledTableCell>
+                    <StyledTableCell>BIRTHDAY</StyledTableCell>
+                    <StyledTableCell>GENDER</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -400,9 +401,12 @@ function UpdateCustomerForm(props) {
                       <StyledTableRow
                         key={row.customerId}
                         style={{ height: 10 }}>
-                        <StyledTableCell>{index + 1}</StyledTableCell>
-                        <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
                         <StyledTableCell>{row?.customerId}</StyledTableCell>
+                        <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
+                        <StyledTableCell>
+                          {moment(row.dob.toDate()).format('MM/DD/YYYY')}
+                        </StyledTableCell>
+                        <StyledTableCell>{row?.gender}</StyledTableCell>
                       </StyledTableRow>
                     ))}
                 </TableBody>
