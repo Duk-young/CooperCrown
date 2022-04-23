@@ -296,17 +296,16 @@ function AddInsurance(props) {
                             key={img.name}
                             alt={''}
                           />
-                          <div
-                            className="flex flex-row justify-between items-center"
-                            onClick={() => {
-                              let newImages = images;
-                              newImages.splice(index, 1);
-                              setImages([...newImages]);
-                            }}>
+                          <div className="flex flex-row justify-between items-center">
                             <div className="truncate">
                               {img.name.split('.', 1)}
                             </div>
                             <IconButton
+                              onClick={() => {
+                                let newImages = images;
+                                newImages.splice(index, 1);
+                                setImages([...newImages]);
+                              }}
                               aria-label="delete"
                               className={classes.margin}>
                               <DeleteIcon

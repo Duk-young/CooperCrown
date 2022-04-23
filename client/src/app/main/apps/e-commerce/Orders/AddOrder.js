@@ -56,10 +56,12 @@ import OrderReceipt from './OrderReceipt';
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
+    textAlign: 'center'
   },
   body: {
-    fontSize: 14
+    fontSize: 14,
+    textAlign: 'center'
   }
 }))(TableCell);
 
@@ -101,6 +103,16 @@ function AddOrder(props) {
   const [openAlert, setOpenAlert] = useState(false);
   const [openAlert1, setOpenAlert1] = useState(false);
   const [lensTypeNames, setLensTypeNames] = useState(false);
+
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      var intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return phoneNumberString;
+  }
 
   const handleStatusChange = async (e) => {
     const ref = firestore().collection('orders').doc(form?.id);
@@ -571,9 +583,11 @@ function AddOrder(props) {
               <span className="mx-4 text-12">Orders</span>
             </IconButton>
             <div className="flex flex-row">
-              <Icon className="text-20 mt-4">listalt</Icon>
+              <Icon className="text-20 mt-4">description</Icon>
               <Typography className="text-16 pl-16 sm:text-20 truncate">
-                New Order
+                {routeParams.orderId
+                  ? `Order: ${routeParams.orderId}`
+                  : 'New Order'}
               </Typography>
             </div>
             <div>
@@ -619,7 +633,7 @@ function AddOrder(props) {
                 <h2>{`Customer Id: ${customer.customerId}`}</h2>
                 <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
                 <h2>{`Address: ${customer.address}, ${customer.state}, ${customer.zipCode}`}</h2>
-                <h2>{`Phone: ${customer.phone1}`}</h2>
+                <h2>{`Phone: ${formatPhoneNumber(customer.phone1)}`}</h2>
                 <h2>{`Email: ${customer.email}`}</h2>
                 <h2>{`DOB: ${customer?.dob?.toDateString()}`}</h2>
                 <h2>{`Sex: ${customer.gender}`}</h2>
@@ -1704,7 +1718,7 @@ function AddOrder(props) {
                           payments={payments}
                         />
                       </div>
-                      <div className="flex flex-row mb-10 justify-between">
+                      <div className="flex flex-row mb-10 justify-around">
                         <Fab
                           onClick={() => {
                             if (selectedFrame?.lensRate) {
@@ -1774,46 +1788,6 @@ function AddOrder(props) {
                           Add Frame
                         </Fab>
 
-                        <div>
-                          <Dialog
-                            fullWidth
-                            maxWidth="sm"
-                            open={openAlert}
-                            onClose={handleCloseAlert}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description">
-                            <DialogTitle id="alert-dialog-title" color="white">
-                              {'Save Changes?'}
-                            </DialogTitle>
-                            <DialogContent>
-                              <DialogContentText id="alert-dialog-description">
-                                Are you sure?
-                              </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                              <Button
-                                onClick={handleCloseAlert}
-                                color="secondary">
-                                Disagree
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  handleCloseAlert();
-                                  if (form?.insuranceCost > 0) {
-                                    setOpen(true);
-                                  } else {
-                                    deleteExistingInsurance();
-                                    onSubmit();
-                                  }
-                                }}
-                                color="secondary"
-                                autoFocus>
-                                Agree
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </div>
-
                         <Fab
                           onClick={() => {
                             if (eyeglasses.length) {
@@ -1842,21 +1816,19 @@ function AddOrder(props) {
                         </Fab>
 
                         {routeParams?.orderId && (
-                          <div className="flex flex-row justify-start mt-10">
-                            <Fab
-                              onClick={() => {
-                                setOpenOrderPayment(true);
-                              }}
-                              variant="extended"
-                              color="primary"
-                              aria-label="add">
-                              <AddIcon />
-                              Receive Payment
-                            </Fab>
-                          </div>
+                          <Fab
+                            onClick={() => {
+                              setOpenOrderPayment(true);
+                            }}
+                            variant="extended"
+                            color="primary"
+                            aria-label="add">
+                            <AddIcon />
+                            Receive Payment
+                          </Fab>
                         )}
                         {routeParams?.orderId && (
-                          <div className="flex flex-row justify-start mt-10">
+                          <div>
                             <OrderReceipt
                               mainForm={form}
                               openOrderReceipt={openOrderReceipt}
@@ -1879,12 +1851,47 @@ function AddOrder(props) {
                           </div>
                         )}
                       </div>
+                      <Dialog
+                        fullWidth
+                        maxWidth="sm"
+                        open={openAlert}
+                        onClose={handleCloseAlert}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description">
+                        <DialogTitle id="alert-dialog-title" color="white">
+                          {'Save Changes?'}
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            Are you sure?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleCloseAlert} color="secondary">
+                            Disagree
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              handleCloseAlert();
+                              if (form?.insuranceCost > 0) {
+                                setOpen(true);
+                              } else {
+                                deleteExistingInsurance();
+                                onSubmit();
+                              }
+                            }}
+                            color="secondary"
+                            autoFocus>
+                            Agree
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
                       <div className="flex flex-row w-full">
                         <div className="flex flex-col w-2/3">
                           <h1 className="ml-10 font-700">Eyeglasses Detail:</h1>
                           <div className="flex flex-col h-320 ">
                             <TableContainer
-                              className="flex flex-col w-full m-2 rounded-12 shadow-4 overflow-scroll"
+                              className="flex flex-col w-full m-2  overflow-scroll"
                               component={Paper}>
                               <Table aria-label="customized table">
                                 <TableHead>
@@ -1969,7 +1976,7 @@ function AddOrder(props) {
                             <div className="flex flex-col h-320 ">
                               <TableContainer
                                 component={Paper}
-                                className="flex flex-col w-full m-2 rounded-12 shadow-4 overflow-scroll">
+                                className="flex flex-col w-full m-2  overflow-scroll">
                                 <Table
                                   stickyHeader
                                   aria-label="customized table">

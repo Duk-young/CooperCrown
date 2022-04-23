@@ -34,6 +34,16 @@ const AddAppointments = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      var intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return phoneNumberString;
+  }
+
   useEffect(() => {
     setisLoading(true);
     const id = routeParams.customerId;
@@ -127,7 +137,7 @@ const AddAppointments = (props) => {
           <h2>{`Customer Id: ${customer.customerId}`}</h2>
           <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
           <h2>{`Address: ${customer.address}, ${customer.state}, ${customer.zipCode}`}</h2>
-          <h2>{`Phone: ${customer.phone1}`}</h2>
+          <h2>{`Phone: ${formatPhoneNumber(customer.phone1)}`}</h2>
           <h2>{`Email: ${customer.email}`}</h2>
           <h2>{`DOB: ${customer.dob.toDateString()}`}</h2>
           <h2>{`Sex: ${customer.gender}`}</h2>

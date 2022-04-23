@@ -8,7 +8,6 @@ import { useForm } from '@fuse/hooks';
 import { useTheme } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import Button from '@material-ui/core/Button';
 import CustomAlert from '../../ReusableComponents/CustomAlert';
 import emailjs from 'emailjs-com';
 import FuseAnimate from '@fuse/core/FuseAnimate';
@@ -250,43 +249,7 @@ function UpdateCustomer(props) {
                 </div>
               </div>
             </div>
-            <FuseAnimate animation="transition.slideRightIn" delay={300}>
-              <Button
-                className="whitespace-no-wrap normal-case"
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                  if (form) {
-                    let count = 0;
-                    customers.map((row) => {
-                      if (
-                        row?.firstName === form?.firstName &&
-                        row?.lastName === form?.lastName &&
-                        row?.dob === firestore.Timestamp.fromDate(form?.dob) &&
-                        row?.phone1 === form?.phone1
-                      ) {
-                        count++;
-                      }
-                    });
-                    if (count > 0) {
-                      toast.error('Customer already exists!', {
-                        position: 'bottom-right',
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        transition: Zoom
-                      });
-                    } else {
-                      setOpenAlertOnSave(true);
-                    }
-                  }
-                }}>
-                Save Customer
-              </Button>
-            </FuseAnimate>
+
             <CustomAlert
               open={openAlertOnSave}
               setOpen={setOpenAlertOnSave}
@@ -304,6 +267,8 @@ function UpdateCustomer(props) {
             setForm={setForm}
             familyMembers={familyMembers}
             setFamilyMembers={setFamilyMembers}
+            customers={customers}
+            setOpenAlertOnSave={setOpenAlertOnSave}
           />
         }
         innerScroll

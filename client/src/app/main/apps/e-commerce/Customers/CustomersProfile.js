@@ -10,6 +10,7 @@ import Fab from '@material-ui/core/Fab';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
+import FuseAnimate from '@fuse/core/FuseAnimate';
 import IconButton from '@material-ui/core/IconButton';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import Paper from '@material-ui/core/Paper';
@@ -63,6 +64,16 @@ const CustomerProfile = (props) => {
   const [filteredPrescription, setFilteredPrescription] = useState([]);
   const [familyMembers, setFamilyMembers] = useState([]);
   const routeParams = useParams();
+
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      var intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return phoneNumberString;
+  }
 
   useEffect(() => {
     setisLoading(true);
@@ -145,7 +156,7 @@ const CustomerProfile = (props) => {
         header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
       }}
       header={
-        <div className="mt-24">
+        <div className=" flex flex-col w-full mt-24">
           <Typography
             className="normal-case flex items-center sm:mb-12"
             component={Link}
@@ -155,49 +166,146 @@ const CustomerProfile = (props) => {
             <Icon className="text-20">arrow_back</Icon>
             <span className="mx-4">Customers</span>
           </Typography>
-          <div className="flex flex-row">
-            <Icon className="text-20 mt-4">people</Icon>
-            <Typography className="text-16 pl-16 sm:text-20 truncate">
-              Customer's Details
-            </Typography>
+          <div className="flex flex-row w-full px-10 justify-between">
+            <div className="flex flex-row">
+              <Icon className="text-28 ">people</Icon>
+              <Typography className="text-16 pl-8 sm:text-20 truncate">
+                Customer's Details
+              </Typography>
+            </div>
+            <FuseAnimate animation="transition.slideRightIn" delay={300}>
+              <Button
+                onClick={() =>
+                  props.history.push(
+                    `/apps/e-commerce/customers/${customer?.customerId}`
+                  )
+                }
+                className="whitespace-no-wrap normal-case"
+                variant="contained"
+                color="secondary">
+                <EditIcon fontSize="small" />
+                Edit
+              </Button>
+            </FuseAnimate>
           </div>
         </div>
       }
       content={
         <div className="flex flex-col w-full">
           <div className="flex flex-row p-16 sm:p-24 w-full">
-            <div className="p-12 w-1/2 h-auto  rounded-20 shadow-10">
+            <div className="p-12 w-1/3 h-auto  rounded-20 shadow-2">
               <h1 className="underline font-700">Customer Info</h1>
-              <h2>{`Customer Id: ${customer.customerId}`}</h2>
-              <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
-              <h2>{`DOB: ${customer?.dob.toDateString()}`}</h2>
-              <h2>{`Sex: ${customer?.gender}`}</h2>
-              <h2>{`Ethnicity: ${customer?.ethnicity}`}</h2>
-              <h2>{`Address: ${customer?.address}`}</h2>
-              <h2>{`City: ${customer?.city}`}</h2>
-              <h2>{`State: ${customer?.state}`}</h2>
-              <h2>{`Zip-Code: ${customer?.zipCode}`}</h2>
-              <h2>{`Phone 1: ${customer?.phone1}`}</h2>
-              <h2>{`Phone 2: ${customer?.phone2}`}</h2>
-              <h2>{`Email: ${customer?.email}`}</h2>
-              <h2>{`Other: ${customer?.other}`}</h2>
-              <Fab
-                onClick={() => {
-                  props.history.push(
-                    `/apps/e-commerce/customers/${customer?.customerId}`
-                  );
-                }}
-                variant="extended"
-                color="secondary"
-                aria-label="add">
-                <IconButton aria-label="edit">
-                  <EditIcon fontSize="small" />
-                </IconButton>
-                Edit
-              </Fab>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-t-1 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Customer Id:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-t-1 border-b-1">
+                  <h2 className="pl-6">{customer.customerId}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Name:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{`${customer?.firstName} ${customer.lastName}`}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Date of Birth:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{customer?.dob.toDateString()}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Sex:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{customer?.gender}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Ethnicity:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{customer?.ethnicity}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Address:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{customer?.address}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">City:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{customer?.city}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">State:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{customer?.state}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Zip-Code:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{customer?.zipCode}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Phone 1:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">
+                    {formatPhoneNumber(customer?.phone1)}
+                  </h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Phone 2:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">
+                    {formatPhoneNumber(customer?.phone2)}
+                  </h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Email:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{customer?.email}</h2>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                  <h2 className="pl-6 font-700">Other:</h2>
+                </div>
+                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                  <h2 className="pl-6">{customer?.other}</h2>
+                </div>
+              </div>
             </div>
-            <div className="p-12 ml-10 w-1/2 h-auto  rounded-20 shadow-10">
-              <h1>Family Tree:</h1>
+            <div className="p-12 ml-10 w-2/3 h-auto  rounded-20 shadow-10">
+              <h1 className="underline font-700">Family Tree:</h1>
               <div className="flex flex-col w-full h-288">
                 <TableContainer
                   className="flex flex-col w-full"

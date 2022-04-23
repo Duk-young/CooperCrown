@@ -17,7 +17,6 @@ import IconButton from '@material-ui/core/IconButton';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import SearchDialouge from './SearchDialouge';
 import FuseAnimate from '@fuse/core/FuseAnimate';
-// import FuseLoading from '@fuse/core/FuseLoading';
 import { withRouter } from 'react-router';
 import '../Customers/Search.css';
 import '../Customers/Themes.css';
@@ -107,19 +106,13 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const OrdersContent = (props) => {
-  // const classes = useStyles();
-  // const [isLoading, setisLoading] = useState(false);
-
-  // if (isLoading) return <FuseLoading />;
   return (
     <div className="flex w-full ">
-      <TableContainer
-        component={Paper}
-        className="flex flex-col w-full p-20 rounded-32 shadow-20">
+      <TableContainer component={Paper} className="flex flex-col w-full py-20 ">
         <InstantSearch searchClient={searchClient} indexName="orders">
           <div className="flex flex-row">
             <div className="flex flex-col flex-1"></div>
-            <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12">
+            <div className="flex flex-col flex-1 mb-10 border-1 rounded-12">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for orders...'

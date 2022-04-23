@@ -72,6 +72,15 @@ export default function OrderReceipt(props) {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
   });
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      var intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return phoneNumberString;
+  }
 
   //   const onSubmitInsurance = async () => {
   //     try {
@@ -268,8 +277,12 @@ export default function OrderReceipt(props) {
                     <h2 className="font-serif">{`${customer?.firstName} ${customer?.lastName} `}</h2>
                     <h2 className="font-serif">{customer?.address}</h2>
                     <h2 className="font-serif">{`${customer?.state} ${customer?.zipCode} `}</h2>
-                    <h2 className="font-serif">{`Phone 1: ${customer?.phone1} `}</h2>
-                    <h2 className="font-serif">{`Phone 2: ${customer?.phone2} `}</h2>
+                    <h2 className="font-serif">{`Phone 1: ${formatPhoneNumber(
+                      customer?.phone1
+                    )} `}</h2>
+                    <h2 className="font-serif">{`Phone 2: ${formatPhoneNumber(
+                      customer?.phone2
+                    )} `}</h2>
                     <h2 className="font-serif">{`Email: ${customer?.email} `}</h2>
                   </div>
                   <div className="flex w-full px-20 ">

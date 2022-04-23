@@ -30,7 +30,7 @@ function ContactsHeader(props) {
         </FuseAnimate>
       </div>
 
-      <div className="flex flex-1 items-center justify-center px-12">
+      {/* <div className="flex flex-1 items-center justify-center px-12">
         <ThemeProvider theme={mainTheme}>
           <FuseAnimate animation="transition.slideDownIn" delay={300}>
             <Paper
@@ -52,7 +52,7 @@ function ContactsHeader(props) {
             </Paper>
           </FuseAnimate>
         </ThemeProvider>
-      </div>
+      </div> */}
       <FuseAnimate animation="transition.slideRightIn" delay={300}>
         <Button
           component={Link}

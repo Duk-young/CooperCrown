@@ -103,6 +103,7 @@ export default function ReceiveOrderPayment(props) {
         </FormControl>
 
         <FormControl variant="outlined">
+          <FormHelperText>Select Payment Method...</FormHelperText>
           <Select
             labelId="demo-simple-select-autowidth-label"
             defaultValue={form?.paymentMode}
@@ -117,7 +118,6 @@ export default function ReceiveOrderPayment(props) {
               Store Credit / Gift Card
             </MenuItem>
           </Select>
-          <FormHelperText>Select Payment Method...</FormHelperText>
         </FormControl>
 
         <TextField

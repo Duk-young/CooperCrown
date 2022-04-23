@@ -23,6 +23,7 @@ export default function ReceiveInsurancePayment(props) {
   const { claim, open, handleClose, payments } = props;
   const { form, handleChange, setForm } = useForm(null);
   const [error, setError] = useState(null);
+  const [disabledState, setDisabledState] = useState(false);
   const dispatch = useDispatch();
 
   const onSubmit = async () => {
@@ -97,6 +98,7 @@ export default function ReceiveInsurancePayment(props) {
         </FormControl>
 
         <FormControl variant="outlined">
+          <FormHelperText>Select Payment Method...</FormHelperText>
           <Select
             labelId="demo-simple-select-autowidth-label"
             defaultValue={form?.paymentMode}
@@ -111,7 +113,6 @@ export default function ReceiveInsurancePayment(props) {
               Store Credit / Gift Card
             </MenuItem>
           </Select>
-          <FormHelperText>Select Payment Method...</FormHelperText>
         </FormControl>
 
         <TextField
@@ -134,6 +135,7 @@ export default function ReceiveInsurancePayment(props) {
                 +claim?.insuranceCost -
                 payments.reduce((a, b) => +a + +b.amount, 0);
               if (balance >= form?.amount) {
+                setDisabledState(true);
                 onSubmit();
               } else {
                 setError('Balance amount is less than the receiving!');
@@ -143,6 +145,7 @@ export default function ReceiveInsurancePayment(props) {
             }
           }}
           variant="extended"
+          disabled={disabledState}
           color="primary"
           aria-label="add">
           <AddIcon />

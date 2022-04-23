@@ -12,9 +12,10 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import FuseAnimate from '@fuse/core/FuseAnimate';
 import MenuItem from '@material-ui/core/MenuItem';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import { ToastContainer, toast, Zoom } from 'react-toastify';
 import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -67,7 +68,9 @@ function UpdateCustomerForm(props) {
     error,
     setForm,
     familyMembers,
-    setFamilyMembers
+    setFamilyMembers,
+    customers,
+    setOpenAlertOnSave
   } = props;
   const [state, setState] = useState(form?.state);
   const [open, setOpen] = useState(false);
@@ -324,6 +327,45 @@ function UpdateCustomerForm(props) {
             variant="outlined"
             fullWidth
           />
+          <FuseAnimate animation="transition.slideRightIn" delay={300}>
+            <Button
+              className="whitespace-no-wrap normal-case"
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                if (form) {
+                  let count = 0;
+                  customers.map((row) => {
+                    if (
+                      row?.firstName === form?.firstName &&
+                      row?.lastName === form?.lastName &&
+                      row?.dob.toDate().getDate() === form?.dob.getDate() &&
+                      row?.dob.toDate().getMonth() === form?.dob.getMonth() &&
+                      row?.dob.toDate().getYear() === form?.dob.getYear() &&
+                      row?.phone1 === form?.phone1
+                    ) {
+                      count++;
+                    }
+                  });
+                  if (count > 0) {
+                    toast.error('Customer already exists!', {
+                      position: 'bottom-right',
+                      autoClose: 5000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      transition: Zoom
+                    });
+                  } else {
+                    setOpenAlertOnSave(true);
+                  }
+                }
+              }}>
+              Save Customer
+            </Button>
+          </FuseAnimate>
         </div>
       </div>
       <div className="p-16 sm:p-24 w-1/3 mx-4 my-10 flex flex-row h-360 shadow-4 rounded-8">

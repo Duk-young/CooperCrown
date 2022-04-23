@@ -12,14 +12,14 @@ function Orders(props) {
   return (
     <FusePageCarded
       classes={{
-        content: 'flex',
-        header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
+        content: 'flex p-0',
+        header: 'min-h-72 h-72 sm:h-136 sm:min-h-136 p-0'
       }}
       header={
         <div className="flex flex-1 w-full items-center justify-between">
           <div className="flex items-center">
             <FuseAnimate animation="transition.expandIn" delay={300}>
-              <Icon className="text-32">people</Icon>
+              <Icon className="text-32">description</Icon>
             </FuseAnimate>
             <FuseAnimate animation="transition.slideLeftIn" delay={300}>
               <Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h6">

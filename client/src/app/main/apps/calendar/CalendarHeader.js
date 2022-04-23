@@ -114,7 +114,6 @@ class CalendarHeader extends Toolbar {
     const { view } = this.props;
 
     if (viewNames.length > 1) {
-      console.log(this.props);
       return viewNames.map((name) => (
         <Tooltip title={viewNamesObj[name].title} key={name}>
           <div>

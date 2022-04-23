@@ -28,77 +28,87 @@ const searchClient = algoliasearch(
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
-const Hits = ({ hits }) => (
-  <Table aria-label="customized table">
-    <TableHead>
-      <TableRow>
-        <StyledTableCell>ID</StyledTableCell>
-        <StyledTableCell>FIRST NAME</StyledTableCell>
-        <StyledTableCell>LAST NAME</StyledTableCell>
-        <StyledTableCell>D.O.B</StyledTableCell>
-        <StyledTableCell>LAST EXAM</StyledTableCell>
-        <StyledTableCell>GENDER</StyledTableCell>
-        <StyledTableCell>STATE</StyledTableCell>
-        <StyledTableCell>ZIP CODE</StyledTableCell>
-        <StyledTableCell>PHONE</StyledTableCell>
-        <StyledTableCell>EMAIL</StyledTableCell>
-        <StyledTableCell>OPTIONS</StyledTableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {hits.map((hit) => (
-        <StyledTableRow key={hit.objectID} hover>
-          <StyledTableCell component="th" scope="row">
-            {hit.customerId}
-          </StyledTableCell>
-          <StyledTableCell>{hit.firstName}</StyledTableCell>
-          <StyledTableCell>{hit.lastName}</StyledTableCell>
-          <StyledTableCell>
-            {moment(hit.dob).format('MM-DD-YYYY')}
-          </StyledTableCell>
-          <StyledTableCell>
-            {hit.lastExam
-              ? moment(hit?.lastExam).format('MM-DD-YYYY')
-              : 'No Exam'}
-          </StyledTableCell>
-          <StyledTableCell>{hit.gender}</StyledTableCell>
-          <StyledTableCell>{hit.state}</StyledTableCell>
-          <StyledTableCell>{hit.zipCode}</StyledTableCell>
-          <StyledTableCell>{hit.phone1}</StyledTableCell>
-          <StyledTableCell>{hit.email}</StyledTableCell>
-          <StyledTableCell>
-            <Link
-              to={`/apps/e-commerce/customers/profile/${hit.customerId}`}
-              className="btn btn-primary">
-              <IconButton aria-label="view">
-                <PageviewOutlinedIcon fontSize="small" />
-              </IconButton>
-            </Link>
-            <Link
-              to={`/apps/e-commerce/customers/${hit.customerId}`}
-              className="btn btn-primary">
-              <IconButton aria-label="edit">
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Link>
-            <Link
-              to={`/apps/e-commerce/customers/addAppointment/${hit.customerId}`}
-              className="btn btn-primary">
-              <Button
-                className="whitespace-no-wrap normal-case ml-24"
-                variant="contained"
-                color="secondary"
-                size="large"
-                startIcon={<AddToQueueIcon />}>
-                Appointment
-              </Button>
-            </Link>
-          </StyledTableCell>
-        </StyledTableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
+function formatPhoneNumber(phoneNumberString) {
+  var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+  var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+  if (match) {
+    var intlCode = match[1] ? '+1 ' : '';
+    return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+  }
+  return phoneNumberString;
+}
+
+const Hits = ({ hits }) => {
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      var intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return phoneNumberString;
+  }
+
+  return (
+    <Table aria-label="customized table">
+      <TableHead>
+        <TableRow>
+          <StyledTableCell>ID</StyledTableCell>
+          <StyledTableCell>FIRST NAME</StyledTableCell>
+          <StyledTableCell>LAST NAME</StyledTableCell>
+          <StyledTableCell>D.O.B</StyledTableCell>
+          <StyledTableCell>LAST EXAM</StyledTableCell>
+          <StyledTableCell>GENDER</StyledTableCell>
+          <StyledTableCell>STATE</StyledTableCell>
+          <StyledTableCell>ZIP CODE</StyledTableCell>
+          <StyledTableCell>PHONE</StyledTableCell>
+          <StyledTableCell>EMAIL</StyledTableCell>
+          <StyledTableCell>OPTIONS</StyledTableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {hits.map((hit) => (
+          <StyledTableRow key={hit.objectID} hover>
+            <StyledTableCell component="th" scope="row">
+              {hit.customerId}
+            </StyledTableCell>
+            <StyledTableCell>{hit.firstName}</StyledTableCell>
+            <StyledTableCell>{hit.lastName}</StyledTableCell>
+            <StyledTableCell>
+              {moment(hit.dob).format('MM-DD-YYYY')}
+            </StyledTableCell>
+            <StyledTableCell>
+              {hit.lastExam
+                ? moment(hit?.lastExam).format('MM-DD-YYYY')
+                : 'No Exam'}
+            </StyledTableCell>
+            <StyledTableCell>{hit.gender}</StyledTableCell>
+            <StyledTableCell>{hit.state}</StyledTableCell>
+            <StyledTableCell>{hit.zipCode}</StyledTableCell>
+            <StyledTableCell>{formatPhoneNumber(hit.phone1)}</StyledTableCell>
+            <StyledTableCell>{hit.email}</StyledTableCell>
+            <StyledTableCell>
+              <Link
+                to={`/apps/e-commerce/customers/profile/${hit.customerId}`}
+                className="btn btn-primary">
+                <IconButton aria-label="view">
+                  <PageviewOutlinedIcon fontSize="small" />
+                </IconButton>
+              </Link>
+              <Link
+                to={`/apps/e-commerce/customers/${hit.customerId}`}
+                className="btn btn-primary">
+                <IconButton aria-label="edit">
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              </Link>
+            </StyledTableCell>
+          </StyledTableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
 const CustomHits = connectHits(Hits);
 
 const StyledTableCell = withStyles((theme) => ({
@@ -130,13 +140,11 @@ const CustomersContent = (props) => {
   // if (isLoading) return <FuseLoading />;
   return (
     <div className="flex w-full ">
-      <TableContainer
-        component={Paper}
-        className="flex flex-col w-full p-20 rounded-32 shadow-20">
+      <TableContainer component={Paper} className="flex flex-col w-full py-20">
         <InstantSearch searchClient={searchClient} indexName="customers">
           <div className="flex flex-row">
             <div className="flex flex-col flex-1"></div>
-            <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12">
+            <div className="flex flex-col flex-1 mb-10 border-1">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for customers...'

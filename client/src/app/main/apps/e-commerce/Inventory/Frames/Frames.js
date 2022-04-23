@@ -149,7 +149,7 @@ const Frames = (props) => {
         <TableContainer component={Paper} className="flex flex-col w-full ">
           <div className="flex flex-row">
             <div className="flex flex-col flex-1"></div>
-            <div className="flex flex-col flex-1 mb-10 rounded-12 shadow-10">
+            <div className="flex flex-col flex-1 mb-10 border-1 rounded-6">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for frames...'
