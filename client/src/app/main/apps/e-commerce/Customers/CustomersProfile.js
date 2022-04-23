@@ -23,6 +23,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import PrescriptionReceipt from './PrescriptionReceipt';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -64,6 +65,12 @@ const CustomerProfile = (props) => {
   const [filteredPrescription, setFilteredPrescription] = useState([]);
   const [familyMembers, setFamilyMembers] = useState([]);
   const routeParams = useParams();
+  const [openPrescriptionReceipt, setOpenPrescriptionReceipt] = useState(false);
+  const [selectedPrescription, setSelectedPrescription] = useState({});
+
+  const handlePrescriptionReceiptClose = () => {
+    setOpenPrescriptionReceipt(false);
+  };
 
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
@@ -330,7 +337,7 @@ const CustomerProfile = (props) => {
                             <StyledTableCell>{index + 1}</StyledTableCell>
                             <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
                             <StyledTableCell>
-                              {moment(row.dob.toDate()).format('MM-DD-YYYY')}
+                              {moment(row.dob.toDate()).format('MM/DD/YYYY')}
                             </StyledTableCell>
                             <StyledTableCell>{row?.gender}</StyledTableCell>
                             <StyledTableCell>
@@ -421,6 +428,14 @@ const CustomerProfile = (props) => {
               </div>
             </div>
             <div className="flex flex-col p-12 ml-6 w-1/3 h-320  rounded-20 shadow-10">
+              <PrescriptionReceipt
+                mainForm={selectedPrescription}
+                openPrescriptionReceipt={openPrescriptionReceipt}
+                handlePrescriptionReceiptClose={handlePrescriptionReceiptClose}
+                customer={customer}
+                // eyeglasses={eyeglasses}
+                // payments={payments}
+              />
               <h2 className="font-700 text-center">Rx</h2>
               <div className="flex justify-center">
                 <ButtonGroup
@@ -486,12 +501,16 @@ const CustomerProfile = (props) => {
                             )
                             .map((row) => (
                               <StyledTableRow
+                                onClick={() => {
+                                  setSelectedPrescription(row);
+                                  setOpenPrescriptionReceipt(true);
+                                }}
                                 key={row.prescriptionId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
                                   {moment(
                                     row?.prescriptionDate.toDate()
-                                  ).format('MM-DD-YYYY')}
+                                  ).format('MM/DD/YYYY')}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <div className="flex flex-col">
@@ -572,12 +591,16 @@ const CustomerProfile = (props) => {
                             )
                             .map((row) => (
                               <StyledTableRow
+                                onClick={() => {
+                                  setSelectedPrescription(row);
+                                  setOpenPrescriptionReceipt(true);
+                                }}
                                 key={row.prescriptionId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
                                   {moment(
                                     row?.prescriptionDate.toDate()
-                                  ).format('MM-DD-YYYY')}
+                                  ).format('MM/DD/YYYY')}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <div className="flex flex-col">
@@ -661,7 +684,7 @@ const CustomerProfile = (props) => {
                                 <StyledTableCell>
                                   {moment(
                                     row?.prescriptionDate.toDate()
-                                  ).format('MM-DD-YYYY')}
+                                  ).format('MM/DD/YYYY')}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <div className="w-136 truncate">
@@ -740,7 +763,7 @@ const CustomerProfile = (props) => {
                               style={{ height: 10 }}>
                               <StyledTableCell>
                                 {moment(row?.examTime.toDate()).format(
-                                  'MM-DD-YYYY'
+                                  'MM/DD/YYYY'
                                 )}
                               </StyledTableCell>
                               <StyledTableCell>

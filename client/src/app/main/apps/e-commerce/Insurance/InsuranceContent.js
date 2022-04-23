@@ -49,7 +49,7 @@ const CustomHits = connectHits(({ hits, payments }) => {
           .map((hit) => (
             <StyledTableRow key={hit.objectID} hover>
               <StyledTableCell component="th" scope="row">
-                {moment(hit?.orderDate).format('MM-DD-YYYY')}
+                {moment(hit?.orderDate).format('MM/DD/YYYY')}
               </StyledTableCell>
               <StyledTableCell>
                 <Link to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}>

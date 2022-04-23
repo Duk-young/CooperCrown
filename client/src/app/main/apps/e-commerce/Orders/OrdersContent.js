@@ -52,7 +52,7 @@ const Hits = ({ hits }) => (
               {hit?.orderId}
             </StyledTableCell>
             <StyledTableCell>
-              {moment(hit?.orderDate).format('MM-DD-YYYY')}
+              {moment(hit?.orderDate).format('MM/DD/YYYY')}
             </StyledTableCell>
             <StyledTableCell>{hit?.firstName}</StyledTableCell>
             <StyledTableCell>{hit?.lastName}</StyledTableCell>

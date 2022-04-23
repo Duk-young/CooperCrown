@@ -40,7 +40,7 @@ const Hits = ({ hits }) => (
           <StyledTableCell>{hit.firstName}</StyledTableCell>
           <StyledTableCell>{hit.lastName}</StyledTableCell>
           <StyledTableCell>
-            {moment(hit.dob).format('MM-DD-YYYY')}
+            {moment(hit.dob).format('MM/DD/YYYY')}
           </StyledTableCell>
           <StyledTableCell>{hit.gender}</StyledTableCell>
           <StyledTableCell>
