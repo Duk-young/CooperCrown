@@ -220,13 +220,13 @@ const CustomerProfile = (props) => {
         <div className="flex flex-col w-full">
           <div className="flex flex-row p-16 sm:p-24 w-full">
             <div className="p-12 w-1/3 h-auto  ">
-              <h1 className="underline font-700">Customer Info</h1>
+              <h1 className="font-700">Customer Info</h1>
               <div className="flex flex-row w-full">
                 <div className="flex flex-col w-1/3 border-black border-t-1 border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Customer Id:</h2>
+                  <h2 className="pl-6 font-700 bg-grey-200">Customer Id:</h2>
                 </div>
                 <div className="flex flex-col w-2/3 border-black border-t-1 border-b-1">
-                  <h2 className="pl-6">{customer.customerId}</h2>
+                  <h2 className="pl-6 bg-grey-200">{customer.customerId}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
@@ -239,10 +239,12 @@ const CustomerProfile = (props) => {
               </div>
               <div className="flex flex-row w-full">
                 <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Date of Birth:</h2>
+                  <h2 className="pl-6 font-700 bg-grey-200">Date of Birth:</h2>
                 </div>
                 <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{customer?.dob.toDateString()}</h2>
+                  <h2 className="pl-6 bg-grey-200">
+                    {customer?.dob.toDateString()}
+                  </h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
@@ -255,10 +257,10 @@ const CustomerProfile = (props) => {
               </div>
               <div className="flex flex-row w-full">
                 <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Ethnicity:</h2>
+                  <h2 className="pl-6 font-700 bg-grey-200">Ethnicity:</h2>
                 </div>
                 <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{customer?.ethnicity}</h2>
+                  <h2 className="pl-6 bg-grey-200">{customer?.ethnicity}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
@@ -271,10 +273,10 @@ const CustomerProfile = (props) => {
               </div>
               <div className="flex flex-row w-full">
                 <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">City:</h2>
+                  <h2 className="pl-6 font-700 bg-grey-200">City:</h2>
                 </div>
                 <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{customer?.city}</h2>
+                  <h2 className="pl-6 bg-grey-200">{customer?.city}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
@@ -287,10 +289,10 @@ const CustomerProfile = (props) => {
               </div>
               <div className="flex flex-row w-full">
                 <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Zip-Code:</h2>
+                  <h2 className="pl-6 font-700 bg-grey-200">Zip-Code:</h2>
                 </div>
                 <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{customer?.zipCode}</h2>
+                  <h2 className="pl-6 bg-grey-200">{customer?.zipCode}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
@@ -305,10 +307,10 @@ const CustomerProfile = (props) => {
               </div>
               <div className="flex flex-row w-full">
                 <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Phone 2:</h2>
+                  <h2 className="pl-6 font-700 bg-grey-200">Phone 2:</h2>
                 </div>
                 <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">
+                  <h2 className="pl-6 bg-grey-200">
                     {formatPhoneNumber(customer?.phone2)}
                   </h2>
                 </div>
@@ -323,15 +325,15 @@ const CustomerProfile = (props) => {
               </div>
               <div className="flex flex-row w-full">
                 <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Other:</h2>
+                  <h2 className="pl-6 font-700 bg-grey-200">Other:</h2>
                 </div>
                 <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{customer?.other}</h2>
+                  <h2 className="pl-6 bg-grey-200">{customer?.other}</h2>
                 </div>
               </div>
             </div>
             <div className="p-12 ml-10 w-2/3 h-auto  ">
-              <h1 className="underline font-700">Family Tree:</h1>
+              <h1 className="font-700">Family Tree:</h1>
               <div className="flex flex-col w-full h-200">
                 <TableContainer
                   className="flex flex-col w-full"
@@ -865,7 +867,22 @@ const CustomerProfile = (props) => {
             </div>
           </div>
           <div className="flex flex-col h-400 p-16">
-            <h2 className="font-700 underline mb-6">Order History:</h2>
+            <div className="flex flex-row justify-between">
+              <h2 className="font-700 underline mb-6">Order History:</h2>
+              <Button
+                className="justify-center m-4"
+                variant="contained"
+                onClick={() => {
+                  props.history.push(
+                    `/apps/e-commerce/orders/addorder/${customer.customerId}`
+                  );
+                }}
+                color="secondary"
+                size="large"
+                startIcon={<AddCircleOutlineOutlinedIcon />}>
+                New Order
+              </Button>
+            </div>
             <OrderHistory customer={customer} />
             <h3 className="text-white">Hi</h3>
           </div>
