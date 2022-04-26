@@ -27,6 +27,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import OrderHistory from './OrderHistory';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -862,6 +863,11 @@ const CustomerProfile = (props) => {
                 </Button>
               </div>
             </div>
+          </div>
+          <div className="flex flex-col h-400 p-16">
+            <h2 className="font-700 underline mb-6">Order History:</h2>
+            <OrderHistory customer={customer} />
+            <h3 className="text-white">Hi</h3>
           </div>
         </div>
       }
