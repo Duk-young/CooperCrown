@@ -1,29 +1,32 @@
 import { firestore } from 'firebase';
+import { useDispatch } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
+import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
-import FuseAnimate from '@fuse/core/FuseAnimate';
 import IconButton from '@material-ui/core/IconButton';
+import moment from 'moment';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import Paper from '@material-ui/core/Paper';
+import PrescriptionReceipt from './PrescriptionReceipt';
 import React, { useEffect, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import moment from 'moment';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import PrescriptionReceipt from './PrescriptionReceipt';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -67,6 +70,8 @@ const CustomerProfile = (props) => {
   const routeParams = useParams();
   const [openPrescriptionReceipt, setOpenPrescriptionReceipt] = useState(false);
   const [selectedPrescription, setSelectedPrescription] = useState({});
+  const [disabledState, setDisabledState] = useState(true);
+  const dispatch = useDispatch();
 
   const handlePrescriptionReceiptClose = () => {
     setOpenPrescriptionReceipt(false);
@@ -81,6 +86,19 @@ const CustomerProfile = (props) => {
     }
     return phoneNumberString;
   }
+
+  const onMemosChange = async () => {
+    await firestore()
+      .collection('customers')
+      .doc(customer?.id)
+      .update({ memos: customer?.memos });
+
+    dispatch(
+      MessageActions.showMessage({
+        message: 'Memos updated successfully!'
+      })
+    );
+  };
 
   useEffect(() => {
     setisLoading(true);
@@ -200,120 +218,120 @@ const CustomerProfile = (props) => {
       content={
         <div className="flex flex-col w-full">
           <div className="flex flex-row p-16 sm:p-24 w-full">
-            <div className="p-12 w-1/3 h-auto  rounded-20 shadow-2">
+            <div className="p-12 w-1/3 h-auto  ">
               <h1 className="underline font-700">Customer Info</h1>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-t-1 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-t-1 border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Customer Id:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-t-1 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-t-1 border-b-1">
                   <h2 className="pl-6">{customer.customerId}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Name:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{`${customer?.firstName} ${customer.lastName}`}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Date of Birth:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{customer?.dob.toDateString()}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Sex:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{customer?.gender}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Ethnicity:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{customer?.ethnicity}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Address:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{customer?.address}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">City:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{customer?.city}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">State:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{customer?.state}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Zip-Code:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{customer?.zipCode}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Phone 1:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">
                     {formatPhoneNumber(customer?.phone1)}
                   </h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Phone 2:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">
                     {formatPhoneNumber(customer?.phone2)}
                   </h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Email:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{customer?.email}</h2>
                 </div>
               </div>
               <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1 border-r-1">
+                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
                   <h2 className="pl-6 font-700">Other:</h2>
                 </div>
-                <div className="flex flex-col w-1/2 border-teal-400 border-b-1">
+                <div className="flex flex-col w-2/3 border-black border-b-1">
                   <h2 className="pl-6">{customer?.other}</h2>
                 </div>
               </div>
             </div>
-            <div className="p-12 ml-10 w-2/3 h-auto  rounded-20 shadow-10">
+            <div className="p-12 ml-10 w-2/3 h-auto  ">
               <h1 className="underline font-700">Family Tree:</h1>
-              <div className="flex flex-col w-full h-288">
+              <div className="flex flex-col w-full h-200">
                 <TableContainer
                   className="flex flex-col w-full"
                   component={Paper}>
@@ -352,11 +370,53 @@ const CustomerProfile = (props) => {
                   </Table>
                 </TableContainer>
               </div>
+              <div className="relative">
+                <div className="flex w-full">
+                  <TextField
+                    className="mt-8  ml-10"
+                    disabled={disabledState}
+                    id="memos"
+                    label="Memos"
+                    type="text"
+                    name="memos"
+                    value={customer?.memos}
+                    onChange={(e) => {
+                      setCustomer({ ...customer, memos: e.target.value });
+                    }}
+                    multiline
+                    rows={8}
+                    variant="outlined"
+                    fullWidth
+                  />
+                </div>
+
+                {disabledState && (
+                  <Fab
+                    className="absolute bottom-0 right-0"
+                    onClick={() => {
+                      setDisabledState(false);
+                    }}
+                    color="secondary">
+                    <Icon>edit</Icon>
+                  </Fab>
+                )}
+                {!disabledState && (
+                  <Fab
+                    className="absolute bottom-0 right-0"
+                    onClick={() => {
+                      setDisabledState(true);
+                      onMemosChange();
+                    }}
+                    color="secondary">
+                    <Icon>save</Icon>
+                  </Fab>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="flex flex-row p-16 sm:p-24 w-full">
-            <div className="flex flex-col p-12 w-1/3 h-320  rounded-20 shadow-10">
+            <div className="flex flex-col p-12 w-1/3 h-320  rounded-10 border-1 border-black">
               <h2 className="font-700 text-center">INSURANCE</h2>
 
               <div className="flex flex-1 overflow-scroll">
@@ -425,7 +485,7 @@ const CustomerProfile = (props) => {
                 </Button>
               </div>
             </div>
-            <div className="flex flex-col p-12 ml-6 w-1/3 h-320  rounded-20 shadow-10">
+            <div className="flex flex-col p-12 ml-6 w-1/3 h-320  rounded-10 border-1 border-black">
               <PrescriptionReceipt
                 mainForm={selectedPrescription}
                 openPrescriptionReceipt={openPrescriptionReceipt}
@@ -734,7 +794,7 @@ const CustomerProfile = (props) => {
                 </Button>
               </div>
             </div>
-            <div className="flex flex-col ml-6 p-12 w-1/3 h-320  rounded-20 shadow-10 ">
+            <div className="flex flex-col ml-6 p-12 w-1/3 h-320  rounded-10 border-1 border-black">
               <h2 className="font-700 text-center">EXAM HISTORY</h2>
 
               <div className="flex flex-1 overflow-scroll">

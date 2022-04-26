@@ -2,14 +2,17 @@
 import './App.mobile.css';
 import './Search.css';
 import './Themes.css';
-import { connectHits } from 'react-instantsearch-dom';
-import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
+import {
+  connectHits,
+  Pagination,
+  InstantSearch,
+  SearchBox,
+  SortBy
+} from 'react-instantsearch-dom';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
-import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import algoliasearch from 'algoliasearch/lite';
-import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
@@ -27,16 +30,6 @@ const searchClient = algoliasearch(
   '5AS4E06TDY',
   '42176bd827d90462ba9ccb9578eb43b2'
 );
-
-function formatPhoneNumber(phoneNumberString) {
-  var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
-  var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-  if (match) {
-    var intlCode = match[1] ? '+1 ' : '';
-    return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-  }
-  return phoneNumberString;
-}
 
 const Hits = ({ hits }) => {
   function formatPhoneNumber(phoneNumberString) {
@@ -170,9 +163,32 @@ const CustomersContent = (props) => {
                 }
               />
             </div>
-            <div className="flex flex-col flex-1"></div>
+            <div className="flex flex-col flex-1 pl-24">
+              <h5>Sort By:</h5>
+              <SortBy
+                className="w-full"
+                defaultRefinement="customers"
+                items={[
+                  { value: 'customers', label: 'ID' },
+                  { value: 'customersFirstName', label: 'First Name (Asc)' },
+                  {
+                    value: 'customersFirstNameDesc',
+                    label: 'First Name (Desc)'
+                  },
+                  { value: 'customersLastName', label: 'Last Name (Asc)' },
+                  { value: 'customersLastNameDesc', label: 'Last Name (Desc)' },
+                  { value: 'customersDOB', label: 'Date of Birth (Asc)' },
+                  { value: 'customersDOBDesc', label: 'Date of Birth (Desc)' },
+                  { value: 'customersLastExam', label: 'Last Exam (Asc)' },
+                  { value: 'customersLastExamDesc', label: 'Last Exam (Desc)' }
+                ]}
+              />
+            </div>
           </div>
           <CustomHits />
+          <div className="flex flex-row justify-center">
+            <Pagination />
+          </div>
         </InstantSearch>
       </TableContainer>
     </div>

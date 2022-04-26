@@ -1,23 +1,20 @@
-// import FuseAnimate from '@fuse/core/FuseAnimate';
-// import Fab from '@material-ui/core/Fab';
-// import Icon from '@material-ui/core/Icon';
-import { makeStyles } from '@material-ui/core/styles';
-import withReducer from 'app/store/withReducer';
-import clsx from 'clsx';
-import moment from 'moment';
-import React, { useEffect, useRef, useState } from 'react';
-import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
-import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import * as ReactDOM from 'react-dom';
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import CalendarHeader from './CalendarHeader';
-import EventDialog from './EventDialog';
 import * as Actions from './store/actions';
-import reducer from './store/reducers';
-import NewAppointmentDialog from './NewAppointmentDialog';
+import * as ReactDOM from 'react-dom';
+import CalendarHeader from './CalendarHeader';
+import clsx from 'clsx';
 import CustomWeek from './CustomWeek';
+import EventDialog from './EventDialog';
+import moment from 'moment';
+import NewAppointmentDialog from './NewAppointmentDialog';
+import React, { useEffect, useRef, useState } from 'react';
+import reducer from './store/reducers';
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import withReducer from 'app/store/withReducer';
 
 const localizer = momentLocalizer(moment);
 
@@ -209,20 +206,20 @@ function CalendarApp(props) {
       <DragAndDropCalendar
         className="flex flex-1 container"
         selectable
+        min={new Date(1950, 0, 0, 8, 0, 0, 0)}
         localizer={localizer}
         events={events}
         onEventDrop={moveEvent}
         resizable
         onEventResize={resizeEvent}
-        defaultView={Views.MONTH}
+        defaultView={Views.WEEK}
         defaultDate={new Date()}
         startAccessor="start"
         endAccessor="end"
         views={{
           day: true,
           month: true,
-          week: true,
-          CustomWeek: CustomWeek
+          week: CustomWeek
         }}
         step={15}
         timeslots={4}
@@ -251,22 +248,7 @@ function CalendarApp(props) {
           );
         }}
       />
-      {/* <FuseAnimate animation="transition.expandIn" delay={500}>
-        <Fab
-          color="secondary"
-          aria-label="add"
-          className={classes.addButton}
-          onClick={() =>
-            dispatch(
-              Actions.openNewEventDialog({
-                start: new Date(),
-                end: new Date()
-              })
-            )
-          }>
-          <Icon>add</Icon>
-        </Fab>
-      </FuseAnimate> */}
+
       <EventDialog />
       <NewAppointmentDialog />
     </div>
