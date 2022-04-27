@@ -17,29 +17,38 @@ const navigationConfig = [
     auth: authRoles.staff,
     icon: 'apps',
     children: [
+      // {
+      //   id: 'dashboards',
+      //   title: 'Dashboards',
+      //   translate: 'DASHBOARDS',
+      //   auth: authRoles.staff,
+      //   type: 'collapse',
+      //   icon: 'dashboard',
+      //   children: [
+      //     {
+      //       id: 'analytics-dashboard',
+      //       title: 'Analytics',
+      //       auth: authRoles.staff,
+      //       type: 'item',
+      //       url: '/apps/dashboards/analytics'
+      //     },
+      //     {
+      //       id: 'project-dashboard',
+      //       title: 'Project',
+      //       auth: authRoles.staff,
+      //       type: 'item',
+      //       url: '/apps/dashboards/project'
+      //     }
+      //   ]
+      // },
       {
-        id: 'dashboards',
-        title: 'Dashboards',
-        translate: 'DASHBOARDS',
+        id: 'reports',
+        title: 'Dashboard',
+        translate: 'Dashboard',
+        type: 'item',
         auth: authRoles.staff,
-        type: 'collapse',
-        icon: 'dashboard',
-        children: [
-          {
-            id: 'analytics-dashboard',
-            title: 'Analytics',
-            auth: authRoles.staff,
-            type: 'item',
-            url: '/apps/dashboards/analytics'
-          },
-          {
-            id: 'project-dashboard',
-            title: 'Project',
-            auth: authRoles.staff,
-            type: 'item',
-            url: '/apps/dashboards/project'
-          }
-        ]
+        icon: 'assessment',
+        url: '/apps/e-commerce/reports'
       },
       {
         id: 'orders',
@@ -86,15 +95,7 @@ const navigationConfig = [
         icon: 'today',
         url: '/apps/calendar'
       },
-      {
-        id: 'reports',
-        title: 'Reports',
-        translate: 'Reports',
-        type: 'item',
-        auth: authRoles.staff,
-        icon: 'assessment',
-        url: '/apps/e-commerce/reports'
-      },
+
       {
         id: 'Setting',
         title: 'Setting',

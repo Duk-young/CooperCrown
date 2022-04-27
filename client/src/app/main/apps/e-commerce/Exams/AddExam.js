@@ -2491,6 +2491,97 @@ const AddExam = (props) => {
             <h2 className="p-6 font-700">Slit Lamp Examination: </h2>
           </div>
           <div className="flex flex-row">
+            <div className=" flex flex-row flex-1 justify-around">
+              <h3 className="font-700 text-center pt-8">OD</h3>
+              <FormControlLabel
+                control={
+                  <GreenCheckbox
+                    checked={form?.slitOdNormal}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (e.target.checked) {
+                        setForm({
+                          ...form,
+                          odTears: 'Normal',
+                          odLashes: 'Normal',
+                          odCornea: 'Normal',
+                          odPalConj: 'Normal',
+                          odBulConj: 'Normal',
+                          odAntChamber: 'Normal',
+                          odIris: 'Normal',
+                          odLens: 'Normal',
+                          odAntVit: 'Normal'
+                        });
+                      } else {
+                        setForm({
+                          ...form,
+                          odTears: '',
+                          odLashes: '',
+                          odCornea: '',
+                          odPalConj: '',
+                          odBulConj: '',
+                          odAntChamber: '',
+                          odIris: '',
+                          odLens: '',
+                          odAntVit: ''
+                        });
+                      }
+                    }}
+                    disabled={disabledState}
+                    name="slitOdNormal"
+                  />
+                }
+                label="None"
+              />
+            </div>
+            <div className="flex-1">
+              <h3 className="hidden font-700 text-center">Hidden</h3>
+            </div>
+            <div className=" flex flex-row flex-1 justify-around">
+              <h3 className="font-700 text-center pt-8">OD</h3>
+              <FormControlLabel
+                control={
+                  <GreenCheckbox
+                    checked={form?.slitOsNormal}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (e.target.checked) {
+                        setForm({
+                          ...form,
+                          osTears: 'Normal',
+                          osLashes: 'Normal',
+                          osCornea: 'Normal',
+                          osPalConj: 'Normal',
+                          osBulConj: 'Normal',
+                          osAntChamber: 'Normal',
+                          osIris: 'Normal',
+                          osLens: 'Normal',
+                          osAntVit: 'Normal'
+                        });
+                      } else {
+                        setForm({
+                          ...form,
+                          osTears: '',
+                          osLashes: '',
+                          osCornea: '',
+                          osPalConj: '',
+                          osBulConj: '',
+                          osAntChamber: '',
+                          osIris: '',
+                          osLens: '',
+                          osAntVit: ''
+                        });
+                      }
+                    }}
+                    disabled={disabledState}
+                    name="slitOsNormal"
+                  />
+                }
+                label="None"
+              />
+            </div>
+          </div>
+          <div className="flex flex-row">
             <div className="flex-1">
               <h3 className="font-700 text-center">Other</h3>
             </div>
@@ -2505,8 +2596,8 @@ const AddExam = (props) => {
             <div className="flex-1 flex flex-row justify-center">
               <h3 className="font-700 text-center">CL </h3>
               <TextField
+                fullWidth
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 disabled={disabledState}
                 value={form?.odTears}
@@ -2517,7 +2608,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -2527,7 +2617,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 disabled={disabledState}
                 value={form?.osTears}
@@ -2538,7 +2627,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2548,7 +2636,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odLashes}
                 disabled={disabledState}
@@ -2559,7 +2646,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -2569,7 +2655,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osLashes}
                 onChange={handleChange}
@@ -2580,7 +2665,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2590,7 +2674,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odCornea}
                 onChange={handleChange}
@@ -2601,7 +2684,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -2611,7 +2693,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osCornea}
                 onChange={handleChange}
@@ -2622,7 +2703,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2632,7 +2712,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Q </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odPalConj}
                 onChange={handleChange}
@@ -2643,7 +2722,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -2653,7 +2731,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Q </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osPalConj}
                 disabled={disabledState}
@@ -2664,7 +2741,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2674,7 +2750,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Q </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odBulConj}
                 onChange={handleChange}
@@ -2685,7 +2760,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -2695,7 +2769,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Q </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osBulConj}
                 disabled={disabledState}
@@ -2706,7 +2779,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2716,7 +2788,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">D/Q </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odAntChamber}
                 onChange={handleChange}
@@ -2727,7 +2798,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -2737,7 +2807,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">D/Q </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 disabled={disabledState}
                 value={form?.osAntChamber}
@@ -2748,7 +2817,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2758,7 +2826,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Flat </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 disabled={disabledState}
                 value={form?.odIris}
@@ -2769,7 +2836,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -2779,7 +2845,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Flat </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osIris}
                 disabled={disabledState}
@@ -2790,7 +2855,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2800,7 +2864,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odLens}
                 disabled={disabledState}
@@ -2811,7 +2874,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -2821,7 +2883,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 disabled={disabledState}
                 value={form?.osLens}
@@ -2832,7 +2893,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2842,7 +2902,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odAntVit}
                 disabled={disabledState}
@@ -2853,7 +2912,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -2863,7 +2921,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osAntVit}
                 onChange={handleChange}
@@ -2874,7 +2931,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2882,6 +2938,89 @@ const AddExam = (props) => {
         <div className="p-8 w-1/3 h-auto border-grey-400 border-solid border-1 justify-between">
           <div className="flex flex-row">
             <h2 className="p-6 font-700">Fundus Examination: </h2>
+          </div>
+          <div className="flex flex-row">
+            <div className=" flex flex-row flex-1 justify-around">
+              <h3 className="font-700 text-center pt-8">OD</h3>
+              <FormControlLabel
+                control={
+                  <GreenCheckbox
+                    checked={form?.fundusOdNormal}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (e.target.checked) {
+                        setForm({
+                          ...form,
+                          odVessels: 'Normal',
+                          odAV: 'Normal',
+                          odMedia: 'Normal',
+                          odMacula: 'Normal',
+                          odPostPole: 'Normal',
+                          odVitreous: 'Normal',
+                          odDiscMargins: 'Normal'
+                        });
+                      } else {
+                        setForm({
+                          ...form,
+                          odVessels: '',
+                          odAV: '',
+                          odMedia: '',
+                          odMacula: '',
+                          odPostPole: '',
+                          odVitreous: '',
+                          odDiscMargins: ''
+                        });
+                      }
+                    }}
+                    disabled={disabledState}
+                    name="fundusOdNormal"
+                  />
+                }
+                label="None"
+              />
+            </div>
+            <div className="flex-1">
+              <h3 className="hidden font-700 text-center">Hidden</h3>
+            </div>
+            <div className=" flex flex-row flex-1 justify-around">
+              <h3 className="font-700 text-center pt-8">OD</h3>
+              <FormControlLabel
+                control={
+                  <GreenCheckbox
+                    checked={form?.fundusOsNormal}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (e.target.checked) {
+                        setForm({
+                          ...form,
+                          osVessels: 'Normal',
+                          osAV: 'Normal',
+                          osMedia: 'Normal',
+                          osMacula: 'Normal',
+                          osPostPole: 'Normal',
+                          osVitreous: 'Normal',
+                          osDiscMargins: 'Normal'
+                        });
+                      } else {
+                        setForm({
+                          ...form,
+                          osVessels: '',
+                          osAV: '',
+                          osMedia: '',
+                          osMacula: '',
+                          osPostPole: '',
+                          osVitreous: '',
+                          osDiscMargins: ''
+                        });
+                      }
+                    }}
+                    disabled={disabledState}
+                    name="fundusOsNormal"
+                  />
+                }
+                label="None"
+              />
+            </div>
           </div>
           <div className="flex flex-row">
             <div className="flex-1">
@@ -2896,10 +3035,11 @@ const AddExam = (props) => {
           </div>
           <div className="flex flex-row ">
             <div className="flex-1 flex flex-row justify-center">
-              <h3 className="font-700 text-center">Norm Caliber </h3>
+              <h4 className="font-700 text-center whitespace-no-wrap">
+                Norm Caliber{' '}
+              </h4>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 disabled={disabledState}
                 value={form?.odVessels}
@@ -2910,17 +3050,17 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
               <h3 className="font-700 text-center">Vessels</h3>
             </div>
             <div className="flex-1 flex flex-row justify-center">
-              <h3 className="font-700 text-center">Norm Caliber </h3>
+              <h4 className="font-700 text-center whitespace-no-wrap">
+                Norm Caliber{' '}
+              </h4>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osVessels}
                 disabled={disabledState}
@@ -2931,17 +3071,15 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
 
           <div className="flex flex-row ">
             <div className="flex-1 flex flex-row justify-center">
-              <h3 className="font-700 text-center">2 / 3 </h3>
+              <h3 className="font-700 text-center">2/3 </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odAV}
                 disabled={disabledState}
@@ -2952,17 +3090,15 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
               <h3 className="font-700 text-center">A / V</h3>
             </div>
             <div className="flex-1 flex flex-row justify-center">
-              <h3 className="font-700 text-center">2 / 3 </h3>
+              <h3 className="font-700 text-center">2/3 </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 disabled={disabledState}
                 id="standard-basic"
                 value={form?.osAV}
@@ -2973,7 +3109,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -2983,7 +3118,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odMedia}
                 disabled={disabledState}
@@ -2994,7 +3128,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -3004,7 +3137,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osMedia}
                 disabled={disabledState}
@@ -3015,7 +3147,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -3025,7 +3156,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 disabled={disabledState}
                 value={form?.odMacula}
@@ -3036,7 +3166,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -3046,7 +3175,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osMacula}
                 onChange={handleChange}
@@ -3057,17 +3185,17 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
 
           <div className="flex flex-row ">
-            <div className="flex-1 flex flex-row justify-center">
-              <h3 className="font-700 text-center">Flat Norm </h3>
+            <div className="flex-1 flex flex-row ">
+              <h3 className="font-700 text-center whitespace-no-wrap">
+                Flat Norm{' '}
+              </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odPostPole}
                 disabled={disabledState}
@@ -3078,17 +3206,19 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
-              <h3 className="font-700 text-center">Post Pole</h3>
+              <h3 className="font-700 text-center whitespace-no-wrap">
+                Post Pole
+              </h3>
             </div>
-            <div className="flex-1 flex flex-row justify-center">
-              <h3 className="font-700 text-center">Flat Norm </h3>
+            <div className="flex-1 flex flex-row ">
+              <h3 className="font-700 text-center whitespace-no-wrap">
+                Flat Norm{' '}
+              </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osPostPole}
                 disabled={disabledState}
@@ -3099,7 +3229,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -3109,7 +3238,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odVitreous}
                 onChange={handleChange}
@@ -3120,7 +3248,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -3130,7 +3257,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">CL </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osVitreous}
                 disabled={disabledState}
@@ -3141,7 +3267,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -3151,7 +3276,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Distinct </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 disabled={disabledState}
                 value={form?.odDiscMargins}
@@ -3162,7 +3286,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
             <div className="flex-1 flex flex-row justify-center">
@@ -3172,7 +3295,6 @@ const AddExam = (props) => {
               <h3 className="font-700 text-center">Distinct </h3>
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.osDiscMargins}
                 disabled={disabledState}
@@ -3183,7 +3305,6 @@ const AddExam = (props) => {
                     style: { textAlign: 'center' }
                   }
                 }}
-                type="number"
               />
             </div>
           </div>
@@ -3223,7 +3344,6 @@ const AddExam = (props) => {
             <div className="flex-1 flex flex-row justify-center">
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 value={form?.odCDRatio}
                 disabled={disabledState}
@@ -3243,7 +3363,6 @@ const AddExam = (props) => {
             <div className="flex-1 flex flex-row justify-center">
               <TextField
                 size="small"
-                style={{ width: 50 }}
                 id="standard-basic"
                 disabled={disabledState}
                 value={form?.osCDRatio}
