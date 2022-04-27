@@ -4,8 +4,17 @@ import { withRouter } from 'react-router';
 import React, { useState } from 'react';
 
 const CustomAutocomplete = (props) => {
-  const { list, form, handleChange, id, freeSolo, inputType, label, disabled } =
-    props;
+  const {
+    list,
+    form,
+    handleChange,
+    id,
+    freeSolo,
+    inputType,
+    label,
+    disabled,
+    customFunction
+  } = props;
   const [input, setInput] = useState(form[id]);
   return (
     <Autocomplete
@@ -23,16 +32,24 @@ const CustomAutocomplete = (props) => {
         });
       }}
       name={id}
-      onChange={(_, value) =>
+      onChange={(_, value) => {
         handleChange({
           target: {
             value: value,
             name: id
           }
-        })
-      }
+        });
+
+        customFunction(value);
+      }}
       renderInput={(params) => (
-        <TextField {...params} label={label} type={inputType} margin="normal" />
+        <TextField
+          {...params}
+          label={label}
+          type={inputType}
+          margin="normal"
+          variant="outlined"
+        />
       )}
     />
   );

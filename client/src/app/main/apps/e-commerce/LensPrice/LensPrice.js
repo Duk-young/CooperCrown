@@ -31,11 +31,15 @@ function LensPrice() {
     fetchDetails();
   }, []);
 
-  const handleTypeChange = async (e) => {
-    const lensPrices = (
-      await firestore().collection('lensPrice').doc('lensPrice').get()
-    ).data();
-    setRows(lensPrices[form?.a]);
+  const customFunction = async (value) => {
+    if (value) {
+      const lensPrices = (
+        await firestore().collection('lensPrice').doc('lensPrice').get()
+      ).data();
+      setRows(lensPrices[value]);
+    } else {
+      setRows([]);
+    }
   };
 
   return (
@@ -64,7 +68,7 @@ function LensPrice() {
               </div>
             </div>
             <div className="flex flex-row w-2/3 justify-around">
-              <div className="flex flex-col px-10 w-1/2">
+              <div className="flex flex-col px-10 w-1/2 ">
                 <CustomAutocomplete
                   list={lensTypes}
                   form={form}
@@ -73,16 +77,9 @@ function LensPrice() {
                   id="a"
                   freeSolo={false}
                   label="Select Lens Type"
+                  customFunction={customFunction}
                 />
               </div>
-              <Fab
-                className="mt-12"
-                onClick={handleTypeChange}
-                variant="extended"
-                color="secondary"
-                aria-label="add">
-                Fetch Details!
-              </Fab>
             </div>
           </div>
         </div>
