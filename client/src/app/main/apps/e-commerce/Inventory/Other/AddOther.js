@@ -1,6 +1,6 @@
 import { Fab } from '@material-ui/core';
 import { firestore, storage } from 'firebase';
-import { green } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
@@ -11,6 +11,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import CustomAlert from '../../ReusableComponents/CustomAlert';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import DateFnsUtils from '@date-io/date-fns';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -24,6 +25,7 @@ import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import BarcodeDialog from '../BarcodeDialog';
+import CameraDialog from '../CameraDialog';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
@@ -52,7 +54,13 @@ function AddOther(props) {
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
   const [openBarcodeDialog, setOpenBarcodeDialog] = useState(false);
+  const [openCameraDialog, setOpenCameraDialog] = useState(false);
+
   const routeParams = useParams();
+
+  const handleCameraDilogClose = () => {
+    setOpenCameraDialog(false);
+  };
 
   const handleBarCodeDilogClose = () => {
     setOpenBarcodeDialog(false);
@@ -89,6 +97,7 @@ function AddOther(props) {
   const onSubmit = async () => {
     if (form.otherId) {
       setisLoading(true);
+      console.log(images);
 
       try {
         const ref = firestore().collection('other').doc(form?.id);
@@ -99,7 +108,7 @@ function AddOther(props) {
             await storage().ref(`images/${img.id}`).put(img.file);
 
             const url = await storage()
-              .ref('other')
+              .ref('images')
               .child(img.id)
               .getDownloadURL();
             urls.push({ url, name: img.name });
@@ -498,57 +507,94 @@ function AddOther(props) {
                         key={img.name}
                         alt={''}
                       />
-                      <div
-                        className="flex flex-row justify-between items-center"
-                        onClick={() => {
-                          let newImages = images;
-                          newImages.splice(index, 1);
-                          setImages([...newImages]);
-                        }}>
-                        <div>{img.name}</div>
+                      <div className="flex flex-row justify-between items-center">
+                        <div className="truncate">
+                          <TextField
+                            className="mt-12 "
+                            label="Name"
+                            fullWidth
+                            // disabled={disabledState}
+                            id="outlined-multiline-static"
+                            value={images[index].name.split('.', 1)}
+                            onChange={(e) => {
+                              let newImages = images;
+                              newImages[index].name = e.target.value;
+                              setImages([...newImages]);
+                            }}
+                          />
+                        </div>
                         <IconButton
+                          onClick={() => {
+                            let newImages = images;
+                            newImages.splice(index, 1);
+                            setImages([...newImages]);
+                          }}
                           aria-label="delete"
                           className={classes.margin}>
-                          <DeleteIcon color="red" fontSize="small" />
+                          <DeleteIcon
+                            style={{ color: red[500] }}
+                            fontSize="small"
+                          />
                         </IconButton>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <label htmlFor="upload-photo1">
-                  <input
-                    style={{ display: 'none' }}
-                    id="upload-photo1"
-                    type="file"
-                    accept="image/*"
-                    onClick={(event) => {
-                      event.target.value = '';
-                    }}
-                    onChange={(e) =>
-                      setImages([
-                        ...images,
-                        {
-                          name: e.target.files[0].name,
-                          id: uuidv4(),
-                          url: URL.createObjectURL(e.target.files[0]),
-                          file: e.target.files[0]
-                        }
-                      ])
-                    }
-                  />
+                <div className="flex flex-row">
+                  <label htmlFor="upload-photo1">
+                    <input
+                      style={{ display: 'none' }}
+                      id="upload-photo1"
+                      type="file"
+                      accept="image/*"
+                      onClick={(event) => {
+                        event.target.value = '';
+                      }}
+                      onChange={(e) =>
+                        setImages([
+                          ...images,
+                          {
+                            name: e.target.files[0].name,
+                            id: uuidv4(),
+                            url: URL.createObjectURL(e.target.files[0]),
+                            file: e.target.files[0]
+                          }
+                        ])
+                      }
+                    />
 
-                  <Fab
-                    color="secondary"
-                    size="small"
-                    component="span"
-                    aria-label="add"
-                    variant="extended">
-                    <AddIcon /> Upload photo
-                  </Fab>
-                  <br />
-                  <br />
-                </label>
+                    <Fab
+                      color="secondary"
+                      size="small"
+                      component="span"
+                      aria-label="add"
+                      variant="extended">
+                      <AddIcon /> Upload photo
+                    </Fab>
+                    <br />
+                    <br />
+                  </label>
+                  <div className="flex flex-row h-44 ml-8">
+                    <Fab
+                      onClick={() => {
+                        setOpenCameraDialog(true);
+                      }}
+                      color="secondary"
+                      size="small"
+                      component="span"
+                      aria-label="add"
+                      variant="extended">
+                      <CameraAltIcon /> Capture Photo
+                    </Fab>
+                    <CameraDialog
+                      open={openCameraDialog}
+                      handleClose={handleCameraDilogClose}
+                      setImages={setImages}
+                      images={images}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 

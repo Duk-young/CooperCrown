@@ -83,7 +83,7 @@ const AddAppointments = (props) => {
     setisLoading(true);
 
     try {
-      const appointmentId = (
+      const dbConfig = (
         await firestore().collection('dbConfig').doc('dbConfig').get()
       ).data();
 
@@ -95,8 +95,8 @@ const AddAppointments = (props) => {
           end: firestore.Timestamp.fromDate(
             moment(form?.start).add(form?.duration, 'm').toDate()
           ),
-          appointmentId: appointmentId?.appointmentId + 1,
-          id: appointmentId?.appointmentId + 1,
+          appointmentId: dbConfig?.appointmentId + 1,
+          id: dbConfig?.appointmentId + 1,
           allDay: false,
           title: `${customer.firstName} ${customer.lastName}`,
           customerId: customer.customerId,
@@ -105,14 +105,21 @@ const AddAppointments = (props) => {
         });
 
       await firestore()
-        .collection('dbConfig')
-        .doc('dbConfig')
-        .update({ appointmentId: appointmentId?.appointmentId + 1 });
-
-      await firestore()
         .collection('customers')
         .doc(customer?.id)
-        .update({ medicalHistory: customer?.medicalHistory });
+        .update({
+          medicalHistory: customer?.medicalHistory,
+          recentUpdated: dbConfig?.recentUpdated + 1
+        });
+
+      await firestore()
+        .collection('dbConfig')
+        .doc('dbConfig')
+        .update({
+          appointmentId: dbConfig?.appointmentId + 1,
+          recentUpdated: dbConfig?.recentUpdated + 1
+        });
+
       dispatch(
         MessageActions.showMessage({
           message: 'Appointment Saved Successfully'

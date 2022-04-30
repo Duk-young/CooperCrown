@@ -39,8 +39,9 @@ const CustomAutocomplete = (props) => {
             name: id
           }
         });
-
-        customFunction(value);
+        if (customFunction) {
+          customFunction(value);
+        }
       }}
       renderInput={(params) => (
         <TextField

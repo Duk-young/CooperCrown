@@ -1,37 +1,39 @@
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { green } from '@material-ui/core/colors';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import { useForm } from '@fuse/hooks';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import FuseLoading from '@fuse/core/FuseLoading';
 import { Fab } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { v4 as uuidv4 } from 'uuid';
 import { firestore, storage } from 'firebase';
+import { green, red } from '@material-ui/core/colors';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
+import { useForm } from '@fuse/hooks';
+import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import AddIcon from '@material-ui/icons/Add';
+import BarcodeDialog from '../BarcodeDialog';
+import Button from '@material-ui/core/Button';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import CameraDialog from '../CameraDialog';
+import Checkbox from '@material-ui/core/Checkbox';
+import CustomAlert from '../../ReusableComponents/CustomAlert';
+import DateFnsUtils from '@date-io/date-fns';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import FuseLoading from '@fuse/core/FuseLoading';
+import FusePageCarded from '@fuse/core/FusePageCarded';
+import Grid from '@material-ui/core/Grid';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import React, { useState, useEffect } from 'react';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import Grid from '@material-ui/core/Grid';
-import FusePageCarded from '@fuse/core/FusePageCarded';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import React, { useState, useEffect } from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
-import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CustomAlert from '../../ReusableComponents/CustomAlert';
-import BarcodeDialog from '../BarcodeDialog';
 
 const GreenCheckbox = withStyles({
   root: {
@@ -58,7 +60,12 @@ function AddShowRoomInventory(props) {
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
   const [openBarcodeDialog, setOpenBarcodeDialog] = useState(false);
+  const [openCameraDialog, setOpenCameraDialog] = useState(false);
   const routeParams = useParams();
+
+  const handleCameraDilogClose = () => {
+    setOpenCameraDialog(false);
+  };
 
   const handleBarCodeDilogClose = () => {
     setOpenBarcodeDialog(false);
@@ -542,57 +549,94 @@ function AddShowRoomInventory(props) {
                         key={img.name}
                         alt={''}
                       />
-                      <div
-                        className="flex flex-row justify-between items-center"
-                        onClick={() => {
-                          let newImages = images;
-                          newImages.splice(index, 1);
-                          setImages([...newImages]);
-                        }}>
-                        <div>{img.name}</div>
+                      <div className="flex flex-row justify-between items-center">
+                        <div className="truncate">
+                          <TextField
+                            className="mt-12 "
+                            label="Name"
+                            fullWidth
+                            // disabled={disabledState}
+                            id="outlined-multiline-static"
+                            value={images[index].name.split('.', 1)}
+                            onChange={(e) => {
+                              let newImages = images;
+                              newImages[index].name = e.target.value;
+                              setImages([...newImages]);
+                            }}
+                          />
+                        </div>
                         <IconButton
+                          onClick={() => {
+                            let newImages = images;
+                            newImages.splice(index, 1);
+                            setImages([...newImages]);
+                          }}
                           aria-label="delete"
                           className={classes.margin}>
-                          <DeleteIcon color="red" fontSize="small" />
+                          <DeleteIcon
+                            style={{ color: red[500] }}
+                            fontSize="small"
+                          />
                         </IconButton>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <label htmlFor="upload-photo1">
-                  <input
-                    style={{ display: 'none' }}
-                    id="upload-photo1"
-                    type="file"
-                    accept="image/*"
-                    onClick={(event) => {
-                      event.target.value = '';
-                    }}
-                    onChange={(e) =>
-                      setImages([
-                        ...images,
-                        {
-                          name: e.target.files[0].name,
-                          id: uuidv4(),
-                          url: URL.createObjectURL(e.target.files[0]),
-                          file: e.target.files[0]
-                        }
-                      ])
-                    }
-                  />
+                <div className="flex flex-row">
+                  <label htmlFor="upload-photo1">
+                    <input
+                      style={{ display: 'none' }}
+                      id="upload-photo1"
+                      type="file"
+                      accept="image/*"
+                      onClick={(event) => {
+                        event.target.value = '';
+                      }}
+                      onChange={(e) =>
+                        setImages([
+                          ...images,
+                          {
+                            name: e.target.files[0].name,
+                            id: uuidv4(),
+                            url: URL.createObjectURL(e.target.files[0]),
+                            file: e.target.files[0]
+                          }
+                        ])
+                      }
+                    />
 
-                  <Fab
-                    color="secondary"
-                    size="small"
-                    component="span"
-                    aria-label="add"
-                    variant="extended">
-                    <AddIcon /> Upload photo
-                  </Fab>
-                  <br />
-                  <br />
-                </label>
+                    <Fab
+                      color="secondary"
+                      size="small"
+                      component="span"
+                      aria-label="add"
+                      variant="extended">
+                      <AddIcon /> Upload photo
+                    </Fab>
+                    <br />
+                    <br />
+                  </label>
+                  <div className="flex flex-row h-44 ml-8">
+                    <Fab
+                      onClick={() => {
+                        setOpenCameraDialog(true);
+                      }}
+                      color="secondary"
+                      size="small"
+                      component="span"
+                      aria-label="add"
+                      variant="extended">
+                      <CameraAltIcon /> Capture Photo
+                    </Fab>
+                    <CameraDialog
+                      open={openCameraDialog}
+                      handleClose={handleCameraDilogClose}
+                      setImages={setImages}
+                      images={images}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 

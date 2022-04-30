@@ -12389,6 +12389,11 @@ react-i18next@11.3.4:
     "@babel/runtime" "^7.3.1"
     html-parse-stringify2 "2.0.1"
 
+react-image-data-capture@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/react-image-data-capture/-/react-image-data-capture-1.2.2.tgz#a3b15ff6dad22e142c5e399b60c07f878d29c021"
+  integrity sha512-Y6xZJvg5O8nHQvVYeUOVQB1Px3vpApsbJN553VheMMMiCau6D+YIt+XNVMR0cNJQJO1+HXDvEYhhU4DW+fIdZw==
+
 react-input-autosize@^2.2.2:
   version "2.2.2"
   resolved "https://registry.npmjs.org/react-input-autosize/-/react-input-autosize-2.2.2.tgz"

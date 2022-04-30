@@ -30,8 +30,8 @@ const Hits = ({ hits }) => {
   const classes = useStyles();
   const handleClick = async (item) => {
     const query = await firestore()
-      .collection('frames')
-      .where('frameId', '==', Number(item))
+      .collection('showRoomInventory')
+      .where('showRoomInventoryId', '==', Number(item))
       .limit(1)
       .get();
 

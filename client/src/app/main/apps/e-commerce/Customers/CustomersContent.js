@@ -169,7 +169,7 @@ const CustomersContent = (props) => {
                 className="w-full"
                 defaultRefinement="customers"
                 items={[
-                  { value: 'customers', label: 'ID' },
+                  { value: 'customers', label: 'Recently Updated' },
                   { value: 'customersFirstName', label: 'First Name (Asc)' },
                   {
                     value: 'customersFirstNameDesc',

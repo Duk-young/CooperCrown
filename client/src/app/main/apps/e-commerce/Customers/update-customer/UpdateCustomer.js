@@ -158,13 +158,17 @@ function UpdateCustomer(props) {
             ...form,
             family: form?.family ? form?.family : customerNo?.customerId + 1,
             dob: firestore.Timestamp.fromDate(form?.dob),
-            customerId: customerNo?.customerId + 1
+            customerId: customerNo?.customerId + 1,
+            recentUpdated: customerNo?.recentUpdated + 1
           });
 
         await firestore()
           .collection('dbConfig')
           .doc('dbConfig')
-          .update({ customerId: customerNo?.customerId + 1 });
+          .update({
+            customerId: customerNo?.customerId + 1,
+            recentUpdated: customerNo?.recentUpdated + 1
+          });
         dispatch(
           MessageActions.showMessage({
             message: 'User data saved to firebase'

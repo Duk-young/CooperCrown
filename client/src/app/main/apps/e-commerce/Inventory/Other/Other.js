@@ -1,24 +1,25 @@
-import React from 'react';
-import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Panel, SearchBox } from 'react-instantsearch-dom';
+// import FuseLoading from '@fuse/core/FuseLoading';
+import '../../Customers/Search.css';
+import '../../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
+import { firestore } from 'firebase';
+import { InstantSearch, Panel, SearchBox } from 'react-instantsearch-dom';
+import { Link } from 'react-router-dom';
 import { RefinementList } from 'react-instantsearch-dom';
+import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import algoliasearch from 'algoliasearch/lite';
+import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-// import FuseLoading from '@fuse/core/FuseLoading';
-import { withRouter } from 'react-router';
-import '../../Customers/Search.css';
-import '../../Customers/Themes.css';
 
 const searchClient = algoliasearch(
   '5AS4E06TDY',
@@ -26,10 +27,36 @@ const searchClient = algoliasearch(
 );
 
 const Hits = ({ hits }) => {
+  const [images, setImages] = useState([]);
   const classes = useStyles();
+  const handleClick = async (item) => {
+    const query = await firestore()
+      .collection('other')
+      .where('otherId', '==', Number(item))
+      .limit(1)
+      .get();
+
+    let result = query.docs[0].data();
+    setImages(result?.images?.urls);
+  };
 
   return (
     <div className="flex flex-col ml-8 w-full">
+      <div className="flex flex-row">
+        {images?.length
+          ? images?.map((img, index) => (
+              <div className="mb-8 w-224 mr-6 ">
+                <img
+                  className="w-full border-grey-300 border-1 relative shadow-1 rounded-4"
+                  src={img.url}
+                  key={img.name}
+                  alt={''}
+                />
+                <div className="truncate">{img.name.split('.', 1)}</div>
+              </div>
+            ))
+          : 'No Images'}
+      </div>
       <div className="flex flex-row w-full">
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
@@ -49,7 +76,10 @@ const Hits = ({ hits }) => {
             {hits
               .sort((a, b) => (a.otherId < b.otherId ? -1 : 1))
               .map((row) => (
-                <StyledTableRow key={row.otherId}>
+                <StyledTableRow
+                  key={row.otherId}
+                  onClick={() => handleClick(row.otherId)}
+                  className="cursor-pointer">
                   <StyledTableCell component="th" scope="row">
                     {row.sku}
                   </StyledTableCell>

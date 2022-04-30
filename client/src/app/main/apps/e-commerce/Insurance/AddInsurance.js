@@ -1,6 +1,6 @@
 import { Fab } from '@material-ui/core';
 import { firestore, storage } from 'firebase';
-import { Link } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 import { useDispatch } from 'react-redux';
@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddIcon from '@material-ui/icons/Add';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -23,6 +24,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import CustomAlert from '../ReusableComponents/CustomAlert';
+import CameraDialog from './CameraDialog';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {}
@@ -40,6 +42,11 @@ function AddInsurance(props) {
     form?.insuranceCompany
   );
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
+  const [openCameraDialog, setOpenCameraDialog] = useState(false);
+
+  const handleCameraDilogClose = () => {
+    setOpenCameraDialog(false);
+  };
 
   useEffect(() => {
     if (routeParams.insuranceId) {
@@ -133,7 +140,7 @@ function AddInsurance(props) {
     } else {
       setisLoading(true);
       try {
-        const insuranceId = (
+        const dbConfig = (
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
         let urls = [];
@@ -150,14 +157,32 @@ function AddInsurance(props) {
           .collection('insurances')
           .add({
             ...form,
-            insuranceId: insuranceId?.insuranceId + 1,
-            customerId: routeParams.customerId.Number(),
+            insuranceId: dbConfig?.insuranceId + 1,
+            customerId: Number(routeParams.customerId),
             images: { urls }
           });
+
+        const queryCustomer = await firestore()
+          .collection('customers')
+          .where('customerId', '==', Number(routeParams.customerId))
+          .limit(1)
+          .get();
+        let docId = queryCustomer.docs[0].id;
+
+        await firestore()
+          .collection('customers')
+          .doc(docId)
+          .update({
+            recentUpdated: dbConfig?.recentUpdated + 1
+          });
+
         await firestore()
           .collection('dbConfig')
           .doc('dbConfig')
-          .update({ insuranceId: insuranceId?.insuranceId + 1 });
+          .update({
+            insuranceId: dbConfig?.insuranceId + 1,
+            recentUpdated: dbConfig?.recentUpdated + 1
+          });
         dispatch(
           MessageActions.showMessage({
             message: 'Insurance Saved Successfully'
@@ -325,8 +350,22 @@ function AddInsurance(props) {
                           />
                           <div className="flex flex-row justify-between items-center">
                             <div className="truncate">
-                              {img.name.split('.', 1)}
+                              <TextField
+                                className="mt-12 "
+                                fullWidth
+                                // disabled={disabledState}
+                                id="outlined-multiline-static"
+                                value={images[index].name.split('.', 1)}
+                                onChange={(e) => {
+                                  let newImages = images;
+                                  newImages[index].name = e.target.value;
+                                  setImages([...newImages]);
+                                }}
+                                name={'ssn'}
+                                variant="outlined"
+                              />
                             </div>
+
                             <IconButton
                               onClick={() => {
                                 let newImages = images;
@@ -344,8 +383,8 @@ function AddInsurance(props) {
                         </div>
                       ))}
                     </div>
-                    <div className="flex flex-col flex-1"></div>
-                    <label htmlFor="upload-photo1">
+                    <div className="flex flex-col w-1/5"></div>
+                    <label htmlFor="upload-photo1" style={{ width: 153 }}>
                       <input
                         style={{ display: 'none' }}
                         id="upload-photo1"
@@ -375,9 +414,29 @@ function AddInsurance(props) {
                         variant="extended">
                         <AddIcon /> Upload photo
                       </Fab>
+
                       <br />
                       <br />
                     </label>
+                    <div className="flex flex-row w-1/5 h-44">
+                      <Fab
+                        onClick={() => {
+                          setOpenCameraDialog(true);
+                        }}
+                        color="secondary"
+                        size="small"
+                        component="span"
+                        aria-label="add"
+                        variant="extended">
+                        <CameraAltIcon /> Capture Photo
+                      </Fab>
+                      <CameraDialog
+                        open={openCameraDialog}
+                        handleClose={handleCameraDilogClose}
+                        setImages={setImages}
+                        images={images}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

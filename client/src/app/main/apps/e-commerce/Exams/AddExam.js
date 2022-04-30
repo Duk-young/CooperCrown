@@ -129,13 +129,17 @@ const AddExam = (props) => {
           lastExam: firestore.Timestamp.fromDate(form?.examTime),
           medicalHistory: customer?.medicalHistory
             ? customer?.medicalHistory
-            : ''
+            : '',
+          recentUpdated: dbConfig?.recentUpdated + 1
         });
 
       await firestore()
         .collection('dbConfig')
         .doc('dbConfig')
-        .update({ examId: dbConfig?.examId + 1 });
+        .update({
+          examId: dbConfig?.examId + 1,
+          recentUpdated: dbConfig?.recentUpdated + 1
+        });
 
       await firestore()
         .collection('prescriptions')

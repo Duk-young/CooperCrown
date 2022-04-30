@@ -186,7 +186,7 @@ const AddPrescription = (props) => {
         resultCustomer.dob = resultCustomer.dob && resultCustomer.dob.toDate();
         resultCustomer.id = queryCustomer.docs[0].id;
         setCustomer(resultCustomer);
-        console.log(resultCustomer);
+
         const queryPrescription = await firestore()
           .collection('prescriptions')
           .get();
@@ -235,7 +235,7 @@ const AddPrescription = (props) => {
       setisLoading(true);
 
       try {
-        const prescriptionId = (
+        const dbConfig = (
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
 
@@ -243,15 +243,23 @@ const AddPrescription = (props) => {
           .collection('prescriptions')
           .add({
             ...form,
-            prescriptionId: prescriptionId?.prescriptionId + 1,
+            prescriptionId: dbConfig?.prescriptionId + 1,
             customerId: customer.customerId,
             prescriptionDate: firestore.Timestamp.fromDate(new Date())
           });
 
         await firestore()
+          .collection('customers')
+          .doc(customer?.id)
+          .update({ recentUpdated: dbConfig?.recentUpdated + 1 });
+
+        await firestore()
           .collection('dbConfig')
           .doc('dbConfig')
-          .update({ prescriptionId: prescriptionId?.prescriptionId + 1 });
+          .update({
+            prescriptionId: dbConfig?.prescriptionId + 1,
+            recentUpdated: dbConfig?.recentUpdated + 1
+          });
         dispatch(
           MessageActions.showMessage({
             message: 'Prescription Saved Successfully'

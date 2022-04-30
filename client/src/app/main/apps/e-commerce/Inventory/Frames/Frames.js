@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Panel, SearchBox } from 'react-instantsearch-dom';
+// import FuseLoading from '@fuse/core/FuseLoading';
+import '../../Customers/Search.css';
+import '../../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
+import { firestore } from 'firebase';
+import { InstantSearch, Panel, SearchBox } from 'react-instantsearch-dom';
+import { Link } from 'react-router-dom';
 import { RefinementList } from 'react-instantsearch-dom';
+import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import algoliasearch from 'algoliasearch/lite';
+import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-// import FuseLoading from '@fuse/core/FuseLoading';
-import { firestore } from 'firebase';
-import { withRouter } from 'react-router';
-import '../../Customers/Search.css';
-import '../../Customers/Themes.css';
 
 const searchClient = algoliasearch(
   '5AS4E06TDY',
@@ -80,7 +80,7 @@ const Hits = ({ hits }) => {
               .map((hit) => (
                 <StyledTableRow
                   style={{ height: 10 }}
-                  onClick={(event) => handleClick(hit.frameId)}
+                  onClick={() => handleClick(hit.frameId)}
                   key={hit.frameId}
                   className="cursor-pointer">
                   <StyledTableCell component="th" scope="row">

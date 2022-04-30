@@ -332,7 +332,7 @@ function AddOrder(props) {
       setisLoading(true);
 
       try {
-        const orderId = (
+        const dbConfig = (
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
 
@@ -341,7 +341,7 @@ function AddOrder(props) {
           .add({
             ...form,
             orderDate: firestore.Timestamp.fromDate(new Date()),
-            orderId: orderId?.orderId + 1,
+            orderId: dbConfig?.orderId + 1,
             customerId: customer?.customerId,
             firstName: customer?.firstName,
             lastName: customer?.lastName,
@@ -354,9 +354,17 @@ function AddOrder(props) {
           });
 
         await firestore()
+          .collection('customers')
+          .doc(customer?.id)
+          .update({ recentUpdated: dbConfig?.recentUpdated + 1 });
+
+        await firestore()
           .collection('dbConfig')
           .doc('dbConfig')
-          .update({ orderId: orderId?.orderId + 1 });
+          .update({
+            orderId: dbConfig?.orderId + 1,
+            recentUpdated: dbConfig?.recentUpdated + 1
+          });
 
         if (form?.prescriptionType === 'eyeglassesRx') {
           for (var k = 0; k < eyeglasses.length; k++) {

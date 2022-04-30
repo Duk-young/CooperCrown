@@ -174,13 +174,9 @@ export default function NewAppointmentDialog() {
           family: form?.family ? form?.family : dbConfig?.customerId + 1,
           dob: form?.dob ? firestore.Timestamp.fromDate(form?.dob) : '',
           medicalHistory: form?.medicalHistory ? form?.medicalHistory : '',
-          customerId: dbConfig?.customerId + 1
+          customerId: dbConfig?.customerId + 1,
+          recentUpdated: dbConfig?.recentUpdated + 1
         });
-
-      await firestore()
-        .collection('dbConfig')
-        .doc('dbConfig')
-        .update({ customerId: dbConfig?.customerId + 1 });
 
       await firestore()
         .collection('appointments')
@@ -202,7 +198,11 @@ export default function NewAppointmentDialog() {
       await firestore()
         .collection('dbConfig')
         .doc('dbConfig')
-        .update({ appointmentId: dbConfig?.appointmentId + 1 });
+        .update({
+          customerId: dbConfig?.customerId + 1,
+          recentUpdated: dbConfig?.recentUpdated + 1,
+          appointmentId: dbConfig?.appointmentId + 1
+        });
 
       closeComposeDialog();
       dispatch(Actions.getEvents());
