@@ -6,13 +6,16 @@ import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
+import moment from 'moment';
 import Paper from '@material-ui/core/Paper';
 import React, { useEffect, useState } from 'react';
 import ReceiveInsurancePayment from './ReceiveInsurancePayment';
@@ -56,6 +59,7 @@ const InsuranceClaim = (props) => {
   const [payments, setPayments] = useState([]);
   const [open, setOpen] = useState(false);
   const { form, handleChange, setForm } = useForm({});
+  const [editablePayment, setEditablePayment] = useState({});
   const routeParams = useParams();
   const dispatch = useDispatch();
 
@@ -200,6 +204,9 @@ const InsuranceClaim = (props) => {
                   open={open}
                   claim={form}
                   payments={payments}
+                  setPayments={setPayments}
+                  editablePayment={editablePayment}
+                  setEditablePayment={setEditablePayment}
                 />
               </div>
             </div>
@@ -217,21 +224,38 @@ const InsuranceClaim = (props) => {
                       <StyledTableCell>Payment Method</StyledTableCell>
                       <StyledTableCell>Amount</StyledTableCell>
                       <StyledTableCell>Extra Notes</StyledTableCell>
+                      <StyledTableCell>OPTIONS</StyledTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {payments.map((hit) => (
-                      <StyledTableRow key={hit.insurancePaymentId}>
-                        <StyledTableCell>
-                          {hit?.paymentDate.toDate().toDateString()}
-                        </StyledTableCell>
-                        <StyledTableCell>{hit?.paymentMode}</StyledTableCell>
-                        <StyledTableCell>{`$ ${Number(
-                          hit?.amount
-                        ).toLocaleString()}`}</StyledTableCell>
-                        <StyledTableCell>{hit?.extraNotes}</StyledTableCell>
-                      </StyledTableRow>
-                    ))}
+                    {payments
+                      .sort((a, b) =>
+                        a.insurancePaymentId > b.insurancePaymentId ? -1 : 1
+                      )
+                      .map((hit, index) => (
+                        <StyledTableRow key={hit.insurancePaymentId}>
+                          <StyledTableCell>
+                            {moment(hit?.paymentDate.toDate()).format(
+                              'MM/DD/YYYY'
+                            )}
+                          </StyledTableCell>
+                          <StyledTableCell>{hit?.paymentMode}</StyledTableCell>
+                          <StyledTableCell>{`$ ${Number(
+                            hit?.amount
+                          ).toLocaleString()}`}</StyledTableCell>
+                          <StyledTableCell>{hit?.extraNotes}</StyledTableCell>
+                          <StyledTableCell>
+                            <IconButton
+                              onClick={() => {
+                                setEditablePayment({ ...hit, index });
+                                setOpen(true);
+                              }}
+                              aria-label="edit">
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>

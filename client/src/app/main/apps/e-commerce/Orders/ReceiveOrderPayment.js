@@ -14,7 +14,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -25,39 +25,70 @@ export default function ReceiveOrderPayment(props) {
     openOrderPayment,
     handleOrderPaymentClose,
     eyeglasses,
-    payments
+    payments,
+    editablePayment,
+    setEditablePayment,
+    setPayments
   } = props;
   const { form, handleChange, setForm } = useForm(null);
   const [error, setError] = useState(null);
+  const [disabledState, setDisabledState] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setForm(editablePayment);
+  }, [editablePayment]);
 
   const onSubmit = async () => {
     try {
-      const dbConfig = (
-        await firestore().collection('dbConfig').doc('dbConfig').get()
-      ).data();
+      if (form?.orderPaymentId) {
+        const queryEditPayment = await firestore()
+          .collection('orderPayments')
+          .where('orderPaymentId', '==', Number(form?.orderPaymentId))
+          .limit(1)
+          .get();
+        let resultEditPayment = queryEditPayment.docs[0].data();
+        resultEditPayment.id = queryEditPayment.docs[0].id;
 
-      await firestore()
-        .collection('orderPayments')
-        .add({
-          ...form,
-          paymentDate: firestore.Timestamp.fromDate(new Date()),
-          orderPaymentId: dbConfig?.orderPaymentId + 1,
-          orderId: mainForm?.orderId
-        });
+        const ref = await firestore()
+          .collection('orderPayments')
+          .doc(resultEditPayment.id);
+        await ref.set(form);
 
-      await firestore()
-        .collection('dbConfig')
-        .doc('dbConfig')
-        .update({ orderPaymentId: dbConfig?.orderPaymentId + 1 });
+        handleOrderPaymentClose();
 
-      handleOrderPaymentClose();
+        dispatch(
+          MessageActions.showMessage({
+            message: 'Payment Details Saved Successfully!'
+          })
+        );
+      } else {
+        const dbConfig = (
+          await firestore().collection('dbConfig').doc('dbConfig').get()
+        ).data();
 
-      dispatch(
-        MessageActions.showMessage({
-          message: 'Payment Details Saved Successfully!'
-        })
-      );
+        await firestore()
+          .collection('orderPayments')
+          .add({
+            ...form,
+            paymentDate: firestore.Timestamp.fromDate(new Date()),
+            orderPaymentId: dbConfig?.orderPaymentId + 1,
+            orderId: mainForm?.orderId
+          });
+
+        await firestore()
+          .collection('dbConfig')
+          .doc('dbConfig')
+          .update({ orderPaymentId: dbConfig?.orderPaymentId + 1 });
+
+        handleOrderPaymentClose();
+
+        dispatch(
+          MessageActions.showMessage({
+            message: 'Payment Details Saved Successfully!'
+          })
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -70,6 +101,8 @@ export default function ReceiveOrderPayment(props) {
       onClose={(e) => {
         setError(null);
         setForm(null);
+        setEditablePayment(null);
+        setDisabledState(false);
         handleOrderPaymentClose();
       }}
       aria-labelledby="simple-dialog-title"
@@ -173,6 +206,7 @@ export default function ReceiveOrderPayment(props) {
                   (mainForm?.discount ? +mainForm?.discount : 0) -
                   payments.reduce((a, b) => +a + +b.amount, 0);
                 if (balance >= form?.amount) {
+                  setDisabledState(true);
                   onSubmit();
                 } else {
                   setError(
@@ -186,6 +220,7 @@ export default function ReceiveOrderPayment(props) {
           }}
           variant="extended"
           color="primary"
+          disabled={disabledState}
           aria-label="add">
           <AddIcon />
           Save Details

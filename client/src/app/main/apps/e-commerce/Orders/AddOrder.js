@@ -9,30 +9,31 @@ import { useParams } from 'react-router-dom';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddIcon from '@material-ui/icons/Add';
+import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import CustomAutocomplete from '../ReusableComponents/Autocomplete';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
 import CustomAutocomplete1 from './Autocomplete';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DiscountAutocomplete from './DiscountAutocomplete';
+import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import moment from 'moment';
+import OrderReceipt from './OrderReceipt';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
@@ -42,6 +43,7 @@ import ReceiveOrderPayment from './ReceiveOrderPayment';
 import reducer from '../store/reducers';
 import SearchFrameDialouge from './SearchFrameDialouge';
 import SearchInsuranceDialouge from './SearchInsuranceDialouge';
+import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -51,7 +53,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import OrderReceipt from './OrderReceipt';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -103,6 +104,7 @@ function AddOrder(props) {
   const [openAlert, setOpenAlert] = useState(false);
   const [openAlert1, setOpenAlert1] = useState(false);
   const [lensTypeNames, setLensTypeNames] = useState(false);
+  const [editablePayment, setEditablePayment] = useState({});
 
   const routeParams = useParams();
   const dispatch = useDispatch();
@@ -1724,6 +1726,9 @@ function AddOrder(props) {
                           handleOrderPaymentClose={handleOrderPaymentClose}
                           eyeglasses={eyeglasses}
                           payments={payments}
+                          setPayments={setPayments}
+                          editablePayment={editablePayment}
+                          setEditablePayment={setEditablePayment}
                         />
                       </div>
                       <div className="flex flex-row mb-10 justify-around">
@@ -2000,6 +2005,7 @@ function AddOrder(props) {
                                       <StyledTableCell>
                                         Extra Notes
                                       </StyledTableCell>
+                                      <StyledTableCell>OPTIONS</StyledTableCell>
                                     </TableRow>
                                   </TableHead>
                                   <TableBody>
@@ -2009,15 +2015,25 @@ function AddOrder(props) {
                                           {hit?.orderPaymentId}
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                          {hit?.paymentDate
-                                            .toDate()
-                                            .toDateString()}
+                                          {moment(
+                                            hit?.paymentDate.toDate()
+                                          ).format('MM/DD/YYYY')}
                                         </StyledTableCell>
-                                        <StyledTableCell>{`$ ${Number(
+                                        <StyledTableCell className="whitespace-no-wrap">{`$ ${Number(
                                           hit?.amount
                                         ).toLocaleString()}`}</StyledTableCell>
                                         <StyledTableCell>
                                           {hit?.extraNotes}
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                          <IconButton
+                                            onClick={() => {
+                                              setEditablePayment(hit);
+                                              setOpenOrderPayment(true);
+                                            }}
+                                            aria-label="edit">
+                                            <EditIcon fontSize="small" />
+                                          </IconButton>
                                         </StyledTableCell>
                                       </StyledTableRow>
                                     ))}

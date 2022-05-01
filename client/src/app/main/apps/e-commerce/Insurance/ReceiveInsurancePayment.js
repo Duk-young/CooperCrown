@@ -10,49 +10,103 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 export default function ReceiveInsurancePayment(props) {
-  const { claim, open, handleClose, payments } = props;
+  const {
+    claim,
+    open,
+    handleClose,
+    payments,
+    editablePayment,
+    setPayments,
+    setEditablePayment
+  } = props;
   const { form, handleChange, setForm } = useForm(null);
   const [error, setError] = useState(null);
   const [disabledState, setDisabledState] = useState(false);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    setForm(editablePayment);
+  }, [editablePayment]);
+
   const onSubmit = async () => {
     try {
-      const dbConfig = (
-        await firestore().collection('dbConfig').doc('dbConfig').get()
-      ).data();
+      if (form?.insurancePaymentId) {
+        const queryEditPayment = await firestore()
+          .collection('insurancePayments')
+          .where('insurancePaymentId', '==', Number(form?.insurancePaymentId))
+          .limit(1)
+          .get();
+        let resultEditPayment = queryEditPayment.docs[0].data();
+        resultEditPayment.id = queryEditPayment.docs[0].id;
 
-      await firestore()
-        .collection('insurancePayments')
-        .add({
-          ...form,
-          paymentDate: firestore.Timestamp.fromDate(new Date()),
-          insurancePaymentId: dbConfig?.insurancePaymentId + 1,
-          insuranceClaimId: claim?.insuranceClaimId
+        const ref = await firestore()
+          .collection('insurancePayments')
+          .doc(resultEditPayment.id);
+        await ref.set(form);
+
+        let newPayments = payments;
+        newPayments[form?.index] = form;
+
+        setPayments(newPayments);
+
+        handleClose();
+        setDisabledState(false);
+        setEditablePayment(null);
+
+        dispatch(
+          MessageActions.showMessage({
+            message: 'Payment Details Updated Successfully!'
+          })
+        );
+      } else {
+        const dbConfig = (
+          await firestore().collection('dbConfig').doc('dbConfig').get()
+        ).data();
+
+        await firestore()
+          .collection('insurancePayments')
+          .add({
+            ...form,
+            paymentDate: firestore.Timestamp.fromDate(new Date()),
+            insurancePaymentId: dbConfig?.insurancePaymentId + 1,
+            insuranceClaimId: claim?.insuranceClaimId
+          });
+
+        await firestore()
+          .collection('dbConfig')
+          .doc('dbConfig')
+          .update({ insurancePaymentId: dbConfig?.insurancePaymentId + 1 });
+
+        const queryPayments = await firestore()
+          .collection('insurancePayments')
+          .where('insuranceClaimId', '==', Number(claim?.insuranceClaimId))
+          .get();
+        let resultPayments = [];
+        queryPayments.forEach((doc) => {
+          resultPayments.push(doc.data());
         });
+        setPayments(resultPayments);
 
-      await firestore()
-        .collection('dbConfig')
-        .doc('dbConfig')
-        .update({ insurancePaymentId: dbConfig?.insurancePaymentId + 1 });
+        handleClose();
+        setDisabledState(false);
+        setForm(null);
 
-      handleClose();
-
-      dispatch(
-        MessageActions.showMessage({
-          message: 'Payment Details Saved Successfully!'
-        })
-      );
+        dispatch(
+          MessageActions.showMessage({
+            message: 'Payment Details Saved Successfully!'
+          })
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -66,13 +120,17 @@ export default function ReceiveInsurancePayment(props) {
         setError(null);
         setForm(null);
         handleClose();
+        setEditablePayment(null);
+        setDisabledState(false);
       }}
       aria-labelledby="simple-dialog-title"
       open={open}>
       <AppBar position="static">
         <Toolbar className="flex w-full">
           <Typography variant="subtitle1" color="inherit">
-            Fill Payment Details!
+            {form?.insurancePaymentId
+              ? 'Edit Payment Details!'
+              : 'Fill Payment Details!'}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -133,7 +191,9 @@ export default function ReceiveInsurancePayment(props) {
             if (form?.amount > 0) {
               let balance =
                 +claim?.insuranceCost -
-                payments.reduce((a, b) => +a + +b.amount, 0);
+                payments.reduce((a, b) => +a + +b.amount, 0) +
+                (form?.index >= 0 ? +payments[form?.index].amount : 0);
+              console.log(balance);
               if (balance >= form?.amount) {
                 setDisabledState(true);
                 onSubmit();
