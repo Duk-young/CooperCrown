@@ -105,10 +105,6 @@ function Service(props) {
 
   return (
     <FusePageCarded
-      classes={{
-        toolbar: 'p-0',
-        header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
-      }}
       header={
         form && (
           <div className="flex flex-1 w-full items-center justify-between">

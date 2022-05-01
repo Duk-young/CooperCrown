@@ -200,12 +200,8 @@ function AddInsurance(props) {
 
   return (
     <FusePageCarded
-      classes={{
-        content: 'flex',
-        header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
-      }}
       header={
-        <div className="mt-24">
+        <div>
           <IconButton
             onClick={() => {
               if (
@@ -258,7 +254,7 @@ function AddInsurance(props) {
 
               <div className="flex flex-row px-60">
                 <div className="w-1/4">
-                  <div className="p-8 h-auto rounded-20 shadow-5 justify-between">
+                  <div className="p-8 h-auto justify-between">
                     <Autocomplete
                       options={insurances}
                       getOptionLabel={(option) =>
@@ -337,7 +333,7 @@ function AddInsurance(props) {
                   </div>
                 </div>
 
-                <div className="p-8 flex-1 ml-10 h-auto rounded-20 shadow-5 justify-between">
+                <div className="p-8 flex-1 ml-10 h-auto justify-between">
                   <div className="flex flex-col overflow-scroll">
                     <div className="flex flex-row overflow-scroll">
                       {images.map((img, index) => (

@@ -7,7 +7,7 @@ import FusePageCardedHeader from './FusePageCardedHeader';
 import FusePageCardedSidebar from './FusePageCardedSidebar';
 
 const drawerWidth = 240;
-const headerHeight = 200;
+const headerHeight = 150;
 const toolbarHeight = 64;
 const headerContentHeight = headerHeight - toolbarHeight;
 

@@ -10,10 +10,6 @@ import PolicyOutlinedIcon from '@material-ui/icons/PolicyOutlined';
 function Insurance() {
   return (
     <FusePageCarded
-      classes={{
-        content: 'flex',
-        header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
-      }}
       header={
         <div className="flex flex-row m-28">
           <FuseAnimate animation="transition.expandIn" delay={300}>

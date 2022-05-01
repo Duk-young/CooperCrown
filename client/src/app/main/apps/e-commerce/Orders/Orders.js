@@ -11,10 +11,10 @@ function Orders(props) {
   // const mainTheme = useSelector(({ fuse }) => fuse.settings.mainTheme);
   return (
     <FusePageCarded
-      classes={{
-        content: 'flex p-0',
-        header: 'min-h-72 h-72 sm:h-136 sm:min-h-136 p-0'
-      }}
+      // classes={{
+      //   content: 'flex p-0',
+      //   header: 'min-h-72 h-72 sm:h-136 sm:min-h-136 p-0'
+      // }}
       header={
         <div className="flex flex-1 w-full items-center justify-between">
           <div className="flex items-center">

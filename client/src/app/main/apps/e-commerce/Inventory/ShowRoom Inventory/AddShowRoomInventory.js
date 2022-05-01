@@ -211,7 +211,7 @@ function AddShowRoomInventory(props) {
         root: classes.layoutRoot
       }}
       header={
-        <div className="mt-24">
+        <div>
           <IconButton
             onClick={() => {
               if (

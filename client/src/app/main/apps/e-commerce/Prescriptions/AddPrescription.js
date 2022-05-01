@@ -279,7 +279,7 @@ const AddPrescription = (props) => {
   ) : (
     <div className="flex flex-col w-full">
       <div className="flex flex-row p-16 sm:p-24 w-full">
-        <div className="p-8 w-1/3 h-auto border-grey-400 border-solid border-1 shadow-10 rounded-20">
+        <div className="p-8 w-1/3 h-auto border-grey-400 border-solid border-1">
           <h1 className="underline font-700">Patient Details</h1>
           <h2>{`Customer Id: ${customer.customerId}`}</h2>
           <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
@@ -341,7 +341,7 @@ const AddPrescription = (props) => {
       <div className="flex flex-row p-16 sm:p-24">
         {form?.prescriptionType === 'eyeglassesRx' && (
           <FuseAnimate animation="transition.slideRightIn" delay={500}>
-            <div className="p-16 sm:p-24 w-full border border-grey-400 shadow-10 rounded-20 ">
+            <div className="p-16 sm:p-24 w-full border border-grey-400 ">
               <h1 className="underline p-10">Eyeglasses Rx</h1>
               <div className="flex flex-row px-60">
                 <div className="p-8 h-auto flex-1">
@@ -841,7 +841,7 @@ const AddPrescription = (props) => {
 
         {form?.prescriptionType === 'contactLensRx' && (
           <FuseAnimate animation="transition.slideLeftIn" delay={500}>
-            <div className="p-16 sm:p-24 w-full border border-grey-400 shadow-10 rounded-20">
+            <div className="p-16 sm:p-24 w-full border border-grey-400 ">
               <h1 className="underline p-10">Contact Lens Rx</h1>
               <div className="flex flex-row px-60">
                 <div className="p-8 h-auto flex-1">
@@ -1470,7 +1470,7 @@ const AddPrescription = (props) => {
 
         {form?.prescriptionType === 'medicationRx' && (
           <FuseAnimate animation="transition.slideLeftIn" delay={500}>
-            <div className="p-16 sm:p-24 w-full  shadow-4 rounded-20">
+            <div className="p-16 sm:p-24 w-full ">
               <h1 className="underline p-10">Medication Rx</h1>
               <TextField
                 className="mt-10 "

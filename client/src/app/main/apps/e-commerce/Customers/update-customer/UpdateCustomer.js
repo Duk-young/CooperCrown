@@ -203,10 +203,6 @@ function UpdateCustomer(props) {
     form &&
     customers && (
       <FusePageCarded
-        classes={{
-          toolbar: 'p-0',
-          header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
-        }}
         header={
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">

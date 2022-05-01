@@ -575,12 +575,8 @@ function AddOrder(props) {
   return (
     <div>
       <FusePageCarded
-        classes={{
-          content: 'flex',
-          header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
-        }}
         header={
-          <div className="mt-24">
+          <div>
             <IconButton
               onClick={() => {
                 if (disabledState || eyeglasses.length === 0) {
@@ -638,7 +634,7 @@ function AddOrder(props) {
           <div className="flex flex-col w-full">
             <ToastContainer />
             <div className="flex flex-row p-16 sm:p-24 w-full">
-              <div className="p-8 w-1/3 h-auto shadow-3 rounded-12">
+              <div className="p-8 w-1/3 h-auto rounded-12">
                 <h1 className="underline font-700">Patient Details:</h1>
                 <h2>{`Customer Id: ${customer.customerId}`}</h2>
                 <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
@@ -739,7 +735,7 @@ function AddOrder(props) {
             <div key={selectedFrame} className="flex flex-row px-16 sm:px-24">
               {form?.prescriptionType === 'eyeglassesRx' && (
                 <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                  <div className="w-full flex flex-col rounded-12 shadow-3">
+                  <div className="w-full flex flex-col ">
                     <div className="w-full flex flex-row ">
                       <div className="w-2/3">
                         <div className="flex flex-col p-8 flex-1 h-auto justify-between">
@@ -2051,7 +2047,7 @@ function AddOrder(props) {
 
               {form?.prescriptionType === 'contactLensRx' && (
                 <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                  <div className="w-full flex flex-col rounded-12 shadow-3">
+                  <div className="w-full flex flex-col ">
                     <div className="w-full flex flex-row ">
                       <div className="w-2/3">
                         <div className="flex flex-col p-8 flex-1 h-auto justify-between">
@@ -2773,7 +2769,7 @@ function AddOrder(props) {
                           <h1 className="ml-10 font-700">Contacts Detail:</h1>
                           <div className="flex flex-col h-320 ">
                             <TableContainer
-                              className="flex flex-col w-full m-2 rounded-12 shadow-4 overflow-scroll"
+                              className="flex flex-col w-full m-2 overflow-scroll"
                               component={Paper}>
                               <Table aria-label="customized table">
                                 <TableHead>
@@ -2859,7 +2855,7 @@ function AddOrder(props) {
                             <div className="flex flex-col h-320 ">
                               <TableContainer
                                 component={Paper}
-                                className="flex flex-col w-full m-2 rounded-12 shadow-4 overflow-scroll">
+                                className="flex flex-col w-full m-2  overflow-scroll">
                                 <Table
                                   stickyHeader
                                   aria-label="customized table">
@@ -2903,7 +2899,7 @@ function AddOrder(props) {
               )}
               {form?.prescriptionType === 'medicationRx' && (
                 <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                  <div className="w-full flex flex-col rounded-12 shadow-3">
+                  <div className="w-full flex flex-col">
                     <div className="flex flex-row w-full">
                       <div className="flex flex-col p-12 m-12 w-1/2 flex-1 h-auto border-1">
                         <div className="w-full flex flex-row ">
@@ -3302,7 +3298,7 @@ function AddOrder(props) {
                           <h1 className="ml-10 font-700">Services Detail:</h1>
                           <div className="flex flex-col h-320 ">
                             <TableContainer
-                              className="flex flex-col w-full m-2 rounded-12 shadow-4 overflow-scroll"
+                              className="flex flex-col w-full m-2 overflow-scroll"
                               component={Paper}>
                               <Table aria-label="customized table">
                                 <TableHead>
@@ -3363,7 +3359,7 @@ function AddOrder(props) {
                             <div className="flex flex-col h-320 ">
                               <TableContainer
                                 component={Paper}
-                                className="flex flex-col w-full m-2 rounded-12 shadow-4 overflow-scroll">
+                                className="flex flex-col w-full m-2 overflow-scroll">
                                 <Table
                                   stickyHeader
                                   aria-label="customized table">
