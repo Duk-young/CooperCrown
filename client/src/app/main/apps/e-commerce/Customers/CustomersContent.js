@@ -107,8 +107,7 @@ const CustomHits = connectHits(Hits);
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    textAlign: 'center'
+    color: theme.palette.common.white
   },
   body: {
     fontSize: 14

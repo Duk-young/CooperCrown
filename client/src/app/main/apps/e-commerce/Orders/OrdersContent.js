@@ -115,7 +115,7 @@ const OrdersContent = (props) => {
             <div className="flex flex-col flex-1 mb-10 border-1 rounded-12">
               <SearchBox
                 translations={{
-                  placeholder: 'Searh for orders...'
+                  placeholder: 'Search for orders...'
                 }}
                 submit={
                   <svg

@@ -147,7 +147,7 @@ const InsuranceContent = (props) => {
             <div className="flex flex-col flex-1 mb-10 border-1">
               <SearchBox
                 translations={{
-                  placeholder: 'Searh for Claims...'
+                  placeholder: 'Search for claims...'
                 }}
                 submit={
                   <svg

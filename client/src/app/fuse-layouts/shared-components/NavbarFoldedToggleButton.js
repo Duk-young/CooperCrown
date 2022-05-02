@@ -6,28 +6,33 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 function NavbarFoldedToggleButton(props) {
-	const dispatch = useDispatch();
-	const settings = useSelector(({ fuse }) => fuse.settings.current);
+  const dispatch = useDispatch();
+  const settings = useSelector(({ fuse }) => fuse.settings.current);
+  const { displayState, setDisplayState } = props;
 
-	return (
-		<IconButton
-			className={props.className}
-			onClick={() => {
-				dispatch(
-					Actions.setDefaultSettings(
-						_.set({}, 'layout.config.navbar.folded', !settings.layout.config.navbar.folded)
-					)
-				);
-			}}
-			color="inherit"
-		>
-			{props.children}
-		</IconButton>
-	);
+  return (
+    <IconButton
+      className={props.className}
+      onClick={() => {
+        dispatch(
+          Actions.setDefaultSettings(
+            _.set(
+              {},
+              'layout.config.navbar.folded',
+              !settings.layout.config.navbar.folded
+            )
+          )
+        );
+        setDisplayState(!displayState);
+      }}
+      color="inherit">
+      {props.children}
+    </IconButton>
+  );
 }
 
 NavbarFoldedToggleButton.defaultProps = {
-	children: <Icon>menu</Icon>
+  children: <Icon>menu</Icon>
 };
 
 export default NavbarFoldedToggleButton;

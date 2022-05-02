@@ -345,7 +345,7 @@ const AddPrescription = (props) => {
               <h1 className="underline p-10">Eyeglasses Rx</h1>
               <div className="flex flex-row px-60">
                 <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">`${}`</h3>
+                  <h3 className="text-center font-700"></h3>
                 </div>
                 <div className="p-8 h-auto flex-1">
                   <h3 className="text-center font-700">Sphere</h3>
