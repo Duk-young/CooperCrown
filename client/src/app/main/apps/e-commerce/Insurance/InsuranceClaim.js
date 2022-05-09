@@ -145,7 +145,9 @@ const InsuranceClaim = (props) => {
               <h1 className="underline font-700">Claim Info</h1>
               <h2>{`Order ID: ${form?.orderId}`}</h2>
               <h2>{`Name: ${form?.firstName} ${form.lastName}\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Customer Id: ${form.customerId}`}</h2>
-              <h2>{`Order Date: ${form?.orderDate.toDateString()}`}</h2>
+              <h2>{`Order Date: ${
+                form?.orderDate ? form?.orderDate.toDateString() : ''
+              }`}</h2>
               <h2>{`Insurance Company: ${form?.insuranceCompany}`}</h2>
               <h2>{`Policy No: ${form?.policyNo}`}</h2>
               <h2>{`Claim Amount : $ ${form?.insuranceCost}`}</h2>

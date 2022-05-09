@@ -60,6 +60,8 @@ export default function OrderReceipt(props) {
     handleOrderReceiptClose,
     customer,
     eyeglasses,
+    contactLenses,
+    medication,
     payments
   } = props;
   const dispatch = useDispatch();
@@ -177,216 +179,247 @@ export default function OrderReceipt(props) {
                     </div>
                   </div>
 
-                  {mainForm?.prescriptionType === 'eyeglassesRx' && (
+                  <div>
                     <div>
-                      <div>
-                        {eyeglasses?.map((row) => (
-                          <div className="flex w-full px-20 ">
-                            <div className="flex flex-col w-1/2 border-1 border-black ">
-                              <h2>{`Type: Eyeglasses`}</h2>
-                              <h2>{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Frame: ${row?.frameBrand}`}</h2>
-                              <h2>{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Lens: ${row?.lensType}`}</h2>
-                            </div>
-                            <div className="flex flex-row w-1/2">
-                              <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
-                                <h2>{mainForm?.orderId}</h2>
-                              </div>
-                              <div className="flex flex-col w-1/3 border-1 border-black justify-end">
-                                <h2 className="footercopy">a</h2>
-                                <h2>$ {Number(row?.frameRate).toFixed(2)}</h2>
-                                <h2>$ {Number(row?.lensRate).toFixed(2)}</h2>
-                              </div>
-                              <div className="flex flex-row w-1/3 border-1 border-black justify-center">
-                                <h2>
-                                  ${' '}
-                                  {(+row?.frameRate + +row?.lensRate).toFixed(
-                                    2
-                                  )}
-                                </h2>
-                              </div>
-                            </div>
+                      {eyeglasses?.map((row) => (
+                        <div className="flex w-full px-20 ">
+                          <div className="flex flex-col w-1/2 border-1 border-black ">
+                            <h2>{`Type: Eyeglasses`}</h2>
+                            <h2>{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Frame: ${row?.frameBrand}`}</h2>
+                            <h2>{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Lens: ${row?.lensType}`}</h2>
                           </div>
-                        ))}
-                      </div>
-                      <div className="flex flex-row w-full mt-8 px-20">
-                        <div className="w-2/3">
-                          <div className="flex flex-col">
-                            <h1 className="font-500 underline">PAYMENTS:</h1>
-                          </div>
-                          <div className="flex flex-col">
-                            {payments.map((row) => (
-                              <div className="flex flex-row w-full">
-                                <div className="flex flex-row w-1/3">
-                                  <h3>{row?.paymentMode}</h3>
-                                </div>
-                                <div className="flex flex-row w-1/3">
-                                  <h3>
-                                    {row?.paymentDate.toDate().toDateString()}
-                                  </h3>
-                                </div>
-                                <div className="flex flex-row justify-center w-1/3">
-                                  <h3>$ {row?.amount}</h3>
-                                </div>
-                              </div>
-                            ))}
+                          <div className="flex flex-row w-1/2">
+                            <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
+                              <h2>{mainForm?.orderId}</h2>
+                            </div>
+                            <div className="flex flex-col w-1/3 border-1 border-black justify-end">
+                              <h2 className="footercopy">a</h2>
+                              <h2>$ {Number(row?.frameRate).toFixed(2)}</h2>
+                              <h2>$ {Number(row?.lensRate).toFixed(2)}</h2>
+                            </div>
+                            <div className="flex flex-row w-1/3 border-1 border-black justify-center">
+                              <h2>
+                                ${' '}
+                                {(+row?.frameRate + +row?.lensRate).toFixed(2)}
+                              </h2>
+                            </div>
                           </div>
                         </div>
-                        <div className="w-1/3">
-                          <div className="flex flex-row w-full">
-                            <div className="flex flex-row w-1/2">
-                              <h3 className=" font-700 text-right">
-                                Subtotal:
-                              </h3>
+                      ))}
+                    </div>
+                    <div>
+                      {contactLenses?.map((row) => (
+                        <div className="flex w-full px-20 ">
+                          <div className="flex flex-col w-1/2 border-1 border-black ">
+                            <h2>{`Type: Contact Lens`}</h2>
+                            <h2>{`${row?.contactLensName} ${row?.contactLensStyle}`}</h2>
+                          </div>
+                          <div className="flex flex-row w-1/2">
+                            <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
+                              <h2>{mainForm?.orderId}</h2>
                             </div>
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="font-700 text-right">
-                                ${' '}
-                                {eyeglasses.reduce(
+                            <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
+                              <h2>
+                                $ {Number(row?.contactLensRate).toFixed(2)}
+                              </h2>
+                            </div>
+                            <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
+                              <h2>
+                                $ {Number(row?.contactLensRate).toFixed(2)}
+                              </h2>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      {medication?.map((row) => (
+                        <div className="flex w-full px-20 ">
+                          <div className="flex flex-row w-1/2 border-1 border-black ">
+                            <h2>{`Type: ${row?.name}`}</h2>
+                          </div>
+                          <div className="flex flex-row w-1/2">
+                            <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
+                              <h2>{mainForm?.orderId}</h2>
+                            </div>
+                            <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
+                              <h2>$ {Number(row?.price).toFixed(2)}</h2>
+                            </div>
+                            <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
+                              <h2>$ {Number(row?.price).toFixed(2)}</h2>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-row w-full mt-8 px-20">
+                      <div className="w-2/3">
+                        <div className="flex flex-col">
+                          <h1 className="font-500 underline">PAYMENTS:</h1>
+                        </div>
+                        <div className="flex flex-col">
+                          {payments.map((row) => (
+                            <div className="flex flex-row w-full">
+                              <div className="flex flex-row w-1/3">
+                                <h3>{row?.paymentMode}</h3>
+                              </div>
+                              <div className="flex flex-row w-1/3">
+                                <h3>
+                                  {row?.paymentDate.toDate().toDateString()}
+                                </h3>
+                              </div>
+                              <div className="flex flex-row justify-center w-1/3">
+                                <h3>$ {row?.amount}</h3>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="w-1/3">
+                        <div className="flex flex-row w-full">
+                          <div className="flex flex-row w-1/2">
+                            <h3 className=" font-700 text-right">Subtotal:</h3>
+                          </div>
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="font-700 text-right">
+                              ${' '}
+                              {(
+                                eyeglasses.reduce(
+                                  (a, b) => +a + +b.lensRate,
+                                  0
+                                ) +
+                                eyeglasses.reduce(
                                   (a, b) => +a + +b.frameRate,
                                   0
                                 ) +
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b.lensRate,
-                                    0
-                                  )}
-                              </h3>
-                            </div>
+                                medication.reduce((a, b) => +a + +b.price, 0) +
+                                contactLenses.reduce(
+                                  (a, b) => +a + +b.contactLensRate,
+                                  0
+                                )
+                              ).toLocaleString()}
+                            </h3>
                           </div>
-                          <div className="flex flex-row w-full">
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="text-right">Additional Cost:</h3>
-                            </div>
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="text-right">
-                                ${' '}
-                                {mainForm?.additionalCost
-                                  ? mainForm?.additionalCost
-                                  : 0}
-                              </h3>
-                            </div>
+                        </div>
+                        <div className="flex flex-row w-full">
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="text-right">Additional Cost:</h3>
                           </div>
-                          <div className="flex flex-row w-full">
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="text-right">Discount: -</h3>
-                            </div>
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="text-right">
-                                $ {mainForm?.discount ? mainForm?.discount : 0}
-                              </h3>
-                            </div>
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="text-right">
+                              ${' '}
+                              {mainForm?.additionalCost
+                                ? mainForm?.additionalCost
+                                : 0}
+                            </h3>
                           </div>
-                          <div className="flex flex-row w-full">
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="text-right">Insurance Cost:</h3>
-                            </div>
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="text-center">
-                                ${' '}
-                                {mainForm?.insuranceCost
-                                  ? mainForm?.insuranceCost
-                                  : 0}
-                              </h3>
-                            </div>
+                        </div>
+                        <div className="flex flex-row w-full">
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="text-right">Discount: -</h3>
                           </div>
-                          <div className="flex flex-row w-full">
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="font-700 text-right">
-                                Grand Total:{' '}
-                              </h3>
-                            </div>
-                            <div className="flex flex-col w-1/2">
-                              <h3 className="font-700 text-black ">
-                                ${' '}
-                                {eyeglasses.reduce(
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="text-right">
+                              $ {mainForm?.discount ? mainForm?.discount : 0}
+                            </h3>
+                          </div>
+                        </div>
+                        <div className="flex flex-row w-full">
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="text-right">Insurance Cost:</h3>
+                          </div>
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="text-center">
+                              ${' '}
+                              {mainForm?.insuranceCost
+                                ? mainForm?.insuranceCost
+                                : 0}
+                            </h3>
+                          </div>
+                        </div>
+                        <div className="flex flex-row w-full">
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="font-700 text-right">
+                              Grand Total:{' '}
+                            </h3>
+                          </div>
+                          <div className="flex flex-col w-1/2">
+                            <h3 className="font-700 text-black ">
+                              ${' '}
+                              {(
+                                eyeglasses.reduce(
+                                  (a, b) => +a + +b.lensRate,
+                                  0
+                                ) +
+                                eyeglasses.reduce(
                                   (a, b) => +a + +b.frameRate,
                                   0
                                 ) +
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b.lensRate,
-                                    0
-                                  ) +
-                                  (mainForm?.additionalCost
-                                    ? +mainForm?.additionalCost
-                                    : 0) -
-                                  (mainForm?.discount
-                                    ? +mainForm?.discount
-                                    : 0) -
-                                  (mainForm?.insuranceCost
-                                    ? +mainForm?.insuranceCost
-                                    : 0)}
-                              </h3>
-                            </div>
+                                medication.reduce((a, b) => +a + +b.price, 0) +
+                                contactLenses.reduce(
+                                  (a, b) => +a + +b.contactLensRate,
+                                  0
+                                ) +
+                                (mainForm?.additionalCost
+                                  ? +mainForm?.additionalCost
+                                  : 0) -
+                                (mainForm?.discount ? +mainForm?.discount : 0) -
+                                (mainForm?.insuranceCost
+                                  ? +mainForm?.insuranceCost
+                                  : 0)
+                              ).toLocaleString()}
+                            </h3>
                           </div>
-                          <div className="flex flex-row w-full">
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="text-right">Paid:</h3>
-                            </div>
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="text-center">
-                                $ {payments.reduce((a, b) => +a + +b.amount, 0)}
-                              </h3>
-                            </div>
+                        </div>
+                        <div className="flex flex-row w-full">
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="text-right">Paid:</h3>
                           </div>
-                          <div className="flex flex-row w-full">
-                            <div className="flex flex-row w-1/2">
-                              <h3 className="font-700 text-right">Balance: </h3>
-                            </div>
-                            <div className="flex flex-col w-1/2">
-                              <h3 className="font-700 text-black ">
-                                ${' '}
-                                {eyeglasses.reduce(
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="text-center">
+                              $ {payments.reduce((a, b) => +a + +b.amount, 0)}
+                            </h3>
+                          </div>
+                        </div>
+                        <div className="flex flex-row w-full">
+                          <div className="flex flex-row w-1/2">
+                            <h3 className="font-700 text-right">Balance: </h3>
+                          </div>
+                          <div className="flex flex-col w-1/2">
+                            <h3 className="font-700 text-black ">
+                              ${' '}
+                              {(
+                                eyeglasses.reduce(
+                                  (a, b) => +a + +b.lensRate,
+                                  0
+                                ) +
+                                eyeglasses.reduce(
                                   (a, b) => +a + +b.frameRate,
                                   0
                                 ) +
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b.lensRate,
-                                    0
-                                  ) +
-                                  (mainForm?.additionalCost
-                                    ? +mainForm?.additionalCost
-                                    : 0) -
-                                  (mainForm?.discount
-                                    ? +mainForm?.discount
-                                    : 0) -
-                                  (mainForm?.insuranceCost
-                                    ? +mainForm?.insuranceCost
-                                    : 0) -
-                                  payments.reduce((a, b) => +a + +b.amount, 0)}
-                              </h3>
-                            </div>
+                                medication.reduce((a, b) => +a + +b.price, 0) +
+                                contactLenses.reduce(
+                                  (a, b) => +a + +b.contactLensRate,
+                                  0
+                                ) +
+                                (mainForm?.additionalCost
+                                  ? +mainForm?.additionalCost
+                                  : 0) -
+                                (mainForm?.discount ? +mainForm?.discount : 0) -
+                                (mainForm?.insuranceCost
+                                  ? +mainForm?.insuranceCost
+                                  : 0) -
+                                payments.reduce((a, b) => +a + +b.amount, 0)
+                              ).toLocaleString()}
+                            </h3>
                           </div>
                         </div>
                       </div>
                     </div>
-                  )}
+                  </div>
 
                   {mainForm?.prescriptionType === 'contactLensRx' && (
                     <div>
-                      <div>
-                        {eyeglasses?.map((row) => (
-                          <div className="flex w-full px-20 ">
-                            <div className="flex flex-col w-1/2 border-1 border-black ">
-                              <h2>{`Type: Contact Lens`}</h2>
-                              <h2>{`${row?.contactLensName} ${row?.contactLensStyle}`}</h2>
-                            </div>
-                            <div className="flex flex-row w-1/2">
-                              <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
-                                <h2>{mainForm?.orderId}</h2>
-                              </div>
-                              <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
-                                <h2>
-                                  $ {Number(row?.contactLensRate).toFixed(2)}
-                                </h2>
-                              </div>
-                              <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
-                                <h2>
-                                  $ {Number(row?.contactLensRate).toFixed(2)}
-                                </h2>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
                       <div className="flex flex-row w-full mt-8 px-20">
                         <div className="w-2/3">
                           <div className="flex flex-col">
@@ -529,26 +562,6 @@ export default function OrderReceipt(props) {
 
                   {mainForm?.prescriptionType === 'medicationRx' && (
                     <div>
-                      <div>
-                        {eyeglasses?.map((row) => (
-                          <div className="flex w-full px-20 ">
-                            <div className="flex flex-row w-1/2 border-1 border-black ">
-                              <h2>{`Type: ${row?.name}`}</h2>
-                            </div>
-                            <div className="flex flex-row w-1/2">
-                              <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
-                                <h2>{mainForm?.orderId}</h2>
-                              </div>
-                              <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
-                                <h2>$ {Number(row?.price).toFixed(2)}</h2>
-                              </div>
-                              <div className="flex flex-row w-1/3 border-1 border-black  justify-center">
-                                <h2>$ {Number(row?.price).toFixed(2)}</h2>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
                       <div className="flex flex-row w-full mt-8 px-20">
                         <div className="w-2/3">
                           <div className="flex flex-col">

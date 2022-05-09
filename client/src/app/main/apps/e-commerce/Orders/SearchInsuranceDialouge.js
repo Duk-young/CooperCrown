@@ -78,7 +78,7 @@ export default function SearchInsuranceDialouge(props) {
           await firestore()
             .collection('insuranceClaims')
             .add({
-              orderDate: firestore.Timestamp.fromDate(new Date()),
+              orderDate: form?.orderDate,
               insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1,
               orderId: form?.orderId,
               customerId: customer?.customerId,

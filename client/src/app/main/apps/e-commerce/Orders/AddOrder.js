@@ -18,7 +18,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DiscountAutocomplete from './DiscountAutocomplete';
 import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
@@ -90,8 +89,12 @@ function AddOrder(props) {
   const [discounts, setDiscounts] = useState([]);
   const [payments, setPayments] = useState([]);
   const [eyeglasses, setEyeglasses] = useState([]);
-  const [prevEyeglasses, setPrevEyeglasses] = useState([]);
   const [selectedFrame, setSelectedFrame] = useState({});
+  const [contactLenses, setContactLenses] = useState([]);
+  const [selectedContactLens, setSelectedContactLens] = useState({});
+  const [medication, setMedication] = useState([]);
+  const [selectedMedication, setSelectedMedication] = useState({});
+  const [prevEyeglasses, setPrevEyeglasses] = useState([]);
   const { form, handleChange, setForm } = useForm(null);
   const [filteredPrescription, setFilteredPrescription] = useState([]);
   const [prescription, setPrescription] = useState([]);
@@ -219,11 +222,11 @@ function AddOrder(props) {
   };
 
   const fetchContactLensRate = () => {
-    if (selectedFrame?.type) {
+    if (selectedContactLens?.type) {
       contactLens.map((row) => {
-        if (row?.type === selectedFrame?.type) {
-          setSelectedFrame({
-            ...selectedFrame,
+        if (row?.type === selectedContactLens?.type) {
+          setSelectedContactLens({
+            ...selectedContactLens,
             contactLensRate: +row?.price
           });
           dispatch(
@@ -261,6 +264,32 @@ function AddOrder(props) {
     );
   }, []);
 
+  const handleSelectedContactLensChange = useCallback((event) => {
+    event?.persist && event.persist();
+    setSelectedContactLens((_selectedContactLens) =>
+      _.setIn(
+        { ..._selectedContactLens },
+        event.target.name,
+        event.target.type === 'checkbox'
+          ? event.target.checked
+          : event.target.value
+      )
+    );
+  }, []);
+
+  const handleSelectedMedicationChange = useCallback((event) => {
+    event?.persist && event.persist();
+    setSelectedMedication((_selectedMedication) =>
+      _.setIn(
+        { ..._selectedMedication },
+        event.target.name,
+        event.target.type === 'checkbox'
+          ? event.target.checked
+          : event.target.value
+      )
+    );
+  }, []);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -279,13 +308,16 @@ function AddOrder(props) {
         const ref = firestore().collection('orders').doc(form?.id);
         let data = {
           ...form,
-          eyeglasses: eyeglasses
+          eyeglasses: eyeglasses,
+          contactLenses: contactLenses,
+          medication: medication
         };
 
         await ref.set(data);
 
-        if (form?.prescriptionType === 'eyeglassesRx') {
+        if (eyeglasses.length) {
           for (var i = 0; i < prevEyeglasses.length; i++) {
+            console.log(prevEyeglasses[i]);
             const queryFrame = await firestore()
               .collection('frames')
               .where('frameId', '==', Number(prevEyeglasses[i]?.frameId))
@@ -352,7 +384,9 @@ function AddOrder(props) {
             ethnicity: customer?.ethnicity ? customer?.ethnicity : '',
             state: customer?.state ? customer?.state : '',
             orderStatus: 'Order Received',
-            eyeglasses: eyeglasses
+            eyeglasses: eyeglasses,
+            contactLenses: contactLenses,
+            medication: medication
           });
 
         await firestore()
@@ -368,7 +402,7 @@ function AddOrder(props) {
             recentUpdated: dbConfig?.recentUpdated + 1
           });
 
-        if (form?.prescriptionType === 'eyeglassesRx') {
+        if (eyeglasses.length) {
           for (var k = 0; k < eyeglasses.length; k++) {
             const queryFrame = await firestore()
               .collection('frames')
@@ -419,6 +453,8 @@ function AddOrder(props) {
         setForm(resultOrder);
         setEyeglasses(resultOrder?.eyeglasses);
         setPrevEyeglasses(resultOrder?.eyeglasses);
+        setContactLenses(resultOrder?.contactLenses);
+        setMedication(resultOrder?.medication);
         const queryCustomer = await firestore()
           .collection('customers')
           .where('customerId', '==', Number(resultOrder.customerId))
@@ -631,118 +667,203 @@ function AddOrder(props) {
           </div>
         }
         content={
-          <div className="flex flex-col w-full">
-            <ToastContainer />
-            <div className="flex flex-row p-16 sm:p-24 w-full">
-              <div className="p-8 w-1/3 h-auto rounded-12">
-                <h1 className="underline font-700">Patient Details:</h1>
-                <h2>{`Customer Id: ${customer.customerId}`}</h2>
-                <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
-                <h2>{`Address: ${customer.address}, ${customer.state}, ${customer.zipCode}`}</h2>
-                <h2>{`Phone: ${formatPhoneNumber(customer.phone1)}`}</h2>
-                <h2>{`Email: ${customer.email}`}</h2>
-                <h2>{`DOB: ${customer?.dob?.toDateString()}`}</h2>
-                <h2>{`Sex: ${customer.gender}`}</h2>
+          showroom.length &&
+          discounts.length && (
+            <div className="flex flex-col w-full">
+              <ToastContainer />
+              <div className="flex flex-row p-16 sm:p-24 w-full">
+                <div className="p-8 w-1/3">
+                  <h1 className="underline font-700">Patient Details:</h1>
+                  <h2>{`Customer Id: ${customer.customerId}`}</h2>
+                  <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
+                  <h2>{`Address: ${customer.address}, ${customer.state}, ${customer.zipCode}`}</h2>
+                  <h2>{`Phone: ${formatPhoneNumber(customer.phone1)}`}</h2>
+                  <h2>{`Email: ${customer.email}`}</h2>
+                  <h2>{`DOB: ${customer?.dob?.toDateString()}`}</h2>
+                  <h2>{`Sex: ${customer.gender}`}</h2>
 
-                {disabledState && (
-                  <div className="flex flex-row justify-center">
-                    <Typography
-                      className="username text-16 whitespace-no-wrap self-center font-700 underline"
-                      color="inherit">
-                      Order Status
-                    </Typography>
-                    <FormControl className="ml-32 ">
-                      <Select
-                        labelId="demo-simple-select-autowidth-label"
-                        id="ethnicityId"
-                        defaultValue={form?.orderStatus}
-                        value={form?.orderStatus}
-                        name="orderStatus"
-                        onChange={(e) => {
-                          handleChange(e);
-                          handleStatusChange(e);
+                  {disabledState && (
+                    <div className="flex flex-row justify-center">
+                      <Typography
+                        className="username text-16 whitespace-no-wrap self-center font-700 underline"
+                        color="inherit">
+                        Order Status
+                      </Typography>
+                      <FormControl className="ml-32 ">
+                        <Select
+                          labelId="demo-simple-select-autowidth-label"
+                          id="ethnicityId"
+                          defaultValue={form?.orderStatus}
+                          value={form?.orderStatus}
+                          name="orderStatus"
+                          onChange={(e) => {
+                            handleChange(e);
+                            handleStatusChange(e);
+                          }}
+                          autoWidth>
+                          <MenuItem value={'Order Received'}>
+                            Order Received
+                          </MenuItem>
+                          <MenuItem value={'In Process'}>In Process</MenuItem>
+                          <MenuItem value={'Shipped to Showroom'}>
+                            Shipped to Showroom
+                          </MenuItem>
+                          <MenuItem value={'Awaiting Pickup'}>
+                            Awaiting Pickup
+                          </MenuItem>
+                          <MenuItem value={'Partially Picked Up'}>
+                            Partially Picked Up
+                          </MenuItem>
+                          <MenuItem value={'Picked Up/Completed'}>
+                            Picked Up/Completed
+                          </MenuItem>
+                          <MenuItem value={'Redo'}>Redo</MenuItem>
+                        </Select>
+                        <FormHelperText>Select from the list</FormHelperText>
+                      </FormControl>
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col p-8 w-2/3 h-auto">
+                  {routeParams?.orderId && (
+                    <div className="flex flex-col w-full h-320">
+                      <h1 className="ml-10 font-700">Payment History</h1>
+                      <div className="flex flex-col h-200">
+                        <TableContainer
+                          component={Paper}
+                          className="flex flex-col w-full m-2  overflow-scroll">
+                          <Table stickyHeader aria-label="customized table">
+                            <TableHead>
+                              <TableRow>
+                                <StyledTableCell>Payment ID</StyledTableCell>
+                                <StyledTableCell>Payment Date</StyledTableCell>
+                                <StyledTableCell>Amount</StyledTableCell>
+                                <StyledTableCell>Extra Notes</StyledTableCell>
+                                <StyledTableCell>OPTIONS</StyledTableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {payments.map((hit) => (
+                                <StyledTableRow key={hit.orderPaymentId}>
+                                  <StyledTableCell>
+                                    {hit?.orderPaymentId}
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    {moment(hit?.paymentDate.toDate()).format(
+                                      'MM/DD/YYYY'
+                                    )}
+                                  </StyledTableCell>
+                                  <StyledTableCell className="whitespace-no-wrap">{`$ ${Number(
+                                    hit?.amount
+                                  ).toLocaleString()}`}</StyledTableCell>
+                                  <StyledTableCell>
+                                    {hit?.extraNotes}
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <IconButton
+                                      onClick={() => {
+                                        setEditablePayment(hit);
+                                        setOpenOrderPayment(true);
+                                      }}
+                                      aria-label="edit">
+                                      <EditIcon fontSize="small" />
+                                    </IconButton>
+                                  </StyledTableCell>
+                                </StyledTableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex flex-col h-full"></div>
+                  <div className="flex flex-row justify-around">
+                    <Fab
+                      onClick={() => {
+                        if (
+                          eyeglasses.length ||
+                          contactLenses.length ||
+                          medication.length
+                        ) {
+                          setOpenAlert(true);
+                        } else {
+                          toast.error(
+                            'Please Add atleast One Pair or Service',
+                            {
+                              position: 'bottom-right',
+                              autoClose: 5000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              transition: Zoom
+                            }
+                          );
+                        }
+                      }}
+                      disabled={disabledState}
+                      variant="extended"
+                      color="secondary"
+                      aria-label="add">
+                      <AddIcon />
+                      {routeParams?.customerId ? 'Place Order' : 'Update Order'}
+                    </Fab>
+
+                    {routeParams?.orderId && (
+                      <Fab
+                        onClick={() => {
+                          setOpenOrderPayment(true);
                         }}
-                        autoWidth>
-                        <MenuItem value={'Order Received'}>
-                          Order Received
-                        </MenuItem>
-                        <MenuItem value={'In Process'}>In Process</MenuItem>
-                        <MenuItem value={'Shipped to Showroom'}>
-                          Shipped to Showroom
-                        </MenuItem>
-                        <MenuItem value={'Awaiting Pickup'}>
-                          Awaiting Pickup
-                        </MenuItem>
-                        <MenuItem value={'Partially Picked Up'}>
-                          Partially Picked Up
-                        </MenuItem>
-                        <MenuItem value={'Picked Up/Completed'}>
-                          Picked Up/Completed
-                        </MenuItem>
-                        <MenuItem value={'Redo'}>Redo</MenuItem>
-                      </Select>
-                      <FormHelperText>Select from the list</FormHelperText>
-                    </FormControl>
+                        variant="extended"
+                        color="primary"
+                        aria-label="add">
+                        <AddIcon />
+                        Receive Payment
+                      </Fab>
+                    )}
+                    {routeParams?.orderId && (
+                      <div>
+                        <OrderReceipt
+                          mainForm={form}
+                          openOrderReceipt={openOrderReceipt}
+                          handleOrderReceiptClose={handleOrderReceiptClose}
+                          customer={customer}
+                          eyeglasses={eyeglasses}
+                          contactLenses={contactLenses}
+                          medication={medication}
+                          payments={payments}
+                        />
+                        <Fab
+                          onClick={() => {
+                            setOpenOrderReceipt(true);
+                          }}
+                          variant="extended"
+                          color="primary"
+                          disabled={!disabledState}
+                          aria-label="add">
+                          <AddIcon />
+                          Print Receipt
+                        </Fab>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
-              <div className="p-8 w-2/3 h-auto relative">
-                <h1>Order Details</h1>
-                <h3>Select type of Order:</h3>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    className="ml-60"
-                    row
-                    aria-label="prescriptionType"
-                    name="prescriptionType"
-                    value={form?.prescriptionType}
-                    onChange={handleChange}>
-                    <FormControlLabel
-                      // disabled={routeParams?.customerId ? false : true}
-                      value="eyeglassesRx"
-                      onClick={() => {
-                        let eyeglassesRx = prescription.filter(
-                          (word) => word.prescriptionType === 'eyeglassesRx'
-                        );
-
-                        setFilteredPrescription(eyeglassesRx);
-                      }}
-                      control={<Radio />}
-                      label="Eyeglasses"
-                    />
-                    <FormControlLabel
-                      // disabled={routeParams?.customerId ? false : true}
-                      onClick={() => {
-                        let contactLensRx = prescription.filter(
-                          (word) => word.prescriptionType === 'contactLensRx'
-                        );
-                        setFilteredPrescription(contactLensRx);
-                      }}
-                      value="contactLensRx"
-                      control={<Radio />}
-                      label="Contact Lens"
-                    />
-                    <FormControlLabel
-                      // disabled={routeParams?.customerId ? false : true}
-                      value="medicationRx"
-                      control={<Radio />}
-                      label="Medication"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </div>
-            </div>
-            <div key={selectedFrame} className="flex flex-row px-16 sm:px-24">
-              {form?.prescriptionType === 'eyeglassesRx' && (
+              <div className="flex flex-col px-16 sm:px-24">
                 <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                  <div className="w-full flex flex-col ">
+                  <div className="w-full flex flex-col border-1 border-black">
                     <div className="w-full flex flex-row ">
                       <div className="w-2/3">
                         <div className="flex flex-col p-8 flex-1 h-auto justify-between">
                           <div className="flex flex-row w-full">
                             <div className="flex flex-col px-10 w-1/2 ">
                               <CustomAutocomplete1
-                                list={filteredPrescription}
+                                list={prescription.filter(
+                                  (word) =>
+                                    word.prescriptionType === 'eyeglassesRx'
+                                )}
                                 form={selectedFrame}
                                 disabled={disabledState}
                                 setForm={setSelectedFrame}
@@ -1149,7 +1270,7 @@ function AddOrder(props) {
                       </div>
                     </div>
                     <div className="flex flex-row">
-                      <h1 className="px-10 my-0 underline"> Eyeglasses</h1>
+                      <h1 className="px-10 my-0"> Eyeglasses</h1>
                       <div className="flex flex-row w-full flex-1 h-auto border-1 justify-around">
                         <FormControlLabel
                           control={
@@ -1219,10 +1340,50 @@ function AddOrder(props) {
                                 setForm={setSelectedFrame}
                               />
                             </div>
+                            <FormControl component="fieldset">
+                              <RadioGroup
+                                className="ml-4"
+                                row
+                                aria-label="saleType"
+                                name="saleType"
+                                value={selectedFrame?.saleType}
+                                onChange={handleSelectedFrameChange}>
+                                <FormControlLabel
+                                  disabled={disabledState}
+                                  value="retail"
+                                  control={
+                                    <Radio
+                                      onClick={() => {
+                                        setSelectedFrame({
+                                          ...selectedFrame,
+                                          frameRate:
+                                            selectedFrame?.frameRetailRate
+                                        });
+                                      }}
+                                    />
+                                  }
+                                  label="Retail"
+                                />
+                                <FormControlLabel
+                                  value="wsale"
+                                  disabled={disabledState}
+                                  control={
+                                    <Radio
+                                      onClick={() => {
+                                        setSelectedFrame({
+                                          ...selectedFrame,
+                                          frameRate: selectedFrame?.frameWsRate
+                                        });
+                                      }}
+                                    />
+                                  }
+                                  label="Whole Sale"
+                                />
+                              </RadioGroup>
+                            </FormControl>
                           </div>
                           <div className="flex flex-col w-3/4">
                             <TextField
-                              size="small"
                               fullWidth
                               variant="outlined"
                               disabled={true}
@@ -1238,7 +1399,6 @@ function AddOrder(props) {
                               }}
                             />
                             <TextField
-                              size="small"
                               className="mt-4"
                               fullWidth
                               variant="outlined"
@@ -1255,7 +1415,6 @@ function AddOrder(props) {
                               }}
                             />
                             <TextField
-                              size="small"
                               className="mt-4"
                               fullWidth
                               variant="outlined"
@@ -1273,7 +1432,6 @@ function AddOrder(props) {
                             />
                             <div className="flex flex-row">
                               <TextField
-                                size="small"
                                 className="mt-4"
                                 fullWidth
                                 variant="outlined"
@@ -1291,7 +1449,6 @@ function AddOrder(props) {
                                 type="number"
                               />
                               <TextField
-                                size="small"
                                 className="mt-4 ml-2"
                                 fullWidth
                                 variant="outlined"
@@ -1356,7 +1513,7 @@ function AddOrder(props) {
                               </FormControl>
                             </div>
                           </div>
-                          <div className="flex flex-row">
+                          <div className="flex flex-row justify-between">
                             <div className="flex flex-col px-10 w-1/2">
                               <CustomAutocomplete
                                 list={lensTypeNames}
@@ -1368,14 +1525,21 @@ function AddOrder(props) {
                                 label="Select Lens Type"
                               />
                             </div>
-                            <Fab
-                              onClick={fetchLensRate}
-                              disabled={disabledState}
-                              variant="extended"
-                              color="secondary"
-                              aria-label="add">
-                              Fetch Rate
-                            </Fab>
+                            <div className="pt-20">
+                              <Fab
+                                onClick={fetchLensRate}
+                                disabled={disabledState}
+                                variant="extended"
+                                color="secondary"
+                                aria-label="add">
+                                Fetch Rate
+                              </Fab>
+                            </div>
+                            <h3 className="pt-20">
+                              {selectedFrame?.lensRate
+                                ? `Lens Rate: $${selectedFrame?.lensRate.toLocaleString()}`
+                                : ''}
+                            </h3>
                           </div>
                           <TextField
                             className="mt-4"
@@ -1412,301 +1576,7 @@ function AddOrder(props) {
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-row w-full">
-                      <div className="flex flex-col p-12 m-12 w-1/2 flex-1 h-auto border-1">
-                        <TextField
-                          fullWidth
-                          id="outlined-multiline-static"
-                          inputProps={{
-                            style: { fontSize: 28, lineHeight: 0.8 }
-                          }}
-                          multiline
-                          rows={4}
-                          value={selectedFrame?.eyeglassesOrderComments}
-                          disabled={disabledState}
-                          onChange={handleSelectedFrameChange}
-                          label="Comments"
-                          name={'eyeglassesOrderComments'}
-                          variant="outlined"
-                        />
-                      </div>
-                      <div className="flex flex-col p-12 m-12 w-1/2 flex-1 h-auto border-1">
-                        <FormControl component="fieldset">
-                          <RadioGroup
-                            className="ml-4"
-                            row
-                            aria-label="saleType"
-                            name="saleType"
-                            value={selectedFrame?.saleType}
-                            onChange={handleSelectedFrameChange}>
-                            <FormControlLabel
-                              disabled={disabledState}
-                              value="retail"
-                              control={
-                                <Radio
-                                  onClick={() => {
-                                    setSelectedFrame({
-                                      ...selectedFrame,
-                                      frameRate: selectedFrame?.frameRetailRate
-                                    });
-                                  }}
-                                />
-                              }
-                              label="Retail"
-                            />
-                            <FormControlLabel
-                              value="wsale"
-                              disabled={disabledState}
-                              control={
-                                <Radio
-                                  onClick={() => {
-                                    setSelectedFrame({
-                                      ...selectedFrame,
-                                      frameRate: selectedFrame?.frameWsRate
-                                    });
-                                  }}
-                                />
-                              }
-                              label="Whole Sale"
-                            />
-                          </RadioGroup>
-                        </FormControl>
-                        <div className="flex flex-col">
-                          {eyeglasses.map((row, index) => (
-                            <div className="border-1" key={index}>
-                              <div className="flex flex-row justify-between">
-                                <h2>Frame Price: {row.frameBrand}</h2>
-                                <h2>
-                                  $
-                                  {row?.frameRate &&
-                                    Number(row?.frameRate).toLocaleString()}
-                                </h2>
-                              </div>
-                              <div className="flex flex-row justify-between">
-                                <h2>Lens Price: {row?.lensDetail}</h2>
-                                <h2>
-                                  $
-                                  {row?.lensRate &&
-                                    Number(row?.lensRate).toLocaleString()}
-                                </h2>
-                              </div>
-                            </div>
-                          ))}
 
-                          <div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 underline font-700">
-                                Sub-Total:
-                              </h2>
-                              <h2 className="mt-6 font-700">
-                                $
-                                {(
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b.lensRate,
-                                    0
-                                  ) +
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b.frameRate,
-                                    0
-                                  )
-                                ).toLocaleString()}
-                              </h2>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 pt-12 ">Additional Cost</h2>
-                              <div>
-                                <FormControl
-                                  className="mt-6"
-                                  disabled={disabledState}
-                                  fullWidth
-                                  variant="outlined">
-                                  <InputLabel htmlFor="outlined-adornment-amount">
-                                    Additional Cost
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    value={form?.additionalCost || +0}
-                                    name={'additionalCost'}
-                                    onChange={handleChange}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        $
-                                      </InputAdornment>
-                                    }
-                                    labelWidth={60}
-                                    type="number"
-                                  />
-                                </FormControl>
-                              </div>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <div className="flex flex-col w-1/2">
-                                <DiscountAutocomplete
-                                  list={discounts}
-                                  disabled={disabledState}
-                                  form={form}
-                                  setForm={setForm}
-                                  handleChange={handleChange}
-                                  id="code"
-                                  freeSolo={false}
-                                  label="Select Discount"
-                                />
-                              </div>
-                              <div>
-                                <FormControl
-                                  className="mt-6"
-                                  disabled={true}
-                                  fullWidth
-                                  variant="outlined">
-                                  <InputLabel htmlFor="outlined-adornment-amount">
-                                    Amount
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    value={form?.discount || 0}
-                                    name={'discount'}
-                                    onChange={handleChange}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        $
-                                      </InputAdornment>
-                                    }
-                                    labelWidth={60}
-                                    type="number"
-                                  />
-                                </FormControl>
-                              </div>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 underline font-700">
-                                Grand Total:
-                              </h2>
-                              {form?.additionalCost && form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.lensRate,
-                                      0
-                                    ) +
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.frameRate,
-                                      0
-                                    ) +
-                                    +form?.additionalCost -
-                                    +form?.discount
-                                  ).toLocaleString()}
-                                </h2>
-                              )}
-                              {form?.additionalCost && !form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.lensRate,
-                                      0
-                                    ) +
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.frameRate,
-                                      0
-                                    ) +
-                                    +form?.additionalCost
-                                  ).toLocaleString()}
-                                </h2>
-                              )}
-                              {!form?.additionalCost && form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.lensRate,
-                                      0
-                                    ) +
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.frameRate,
-                                      0
-                                    ) -
-                                    +form?.discount
-                                  ).toLocaleString()}
-                                </h2>
-                              )}
-                              {!form?.additionalCost && !form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.lensRate,
-                                      0
-                                    ) +
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.frameRate,
-                                      0
-                                    )
-                                  ).toLocaleString()}
-                                </h2>
-                              )}
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="pt-20">Insurance Amount:</h2>
-                              <div>
-                                <FormControl
-                                  className="mt-6"
-                                  disabled={disabledState}
-                                  fullWidth
-                                  variant="outlined">
-                                  <InputLabel htmlFor="outlined-adornment-amount">
-                                    Amount
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    value={form?.insuranceCost || 0}
-                                    name={'insuranceCost'}
-                                    onChange={handleChange}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        $
-                                      </InputAdornment>
-                                    }
-                                    labelWidth={60}
-                                    type="number"
-                                  />
-                                </FormControl>
-                              </div>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 ">Total Payments:</h2>
-                              <h2 className="mt-6">
-                                $ {payments.reduce((a, b) => +a + +b.amount, 0)}
-                              </h2>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 underline font-700">
-                                Balance Due:
-                              </h2>
-                              <h2 className="mt-6 font-700">
-                                ${' '}
-                                {eyeglasses.reduce(
-                                  (a, b) => +a + +b?.frameRate,
-                                  0
-                                ) +
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b?.lensRate,
-                                    0
-                                  ) -
-                                  (form?.insuranceCost
-                                    ? +form?.insuranceCost
-                                    : 0) +
-                                  (form?.additionalCost
-                                    ? +form?.additionalCost
-                                    : 0) -
-                                  (form?.discount ? +form?.discount : 0) -
-                                  payments.reduce((a, b) => +a + +b.amount, 0)}
-                              </h2>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                     <div className="flex flex-col mt-10 px-6 w-full rounded-20">
                       <div className="flex flex-row justify-center">
                         <SearchInsuranceDialouge
@@ -1727,7 +1597,7 @@ function AddOrder(props) {
                           setEditablePayment={setEditablePayment}
                         />
                       </div>
-                      <div className="flex flex-row mb-10 justify-around">
+                      <div className="flex flex-row mb-10 ">
                         <Fab
                           onClick={() => {
                             if (selectedFrame?.lensRate) {
@@ -1796,69 +1666,6 @@ function AddOrder(props) {
                           <AddIcon />
                           Add Frame
                         </Fab>
-
-                        <Fab
-                          onClick={() => {
-                            if (eyeglasses.length) {
-                              setOpenAlert(true);
-                            } else {
-                              toast.error('Please Add atleast One Pair', {
-                                position: 'bottom-right',
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                transition: Zoom
-                              });
-                            }
-                          }}
-                          disabled={disabledState}
-                          variant="extended"
-                          color="secondary"
-                          aria-label="add">
-                          <AddIcon />
-                          {routeParams?.customerId
-                            ? 'Place Order'
-                            : 'Update Order'}
-                        </Fab>
-
-                        {routeParams?.orderId && (
-                          <Fab
-                            onClick={() => {
-                              setOpenOrderPayment(true);
-                            }}
-                            variant="extended"
-                            color="primary"
-                            aria-label="add">
-                            <AddIcon />
-                            Receive Payment
-                          </Fab>
-                        )}
-                        {routeParams?.orderId && (
-                          <div>
-                            <OrderReceipt
-                              mainForm={form}
-                              openOrderReceipt={openOrderReceipt}
-                              handleOrderReceiptClose={handleOrderReceiptClose}
-                              customer={customer}
-                              eyeglasses={eyeglasses}
-                              payments={payments}
-                            />
-                            <Fab
-                              onClick={() => {
-                                setOpenOrderReceipt(true);
-                              }}
-                              variant="extended"
-                              color="primary"
-                              disabled={!disabledState}
-                              aria-label="add">
-                              <AddIcon />
-                              Print Receipt
-                            </Fab>
-                          </div>
-                        )}
                       </div>
                       <Dialog
                         fullWidth
@@ -1896,7 +1703,7 @@ function AddOrder(props) {
                         </DialogActions>
                       </Dialog>
                       <div className="flex flex-row w-full">
-                        <div className="flex flex-col w-2/3">
+                        <div className="flex flex-col w-full">
                           <h1 className="ml-10 font-700">Eyeglasses Detail:</h1>
                           <div className="flex flex-col h-320 ">
                             <TableContainer
@@ -1978,102 +1785,30 @@ function AddOrder(props) {
                             </TableContainer>
                           </div>
                         </div>
-
-                        {routeParams?.orderId && (
-                          <div className="flex flex-col w-1/3 ">
-                            <h1 className="ml-10 font-700">Payment History</h1>
-                            <div className="flex flex-col h-320 ">
-                              <TableContainer
-                                component={Paper}
-                                className="flex flex-col w-full m-2  overflow-scroll">
-                                <Table
-                                  stickyHeader
-                                  aria-label="customized table">
-                                  <TableHead>
-                                    <TableRow>
-                                      <StyledTableCell>
-                                        Payment ID
-                                      </StyledTableCell>
-                                      <StyledTableCell>
-                                        Payment Date
-                                      </StyledTableCell>
-                                      <StyledTableCell>Amount</StyledTableCell>
-                                      <StyledTableCell>
-                                        Extra Notes
-                                      </StyledTableCell>
-                                      <StyledTableCell>OPTIONS</StyledTableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    {payments.map((hit) => (
-                                      <StyledTableRow key={hit.orderPaymentId}>
-                                        <StyledTableCell>
-                                          {hit?.orderPaymentId}
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                          {moment(
-                                            hit?.paymentDate.toDate()
-                                          ).format('MM/DD/YYYY')}
-                                        </StyledTableCell>
-                                        <StyledTableCell className="whitespace-no-wrap">{`$ ${Number(
-                                          hit?.amount
-                                        ).toLocaleString()}`}</StyledTableCell>
-                                        <StyledTableCell>
-                                          {hit?.extraNotes}
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                          <IconButton
-                                            onClick={() => {
-                                              setEditablePayment(hit);
-                                              setOpenOrderPayment(true);
-                                            }}
-                                            aria-label="edit">
-                                            <EditIcon fontSize="small" />
-                                          </IconButton>
-                                        </StyledTableCell>
-                                      </StyledTableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </TableContainer>
-                            </div>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>
                 </FuseAnimate>
-              )}
 
-              {form?.prescriptionType === 'contactLensRx' && (
                 <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                  <div className="w-full flex flex-col ">
+                  <div className="w-full flex flex-col border-1 border-black">
                     <div className="w-full flex flex-row ">
                       <div className="w-2/3">
                         <div className="flex flex-col p-8 flex-1 h-auto justify-between">
                           <div className="flex flex-row w-full">
                             <div className="flex flex-col px-10 w-1/2 ">
                               <CustomAutocomplete1
-                                list={filteredPrescription}
-                                form={selectedFrame}
+                                list={prescription.filter(
+                                  (word) =>
+                                    word.prescriptionType === 'contactLensRx'
+                                )}
+                                form={selectedContactLens}
                                 disabled={disabledState}
-                                setForm={setSelectedFrame}
-                                handleChange={handleSelectedFrameChange}
+                                setForm={setSelectedContactLens}
+                                handleChange={handleSelectedContactLensChange}
                                 id="prescriptionId"
                                 freeSolo={false}
                                 label="Select Prescription"
-                              />
-                            </div>
-                            <div className="flex flex-col px-10 w-1/2">
-                              <CustomAutocomplete
-                                list={showroom}
-                                form={form}
-                                disabled={disabledState}
-                                setForm={setForm}
-                                handleChange={handleChange}
-                                id="locationName"
-                                freeSolo={false}
-                                label="Select Showroom"
                               />
                             </div>
                           </div>
@@ -2104,8 +1839,8 @@ function AddOrder(props) {
                                 size="small"
                                 fullWidth
                                 id="standard-basic"
-                                value={selectedFrame?.contactLensSphereOd}
-                                onChange={handleSelectedFrameChange}
+                                value={selectedContactLens?.contactLensSphereOd}
+                                onChange={handleSelectedContactLensChange}
                                 disabled={disabledState}
                                 name={'contactLensSphereOd'}
                                 InputProps={{
@@ -2121,8 +1856,10 @@ function AddOrder(props) {
                                 size="small"
                                 fullWidth
                                 id="standard-basic"
-                                value={selectedFrame?.contactLensCylinderOd}
-                                onChange={handleSelectedFrameChange}
+                                value={
+                                  selectedContactLens?.contactLensCylinderOd
+                                }
+                                onChange={handleSelectedContactLensChange}
                                 disabled={disabledState}
                                 name={'contactLensCylinderOd'}
                                 InputProps={{
@@ -2138,9 +1875,9 @@ function AddOrder(props) {
                                 size="small"
                                 fullWidth
                                 id="standard-basic"
-                                value={selectedFrame?.contactLensAxisOd}
+                                value={selectedContactLens?.contactLensAxisOd}
                                 disabled={disabledState}
-                                onChange={handleSelectedFrameChange}
+                                onChange={handleSelectedContactLensChange}
                                 name={'contactLensAxisOd'}
                                 InputProps={{
                                   inputProps: {
@@ -2156,8 +1893,8 @@ function AddOrder(props) {
                                 fullWidth
                                 id="standard-basic"
                                 disabled={disabledState}
-                                value={selectedFrame?.contactLensAddOd}
-                                onChange={handleSelectedFrameChange}
+                                value={selectedContactLens?.contactLensAddOd}
+                                onChange={handleSelectedContactLensChange}
                                 name={'contactLensAddOd'}
                                 InputProps={{
                                   inputProps: {
@@ -2178,8 +1915,8 @@ function AddOrder(props) {
                                 fullWidth
                                 id="standard-basic"
                                 disabled={disabledState}
-                                value={selectedFrame?.contactLensSphereOs}
-                                onChange={handleSelectedFrameChange}
+                                value={selectedContactLens?.contactLensSphereOs}
+                                onChange={handleSelectedContactLensChange}
                                 name={'contactLensSphereOs'}
                                 InputProps={{
                                   inputProps: {
@@ -2195,8 +1932,10 @@ function AddOrder(props) {
                                 fullWidth
                                 id="standard-basic"
                                 disabled={disabledState}
-                                value={selectedFrame?.contactLensCylinderOs}
-                                onChange={handleSelectedFrameChange}
+                                value={
+                                  selectedContactLens?.contactLensCylinderOs
+                                }
+                                onChange={handleSelectedContactLensChange}
                                 name={'contactLensCylinderOs'}
                                 InputProps={{
                                   inputProps: {
@@ -2212,8 +1951,8 @@ function AddOrder(props) {
                                 fullWidth
                                 id="standard-basic"
                                 disabled={disabledState}
-                                value={selectedFrame?.contactLensAxisOs}
-                                onChange={handleSelectedFrameChange}
+                                value={selectedContactLens?.contactLensAxisOs}
+                                onChange={handleSelectedContactLensChange}
                                 name={'contactLensAxisOs'}
                                 InputProps={{
                                   inputProps: {
@@ -2229,8 +1968,8 @@ function AddOrder(props) {
                                 fullWidth
                                 id="standard-basic"
                                 disabled={disabledState}
-                                value={selectedFrame?.contactLensAddOs}
-                                onChange={handleSelectedFrameChange}
+                                value={selectedContactLens?.contactLensAddOs}
+                                onChange={handleSelectedContactLensChange}
                                 name={'contactLensAddOs'}
                                 InputProps={{
                                   inputProps: {
@@ -2248,19 +1987,10 @@ function AddOrder(props) {
                           <FormControlLabel
                             control={
                               <Checkbox
-                                checked={form?.rushOrder}
-                                onChange={handleChange}
-                                name="rushOrder"
-                                disabled={disabledState}
-                              />
-                            }
-                            label="Rush Order"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={selectedFrame.contactLensInsurance}
-                                onChange={handleSelectedFrameChange}
+                                checked={
+                                  selectedContactLens.contactLensInsurance
+                                }
+                                onChange={handleSelectedContactLensChange}
                                 name="contactLensInsurance"
                                 disabled={disabledState}
                               />
@@ -2274,10 +2004,10 @@ function AddOrder(props) {
                       <div className="flex flex-col px-10 w-1/4">
                         <CustomAutocomplete
                           list={contactLens}
-                          form={selectedFrame}
+                          form={selectedContactLens}
                           disabled={disabledState}
-                          setForm={setSelectedFrame}
-                          handleChange={handleSelectedFrameChange}
+                          setForm={setSelectedContactLens}
+                          handleChange={handleSelectedContactLensChange}
                           id="type"
                           freeSolo={false}
                           label="Select Contact Lens"
@@ -2298,10 +2028,10 @@ function AddOrder(props) {
                           <Select
                             disabled={disabledState}
                             labelId="demo-simple-select-autowidth-label"
-                            defaultValue={selectedFrame?.contactLensStyle}
-                            value={selectedFrame?.contactLensStyle}
+                            defaultValue={selectedContactLens?.contactLensStyle}
+                            value={selectedContactLens?.contactLensStyle}
                             name="contactLensStyle"
-                            onChange={handleSelectedFrameChange}
+                            onChange={handleSelectedContactLensChange}
                             autoWidth>
                             <MenuItem value={'Spherical'}>Spherical</MenuItem>
                             <MenuItem value={'Toric'}>Toric</MenuItem>
@@ -2318,10 +2048,10 @@ function AddOrder(props) {
                           <Select
                             disabled={disabledState}
                             labelId="demo-simple-select-autowidth-label"
-                            defaultValue={selectedFrame?.contactLensBrand}
-                            value={selectedFrame?.contactLensBrand}
+                            defaultValue={selectedContactLens?.contactLensBrand}
+                            value={selectedContactLens?.contactLensBrand}
                             name="contactLensBrand"
-                            onChange={handleSelectedFrameChange}
+                            onChange={handleSelectedContactLensChange}
                             autoWidth>
                             <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
                             <MenuItem value={'Alcon'}>Alcon</MenuItem>
@@ -2338,10 +2068,10 @@ function AddOrder(props) {
                           <Select
                             disabled={disabledState}
                             labelId="demo-simple-select-autowidth-label"
-                            defaultValue={selectedFrame?.contactLensName}
-                            value={selectedFrame?.contactLensName}
+                            defaultValue={selectedContactLens?.contactLensName}
+                            value={selectedContactLens?.contactLensName}
                             name="contactLensName"
-                            onChange={handleSelectedFrameChange}
+                            onChange={handleSelectedContactLensChange}
                             autoWidth>
                             <MenuItem value={'1-Day Moist'}>
                               1-Day Moist
@@ -2358,10 +2088,10 @@ function AddOrder(props) {
                           <Select
                             disabled={disabledState}
                             labelId="demo-simple-select-autowidth-label"
-                            defaultValue={selectedFrame?.contactLensDia}
-                            value={selectedFrame?.contactLensDia}
+                            defaultValue={selectedContactLens?.contactLensDia}
+                            value={selectedContactLens?.contactLensDia}
                             name="contactLensDia"
-                            onChange={handleSelectedFrameChange}
+                            onChange={handleSelectedContactLensChange}
                             autoWidth>
                             <MenuItem value={'3'}>3</MenuItem>
                             <MenuItem value={'3.5'}>3.5</MenuItem>
@@ -2376,10 +2106,12 @@ function AddOrder(props) {
                           <Select
                             disabled={disabledState}
                             labelId="demo-simple-select-autowidth-label"
-                            defaultValue={selectedFrame?.contactLensBaseCurve}
-                            value={selectedFrame?.contactLensBaseCurve}
+                            defaultValue={
+                              selectedContactLens?.contactLensBaseCurve
+                            }
+                            value={selectedContactLens?.contactLensBaseCurve}
                             name="contactLensBaseCurve"
-                            onChange={handleSelectedFrameChange}
+                            onChange={handleSelectedContactLensChange}
                             autoWidth>
                             <MenuItem value={'8.4'}>8.4</MenuItem>
                             <MenuItem value={'8.5'}>8.5</MenuItem>
@@ -2393,248 +2125,15 @@ function AddOrder(props) {
                       </div>
                     </div>
 
-                    <div className="flex flex-row w-full">
-                      <div className="flex flex-col p-12 m-12 w-1/2 flex-1 h-auto border-1">
-                        <TextField
-                          fullWidth
-                          id="outlined-multiline-static"
-                          inputProps={{
-                            style: { fontSize: 28, lineHeight: 0.8 }
-                          }}
-                          multiline
-                          rows={4}
-                          value={selectedFrame?.contactLensOrderComments}
-                          disabled={disabledState}
-                          onChange={handleSelectedFrameChange}
-                          label="Comments"
-                          name={'contactLensOrderComments'}
-                          variant="outlined"
-                        />
-                      </div>
-                      <div className="flex flex-col p-12 m-12 w-1/2 flex-1 h-auto border-1">
-                        <div className="flex flex-col">
-                          {eyeglasses.map((row, index) => (
-                            <div className="border-1" key={index}>
-                              <div className="flex flex-row justify-between">
-                                <h2>Contact Lens Price: {row.type}</h2>
-                                <h2>
-                                  $
-                                  {row?.contactLensRate &&
-                                    Number(
-                                      row?.contactLensRate
-                                    ).toLocaleString()}
-                                </h2>
-                              </div>
-                            </div>
-                          ))}
-
-                          <div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 underline font-700">
-                                Sub-Total:
-                              </h2>
-                              <h2 className="mt-6 font-700">
-                                $
-                                {eyeglasses
-                                  .reduce((a, b) => +a + +b.contactLensRate, 0)
-                                  .toLocaleString()}
-                              </h2>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 pt-12 ">Additional Cost</h2>
-                              <div>
-                                <FormControl
-                                  className="mt-6"
-                                  disabled={disabledState}
-                                  fullWidth
-                                  variant="outlined">
-                                  <InputLabel htmlFor="outlined-adornment-amount">
-                                    Additional Cost
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    value={form?.additionalCost || +0}
-                                    name={'additionalCost'}
-                                    onChange={handleChange}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        $
-                                      </InputAdornment>
-                                    }
-                                    labelWidth={60}
-                                    type="number"
-                                  />
-                                </FormControl>
-                              </div>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <div className="flex flex-col w-1/2">
-                                <DiscountAutocomplete
-                                  list={discounts}
-                                  disabled={disabledState}
-                                  form={form}
-                                  setForm={setForm}
-                                  handleChange={handleChange}
-                                  id="code"
-                                  freeSolo={false}
-                                  label="Select Discount"
-                                />
-                              </div>
-                              <div>
-                                <FormControl
-                                  className="mt-6"
-                                  disabled={true}
-                                  fullWidth
-                                  variant="outlined">
-                                  <InputLabel htmlFor="outlined-adornment-amount">
-                                    Amount
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    value={form?.discount || 0}
-                                    name={'discount'}
-                                    onChange={handleChange}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        $
-                                      </InputAdornment>
-                                    }
-                                    labelWidth={60}
-                                    type="number"
-                                  />
-                                </FormControl>
-                              </div>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 underline font-700">
-                                Grand Total:
-                              </h2>
-                              {form?.additionalCost && form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.contactLensRate,
-                                      0
-                                    ) +
-                                    +form?.additionalCost -
-                                    +form?.discount
-                                  ).toLocaleString()}
-                                </h2>
-                              )}
-                              {form?.additionalCost && !form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.contactLensRate,
-                                      0
-                                    ) + +form?.additionalCost
-                                  ).toLocaleString()}
-                                </h2>
-                              )}
-                              {!form?.additionalCost && form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.contactLensRate,
-                                      0
-                                    ) - +form?.discount
-                                  ).toLocaleString()}
-                                </h2>
-                              )}
-                              {!form?.additionalCost && !form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {eyeglasses
-                                    .reduce(
-                                      (a, b) => +a + +b.contactLensRate,
-                                      0
-                                    )
-                                    .toLocaleString()}
-                                </h2>
-                              )}
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="pt-20">Insurance Amount:</h2>
-                              <div>
-                                <FormControl
-                                  className="mt-6"
-                                  disabled={disabledState}
-                                  fullWidth
-                                  variant="outlined">
-                                  <InputLabel htmlFor="outlined-adornment-amount">
-                                    Amount
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    value={form?.insuranceCost || 0}
-                                    name={'insuranceCost'}
-                                    onChange={handleChange}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        $
-                                      </InputAdornment>
-                                    }
-                                    labelWidth={60}
-                                    type="number"
-                                  />
-                                </FormControl>
-                              </div>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 ">Total Payments:</h2>
-                              <h2 className="mt-6">
-                                $ {payments.reduce((a, b) => +a + +b.amount, 0)}
-                              </h2>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                              <h2 className="mt-6 underline font-700">
-                                Balance Due:
-                              </h2>
-                              <h2 className="mt-6 font-700">
-                                ${' '}
-                                {eyeglasses.reduce(
-                                  (a, b) => +a + +b.contactLensRate,
-                                  0
-                                ) -
-                                  (form?.insuranceCost
-                                    ? +form?.insuranceCost
-                                    : 0) +
-                                  (form?.additionalCost
-                                    ? +form?.additionalCost
-                                    : 0) -
-                                  (form?.discount ? +form?.discount : 0) -
-                                  payments.reduce((a, b) => +a + +b.amount, 0)}
-                              </h2>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                     <div className="flex flex-col mt-10 px-6 w-full rounded-20">
-                      <div className="flex flex-row justify-center">
-                        <SearchInsuranceDialouge
-                          form={form}
-                          handleClose={handleClose}
-                          open={open}
-                          customer={customer}
-                          onSubmit={onSubmit}
-                        />
-                        <ReceiveOrderPayment
-                          mainForm={form}
-                          openOrderPayment={openOrderPayment}
-                          handleOrderPaymentClose={handleOrderPaymentClose}
-                          eyeglasses={eyeglasses}
-                          payments={payments}
-                        />
-                      </div>
                       <div className="flex flex-row mb-10 justify-between">
                         <Fab
                           onClick={() => {
-                            if (selectedFrame?.contactLensRate) {
-                              setEyeglasses([...eyeglasses, selectedFrame]);
+                            if (selectedContactLens?.contactLensRate) {
+                              setContactLenses([
+                                ...contactLenses,
+                                selectedContactLens
+                              ]);
                             } else {
                               toast.error(
                                 'Contact Lens Rate is not calculated yet. Press Fetch Rate...',
@@ -2658,114 +2157,9 @@ function AddOrder(props) {
                           <AddIcon />
                           Add Contact Lens
                         </Fab>
-
-                        <div>
-                          <Dialog
-                            fullWidth
-                            maxWidth="sm"
-                            open={openAlert}
-                            onClose={handleCloseAlert}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description">
-                            <DialogTitle id="alert-dialog-title" color="white">
-                              {'Save Changes?'}
-                            </DialogTitle>
-                            <DialogContent>
-                              <DialogContentText id="alert-dialog-description">
-                                Are you sure?
-                              </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                              <Button
-                                onClick={handleCloseAlert}
-                                color="secondary">
-                                Disagree
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  handleCloseAlert();
-                                  if (form?.insuranceCost > 0) {
-                                    setOpen(true);
-                                  } else {
-                                    deleteExistingInsurance();
-                                    onSubmit();
-                                  }
-                                }}
-                                color="secondary"
-                                autoFocus>
-                                Agree
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </div>
-
-                        <Fab
-                          onClick={() => {
-                            if (eyeglasses.length) {
-                              setOpenAlert(true);
-                            } else {
-                              toast.error('Please Add atleast One Pair', {
-                                position: 'bottom-right',
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                transition: Zoom
-                              });
-                            }
-                          }}
-                          disabled={disabledState}
-                          variant="extended"
-                          color="secondary"
-                          aria-label="add">
-                          <AddIcon />
-                          {routeParams?.customerId
-                            ? 'Place Order'
-                            : 'Update Order'}
-                        </Fab>
-
-                        {routeParams?.orderId && (
-                          <div className="flex flex-row justify-start mt-10">
-                            <Fab
-                              onClick={() => {
-                                setOpenOrderPayment(true);
-                              }}
-                              variant="extended"
-                              color="primary"
-                              aria-label="add">
-                              <AddIcon />
-                              Receive Payment
-                            </Fab>
-                          </div>
-                        )}
-                        {routeParams?.orderId && (
-                          <div className="flex flex-row justify-start mt-10">
-                            <OrderReceipt
-                              mainForm={form}
-                              openOrderReceipt={openOrderReceipt}
-                              handleOrderReceiptClose={handleOrderReceiptClose}
-                              customer={customer}
-                              eyeglasses={eyeglasses}
-                              payments={payments}
-                            />
-                            <Fab
-                              onClick={() => {
-                                setOpenOrderReceipt(true);
-                              }}
-                              variant="extended"
-                              color="primary"
-                              disabled={!disabledState}
-                              aria-label="add">
-                              <AddIcon />
-                              Print Receipt
-                            </Fab>
-                          </div>
-                        )}
                       </div>
                       <div className="flex flex-row w-full">
-                        <div className="flex flex-col w-2/3">
+                        <div className="flex flex-col w-full">
                           <h1 className="ml-10 font-700">Contacts Detail:</h1>
                           <div className="flex flex-col h-320 ">
                             <TableContainer
@@ -2797,10 +2191,10 @@ function AddOrder(props) {
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                  {eyeglasses.map((row, index) => (
+                                  {contactLenses.map((row, index) => (
                                     <StyledTableRow
                                       onClick={() => {
-                                        setSelectedFrame(row);
+                                        setSelectedContactLens(row);
                                       }}
                                       key={index}
                                       hover
@@ -2831,10 +2225,13 @@ function AddOrder(props) {
                                       <StyledTableCell>
                                         <IconButton
                                           onClick={() => {
-                                            let newEyeglasses = eyeglasses;
-                                            newEyeglasses.splice(index, 1);
-                                            setEyeglasses([...newEyeglasses]);
-                                            setSelectedFrame(row);
+                                            let newContactLenses =
+                                              contactLenses;
+                                            newContactLenses.splice(index, 1);
+                                            setContactLenses([
+                                              ...newContactLenses
+                                            ]);
+                                            setSelectedContactLens(row);
                                             setDisabledState(false);
                                           }}
                                           aria-label="view">
@@ -2848,100 +2245,23 @@ function AddOrder(props) {
                             </TableContainer>
                           </div>
                         </div>
-
-                        {routeParams?.orderId && (
-                          <div className="flex flex-col w-1/3 ">
-                            <h1 className="ml-10 font-700">Payment History</h1>
-                            <div className="flex flex-col h-320 ">
-                              <TableContainer
-                                component={Paper}
-                                className="flex flex-col w-full m-2  overflow-scroll">
-                                <Table
-                                  stickyHeader
-                                  aria-label="customized table">
-                                  <TableHead>
-                                    <TableRow>
-                                      <StyledTableCell>
-                                        Payment Date
-                                      </StyledTableCell>
-                                      <StyledTableCell>Amount</StyledTableCell>
-                                      <StyledTableCell>
-                                        Extra Notes
-                                      </StyledTableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    {payments.map((hit) => (
-                                      <StyledTableRow key={hit.orderPaymentId}>
-                                        <StyledTableCell>
-                                          {hit?.paymentDate
-                                            .toDate()
-                                            .toDateString()}
-                                        </StyledTableCell>
-                                        <StyledTableCell>{`$ ${Number(
-                                          hit?.amount
-                                        ).toLocaleString()}`}</StyledTableCell>
-                                        <StyledTableCell>
-                                          {hit?.extraNotes}
-                                        </StyledTableCell>
-                                      </StyledTableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </TableContainer>
-                            </div>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>
                 </FuseAnimate>
-              )}
-              {form?.prescriptionType === 'medicationRx' && (
+
                 <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                  <div className="w-full flex flex-col">
+                  <div className="w-full flex flex-col border-1 border-black">
                     <div className="flex flex-row w-full">
                       <div className="flex flex-col p-12 m-12 w-1/2 flex-1 h-auto border-1">
-                        <div className="w-full flex flex-row ">
-                          <div className="flex flex-row w-1/3">
-                            <div className="flex flex-col px-10 w-full">
-                              <CustomAutocomplete
-                                list={showroom}
-                                form={form}
-                                disabled={disabledState}
-                                setForm={setForm}
-                                handleChange={handleChange}
-                                id="locationName"
-                                freeSolo={false}
-                                label="Select Showroom"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="w-1/3">
-                            <div className="flex flex-col mt-28 ml-40">
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    checked={form?.rushOrder}
-                                    onChange={handleChange}
-                                    name="rushOrder"
-                                    disabled={disabledState}
-                                  />
-                                }
-                                label="Rush Order"
-                              />
-                            </div>
-                          </div>
-                        </div>
                         <div className="flex flex-row w-full">
-                          <div className="flex flex-col px-10 w-1/4">
+                          <div className="flex flex-col px-10 w-1/3">
                             <CustomAutocomplete
                               list={services}
-                              form={selectedFrame}
+                              form={selectedMedication}
                               disabled={disabledState}
-                              setForm={setSelectedFrame}
-                              handleChange={handleSelectedFrameChange}
+                              setForm={setSelectedMedication}
+                              handleChange={handleSelectedMedicationChange}
                               id="name"
                               freeSolo={false}
                               label="Select Services..."
@@ -2950,10 +2270,12 @@ function AddOrder(props) {
                           <div className="pt-20">
                             <Fab
                               onClick={() => {
-                                if (selectedFrame) {
+                                if (selectedMedication) {
                                   let count = 0;
-                                  eyeglasses.map((row) => {
-                                    if (row?.name === selectedFrame?.name) {
+                                  medication.map((row) => {
+                                    if (
+                                      row?.name === selectedMedication?.name
+                                    ) {
                                       count++;
                                     }
                                   });
@@ -2974,11 +2296,13 @@ function AddOrder(props) {
                                     );
                                   } else {
                                     services.map((row) => {
-                                      if (selectedFrame?.name === row?.name) {
-                                        setEyeglasses([
-                                          ...eyeglasses,
+                                      if (
+                                        selectedMedication?.name === row?.name
+                                      ) {
+                                        setMedication([
+                                          ...medication,
                                           {
-                                            ...selectedFrame,
+                                            ...selectedMedication,
                                             price: +row?.price
                                           }
                                         ]);
@@ -3010,10 +2334,104 @@ function AddOrder(props) {
                             </Fab>
                           </div>
                         </div>
+                        <div className="flex flex-col ">
+                          <h1 className="ml-10 font-700">Services Detail:</h1>
+                          <div className="flex flex-col h-320 ">
+                            <TableContainer
+                              className="flex flex-col w-full m-2 overflow-scroll"
+                              component={Paper}>
+                              <Table aria-label="customized table">
+                                <TableHead>
+                                  <TableRow>
+                                    <StyledTableCell>Sr#</StyledTableCell>
+                                    <StyledTableCell>
+                                      Service Name
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      Service Price
+                                    </StyledTableCell>
+                                    <StyledTableCell>Options</StyledTableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {medication.map((row, index) => (
+                                    <StyledTableRow
+                                      onClick={() => {
+                                        setSelectedMedication(row);
+                                      }}
+                                      key={index}
+                                      hover
+                                      className="cursor-pointer">
+                                      <StyledTableCell
+                                        component="th"
+                                        scope="row">
+                                        {+index + 1}
+                                      </StyledTableCell>
+                                      <StyledTableCell>
+                                        {row?.name}
+                                      </StyledTableCell>
+                                      <StyledTableCell>
+                                        {row?.price}
+                                      </StyledTableCell>
+                                      <StyledTableCell>
+                                        <IconButton
+                                          onClick={() => {
+                                            let newMedication = medication;
+                                            newMedication.splice(index, 1);
+                                            setMedication([...newMedication]);
+                                            setDisabledState(false);
+                                          }}
+                                          aria-label="view">
+                                          <Icon>delete</Icon>
+                                        </IconButton>
+                                      </StyledTableCell>
+                                    </StyledTableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </TableContainer>
+                          </div>
+                        </div>
                       </div>
                       <div className="flex flex-col p-12 m-12 w-1/2 flex-1 h-auto border-1">
                         <div className="flex flex-col">
                           {eyeglasses.map((row, index) => (
+                            <div className="border-1" key={index}>
+                              <div className="flex flex-row justify-between">
+                                <h2>Frame Price: {row.frameBrand}</h2>
+                                <h2>
+                                  $
+                                  {row?.frameRate &&
+                                    Number(row?.frameRate).toLocaleString()}
+                                </h2>
+                              </div>
+                              <div className="flex flex-row justify-between">
+                                <h2>Lens Price: {row?.lensDetail}</h2>
+                                <h2>
+                                  $
+                                  {row?.lensRate &&
+                                    Number(row?.lensRate).toLocaleString()}
+                                </h2>
+                              </div>
+                            </div>
+                          ))}
+
+                          {contactLenses.map((row, index) => (
+                            <div className="border-1" key={index}>
+                              <div className="flex flex-row justify-between">
+                                <h2>Contact Lens Price: {row.type}</h2>
+                                <h2>
+                                  $
+                                  {row?.contactLensRate &&
+                                    Number(
+                                      row?.contactLensRate
+                                    ).toLocaleString()}
+                                </h2>
+                              </div>
+                            </div>
+                          ))}
+
+                          {medication.map((row, index) => (
                             <div className="border-1" key={index}>
                               <div className="flex flex-row justify-between">
                                 <h2> {row?.name}</h2>
@@ -3033,9 +2451,24 @@ function AddOrder(props) {
                               </h2>
                               <h2 className="mt-6 font-700">
                                 $
-                                {eyeglasses
-                                  .reduce((a, b) => +a + +b.price, 0)
-                                  .toLocaleString()}
+                                {(
+                                  eyeglasses.reduce(
+                                    (a, b) => +a + +b.lensRate,
+                                    0
+                                  ) +
+                                  eyeglasses.reduce(
+                                    (a, b) => +a + +b.frameRate,
+                                    0
+                                  ) +
+                                  medication.reduce(
+                                    (a, b) => +a + +b.price,
+                                    0
+                                  ) +
+                                  contactLenses.reduce(
+                                    (a, b) => +a + +b.contactLensRate,
+                                    0
+                                  )
+                                ).toLocaleString()}
                               </h2>
                             </div>
                             <div className="flex flex-row justify-between">
@@ -3066,17 +2499,26 @@ function AddOrder(props) {
                               </div>
                             </div>
                             <div className="flex flex-row justify-between">
-                              <div className="flex flex-col w-1/2">
-                                <DiscountAutocomplete
-                                  list={discounts}
-                                  disabled={disabledState}
-                                  form={form}
-                                  setForm={setForm}
-                                  handleChange={handleChange}
-                                  id="code"
-                                  freeSolo={false}
-                                  label="Select Discount"
-                                />
+                              <div>
+                                <FormControl style={{ minWidth: 225 }}>
+                                  <FormHelperText>
+                                    Select Discount
+                                  </FormHelperText>
+                                  <Select
+                                    labelId="demo-simple-select-autowidth-label"
+                                    disabled={disabledState}
+                                    defaultValue={form?.discount}
+                                    value={form?.discount}
+                                    name="discount"
+                                    onChange={handleChange}
+                                    autoWidth>
+                                    {discounts.map((row) => (
+                                      <MenuItem value={row?.amount}>
+                                        {row?.code}
+                                      </MenuItem>
+                                    ))}
+                                  </Select>
+                                </FormControl>
                               </div>
                               <div>
                                 <FormControl
@@ -3107,49 +2549,33 @@ function AddOrder(props) {
                               <h2 className="mt-6 underline font-700">
                                 Grand Total:
                               </h2>
-                              {form?.additionalCost && form?.discount && (
+                              {
                                 <h2 className="mt-6 font-700">
                                   $
                                   {(
                                     eyeglasses.reduce(
+                                      (a, b) => +a + +b.lensRate,
+                                      0
+                                    ) +
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.frameRate,
+                                      0
+                                    ) +
+                                    medication.reduce(
                                       (a, b) => +a + +b.price,
                                       0
                                     ) +
-                                    +form?.additionalCost -
-                                    +form?.discount
-                                  ).toLocaleString()}
-                                </h2>
-                              )}
-                              {form?.additionalCost && !form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.price,
+                                    contactLenses.reduce(
+                                      (a, b) => +a + +b.contactLensRate,
                                       0
-                                    ) + +form?.additionalCost
+                                    ) +
+                                    (form?.additionalCost
+                                      ? +form?.additionalCost
+                                      : 0) -
+                                    (form?.discount ? +form?.discount : 0)
                                   ).toLocaleString()}
                                 </h2>
-                              )}
-                              {!form?.additionalCost && form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.price,
-                                      0
-                                    ) - +form?.discount
-                                  ).toLocaleString()}
-                                </h2>
-                              )}
-                              {!form?.additionalCost && !form?.discount && (
-                                <h2 className="mt-6 font-700">
-                                  $
-                                  {eyeglasses
-                                    .reduce((a, b) => +a + +b.price, 0)
-                                    .toLocaleString()}
-                                </h2>
-                              )}
+                              }
                             </div>
                             <div className="flex flex-row justify-between">
                               <h2 className="pt-20">Insurance Amount:</h2>
@@ -3190,225 +2616,43 @@ function AddOrder(props) {
                               </h2>
                               <h2 className="mt-6 font-700">
                                 ${' '}
-                                {eyeglasses.reduce((a, b) => +a + +b.price, 0) -
-                                  (form?.insuranceCost
-                                    ? +form?.insuranceCost
-                                    : 0) +
+                                {(
+                                  eyeglasses.reduce(
+                                    (a, b) => +a + +b.lensRate,
+                                    0
+                                  ) +
+                                  eyeglasses.reduce(
+                                    (a, b) => +a + +b.frameRate,
+                                    0
+                                  ) +
+                                  medication.reduce(
+                                    (a, b) => +a + +b.price,
+                                    0
+                                  ) +
+                                  contactLenses.reduce(
+                                    (a, b) => +a + +b.contactLensRate,
+                                    0
+                                  ) +
                                   (form?.additionalCost
                                     ? +form?.additionalCost
                                     : 0) -
                                   (form?.discount ? +form?.discount : 0) -
-                                  payments.reduce((a, b) => +a + +b.amount, 0)}
+                                  (form?.insuranceCost
+                                    ? +form?.insuranceCost
+                                    : 0) -
+                                  payments.reduce((a, b) => +a + +b.amount, 0)
+                                ).toLocaleString()}
                               </h2>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col mt-10 px-6 w-full rounded-20">
-                      <div className="flex flex-row justify-center">
-                        <SearchInsuranceDialouge
-                          form={form}
-                          handleClose={handleClose}
-                          open={open}
-                          customer={customer}
-                          onSubmit={onSubmit}
-                        />
-                        <ReceiveOrderPayment
-                          mainForm={form}
-                          openOrderPayment={openOrderPayment}
-                          handleOrderPaymentClose={handleOrderPaymentClose}
-                          eyeglasses={eyeglasses}
-                          payments={payments}
-                        />
-                      </div>
-                      <div className="flex flex-row mb-10 justify-between">
-                        <Fab
-                          onClick={() => {
-                            if (eyeglasses.length) {
-                              if (form?.insuranceCost > 0) {
-                                setOpen(true);
-                              } else {
-                                onSubmit();
-                              }
-                            } else {
-                              toast.error('Please Add atleast One Pair', {
-                                position: 'bottom-right',
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                transition: Zoom
-                              });
-                            }
-                          }}
-                          disabled={disabledState}
-                          variant="extended"
-                          color="secondary"
-                          aria-label="add">
-                          <AddIcon />
-                          {routeParams?.customerId
-                            ? 'Place Order'
-                            : 'Update Order'}
-                        </Fab>
-
-                        {routeParams?.orderId && (
-                          <div className="flex flex-row justify-start mt-10">
-                            <Fab
-                              onClick={() => {
-                                setOpenOrderPayment(true);
-                              }}
-                              variant="extended"
-                              disabled={!disabledState}
-                              color="primary"
-                              aria-label="add">
-                              <AddIcon />
-                              Receive Payment
-                            </Fab>
-                          </div>
-                        )}
-                        {routeParams?.orderId && (
-                          <div className="flex flex-row justify-start mt-10">
-                            <OrderReceipt
-                              mainForm={form}
-                              openOrderReceipt={openOrderReceipt}
-                              handleOrderReceiptClose={handleOrderReceiptClose}
-                              customer={customer}
-                              eyeglasses={eyeglasses}
-                              payments={payments}
-                            />
-                            <Fab
-                              onClick={() => {
-                                setOpenOrderReceipt(true);
-                              }}
-                              variant="extended"
-                              color="primary"
-                              disabled={!disabledState}
-                              aria-label="add">
-                              <AddIcon />
-                              Print Receipt
-                            </Fab>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex flex-row w-full">
-                        <div className="flex flex-col w-2/3">
-                          <h1 className="ml-10 font-700">Services Detail:</h1>
-                          <div className="flex flex-col h-320 ">
-                            <TableContainer
-                              className="flex flex-col w-full m-2 overflow-scroll"
-                              component={Paper}>
-                              <Table aria-label="customized table">
-                                <TableHead>
-                                  <TableRow>
-                                    <StyledTableCell>Sr#</StyledTableCell>
-                                    <StyledTableCell>
-                                      Service Name
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                      Service Price
-                                    </StyledTableCell>
-                                    <StyledTableCell>Options</StyledTableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {eyeglasses.map((row, index) => (
-                                    <StyledTableRow
-                                      onClick={() => {
-                                        setSelectedFrame(row);
-                                      }}
-                                      key={index}
-                                      hover
-                                      className="cursor-pointer">
-                                      <StyledTableCell
-                                        component="th"
-                                        scope="row">
-                                        {+index + 1}
-                                      </StyledTableCell>
-                                      <StyledTableCell>
-                                        {row?.name}
-                                      </StyledTableCell>
-                                      <StyledTableCell>
-                                        {row?.price}
-                                      </StyledTableCell>
-                                      <StyledTableCell>
-                                        <IconButton
-                                          onClick={() => {
-                                            let newEyeglasses = eyeglasses;
-                                            newEyeglasses.splice(index, 1);
-                                            setEyeglasses([...newEyeglasses]);
-                                            setDisabledState(false);
-                                          }}
-                                          aria-label="view">
-                                          <Icon>delete</Icon>
-                                        </IconButton>
-                                      </StyledTableCell>
-                                    </StyledTableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                            </TableContainer>
-                          </div>
-                        </div>
-
-                        {routeParams?.orderId && (
-                          <div className="flex flex-col w-1/3 ">
-                            <h1 className="ml-10 font-700">Payment History</h1>
-                            <div className="flex flex-col h-320 ">
-                              <TableContainer
-                                component={Paper}
-                                className="flex flex-col w-full m-2 overflow-scroll">
-                                <Table
-                                  stickyHeader
-                                  aria-label="customized table">
-                                  <TableHead>
-                                    <TableRow>
-                                      <StyledTableCell>
-                                        Payment Date
-                                      </StyledTableCell>
-                                      <StyledTableCell>
-                                        Payment Method
-                                      </StyledTableCell>
-                                      <StyledTableCell>Amount</StyledTableCell>
-                                      <StyledTableCell>
-                                        Extra Notes
-                                      </StyledTableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    {payments.map((hit) => (
-                                      <StyledTableRow key={hit.orderPaymentId}>
-                                        <StyledTableCell>
-                                          {hit?.paymentDate
-                                            .toDate()
-                                            .toDateString()}
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                          {hit?.paymentMode}
-                                        </StyledTableCell>
-                                        <StyledTableCell>{`$ ${Number(
-                                          hit?.amount
-                                        ).toLocaleString()}`}</StyledTableCell>
-                                        <StyledTableCell>
-                                          {hit?.extraNotes}
-                                        </StyledTableCell>
-                                      </StyledTableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </TableContainer>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
                   </div>
                 </FuseAnimate>
-              )}
+              </div>
             </div>
-          </div>
+          )
         }
         innerScroll
       />
