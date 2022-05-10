@@ -61,6 +61,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
+    padding: 0,
     textAlign: 'center'
   }
 }))(TableCell);
@@ -735,42 +736,48 @@ function AddOrder(props) {
                           <Table stickyHeader aria-label="customized table">
                             <TableHead>
                               <TableRow>
-                                <StyledTableCell>Payment ID</StyledTableCell>
-                                <StyledTableCell>Payment Date</StyledTableCell>
-                                <StyledTableCell>Amount</StyledTableCell>
-                                <StyledTableCell>Extra Notes</StyledTableCell>
+                                <StyledTableCell>PAYMENT DATE</StyledTableCell>
+                                <StyledTableCell>
+                                  PAYMENT METHOD
+                                </StyledTableCell>
+                                <StyledTableCell>AMOUNT</StyledTableCell>
+                                <StyledTableCell>EXTRA NOTES</StyledTableCell>
                                 <StyledTableCell>OPTIONS</StyledTableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {payments.map((hit) => (
-                                <StyledTableRow key={hit.orderPaymentId}>
-                                  <StyledTableCell>
-                                    {hit?.orderPaymentId}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {moment(hit?.paymentDate.toDate()).format(
-                                      'MM/DD/YYYY'
-                                    )}
-                                  </StyledTableCell>
-                                  <StyledTableCell className="whitespace-no-wrap">{`$ ${Number(
-                                    hit?.amount
-                                  ).toLocaleString()}`}</StyledTableCell>
-                                  <StyledTableCell>
-                                    {hit?.extraNotes}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    <IconButton
-                                      onClick={() => {
-                                        setEditablePayment(hit);
-                                        setOpenOrderPayment(true);
-                                      }}
-                                      aria-label="edit">
-                                      <EditIcon fontSize="small" />
-                                    </IconButton>
-                                  </StyledTableCell>
-                                </StyledTableRow>
-                              ))}
+                              {payments
+                                .sort((a, b) =>
+                                  a.orderPaymentId > b.orderPaymentId ? -1 : 1
+                                )
+                                .map((hit, index) => (
+                                  <StyledTableRow key={hit.orderPaymentId}>
+                                    <StyledTableCell>
+                                      {moment(hit?.paymentDate.toDate()).format(
+                                        'MM/DD/YYYY'
+                                      )}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {hit?.paymentMode}
+                                    </StyledTableCell>
+                                    <StyledTableCell className="whitespace-no-wrap">{`$ ${Number(
+                                      hit?.amount
+                                    ).toLocaleString()}`}</StyledTableCell>
+                                    <StyledTableCell>
+                                      {hit?.extraNotes}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      <IconButton
+                                        onClick={() => {
+                                          setEditablePayment({ ...hit, index });
+                                          setOpenOrderPayment(true);
+                                        }}
+                                        aria-label="edit">
+                                        <EditIcon fontSize="small" />
+                                      </IconButton>
+                                    </StyledTableCell>
+                                  </StyledTableRow>
+                                ))}
                             </TableBody>
                           </Table>
                         </TableContainer>
@@ -1591,6 +1598,8 @@ function AddOrder(props) {
                           openOrderPayment={openOrderPayment}
                           handleOrderPaymentClose={handleOrderPaymentClose}
                           eyeglasses={eyeglasses}
+                          contactLenses={contactLenses}
+                          medication={medication}
                           payments={payments}
                           setPayments={setPayments}
                           editablePayment={editablePayment}

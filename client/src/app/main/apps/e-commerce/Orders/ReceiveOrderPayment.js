@@ -25,6 +25,8 @@ export default function ReceiveOrderPayment(props) {
     openOrderPayment,
     handleOrderPaymentClose,
     eyeglasses,
+    contactLenses,
+    medication,
     payments,
     editablePayment,
     setEditablePayment,
@@ -42,6 +44,7 @@ export default function ReceiveOrderPayment(props) {
   const onSubmit = async () => {
     try {
       if (form?.orderPaymentId) {
+        setDisabledState(true);
         const queryEditPayment = await firestore()
           .collection('orderPayments')
           .where('orderPaymentId', '==', Number(form?.orderPaymentId))
@@ -55,7 +58,14 @@ export default function ReceiveOrderPayment(props) {
           .doc(resultEditPayment.id);
         await ref.set(form);
 
+        let newPayments = payments;
+        newPayments[form?.index] = form;
+
+        setPayments(newPayments);
+
         handleOrderPaymentClose();
+        setDisabledState(false);
+        setEditablePayment(null);
 
         dispatch(
           MessageActions.showMessage({
@@ -63,6 +73,7 @@ export default function ReceiveOrderPayment(props) {
           })
         );
       } else {
+        setDisabledState(true);
         const dbConfig = (
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
@@ -80,6 +91,18 @@ export default function ReceiveOrderPayment(props) {
           .collection('dbConfig')
           .doc('dbConfig')
           .update({ orderPaymentId: dbConfig?.orderPaymentId + 1 });
+
+        const queryPayments = await firestore()
+          .collection('orderPayments')
+          .where('orderId', '==', Number(mainForm?.orderId))
+          .get();
+        let resultPayments = [];
+        queryPayments.forEach((doc) => {
+          resultPayments.push(doc.data());
+        });
+        setPayments(resultPayments);
+        setDisabledState(false);
+        setForm(null);
 
         handleOrderPaymentClose();
 
@@ -169,50 +192,22 @@ export default function ReceiveOrderPayment(props) {
         <Fab
           onClick={() => {
             if (form?.amount > 0) {
-              if (mainForm?.prescriptionType === 'eyeglassesRx') {
-                let balance =
-                  eyeglasses.reduce((a, b) => +a + +b?.frameRate, 0) +
-                  eyeglasses.reduce((a, b) => +a + +b?.lensRate, 0) -
-                  (mainForm?.insuranceCost ? +mainForm?.insuranceCost : 0) +
-                  (mainForm?.additionalCost ? +mainForm?.additionalCost : 0) -
-                  (mainForm?.discount ? +mainForm?.discount : 0) -
-                  payments.reduce((a, b) => +a + +b.amount, 0);
-                if (balance >= form?.amount) {
-                  onSubmit();
-                } else {
-                  setError(
-                    'Balance amount is less than the receiving or Invalid Value!'
-                  );
-                }
-              } else if (mainForm?.prescriptionType === 'contactLensRx') {
-                let balance =
-                  eyeglasses.reduce((a, b) => +a + +b?.contactLensRate, 0) -
-                  (mainForm?.insuranceCost ? +mainForm?.insuranceCost : 0) +
-                  (mainForm?.additionalCost ? +mainForm?.additionalCost : 0) -
-                  (mainForm?.discount ? +mainForm?.discount : 0) -
-                  payments.reduce((a, b) => +a + +b.amount, 0);
-                if (balance >= form?.amount) {
-                  onSubmit();
-                } else {
-                  setError(
-                    'Balance amount is less than the receiving or Invalid Value!'
-                  );
-                }
+              let balance =
+                eyeglasses.reduce((a, b) => +a + +b.lensRate, 0) +
+                eyeglasses.reduce((a, b) => +a + +b.frameRate, 0) +
+                medication.reduce((a, b) => +a + +b.price, 0) +
+                contactLenses.reduce((a, b) => +a + +b.contactLensRate, 0) +
+                (mainForm?.additionalCost ? +mainForm?.additionalCost : 0) -
+                (mainForm?.discount ? +mainForm?.discount : 0) -
+                (mainForm?.insuranceCost ? +mainForm?.insuranceCost : 0) -
+                payments.reduce((a, b) => +a + +b.amount, 0) +
+                (form?.index >= 0 ? +payments[form?.index].amount : 0);
+              if (balance >= form?.amount) {
+                onSubmit();
               } else {
-                let balance =
-                  eyeglasses.reduce((a, b) => +a + +b?.price, 0) -
-                  (mainForm?.insuranceCost ? +mainForm?.insuranceCost : 0) +
-                  (mainForm?.additionalCost ? +mainForm?.additionalCost : 0) -
-                  (mainForm?.discount ? +mainForm?.discount : 0) -
-                  payments.reduce((a, b) => +a + +b.amount, 0);
-                if (balance >= form?.amount) {
-                  setDisabledState(true);
-                  onSubmit();
-                } else {
-                  setError(
-                    'Balance amount is less than the receiving or Invalid Value!'
-                  );
-                }
+                setError(
+                  'Balance amount is less than the receiving or Invalid Value!'
+                );
               }
             } else {
               setError('Amount cannot be empty!');

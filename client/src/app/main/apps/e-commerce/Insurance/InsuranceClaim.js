@@ -222,10 +222,10 @@ const InsuranceClaim = (props) => {
                 <Table stickyHeader aria-label="customized table">
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell>Payment Date</StyledTableCell>
-                      <StyledTableCell>Payment Method</StyledTableCell>
-                      <StyledTableCell>Amount</StyledTableCell>
-                      <StyledTableCell>Extra Notes</StyledTableCell>
+                      <StyledTableCell>PAYMENT DATE</StyledTableCell>
+                      <StyledTableCell>PAYMENT METHOD</StyledTableCell>
+                      <StyledTableCell>AMOUNT</StyledTableCell>
+                      <StyledTableCell>EXTRA NOTES</StyledTableCell>
                       <StyledTableCell>OPTIONS</StyledTableCell>
                     </TableRow>
                   </TableHead>

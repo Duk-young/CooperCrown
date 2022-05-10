@@ -193,7 +193,7 @@ export default function ReceiveInsurancePayment(props) {
                 +claim?.insuranceCost -
                 payments.reduce((a, b) => +a + +b.amount, 0) +
                 (form?.index >= 0 ? +payments[form?.index].amount : 0);
-              console.log(balance);
+
               if (balance >= form?.amount) {
                 setDisabledState(true);
                 onSubmit();
