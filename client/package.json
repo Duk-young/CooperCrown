@@ -88,6 +88,7 @@
     "react-window": "1.8.5",
     "redux": "4.0.5",
     "redux-thunk": "2.3.0",
+    "rheostat": "^4.1.1",
     "select-timezone-material-ui": "^2.6.0",
     "styled-components": "5.1.0",
     "typeface-muli": "1.1.3",

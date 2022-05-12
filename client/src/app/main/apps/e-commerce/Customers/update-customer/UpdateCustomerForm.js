@@ -348,6 +348,7 @@ function UpdateCustomerForm(props) {
                     }
                   });
                   if (count > 0) {
+                    setOpenAlertOnSave(true);
                     toast.error('Customer already exists!', {
                       position: 'bottom-right',
                       autoClose: 5000,

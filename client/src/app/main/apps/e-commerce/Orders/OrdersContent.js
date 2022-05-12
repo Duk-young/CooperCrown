@@ -21,6 +21,7 @@ import { withRouter } from 'react-router';
 import '../Customers/Search.css';
 import '../Customers/Themes.css';
 import '../Customers/App.mobile.css';
+import CustomRangeSlider from './RangeSlider';
 
 const searchClient = algoliasearch(
   '5AS4E06TDY',
@@ -111,7 +112,9 @@ const OrdersContent = (props) => {
       <TableContainer component={Paper} className="flex flex-col w-full py-20 ">
         <InstantSearch searchClient={searchClient} indexName="orders">
           <div className="flex flex-row">
-            <div className="flex flex-col flex-1"></div>
+            <div className="flex flex-col flex-1 pt-6">
+              <CustomRangeSlider attribute="orderDate" />
+            </div>
             <div className="flex flex-col flex-1 mb-10 border-1 rounded-12">
               <SearchBox
                 translations={{

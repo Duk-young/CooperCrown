@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
+import CustomRangeSlider from './RangeSlider';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
@@ -135,7 +136,10 @@ const CustomersContent = (props) => {
       <TableContainer component={Paper} className="flex flex-col w-full py-20">
         <InstantSearch searchClient={searchClient} indexName="customers">
           <div className="flex flex-row">
-            <div className="flex flex-col flex-1"></div>
+            <div className="flex flex-col flex-1  px-12">
+              <h4 className="pl-16">Date Range Filter</h4>
+              <CustomRangeSlider attribute="dob" />
+            </div>
             <div className="flex flex-col flex-1 mb-10 border-1">
               <SearchBox
                 translations={{
