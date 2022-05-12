@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 import CanvasDraw from 'react-canvas-draw';
 import Capture from './Capture.PNG';
 import Fab from '@material-ui/core/Fab';
-import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import MenuItem from '@material-ui/core/MenuItem';
+import React, { useState } from 'react';
 import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -19,31 +20,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sketch = (props) => {
-  const { form, setForm } = props;
+  const { form, setForm, handleChange } = props;
   const [saveableCanvas, setSaveableCanvas] = useState();
   const [selectedColour, setSelectedColour] = useState('#000000');
   const classes = useStyles();
 
   return (
     <div>
-      <p>
-        <span role="img" aria-label="fingers pointing down">
-          👇👇👇👇
-        </span>{' '}
-        Use your finder or mouse to draw{' '}
-        <span role="img" aria-label="fingers pointing down">
-          👇👇👇👇
-        </span>
-      </p>
-
       {form?.examId && (
         <CanvasDraw
           ref={(canvasDraw) => setSaveableCanvas(canvasDraw)}
           imgSrc={Capture}
           disabled
-          brushRadius="3"
           saveData={form?.sketch}
-          lazyRadius="2"
+          lazyRadius="1"
           style={{
             boxShadow:
               '0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)'
@@ -52,7 +42,7 @@ const Sketch = (props) => {
       )}
       {!form?.examId && (
         <div className="relative">
-          <div className="flex">
+          <div className="flex flex-row justify-evenly">
             <Typography
               className="username text-16 whitespace-no-wrap self-center"
               color="inherit">
@@ -75,16 +65,29 @@ const Sketch = (props) => {
               </Select>
               <FormHelperText>Select from the list</FormHelperText>
             </FormControl>
+            <TextField
+              className="ml-4"
+              size="small"
+              id="outlined-multiline-static"
+              label="Brush Radius"
+              value={form?.brushRadius}
+              onChange={(e) => {
+                setForm({ ...form, brushRadius: e.target.value });
+              }}
+              name={'brushRadius'}
+              variant="outlined"
+              type="number"
+            />
           </div>
           <CanvasDraw
             ref={(canvasDraw) => setSaveableCanvas(canvasDraw)}
             imgSrc={Capture}
-            brushRadius="3"
+            brushRadius={form?.brushRadius ? form?.brushRadius : 1}
             brushColor={selectedColour}
             onChange={() => {
               setForm({ ...form, sketch: saveableCanvas.getSaveData() });
             }}
-            lazyRadius="2"
+            lazyRadius="0"
             style={{
               boxShadow:
                 '0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)'

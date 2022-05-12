@@ -64,7 +64,7 @@ function Inventory() {
         </Tabs>
       }
       content={
-        <div className="p-24">
+        <div className="py-2">
           {selectedTab === 0 && (
             <div>
               <Frames />

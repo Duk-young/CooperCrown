@@ -3,7 +3,13 @@ import '../../Customers/Search.css';
 import '../../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
-import { InstantSearch, Panel, SearchBox } from 'react-instantsearch-dom';
+import {
+  InstantSearch,
+  Panel,
+  SearchBox,
+  HitsPerPage,
+  Pagination
+} from 'react-instantsearch-dom';
 import { Link } from 'react-router-dom';
 import { RefinementList } from 'react-instantsearch-dom';
 import { withRouter } from 'react-router';
@@ -15,6 +21,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -121,7 +132,8 @@ const StyledTableCell = withStyles((theme) => ({
     color: theme.palette.common.white
   },
   body: {
-    fontSize: 14
+    fontSize: 14,
+    padding: 0
   }
 }))(TableCell);
 
@@ -140,17 +152,28 @@ const useStyles = makeStyles({
 });
 
 const Frames = (props) => {
-  // const [isLoading, setisLoading] = useState(false);
+  const [openFiltersDialog, setOpenFiltersDialog] = useState(false);
 
-  // if (isLoading) return <FuseLoading />;
+  const [searchState, setSearchState] = useState({});
+  const handleCloseFiltersDialog = () => {
+    setOpenFiltersDialog(false);
+  };
+
   return (
-    <div className="flex flex-col w-full h-full">
-      <InstantSearch searchClient={searchClient} indexName="frames">
+    <div className="flex flex-col w-full ">
+      <InstantSearch
+        searchClient={searchClient}
+        indexName="frames"
+        searchState={searchState}>
         <TableContainer component={Paper} className="flex flex-col w-full ">
           <div className="flex flex-row">
             <div className="flex flex-col flex-1"></div>
-            <div className="flex flex-col flex-1 mb-10 border-1 rounded-6">
+            <div className="flex flex-col flex-1 mb-10 border-1">
               <SearchBox
+                onChange={(e) => {
+                  setSearchState({ ...searchState, query: e.target.value });
+                  console.log(searchState);
+                }}
                 translations={{
                   placeholder: 'Searh for frames...'
                 }}
@@ -176,9 +199,18 @@ const Frames = (props) => {
               />
             </div>
             <div className="flex flex-col flex-1">
-              <div className="flex w-full justify-end">
+              <div className="flex w-full justify-around">
                 <Button
-                  className="whitespace-no-wrap normal-case mb-24 ml-24"
+                  className="whitespace-no-wrap normal-case mt-10"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setOpenFiltersDialog(true);
+                  }}>
+                  Filters
+                </Button>
+                <Button
+                  className="whitespace-no-wrap normal-case mt-10"
                   variant="contained"
                   color="secondary"
                   onClick={() => {
@@ -189,47 +221,83 @@ const Frames = (props) => {
               </div>
             </div>
           </div>
-          <div className="flex flex-row">
-            <div className="flex flex-col w-1/4 ">
-              <div className="p-8 mb-10 rounded-12 shadow-5">
-                <Panel header="Brands">
-                  <RefinementList
-                    attribute="brand"
-                    limit={4}
-                    searchable={true}
-                    translations={{
-                      placeholder: 'Search for brands…'
-                    }}
-                  />
-                </Panel>
-              </div>
-              <div className="p-8 mb-10 rounded-12 shadow-5">
-                <Panel header="Colour">
-                  <RefinementList
-                    attribute="colour"
-                    limit={4}
-                    searchable={true}
-                    translations={{
-                      placeholder: 'Search for colours…'
-                    }}
-                  />
-                </Panel>
-              </div>
-              <div className="p-8 mb-10 rounded-12 shadow-5">
-                <Panel header="Material">
-                  <RefinementList
-                    attribute="material"
-                    limit={4}
-                    searchable={true}
-                    translations={{
-                      placeholder: 'Search for materials…'
-                    }}
-                  />
-                </Panel>
-              </div>
+          <div>
+            <div>
+              <Dialog
+                fullWidth
+                maxWidth="sm"
+                open={openFiltersDialog}
+                onClose={handleCloseFiltersDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">
+                  <h2>Select Filters!</h2>
+                </DialogTitle>
+                <DialogContent>
+                  <div className="flex flex-row justify-between">
+                    <InstantSearch
+                      searchClient={searchClient}
+                      indexName="frames"
+                      // onChange={(e) => {
+                      //   console.log(e);
+                      // }}
+                      searchState={searchState}
+                      onSearchStateChange={(e) => {
+                        setSearchState(e);
+                        console.log(searchState);
+                      }}>
+                      <Panel header="Brands">
+                        <RefinementList
+                          attribute="brand"
+                          limit={4}
+                          searchable={true}
+                          translations={{
+                            placeholder: 'Search for brands…'
+                          }}
+                        />
+                      </Panel>
+                      <Panel header="Colour">
+                        <RefinementList
+                          attribute="colour"
+                          limit={4}
+                          searchable={true}
+                          translations={{
+                            placeholder: 'Search for colours…'
+                          }}
+                        />
+                      </Panel>
+                      <Panel header="Material">
+                        <RefinementList
+                          attribute="material"
+                          limit={4}
+                          searchable={true}
+                          translations={{
+                            placeholder: 'Search for materials…'
+                          }}
+                        />
+                      </Panel>
+                    </InstantSearch>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
-            <div className="flex flex-1">
-              <CustomHits />
+          </div>
+          <CustomHits />
+          <div className="flex flex-row justify-center">
+            <div className="flex flex-1"></div>
+            <div className="flex flex-1 justify-center mt-8">
+              <Pagination />
+            </div>
+            <div className="flex flex-1 justify-center mt-8">
+              <HitsPerPage
+                defaultRefinement={25}
+                items={[
+                  { value: 25, label: 'Show 25 Hits' },
+                  { value: 50, label: 'Show 50 Hits' },
+                  { value: 75, label: 'Show 75 Hits' },
+                  { value: 100, label: 'Show 100 Hits' }
+                ]}
+              />
             </div>
           </div>
         </TableContainer>

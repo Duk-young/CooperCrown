@@ -40,7 +40,7 @@ const RangeSlider = ({ min, max, currentRefinement, canRefine, refine }) => {
       values={[currentRefinement.min, currentRefinement.max]}
       onChange={onChange}
       onValuesUpdated={onValuesUpdated}>
-      <div className="flex flex-row justify-around">
+      <div className="flex flex-row justify-between">
         <div>{moment(stateMin).format('MM/DD/YYYY')}</div>
         <div>{moment(stateMax).format('MM/DD/YYYY')}</div>
       </div>

@@ -3502,7 +3502,7 @@ const AddExam = (props) => {
       <div className="flex flex-row px-16  sm:px-24 w-full">
         <div className="p-8 w-1/3 min-w-400 h-auto border-grey-400 border-solid border-1 justify-between">
           <div className="flex flex-row justify-center min-w-400">
-            <Sketch form={form} setForm={setForm} />
+            <Sketch form={form} setForm={setForm} handleChange={handleChange}/>
           </div>
         </div>
         <div className="p-8 w-2/3 h-auto border-grey-400 border-solid border-1 justify-between">

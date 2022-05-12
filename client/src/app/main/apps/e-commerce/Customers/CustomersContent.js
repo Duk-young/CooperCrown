@@ -7,7 +7,8 @@ import {
   Pagination,
   InstantSearch,
   SearchBox,
-  SortBy
+  SortBy,
+  HitsPerPage
 } from 'react-instantsearch-dom';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
@@ -44,7 +45,7 @@ const Hits = ({ hits }) => {
   }
 
   return (
-    <Table aria-label="customized table">
+    <Table stickyHeader aria-label="customized table">
       <TableHead>
         <TableRow>
           <StyledTableCell>ID</StyledTableCell>
@@ -64,7 +65,7 @@ const Hits = ({ hits }) => {
         {hits.map((hit) => (
           <StyledTableRow key={hit.objectID} hover>
             <StyledTableCell component="th" scope="row">
-              {hit.customerId}
+              {'\xa0\xa0\xa0'} {hit.customerId}
             </StyledTableCell>
             <StyledTableCell>{hit.firstName}</StyledTableCell>
             <StyledTableCell>{hit.lastName}</StyledTableCell>
@@ -108,10 +109,12 @@ const CustomHits = connectHits(Hits);
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
+    textAlign: 'left'
   },
   body: {
-    fontSize: 14
+    fontSize: 14,
+    padding: 0
   }
 }))(TableCell);
 
@@ -133,8 +136,14 @@ const CustomersContent = (props) => {
   // if (isLoading) return <FuseLoading />;
   return (
     <div className="flex w-full ">
-      <TableContainer component={Paper} className="flex flex-col w-full py-20">
-        <InstantSearch searchClient={searchClient} indexName="customers">
+      <TableContainer
+        stickyHeader
+        component={Paper}
+        className="flex flex-col w-full py-20">
+        <InstantSearch
+          searchClient={searchClient}
+          indexName="customers"
+          refresh>
           <div className="flex flex-row">
             <div className="flex flex-col flex-1  px-12">
               <h4 className="pl-16">Date Range Filter</h4>
@@ -190,7 +199,21 @@ const CustomersContent = (props) => {
           </div>
           <CustomHits />
           <div className="flex flex-row justify-center">
-            <Pagination />
+            <div className="flex flex-1"></div>
+            <div className="flex flex-1 justify-center mt-8">
+              <Pagination />
+            </div>
+            <div className="flex flex-1 justify-center mt-8">
+              <HitsPerPage
+                defaultRefinement={25}
+                items={[
+                  { value: 25, label: 'Show 25 Hits' },
+                  { value: 50, label: 'Show 50 Hits' },
+                  { value: 75, label: 'Show 75 Hits' },
+                  { value: 100, label: 'Show 100 Hits' }
+                ]}
+              />
+            </div>
           </div>
         </InstantSearch>
       </TableContainer>

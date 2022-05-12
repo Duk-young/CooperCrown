@@ -3,7 +3,12 @@ import '../Customers/Search.css';
 import '../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
-import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
+import {
+  InstantSearch,
+  SearchBox,
+  HitsPerPage,
+  Pagination
+} from 'react-instantsearch-dom';
 import { Link, useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
@@ -100,7 +105,8 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
-    textAlign: 'center'
+    textAlign: 'center',
+    padding: 0
   }
 }))(TableCell);
 
@@ -173,6 +179,23 @@ const InsuranceContent = (props) => {
             <div className="flex flex-col flex-1"></div>
           </div>
           <CustomHits payments={payments} />
+          <div className="flex flex-row justify-center">
+            <div className="flex flex-1"></div>
+            <div className="flex flex-1 justify-center mt-8">
+              <Pagination />
+            </div>
+            <div className="flex flex-1 justify-center mt-8">
+              <HitsPerPage
+                defaultRefinement={25}
+                items={[
+                  { value: 25, label: 'Show 25 Hits' },
+                  { value: 50, label: 'Show 50 Hits' },
+                  { value: 75, label: 'Show 75 Hits' },
+                  { value: 100, label: 'Show 100 Hits' }
+                ]}
+              />
+            </div>
+          </div>
         </InstantSearch>
       </TableContainer>
     </div>

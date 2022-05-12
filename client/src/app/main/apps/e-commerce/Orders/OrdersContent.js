@@ -1,6 +1,11 @@
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
+import {
+  InstantSearch,
+  SearchBox,
+  Pagination,
+  HitsPerPage
+} from 'react-instantsearch-dom';
 import { connectHits } from 'react-instantsearch-dom';
 import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
@@ -49,8 +54,12 @@ const Hits = ({ hits }) => (
         .map((hit) => (
           <StyledTableRow key={hit.objectID} hover>
             <StyledTableCell component="th" scope="row">
-              {hit?.rushOrder && <LabelImportantIcon color="secondary" />}{' '}
-              {hit?.orderId}
+              {hit?.rushOrder ? (
+                <LabelImportantIcon color="secondary" />
+              ) : (
+                '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
+              )}{' '}
+              {`${moment(hit?.orderDate).format('YYMMDD')}${hit?.orderId}`}
             </StyledTableCell>
             <StyledTableCell>
               {moment(hit?.orderDate).format('MM/DD/YYYY')}
@@ -90,11 +99,11 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'center'
+    textAlign: 'left'
   },
   body: {
     fontSize: 14,
-    textAlign: 'center'
+    padding: 0
   }
 }))(TableCell);
 
@@ -109,12 +118,14 @@ const StyledTableRow = withStyles((theme) => ({
 const OrdersContent = (props) => {
   return (
     <div className="flex w-full ">
-      <TableContainer component={Paper} className="flex flex-col w-full py-20 ">
+      <TableContainer className="flex flex-col w-full py-20">
         <InstantSearch searchClient={searchClient} indexName="orders">
           <div className="flex flex-row">
-            <div className="flex flex-col flex-1 pt-6">
+            <div className="flex flex-col flex-1  px-12">
+              <h4 className="pl-16">Date Range Filter</h4>
               <CustomRangeSlider attribute="orderDate" />
             </div>
+
             <div className="flex flex-col flex-1 mb-10 border-1 rounded-12">
               <SearchBox
                 translations={{
@@ -148,6 +159,23 @@ const OrdersContent = (props) => {
             </div>
           </div>
           <CustomHits />
+          <div className="flex flex-row justify-center">
+            <div className="flex flex-1"></div>
+            <div className="flex flex-1 justify-center mt-8">
+              <Pagination />
+            </div>
+            <div className="flex flex-1 justify-center mt-8">
+              <HitsPerPage
+                defaultRefinement={25}
+                items={[
+                  { value: 25, label: 'Show 25 Hits' },
+                  { value: 50, label: 'Show 50 Hits' },
+                  { value: 75, label: 'Show 75 Hits' },
+                  { value: 100, label: 'Show 100 Hits' }
+                ]}
+              />
+            </div>
+          </div>
         </InstantSearch>
       </TableContainer>
     </div>
