@@ -56,7 +56,7 @@ const navigationConfig = [
         translate: 'Orders',
         auth: authRoles.staff,
         type: 'item',
-        icon: 'all_inbox',
+        icon: 'description',
         url: '/apps/e-commerce/orders'
       },
       {

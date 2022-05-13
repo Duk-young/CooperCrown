@@ -705,7 +705,7 @@ function AddOrder(props) {
                           <MenuItem value={'Order Received'}>
                             Order Received
                           </MenuItem>
-                          <MenuItem value={'In Process'}>In Process</MenuItem>
+                          <MenuItem value={'In Progress'}>In Progress</MenuItem>
                           <MenuItem value={'Shipped to Showroom'}>
                             Shipped to Showroom
                           </MenuItem>
@@ -788,26 +788,39 @@ function AddOrder(props) {
                   <div className="flex flex-row justify-around">
                     <Fab
                       onClick={() => {
-                        if (
-                          eyeglasses.length ||
-                          contactLenses.length ||
-                          medication.length
-                        ) {
-                          setOpenAlert(true);
+                        if (form?.locationName) {
+                          if (
+                            eyeglasses.length ||
+                            contactLenses.length ||
+                            medication.length
+                          ) {
+                            setOpenAlert(true);
+                          } else {
+                            toast.error(
+                              'Please Add atleast One Pair or Service',
+                              {
+                                position: 'bottom-right',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              }
+                            );
+                          }
                         } else {
-                          toast.error(
-                            'Please Add atleast One Pair or Service',
-                            {
-                              position: 'bottom-right',
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              transition: Zoom
-                            }
-                          );
+                          toast.error('Showroom is not selected...', {
+                            position: 'bottom-right',
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            transition: Zoom
+                          });
                         }
                       }}
                       disabled={disabledState}
@@ -1019,7 +1032,6 @@ function AddOrder(props) {
                                     style: { textAlign: 'center' }
                                   }
                                 }}
-                                type="number"
                               />
                             </div>
                           </div>
@@ -1126,7 +1138,6 @@ function AddOrder(props) {
                                     style: { textAlign: 'center' }
                                   }
                                 }}
-                                type="number"
                               />
                             </div>
                           </div>

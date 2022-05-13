@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
-import { withRouter } from 'react-router';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
+import { useParams } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import CustomAlert from '../ReusableComponents/CustomAlert';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import FuseLoading from '@fuse/core/FuseLoading';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { useDispatch } from 'react-redux';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import Button from '@material-ui/core/Button';
-import CustomAlert from '../ReusableComponents/CustomAlert';
 
 const AddPrescription = (props) => {
   const { setChangeOccured } = props;
@@ -336,6 +337,18 @@ const AddPrescription = (props) => {
               />
             </RadioGroup>
           </FormControl>
+          <br></br>
+          <FormControlLabel
+            className="ml-52"
+            control={
+              <Checkbox
+                checked={form?.onRx}
+                onChange={handleChange}
+                name="onRx"
+              />
+            }
+            label="On Rx"
+          />
         </div>
       </div>
       <div className="flex flex-row p-16 sm:p-24">

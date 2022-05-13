@@ -14,7 +14,9 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import moment from 'moment';
+import OrderHistory from './OrderHistory';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import Paper from '@material-ui/core/Paper';
 import PrescriptionReceipt from './PrescriptionReceipt';
@@ -27,7 +29,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import OrderHistory from './OrderHistory';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -419,7 +420,7 @@ const CustomerProfile = (props) => {
               <h2 className="font-700 text-center">INSURANCE</h2>
 
               <div className="flex flex-1 overflow-scroll">
-                <div className="flex flex-col ">
+                <div className="flex flex-col w-full">
                   <TableContainer component={Paper}>
                     <Table
                       className={classes.table}
@@ -535,7 +536,7 @@ const CustomerProfile = (props) => {
               </div>
               {prescriptionType === 'eyeglassesRx' && (
                 <div className="flex flex-1 overflow-scroll">
-                  <div className="flex flex-col ">
+                  <div className="flex flex-col w-full">
                     <TableContainer component={Paper}>
                       <Table
                         className={classes.table}
@@ -561,10 +562,16 @@ const CustomerProfile = (props) => {
                                 onClick={() => {
                                   setSelectedPrescription(row);
                                   setOpenPrescriptionReceipt(true);
+                                  console.log(row);
                                 }}
                                 key={row.prescriptionId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
+                                  {row?.onRx ? (
+                                    <LabelImportantIcon color="secondary" />
+                                  ) : (
+                                    '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
+                                  )}{' '}
                                   {moment(
                                     row?.prescriptionDate.toDate()
                                   ).format('MM/DD/YYYY')}
@@ -625,7 +632,7 @@ const CustomerProfile = (props) => {
 
               {prescriptionType === 'contactLensRx' && (
                 <div className="flex flex-1 overflow-scroll">
-                  <div className="flex flex-col ">
+                  <div className="flex flex-col w-full">
                     <TableContainer component={Paper}>
                       <Table
                         className={classes.table}
@@ -715,7 +722,7 @@ const CustomerProfile = (props) => {
 
               {prescriptionType === 'medicationRx' && (
                 <div className="flex flex-1 overflow-scroll">
-                  <div className="flex flex-col ">
+                  <div className="flex flex-col w-full">
                     <TableContainer component={Paper}>
                       <Table
                         className={classes.table}
@@ -797,7 +804,7 @@ const CustomerProfile = (props) => {
               <h2 className="font-700 text-center">EXAM HISTORY</h2>
 
               <div className="flex flex-1 overflow-scroll">
-                <div className="flex flex-col ">
+                <div className="flex flex-col w-full">
                   <TableContainer component={Paper}>
                     <Table
                       className={classes.table}

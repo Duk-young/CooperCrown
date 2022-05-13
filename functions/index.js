@@ -123,7 +123,7 @@ exports.birthdayMessageFunction = functions.pubsub
   });
 
 exports.examExpiry = functions.pubsub
-  .schedule("0 16 * * *")
+  .schedule("0 7 * * *")
   .timeZone("America/New_York") // Users can choose timezone - default is America/Los_Angeles
   .onRun(async () => {
     const queryTemplates = await admin
@@ -133,22 +133,22 @@ exports.examExpiry = functions.pubsub
       .get();
     let templatesresult = queryTemplates.data();
 
-    let resultappointments = [];
-    const queryAppointments = await admin
-      .firestore()
-      .collection("appointments")
-      .get();
-    for (let doc of queryAppointments.docs) {
-      resultappointments.push(doc.data());
+    let resultExams = [];
+    const queryExams = await admin.firestore().collection("exams").get();
+    for (let doc of queryExams.docs) {
+      resultExams.push(doc.data());
     }
 
     let today = new Date();
-    resultappointments.map((row) => {
+    resultExams.map((row) => {
       if (
         row?.email &&
-        row?.start.toDate().getDate() - 1 === today.getDate() &&
-        row?.start.toDate().getMonth() === today.getMonth() &&
-        row?.start.toDate().getYear() === today.getYear()
+        row?.examTime.toDate().getDate() === today.getDate() &&
+        (row?.examTime.toDate().getMonth() + 11 >= 12
+          ? row?.examTime.toDate().getMonth() - 1
+          : row?.examTime.toDate().getMonth() + 11) === today.getMonth() &&
+        (row?.examTime.toDate().getYear() === today.getYear() ||
+          row?.examTime.toDate().getYear() + 1 === today.getYear())
       ) {
         let transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
@@ -164,7 +164,7 @@ exports.examExpiry = functions.pubsub
           from: `ali43093@gmail.com`,
           to: row?.email,
           subject: "New Message from Cooper Crown",
-          html: `<h2>Hi ${row?.title} , </h2>
+          html: `<h2>Hi Mr. ${row?.lastName} , </h2>
           <p>${templatesresult?.templates?.examExpiry} </p>
            <h3>Best Wishes</h3> 
            <h3>Cooper Crown</h3>`,

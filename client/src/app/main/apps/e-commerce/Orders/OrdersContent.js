@@ -1,32 +1,32 @@
-import React from 'react';
-import algoliasearch from 'algoliasearch/lite';
 import {
   InstantSearch,
   SearchBox,
   Pagination,
   HitsPerPage
 } from 'react-instantsearch-dom';
+import '../Customers/App.mobile.css';
+import '../Customers/Search.css';
+import '../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
-import { withStyles } from '@material-ui/core/styles';
-import moment from 'moment';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import { withStyles } from '@material-ui/core/styles';
+import algoliasearch from 'algoliasearch/lite';
+import CustomRangeSlider from './RangeSlider';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import IconButton from '@material-ui/core/IconButton';
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
+import moment from 'moment';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import Paper from '@material-ui/core/Paper';
+import React from 'react';
+import SearchDialouge from './SearchDialouge';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
-import SearchDialouge from './SearchDialouge';
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import { withRouter } from 'react-router';
-import '../Customers/Search.css';
-import '../Customers/Themes.css';
-import '../Customers/App.mobile.css';
-import CustomRangeSlider from './RangeSlider';
 
 const searchClient = algoliasearch(
   '5AS4E06TDY',
