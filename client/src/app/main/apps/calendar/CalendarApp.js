@@ -219,7 +219,7 @@ function CalendarApp(props) {
         views={{
           day: true,
           month: true,
-          week: CustomWeek
+          week: true
         }}
         step={15}
         timeslots={4}

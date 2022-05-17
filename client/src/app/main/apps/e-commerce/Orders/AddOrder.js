@@ -376,6 +376,7 @@ function AddOrder(props) {
           .add({
             ...form,
             orderDate: firestore.Timestamp.fromDate(new Date()),
+            orderDateString: moment(new Date()).format('MM/DD/YYYY'),
             orderId: dbConfig?.orderId + 1,
             customerId: customer?.customerId,
             firstName: customer?.firstName,

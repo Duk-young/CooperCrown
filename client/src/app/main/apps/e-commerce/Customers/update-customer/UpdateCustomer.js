@@ -15,6 +15,7 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import moment from 'moment';
 import React, { useState, useEffect } from 'react';
 import reducer from '../../store/reducers';
 import Typography from '@material-ui/core/Typography';
@@ -128,7 +129,8 @@ function UpdateCustomer(props) {
 
         let data = {
           ...form,
-          dob: firestore.Timestamp.fromDate(form?.dob)
+          dob: firestore.Timestamp.fromDate(form?.dob),
+          dobString: moment(form?.dob).format('MM/DD/YYYY')
         };
         delete data.id;
         await ref.set(data);
@@ -158,6 +160,7 @@ function UpdateCustomer(props) {
             ...form,
             family: form?.family ? form?.family : customerNo?.customerId + 1,
             dob: firestore.Timestamp.fromDate(form?.dob),
+            dobString: moment(form?.dob).format('MM/DD/YYYY'),
             customerId: customerNo?.customerId + 1,
             recentUpdated: customerNo?.recentUpdated + 1
           });

@@ -334,7 +334,7 @@ function UpdateCustomerForm(props) {
               variant="contained"
               color="secondary"
               onClick={() => {
-                if (form) {
+                if (!form?.customerId) {
                   let count = 0;
                   customers.map((row) => {
                     if (
@@ -362,6 +362,8 @@ function UpdateCustomerForm(props) {
                   } else {
                     setOpenAlertOnSave(true);
                   }
+                } else {
+                  setOpenAlertOnSave(true);
                 }
               }}>
               Save Customer

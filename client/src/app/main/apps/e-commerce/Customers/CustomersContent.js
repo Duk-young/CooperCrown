@@ -15,6 +15,8 @@ import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import CustomRangeSlider from './RangeSlider';
+import { DateRangePicker } from '@algolia/react-instantsearch-widget-date-range-picker';
+// import { defineCustomElements } from '@duetds/date-picker/dist/loader';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
@@ -130,10 +132,8 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const CustomersContent = (props) => {
-  // const classes = useStyles();
-  // const [isLoading, setisLoading] = useState(false);
+  // defineCustomElements(window);
 
-  // if (isLoading) return <FuseLoading />;
   return (
     <div className="flex w-full ">
       <TableContainer
@@ -147,7 +147,8 @@ const CustomersContent = (props) => {
           <div className="flex flex-row">
             <div className="flex flex-col flex-1  px-12">
               <h4 className="pl-16">Date Range Filter</h4>
-              <CustomRangeSlider attribute="dob" />
+              <DateRangePicker attribute="dob" />
+              {/* <CustomRangeSlider attribute="dob" /> */}
             </div>
             <div className="flex flex-col flex-1 mb-10 border-1">
               <SearchBox

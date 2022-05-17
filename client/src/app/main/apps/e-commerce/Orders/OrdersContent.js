@@ -37,7 +37,7 @@ const Hits = ({ hits }) => (
   <Table aria-label="customized table">
     <TableHead>
       <TableRow>
-        <StyledTableCell>Order ID</StyledTableCell>
+        <StyledTableCell>ORDER NO</StyledTableCell>
         <StyledTableCell>Date</StyledTableCell>
         <StyledTableCell>First Name</StyledTableCell>
         <StyledTableCell>Last Name</StyledTableCell>
@@ -59,7 +59,7 @@ const Hits = ({ hits }) => (
               ) : (
                 '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
               )}{' '}
-              {`${moment(hit?.orderDate).format('YYMMDD')}${hit?.orderId}`}
+              {`${moment(hit?.orderDate).format('YYMMDD')}000${hit?.orderId}`}
             </StyledTableCell>
             <StyledTableCell>
               {moment(hit?.orderDate).format('MM/DD/YYYY')}

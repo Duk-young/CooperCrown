@@ -80,8 +80,8 @@ const Hits = ({ hits }) => {
               <StyledTableCell>MATERIAL</StyledTableCell>
               <StyledTableCell>SHAPE</StyledTableCell>
               <StyledTableCell>SIZE</StyledTableCell>
-              <StyledTableCell>INITIAL QUANTITY</StyledTableCell>
-              <StyledTableCell>QUANTITY</StyledTableCell>
+              <StyledTableCell>INITIAL QTY</StyledTableCell>
+              <StyledTableCell>CURRENT QTY</StyledTableCell>
               <StyledTableCell>OPTIONS</StyledTableCell>
             </TableRow>
           </TableHead>

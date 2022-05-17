@@ -347,7 +347,7 @@ const AddPrescription = (props) => {
                 name="onRx"
               />
             }
-            label="On Rx"
+            label="Outside Rx"
           />
         </div>
       </div>
