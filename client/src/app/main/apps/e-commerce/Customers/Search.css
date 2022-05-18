@@ -330,3 +330,8 @@ mark {
     display: none;
   }
 }
+
+
+:root {
+  --toastify-toast-width: 500px;
+}

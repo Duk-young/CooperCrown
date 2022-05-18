@@ -9,7 +9,6 @@ import DateFnsUtils from '@date-io/date-fns';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { ToastContainer, toast, Zoom } from 'react-toastify';
-import FuseAnimate from '@fuse/core/FuseAnimate';
 import { useHistory } from 'react-router-dom';
 import FuseLoading from '@fuse/core/FuseLoading';
 import Grid from '@material-ui/core/Grid';
@@ -137,9 +136,9 @@ const AddAppointments = (props) => {
     <></>
   ) : (
     <div className="flex flex-col w-full">
+      <ToastContainer />
       <div className="flex flex-row p-16 sm:p-24 w-full">
         <div className="p-8 w-1/3 h-auto border-grey-400 border-solid border-1">
-          <ToastContainer />
           <h1 className="underline font-700">Patient Details</h1>
           <h2>{`Customer Id: ${customer.customerId}`}</h2>
           <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
@@ -240,58 +239,45 @@ const AddAppointments = (props) => {
           />
         </div>
       </div>
-      <FuseAnimate animation="transition.slideRightIn" delay={300}>
-        <Button
-          className="whitespace-no-wrap normal-case"
-          variant="contained"
-          color="secondary"
-          onClick={() => {
-            if (form) {
-              let start = firestore.Timestamp.fromDate(form?.start);
-              let end = firestore.Timestamp.fromDate(
-                moment(form?.start).add(form?.duration, 'm').toDate()
-              );
-              let count = 0;
-              appointments.map((row) => {
-                if (
-                  (start >= row?.start && start < row?.end) ||
-                  (end > row?.start && end <= row?.end) ||
-                  (row?.start >= start && row?.start < end) ||
-                  (row?.end > start && row?.end <= end)
-                ) {
-                  count++;
-                }
-              });
-              if (count > 0) {
-                toast.error('Selected time slot is unavailable!', {
-                  position: 'bottom-right',
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  transition: Zoom
-                });
-              } else {
-                onSubmit();
-              }
-            } else {
-              toast.error('Please fill required fields...', {
-                position: 'bottom-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                transition: Zoom
-              });
+      {/* <FuseAnimate animation="transition.slideRightIn" delay={300}> */}
+      <Button
+        className="whitespace-no-wrap normal-case"
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          let start = firestore.Timestamp.fromDate(form?.start);
+          let end = firestore.Timestamp.fromDate(
+            moment(form?.start).add(form?.duration, 'm').toDate()
+          );
+          let count = 0;
+          appointments.map((row) => {
+            if (
+              (start >= row?.start && start < row?.end) ||
+              (end > row?.start && end <= row?.end) ||
+              (row?.start >= start && row?.start < end) ||
+              (row?.end > start && row?.end <= end)
+            ) {
+              count++;
             }
-          }}>
-          Save Details
-        </Button>
-      </FuseAnimate>
+          });
+          if (count > 0) {
+            toast.error('Selected slot is unavailable!', {
+              position: 'top-center',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              transition: Zoom
+            });
+          } else {
+            onSubmit();
+          }
+        }}>
+        Save Details
+      </Button>
+      {/* </FuseAnimate> */}
     </div>
   );
 };

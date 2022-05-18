@@ -77,7 +77,7 @@ const CustomHits = connectHits(({ hits, form, setForm, handleClose }) => {
                     handleClose();
                   } else {
                     toast.error('Required Frame is not available in Invntory', {
-                      position: 'bottom-right',
+                      position: 'top-center',
                       autoClose: 5000,
                       hideProgressBar: false,
                       closeOnClick: true,
@@ -164,7 +164,7 @@ function SimpleDialog(props) {
         handleClose();
       } else {
         toast.error('Required Frame is not availabl in Invntory', {
-          position: 'bottom-right',
+          position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -176,7 +176,7 @@ function SimpleDialog(props) {
       }
     } else {
       toast.error('Required Frame is not available in Invntory', {
-        position: 'bottom-right',
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,

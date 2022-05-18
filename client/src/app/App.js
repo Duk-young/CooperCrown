@@ -20,7 +20,7 @@ import AppContext from './AppContext';
 import { Auth } from './auth';
 import routes from './fuse-configs/routesConfig';
 import store from './store';
-
+import { ToastContainer } from 'react-toastify';
 import { DateRangePicker } from '@algolia/react-instantsearch-widget-date-range-picker';
 import { defineCustomElements } from '@duetds/date-picker/dist/loader';
 
@@ -41,6 +41,7 @@ const App = () => {
       value={{
         routes
       }}>
+      <ToastContainer />
       <StylesProvider jss={jss} generateClassName={generateClassName}>
         <Provider store={store}>
           <MuiPickersUtilsProvider utils={MomentUtils}>

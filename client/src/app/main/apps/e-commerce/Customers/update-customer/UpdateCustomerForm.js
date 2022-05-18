@@ -15,7 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import MenuItem from '@material-ui/core/MenuItem';
-import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { toast, Zoom } from 'react-toastify';
 import Paper from '@material-ui/core/Paper';
 import moment from 'moment';
 import Radio from '@material-ui/core/Radio';
@@ -350,7 +350,7 @@ function UpdateCustomerForm(props) {
                   if (count > 0) {
                     setOpenAlertOnSave(true);
                     toast.error('Customer already exists!', {
-                      position: 'bottom-right',
+                      position: 'top-center',
                       autoClose: 5000,
                       hideProgressBar: false,
                       closeOnClick: true,

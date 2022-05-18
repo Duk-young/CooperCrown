@@ -1,8 +1,7 @@
 // import Joi from 'joi-browser';
 import 'react-toastify/dist/ReactToastify.css';
 import { firestore } from 'firebase';
-import { Link, useParams } from 'react-router-dom';
-import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useTheme } from '@material-ui/core/styles';
@@ -98,7 +97,7 @@ function UpdateCustomer(props) {
   //   const result = Joi.validate(form, schema);
 
   // toast.error('Please Fill Required Fields!', {
-  //   position: 'bottom-right',
+  //   position: 'top-center',
   //   autoClose: 5000,
   //   hideProgressBar: false,
   //   closeOnClick: true,
@@ -209,7 +208,6 @@ function UpdateCustomer(props) {
         header={
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">
-              <ToastContainer />
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
                 <IconButton
                   onClick={() => {

@@ -181,7 +181,7 @@ function AddOrder(props) {
               );
             } else {
               toast.error('Selected Lens Rate is not available...', {
-                position: 'bottom-right',
+                position: 'top-center',
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -196,7 +196,7 @@ function AddOrder(props) {
         });
       } else {
         toast.error('Please enter Sphere & Cylinder Values...', {
-          position: 'bottom-right',
+          position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -209,7 +209,7 @@ function AddOrder(props) {
       }
     } else {
       toast.error('Please select Lens Type...', {
-        position: 'bottom-right',
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -239,7 +239,7 @@ function AddOrder(props) {
       });
     } else {
       toast.error('Please select Contact Lens Type...', {
-        position: 'bottom-right',
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -800,7 +800,7 @@ function AddOrder(props) {
                             toast.error(
                               'Please Add atleast One Pair or Service',
                               {
-                                position: 'bottom-right',
+                                position: 'top-center',
                                 autoClose: 5000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
@@ -813,7 +813,7 @@ function AddOrder(props) {
                           }
                         } else {
                           toast.error('Showroom is not selected...', {
-                            position: 'bottom-right',
+                            position: 'top-center',
                             autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -1633,7 +1633,7 @@ function AddOrder(props) {
                                 toast.error(
                                   'Required quantity is not available!',
                                   {
-                                    position: 'bottom-right',
+                                    position: 'top-center',
                                     autoClose: 5000,
                                     hideProgressBar: false,
                                     closeOnClick: true,
@@ -1654,7 +1654,7 @@ function AddOrder(props) {
                                 setEyeglasses([...eyeglasses, selectedFrame]);
                               } else {
                                 toast.error('Please Fill Required Fields!', {
-                                  position: 'bottom-right',
+                                  position: 'top-center',
                                   autoClose: 5000,
                                   hideProgressBar: false,
                                   closeOnClick: true,
@@ -1668,7 +1668,7 @@ function AddOrder(props) {
                               toast.error(
                                 'Lens Rate is not calculated yet. Press Fetch Lens Rate...',
                                 {
-                                  position: 'bottom-right',
+                                  position: 'top-center',
                                   autoClose: 5000,
                                   hideProgressBar: false,
                                   closeOnClick: true,
@@ -2159,7 +2159,7 @@ function AddOrder(props) {
                               toast.error(
                                 'Contact Lens Rate is not calculated yet. Press Fetch Rate...',
                                 {
-                                  position: 'bottom-right',
+                                  position: 'top-center',
                                   autoClose: 5000,
                                   hideProgressBar: false,
                                   closeOnClick: true,
@@ -2305,7 +2305,7 @@ function AddOrder(props) {
                                     toast.error(
                                       'Selected service already added...',
                                       {
-                                        position: 'bottom-right',
+                                        position: 'top-center',
                                         autoClose: 5000,
                                         hideProgressBar: false,
                                         closeOnClick: true,
@@ -2334,7 +2334,7 @@ function AddOrder(props) {
                                   toast.error(
                                     'Please Select atleast one service...',
                                     {
-                                      position: 'bottom-right',
+                                      position: 'top-center',
                                       autoClose: 5000,
                                       hideProgressBar: false,
                                       closeOnClick: true,
