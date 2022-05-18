@@ -192,7 +192,8 @@ export default function NewAppointmentDialog() {
           title: `${form.firstName} ${form.lastName}`,
           customerId: dbConfig?.customerId + 1,
           medicalHistory: form?.medicalHistory ? form?.medicalHistory : '',
-          email: form?.email ? form?.email : ''
+          email: form?.email ? form?.email : '',
+          phone1: form?.phone1 ? form?.phone1 : ''
         });
 
       await firestore()

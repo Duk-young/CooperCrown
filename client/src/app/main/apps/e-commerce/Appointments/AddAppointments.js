@@ -100,7 +100,9 @@ const AddAppointments = (props) => {
           title: `${customer.firstName} ${customer.lastName}`,
           customerId: customer.customerId,
           medicalHistory: customer?.medicalHistory,
-          email: customer?.email ? customer?.email : ''
+          email: customer?.email ? customer?.email : '',
+          phone1: customer?.phone1 ? customer?.phone1 : '',
+          phone2: customer?.phone2 ? customer?.phone2 : ''
         });
 
       await firestore()

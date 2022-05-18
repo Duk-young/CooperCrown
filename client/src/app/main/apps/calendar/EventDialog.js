@@ -57,6 +57,16 @@ function EventDialog(props) {
     }
   }, [eventDialog.data, eventDialog.type, setForm]);
 
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      var intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return phoneNumberString;
+  }
+
   useEffect(() => {
     /**
      * After Dialog Open
@@ -125,7 +135,7 @@ function EventDialog(props) {
           <TextField
             id="title"
             label="Title"
-            className="mt-8 mb-16"
+            className=" mb-16"
             InputLabelProps={{
               shrink: true
             }}
@@ -143,12 +153,57 @@ function EventDialog(props) {
             inputVariant="outlined"
             value={start}
             disabled
-            className="mt-8 mb-16 w-full"
+            className=" mb-16 w-full"
             maxDate={end}
           />
 
           <TextField
-            className="mt-8 mb-16"
+            label="Phone 1"
+            className=" mb-16"
+            InputLabelProps={{
+              shrink: true
+            }}
+            name="phone1"
+            value={formatPhoneNumber(form?.phone1)}
+            disabled
+            variant="outlined"
+            autoFocus
+            required
+            fullWidth
+          />
+
+          <TextField
+            label="Phone 2"
+            className=" mb-16"
+            InputLabelProps={{
+              shrink: true
+            }}
+            name="phone2"
+            value={formatPhoneNumber(form?.phone2)}
+            disabled
+            variant="outlined"
+            autoFocus
+            required
+            fullWidth
+          />
+
+          <TextField
+            label="Email"
+            className=" mb-16"
+            InputLabelProps={{
+              shrink: true
+            }}
+            name="email"
+            value={form?.email}
+            disabled
+            variant="outlined"
+            autoFocus
+            required
+            fullWidth
+          />
+
+          <TextField
+            className=" mb-16"
             id="medicalHistory"
             label="Medical History"
             type="text"
