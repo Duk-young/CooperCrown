@@ -2,17 +2,25 @@ import {
   InstantSearch,
   SearchBox,
   Pagination,
-  HitsPerPage
+  HitsPerPage,
+  Configure
 } from 'react-instantsearch-dom';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from '@material-ui/pickers';
 import '../Customers/App.mobile.css';
 import '../Customers/Search.css';
 import '../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { Link } from 'react-router-dom';
+import DateFnsUtils from '@date-io/date-fns';
 import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import CustomRangeSlider from './RangeSlider';
+import Grid from '@material-ui/core/Grid';
+import { useForm } from '@fuse/hooks';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import IconButton from '@material-ui/core/IconButton';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
@@ -115,15 +123,59 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-const OrdersContent = (props) => {
+const OrdersContent = () => {
+  const { form, handleChange, setForm } = useForm(null);
   return (
     <div className="flex w-full ">
       <TableContainer className="flex flex-col w-full py-20">
         <InstantSearch searchClient={searchClient} indexName="orders">
           <div className="flex flex-row">
             <div className="flex flex-col flex-1  px-12">
-              <h4 className="pl-16">Date Range Filter</h4>
-              <CustomRangeSlider attribute="orderDate" />
+              <Configure
+                filters={`orderDate: ${
+                  form?.start ? form?.start.getTime() : -2208988800000
+                } TO ${form?.end ? form?.end.getTime() : new Date().getTime()}`}
+              />
+              <div className="flex flex-row justify-around">
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid container justifyContent="start">
+                    <KeyboardDatePicker
+                      label="Start Date"
+                      className="ml-24"
+                      margin="normal"
+                      id="date-picker-dialog"
+                      format="MM/dd/yyyy"
+                      value={form?.start}
+                      onChange={(date) => {
+                        handleChange({
+                          target: { name: 'start', value: date }
+                        });
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date'
+                      }}
+                    />
+                  </Grid>
+                </MuiPickersUtilsProvider>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid container justifyContent="start">
+                    <KeyboardDatePicker
+                      label="End Date"
+                      className="ml-24"
+                      margin="normal"
+                      id="date-picker-dialog"
+                      format="MM/dd/yyyy"
+                      value={form?.end}
+                      onChange={(date) => {
+                        handleChange({ target: { name: 'end', value: date } });
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date'
+                      }}
+                    />
+                  </Grid>
+                </MuiPickersUtilsProvider>
+              </div>
             </div>
 
             <div className="flex flex-col flex-1 mb-10 border-1 rounded-12">

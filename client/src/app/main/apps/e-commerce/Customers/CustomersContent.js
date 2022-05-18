@@ -1,23 +1,27 @@
-// import FuseLoading from '@fuse/core/FuseLoading';
-import './App.mobile.css';
-import './Search.css';
-import './Themes.css';
 import {
   connectHits,
   Pagination,
   InstantSearch,
   SearchBox,
   SortBy,
-  HitsPerPage
+  HitsPerPage,
+  Configure
 } from 'react-instantsearch-dom';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from '@material-ui/pickers';
+import './App.mobile.css';
+import './Search.css';
+import './Themes.css';
 import { Link } from 'react-router-dom';
+import { useForm } from '@fuse/hooks';
 import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
-import CustomRangeSlider from './RangeSlider';
-import { DateRangePicker } from '@algolia/react-instantsearch-widget-date-range-picker';
-// import { defineCustomElements } from '@duetds/date-picker/dist/loader';
+import DateFnsUtils from '@date-io/date-fns';
 import EditIcon from '@material-ui/icons/Edit';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
@@ -131,8 +135,8 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-const CustomersContent = (props) => {
-  // defineCustomElements(window);
+const CustomersContent = () => {
+  const { form, handleChange, setForm } = useForm(null);
 
   return (
     <div className="flex w-full ">
@@ -146,11 +150,53 @@ const CustomersContent = (props) => {
           refresh>
           <div className="flex flex-row">
             <div className="flex flex-col flex-1  px-12">
-              <h4 className="pl-16">Date Range Filter</h4>
-              <DateRangePicker attribute="dob" />
-              {/* <CustomRangeSlider attribute="dob" /> */}
+              <Configure
+                filters={`dob: ${
+                  form?.start ? form?.start.getTime() : -2208988800000
+                } TO ${form?.end ? form?.end.getTime() : new Date().getTime()}`}
+              />
+              <div className="flex flex-row justify-around">
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid container justifyContent="start">
+                    <KeyboardDatePicker
+                      label="Start Date"
+                      className="ml-24"
+                      margin="normal"
+                      id="date-picker-dialog"
+                      format="MM/dd/yyyy"
+                      value={form?.start}
+                      onChange={(date) => {
+                        handleChange({
+                          target: { name: 'start', value: date }
+                        });
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date'
+                      }}
+                    />
+                  </Grid>
+                </MuiPickersUtilsProvider>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid container justifyContent="start">
+                    <KeyboardDatePicker
+                      label="End Date"
+                      className="ml-24"
+                      margin="normal"
+                      id="date-picker-dialog"
+                      format="MM/dd/yyyy"
+                      value={form?.end}
+                      onChange={(date) => {
+                        handleChange({ target: { name: 'end', value: date } });
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date'
+                      }}
+                    />
+                  </Grid>
+                </MuiPickersUtilsProvider>
+              </div>
             </div>
-            <div className="flex flex-col flex-1 mb-10 border-1">
+            <div className="flex flex-col flex-1 mt-5 mb-10 border-1">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for customers...'
