@@ -41,67 +41,92 @@ const searchClient = algoliasearch(
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
-const Hits = ({ hits }) => (
-  <Table aria-label="customized table">
-    <TableHead>
-      <TableRow>
-        <StyledTableCell>ORDER NO</StyledTableCell>
-        <StyledTableCell>Date</StyledTableCell>
-        <StyledTableCell>First Name</StyledTableCell>
-        <StyledTableCell>Last Name</StyledTableCell>
-        <StyledTableCell>Customer ID</StyledTableCell>
-        <StyledTableCell>Type</StyledTableCell>
-        <StyledTableCell>Location</StyledTableCell>
-        <StyledTableCell>Status</StyledTableCell>
-        <StyledTableCell>Options</StyledTableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {hits
-        .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
-        .map((hit) => (
-          <StyledTableRow key={hit.objectID} hover>
-            <StyledTableCell component="th" scope="row">
-              {hit?.rushOrder ? (
-                <LabelImportantIcon color="secondary" />
-              ) : (
-                '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
-              )}{' '}
-              {hit?.customOrderId}
-            </StyledTableCell>
-            <StyledTableCell>
-              {moment(hit?.orderDate).format('MM/DD/YYYY')}
-            </StyledTableCell>
-            <StyledTableCell>{hit?.firstName}</StyledTableCell>
-            <StyledTableCell>{hit?.lastName}</StyledTableCell>
-            <StyledTableCell>
-              <Link to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
-                <h3 className="text-black">{hit?.customerId}</h3>
-              </Link>
-            </StyledTableCell>
-            <StyledTableCell>
-              {hit?.prescriptionType === 'eyeglassesRx' && 'Eyeglasses'}
-              {hit?.prescriptionType === 'contactLensRx' && 'Contact Lens'}
-              {hit?.prescriptionType === 'medicationRx' && 'Medication'}
-            </StyledTableCell>
-            <StyledTableCell>{hit?.locationName}</StyledTableCell>
-            <StyledTableCell>{hit?.orderStatus}</StyledTableCell>
-
-            <StyledTableCell>
-              <Link
-                to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}
-                className="btn btn-primary">
-                <IconButton aria-label="view">
-                  <PageviewOutlinedIcon fontSize="small" />
-                </IconButton>
-              </Link>
-            </StyledTableCell>
-          </StyledTableRow>
-        ))}
-    </TableBody>
-  </Table>
-);
-const CustomHits = connectHits(Hits);
+const CustomHits = connectHits(({ hits, props }) => {
+  return (
+    <Table aria-label="customized table">
+      <TableHead>
+        <TableRow>
+          <StyledTableCell>ORDER NO</StyledTableCell>
+          <StyledTableCell>Date</StyledTableCell>
+          <StyledTableCell>First Name</StyledTableCell>
+          <StyledTableCell>Last Name</StyledTableCell>
+          <StyledTableCell>Customer ID</StyledTableCell>
+          <StyledTableCell>Location</StyledTableCell>
+          <StyledTableCell>Status</StyledTableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {hits
+          .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
+          .map((hit) => (
+            <StyledTableRow key={hit.objectID} hover className="cursor-pointer">
+              <StyledTableCell
+                component="th"
+                scope="row"
+                onClick={() => {
+                  props.history.push(
+                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                  );
+                }}>
+                {hit?.rushOrder ? (
+                  <LabelImportantIcon color="secondary" />
+                ) : (
+                  '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
+                )}{' '}
+                {hit?.customOrderId}
+              </StyledTableCell>
+              <StyledTableCell
+                onClick={() => {
+                  props.history.push(
+                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                  );
+                }}>
+                {moment(hit?.orderDate).format('MM/DD/YYYY')}
+              </StyledTableCell>
+              <StyledTableCell
+                onClick={() => {
+                  props.history.push(
+                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                  );
+                }}>
+                {hit?.firstName}
+              </StyledTableCell>
+              <StyledTableCell
+                onClick={() => {
+                  props.history.push(
+                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                  );
+                }}>
+                {hit?.lastName}
+              </StyledTableCell>
+              <StyledTableCell>
+                <Link
+                  to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
+                  <h3 className="text-black">{hit?.customerId}</h3>
+                </Link>
+              </StyledTableCell>
+              <StyledTableCell
+                onClick={() => {
+                  props.history.push(
+                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                  );
+                }}>
+                {hit?.locationName}
+              </StyledTableCell>
+              <StyledTableCell
+                onClick={() => {
+                  props.history.push(
+                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                  );
+                }}>
+                {hit?.orderStatus}
+              </StyledTableCell>
+            </StyledTableRow>
+          ))}
+      </TableBody>
+    </Table>
+  );
+});
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -111,7 +136,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
-    padding: 0
+    padding: 10
   }
 }))(TableCell);
 
@@ -123,7 +148,7 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-const OrdersContent = () => {
+const OrdersContent = (props) => {
   const { form, handleChange, setForm } = useForm(null);
   return (
     <div className="flex w-full ">
@@ -210,7 +235,7 @@ const OrdersContent = () => {
               </FuseAnimate>
             </div>
           </div>
-          <CustomHits />
+          <CustomHits props={props} />
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>
             <div className="flex flex-1 justify-center mt-8">

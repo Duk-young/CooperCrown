@@ -37,7 +37,7 @@ const searchClient = algoliasearch(
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
-const Hits = ({ hits }) => {
+const CustomHits = connectHits(({ hits }) => {
   const [images, setImages] = useState([]);
   const classes = useStyles();
   const handleClick = async (item) => {
@@ -123,8 +123,7 @@ const Hits = ({ hits }) => {
       </div>
     </div>
   );
-};
-const CustomHits = connectHits(Hits);
+});
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -282,7 +281,7 @@ const Frames = (props) => {
               </Dialog>
             </div>
           </div>
-          <CustomHits />
+          <CustomHits props={props} />
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>
             <div className="flex flex-1 justify-center mt-8">

@@ -39,7 +39,7 @@ const searchClient = algoliasearch(
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
-const Hits = ({ hits }) => {
+const CustomHits = connectHits(({ hits, props }) => {
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
     var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
@@ -64,12 +64,19 @@ const Hits = ({ hits }) => {
           <StyledTableCell>ZIP CODE</StyledTableCell>
           <StyledTableCell>PHONE</StyledTableCell>
           <StyledTableCell>EMAIL</StyledTableCell>
-          <StyledTableCell>OPTIONS</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {hits.map((hit) => (
-          <StyledTableRow key={hit.objectID} hover>
+          <StyledTableRow
+            key={hit.objectID}
+            hover
+            className="cursor-pointer"
+            onClick={() => {
+              props.history.push(
+                `/apps/e-commerce/customers/profile/${hit.customerId}`
+              );
+            }}>
             <StyledTableCell component="th" scope="row">
               {'\xa0\xa0\xa0'} {hit.customerId}
             </StyledTableCell>
@@ -88,29 +95,12 @@ const Hits = ({ hits }) => {
             <StyledTableCell>{hit.zipCode}</StyledTableCell>
             <StyledTableCell>{formatPhoneNumber(hit.phone1)}</StyledTableCell>
             <StyledTableCell>{hit.email}</StyledTableCell>
-            <StyledTableCell>
-              <Link
-                to={`/apps/e-commerce/customers/profile/${hit.customerId}`}
-                className="btn btn-primary">
-                <IconButton aria-label="view">
-                  <PageviewOutlinedIcon fontSize="small" />
-                </IconButton>
-              </Link>
-              <Link
-                to={`/apps/e-commerce/customers/${hit.customerId}`}
-                className="btn btn-primary">
-                <IconButton aria-label="edit">
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              </Link>
-            </StyledTableCell>
           </StyledTableRow>
         ))}
       </TableBody>
     </Table>
   );
-};
-const CustomHits = connectHits(Hits);
+});
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -120,7 +110,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
-    padding: 0
+    padding: 10
   }
 }))(TableCell);
 
@@ -135,7 +125,7 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-const CustomersContent = () => {
+const CustomersContent = (props) => {
   const { form, handleChange, setForm } = useForm(null);
 
   return (
@@ -244,7 +234,7 @@ const CustomersContent = () => {
               />
             </div>
           </div>
-          <CustomHits />
+          <CustomHits props={props} />
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>
             <div className="flex flex-1 justify-center mt-8">

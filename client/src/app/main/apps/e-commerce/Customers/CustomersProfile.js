@@ -602,16 +602,6 @@ const CustomerProfile = (props) => {
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <IconButton
-                                    disabled={true}
-                                    onClick={() => {
-                                      props.history.push(
-                                        `/apps/e-commerce/customers/profile/${row.customerId}`
-                                      );
-                                    }}
-                                    aria-label="view">
-                                    <PageviewOutlinedIcon fontSize="small" />
-                                  </IconButton>
-                                  <IconButton
                                     onClick={() => {
                                       props.history.push(
                                         `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
