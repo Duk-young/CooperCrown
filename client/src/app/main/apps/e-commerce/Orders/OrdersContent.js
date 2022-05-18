@@ -67,7 +67,7 @@ const Hits = ({ hits }) => (
               ) : (
                 '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
               )}{' '}
-              {`${moment(hit?.orderDate).format('YYMMDD')}000${hit?.orderId}`}
+              {hit?.customOrderId}
             </StyledTableCell>
             <StyledTableCell>
               {moment(hit?.orderDate).format('MM/DD/YYYY')}
@@ -218,12 +218,11 @@ const OrdersContent = () => {
             </div>
             <div className="flex flex-1 justify-center mt-8">
               <HitsPerPage
-                defaultRefinement={25}
+                defaultRefinement={50}
                 items={[
-                  { value: 25, label: 'Show 25 Hits' },
-                  { value: 50, label: 'Show 50 Hits' },
-                  { value: 75, label: 'Show 75 Hits' },
-                  { value: 100, label: 'Show 100 Hits' }
+                  { value: 50, label: 'Show 50' },
+                  { value: 100, label: 'Show 100' },
+                  { value: 200, label: 'Show 200' }
                 ]}
               />
             </div>

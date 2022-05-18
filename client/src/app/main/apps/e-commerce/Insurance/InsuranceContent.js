@@ -186,12 +186,11 @@ const InsuranceContent = (props) => {
             </div>
             <div className="flex flex-1 justify-center mt-8">
               <HitsPerPage
-                defaultRefinement={25}
+                defaultRefinement={50}
                 items={[
-                  { value: 25, label: 'Show 25 Hits' },
-                  { value: 50, label: 'Show 50 Hits' },
-                  { value: 75, label: 'Show 75 Hits' },
-                  { value: 100, label: 'Show 100 Hits' }
+                  { value: 50, label: 'Show 50' },
+                  { value: 100, label: 'Show 100' },
+                  { value: 200, label: 'Show 200' }
                 ]}
               />
             </div>

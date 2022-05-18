@@ -97,7 +97,6 @@ function AddOrder(props) {
   const [selectedMedication, setSelectedMedication] = useState({});
   const [prevEyeglasses, setPrevEyeglasses] = useState([]);
   const { form, handleChange, setForm } = useForm(null);
-  const [filteredPrescription, setFilteredPrescription] = useState([]);
   const [prescription, setPrescription] = useState([]);
   const [disabledState, setDisabledState] = useState(false);
   const [open, setOpen] = useState(false);
@@ -109,6 +108,7 @@ function AddOrder(props) {
   const [openAlert1, setOpenAlert1] = useState(false);
   const [lensTypeNames, setLensTypeNames] = useState(false);
   const [editablePayment, setEditablePayment] = useState({});
+  const [orders, setOrders] = useState([]);
 
   const routeParams = useParams();
   const dispatch = useDispatch();
@@ -371,38 +371,85 @@ function AddOrder(props) {
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
 
-        await firestore()
-          .collection('orders')
-          .add({
-            ...form,
-            orderDate: firestore.Timestamp.fromDate(new Date()),
-            orderDateString: moment(new Date()).format('MM/DD/YYYY'),
-            orderId: dbConfig?.orderId + 1,
-            customerId: customer?.customerId,
-            firstName: customer?.firstName,
-            lastName: customer?.lastName,
-            dob: customer?.dob ? customer?.dob : '',
-            gender: customer?.gender ? customer?.gender : '',
-            ethnicity: customer?.ethnicity ? customer?.ethnicity : '',
-            state: customer?.state ? customer?.state : '',
-            orderStatus: 'Order Received',
-            eyeglasses: eyeglasses,
-            contactLenses: contactLenses,
-            medication: medication
-          });
+        let count = 0;
+        orders.map((row) => {
+          if (
+            row?.orderDate.toDate().setHours(0, 0, 0, 0) ===
+            new Date().setHours(0, 0, 0, 0)
+          ) {
+            count++;
+          }
+        });
+
+        if (count > 0) {
+          await firestore()
+            .collection('orders')
+            .add({
+              ...form,
+              orderDate: firestore.Timestamp.fromDate(new Date()),
+              orderDateString: moment(new Date()).format('MM/DD/YYYY'),
+              orderId: dbConfig?.orderId + 1,
+              customOrderId:
+                moment(new Date()).format('YYMMDD') +
+                _.padStart(dbConfig?.customOrderId + 1, 4, '0'),
+              customerId: customer?.customerId,
+              firstName: customer?.firstName,
+              lastName: customer?.lastName,
+              dob: customer?.dob ? customer?.dob : '',
+              gender: customer?.gender ? customer?.gender : '',
+              ethnicity: customer?.ethnicity ? customer?.ethnicity : '',
+              state: customer?.state ? customer?.state : '',
+              orderStatus: 'Order Received',
+              eyeglasses: eyeglasses,
+              contactLenses: contactLenses,
+              medication: medication
+            });
+
+          await firestore()
+            .collection('dbConfig')
+            .doc('dbConfig')
+            .update({
+              orderId: dbConfig?.orderId + 1,
+              recentUpdated: dbConfig?.recentUpdated + 1,
+              customOrderId: dbConfig?.customOrderId + 1
+            });
+        } else {
+          await firestore()
+            .collection('orders')
+            .add({
+              ...form,
+              orderDate: firestore.Timestamp.fromDate(new Date()),
+              orderDateString: moment(new Date()).format('MM/DD/YYYY'),
+              orderId: dbConfig?.orderId + 1,
+              customOrderId:
+                moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
+              customerId: customer?.customerId,
+              firstName: customer?.firstName,
+              lastName: customer?.lastName,
+              dob: customer?.dob ? customer?.dob : '',
+              gender: customer?.gender ? customer?.gender : '',
+              ethnicity: customer?.ethnicity ? customer?.ethnicity : '',
+              state: customer?.state ? customer?.state : '',
+              orderStatus: 'Order Received',
+              eyeglasses: eyeglasses,
+              contactLenses: contactLenses,
+              medication: medication
+            });
+
+          await firestore()
+            .collection('dbConfig')
+            .doc('dbConfig')
+            .update({
+              orderId: dbConfig?.orderId + 1,
+              recentUpdated: dbConfig?.recentUpdated + 1,
+              customOrderId: 1
+            });
+        }
 
         await firestore()
           .collection('customers')
           .doc(customer?.id)
           .update({ recentUpdated: dbConfig?.recentUpdated + 1 });
-
-        await firestore()
-          .collection('dbConfig')
-          .doc('dbConfig')
-          .update({
-            orderId: dbConfig?.orderId + 1,
-            recentUpdated: dbConfig?.recentUpdated + 1
-          });
 
         if (eyeglasses.length) {
           for (var k = 0; k < eyeglasses.length; k++) {
@@ -568,6 +615,14 @@ function AddOrder(props) {
           resultShowroom.push(doc.data());
         });
         setShowroom(resultShowroom);
+
+        const queryOrders = await firestore().collection('orders').get();
+
+        let resultOrders = [];
+        queryOrders.forEach((doc) => {
+          resultOrders.push(doc.data());
+        });
+        setOrders(resultOrders);
 
         const queryDiscounts = await firestore().collection('discounts').get();
 
@@ -2352,6 +2407,18 @@ function AddOrder(props) {
                               aria-label="add">
                               <AddIcon />
                               Add Service
+                            </Fab>
+                            <Fab
+                              onClick={() => {
+                                if (orders.length) {
+                                }
+                              }}
+                              disabled={disabledState}
+                              variant="extended"
+                              color="primary"
+                              aria-label="add">
+                              <AddIcon />
+                              Test
                             </Fab>
                           </div>
                         </div>

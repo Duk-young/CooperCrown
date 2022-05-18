@@ -34,10 +34,10 @@ const Sketch = (props) => {
           disabled
           saveData={form?.sketch}
           lazyRadius="1"
-          style={{
-            boxShadow:
-              '0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)'
-          }}
+          // style={{
+          //   boxShadow:
+          //     '0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)'
+          // }}
         />
       )}
       {!form?.examId && (
@@ -88,10 +88,10 @@ const Sketch = (props) => {
               setForm({ ...form, sketch: saveableCanvas.getSaveData() });
             }}
             lazyRadius="0"
-            style={{
-              boxShadow:
-                '0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)'
-            }}
+            // style={{
+            //   boxShadow:
+            //     '0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)'
+            // }}
           />
           <Fab
             onClick={() => {
