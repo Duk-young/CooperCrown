@@ -41,17 +41,18 @@ const Hits = ({ hits }) => {
   return (
     <div className="flex flex-col ml-8 w-full">
       <div className="flex flex-row">
-        {images?.map((img, index) => (
-          <div className="mb-8 w-224 mr-6 ">
-            <img
-              className="w-full border-grey-300 border-1 relative shadow-1 rounded-4"
-              src={img.url}
-              key={img.name}
-              alt={''}
-            />
-            <div className="truncate">{img.name.split('.', 1)}</div>
-          </div>
-        ))}
+        {images?.length
+          ? images?.map((img, index) => (
+              <div className="mb-8 w-224 mr-6 ">
+                <img
+                  className="w-full border-grey-300 border-1 relative shadow-1 rounded-4"
+                  src={img.url}
+                  key={img.name}
+                  alt={''}
+                />
+              </div>
+            ))
+          : 'No Pictures'}
       </div>
 
       <div className="flex flex-row w-full">

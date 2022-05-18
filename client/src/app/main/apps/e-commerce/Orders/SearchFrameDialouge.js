@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
-import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { toast, Zoom } from 'react-toastify';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -26,6 +26,7 @@ import Dialog from '@material-ui/core/Dialog';
 import { blue } from '@material-ui/core/colors';
 import { useState } from 'react';
 import Scanner from '../Inventory/Scanner';
+import '../Customers/Search.css';
 const searchClient = algoliasearch(
   '5AS4E06TDY',
   '42176bd827d90462ba9ccb9578eb43b2'
@@ -195,7 +196,6 @@ function SimpleDialog(props) {
       onClose={handleClose}
       aria-labelledby="simple-dialog-title"
       open={open}>
-      <ToastContainer />
       <DialogTitle className={classes.title} id="simple-dialog-title">
         Select Frame
       </DialogTitle>

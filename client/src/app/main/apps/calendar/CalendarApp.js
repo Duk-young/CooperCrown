@@ -16,6 +16,13 @@ import reducer from './store/reducers';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import withReducer from 'app/store/withReducer';
 
+moment.locale('ko', {
+  week: {
+    dow: 1,
+    doy: 1
+  }
+});
+
 const localizer = momentLocalizer(moment);
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);

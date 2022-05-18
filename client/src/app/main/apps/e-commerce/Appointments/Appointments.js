@@ -6,6 +6,7 @@ import Icon from '@material-ui/core/Icon';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import reducer from '../store/reducers';
+import '../Customers/Search.css';
 
 function Appointments() {
   return (

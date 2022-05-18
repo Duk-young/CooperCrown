@@ -52,7 +52,6 @@ const Hits = ({ hits }) => {
                   key={img.name}
                   alt={''}
                 />
-                <div className="truncate">{img.name.split('.', 1)}</div>
               </div>
             ))
           : 'No Images'}

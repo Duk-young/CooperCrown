@@ -20,6 +20,7 @@ import reducer from '../../store/reducers';
 import Typography from '@material-ui/core/Typography';
 import UpdateCustomerForm from './UpdateCustomerForm';
 import withReducer from 'app/store/withReducer';
+import '../Search.css';
 
 function UpdateCustomer(props) {
   const [error] = useState(null);

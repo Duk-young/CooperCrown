@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import DateFnsUtils from '@date-io/date-fns';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { toast, Zoom } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import FuseLoading from '@fuse/core/FuseLoading';
 import Grid from '@material-ui/core/Grid';
@@ -138,7 +138,6 @@ const AddAppointments = (props) => {
     <></>
   ) : (
     <div className="flex flex-col w-full">
-      <ToastContainer />
       <div className="flex flex-row p-16 sm:p-24 w-full">
         <div className="p-8 w-1/3 h-auto border-grey-400 border-solid border-1">
           <h1 className="underline font-700">Patient Details</h1>

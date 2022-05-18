@@ -1,8 +1,7 @@
 import _ from '@lodash';
 import 'react-toastify/dist/ReactToastify.css';
 import { firestore } from 'firebase';
-import { Link } from 'react-router-dom';
-import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { toast, Zoom } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
@@ -52,6 +51,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import '../Customers/Search.css';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -727,7 +727,6 @@ function AddOrder(props) {
           showroom.length &&
           discounts.length && (
             <div className="flex flex-col w-full">
-              <ToastContainer />
               <div className="flex flex-row p-16 sm:p-24 w-full">
                 <div className="p-8 w-1/3">
                   <h1 className="underline font-700">Patient Details:</h1>
