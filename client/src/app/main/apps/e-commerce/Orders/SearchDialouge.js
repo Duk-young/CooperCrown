@@ -174,9 +174,9 @@ export default function SearchDialouge() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col ">
       <Button
-        className="whitespace-no-wrap normal-case"
+        className="whitespace-no-wrap normal-case mt-42"
         variant="contained"
         color="secondary"
         onClick={handleClickOpen}>
