@@ -196,6 +196,7 @@ const Frames = (props) => {
                     </g>
                   </svg>
                 }
+                reset={false}
               />
             </div>
             <div className="flex flex-col flex-1">

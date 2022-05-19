@@ -406,7 +406,7 @@ export default function TableGrid(props) {
         disableColumnMenu={true}
         hideFooterPagination={true}
       />
-      <div className="flex flex-row p-6 justify-between w-1/3">
+      <div className="flex flex-row p-6 justify-around w-full">
         <AddLensTypeDialog open={open} handleClose={handleClose} />
         <Fab
           onClick={() => {

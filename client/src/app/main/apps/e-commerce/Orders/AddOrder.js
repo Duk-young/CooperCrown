@@ -883,7 +883,7 @@ function AddOrder(props) {
                       color="secondary"
                       aria-label="add">
                       <AddIcon />
-                      {routeParams?.customerId ? 'Place Order' : 'Update Order'}
+                      {routeParams?.customerId ? 'Save Order' : 'Update Order'}
                     </Fab>
 
                     {routeParams?.orderId && (
@@ -2406,18 +2406,6 @@ function AddOrder(props) {
                               aria-label="add">
                               <AddIcon />
                               Add Service
-                            </Fab>
-                            <Fab
-                              onClick={() => {
-                                if (orders.length) {
-                                }
-                              }}
-                              disabled={disabledState}
-                              variant="extended"
-                              color="primary"
-                              aria-label="add">
-                              <AddIcon />
-                              Test
                             </Fab>
                           </div>
                         </div>

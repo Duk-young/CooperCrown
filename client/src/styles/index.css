@@ -10,7 +10,7 @@ body.no-animate *::after {
 }
 
 html {
-  font-size: 62.5%;
+  font-size: 50%;
   font-family: Muli, Roboto, Helvetica Neue, Arial, sans-serif;
   background-color: #121212;
 }
@@ -31,6 +31,57 @@ body,
 }
 
 h1,
+.h1 {
+  font-size: 20px;
+}
+
+h2,
+.h2 {
+  font-size: 16px;
+}
+
+h3,
+.h3 {
+  font-size: 14px;
+}
+
+h4,
+.h4 {
+  font-size: 12px;
+}
+
+h5,
+.h5 {
+  font-size: 10px;
+}
+
+h6,
+.h6 {
+  font-size: 8px;
+}
+
+.ps > .ps__rail-y,
+.ps > .ps__rail-x {
+  z-index: 99;
+}
+
+a[role='button'] {
+  text-decoration: none;
+}
+
+[role='tooltip'] {
+  z-index: 999;
+}
+
+/* Medium Devices, Desktops Only */
+@media only screen and (min-width: 600px) {
+  html {
+    font-size: 62.5%;
+    font-family: Muli, Roboto, Helvetica Neue, Arial, sans-serif;
+    background-color: #121212;
+  }
+
+  h1,
 .h1 {
   font-size: 24px;
 }
@@ -60,26 +111,12 @@ h6,
   font-size: 12px;
 }
 
-.ps > .ps__rail-y,
-.ps > .ps__rail-x {
-  z-index: 99;
-}
-
-a[role='button'] {
-  text-decoration: none;
-}
-
-[role='tooltip'] {
-  z-index: 999;
-}
-
-/* Medium Devices, Desktops Only */
-@media only screen and (min-width: 992px) {
   ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
     background-color: rgba(0, 0, 0, 0);
   }
+  
 
   ::-webkit-scrollbar:hover {
     width: 12px;

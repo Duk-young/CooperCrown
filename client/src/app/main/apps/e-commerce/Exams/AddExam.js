@@ -249,7 +249,7 @@ const AddExam = (props) => {
             fullWidth
             disabled={disabledState}
             id="outlined-multiline-static"
-            label="Curent Medications"
+            label="Current Medications"
             multiline
             rows={4}
             value={form?.currentMedications}

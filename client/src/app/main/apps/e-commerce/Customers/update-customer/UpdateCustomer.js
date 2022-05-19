@@ -238,13 +238,6 @@ function UpdateCustomer(props) {
               />
 
               <div className="flex items-center max-w-full">
-                <FuseAnimate animation="transition.expandIn" delay={300}>
-                  <img
-                    className="w-32 sm:w-48 rounded"
-                    src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={''}
-                  />
-                </FuseAnimate>
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                     <Typography className="text-16 sm:text-20 truncate">

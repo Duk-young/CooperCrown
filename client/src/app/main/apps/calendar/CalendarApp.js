@@ -224,7 +224,6 @@ function CalendarApp(props) {
         startAccessor="start"
         endAccessor="end"
         views={{
-          day: true,
           month: true,
           week: true
         }}

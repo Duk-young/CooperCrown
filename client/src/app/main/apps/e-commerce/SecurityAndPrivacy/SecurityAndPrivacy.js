@@ -210,6 +210,7 @@ function SecurityAndPrivacy(props) {
               <div>
                 <TextField
                   className="mt-8 mb-16"
+                  required
                   id="password"
                   name="password"
                   onChange={handleChange}

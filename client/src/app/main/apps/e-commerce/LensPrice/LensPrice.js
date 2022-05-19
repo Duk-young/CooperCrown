@@ -48,13 +48,6 @@ function LensPrice() {
         <div className="flex flex-1 w-full items-center justify-between">
           <div className="flex flex-col items-start w-full">
             <div className="flex flex-row items-center w-full">
-              <FuseAnimate animation="transition.expandIn" delay={300}>
-                <img
-                  className="w-25 ml-10 sm:w-48 rounded"
-                  src="assets/images/ecommerce/product-image-placeholder.png"
-                  alt={''}
-                />
-              </FuseAnimate>
               <div className="flex flex-col mx-8 sm:mc-16">
                 <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                   <Typography className="text-16 ml-10 sm:text-20 truncate">

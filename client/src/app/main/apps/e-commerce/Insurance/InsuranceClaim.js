@@ -141,7 +141,7 @@ const InsuranceClaim = (props) => {
       content={
         <div className="flex flex-col w-full">
           <div className="flex flex-row p-16 sm:p-24 w-full">
-            <div className="p-12 w-1/2 h-auto  rounded-20 shadow-lg ">
+            <div className="p-12 w-1/2 h-auto    ">
               <h1 className="underline font-700">Claim Info</h1>
               <h2>{`Order ID: ${form?.orderId}`}</h2>
               <h2>{`Name: ${form?.firstName} ${form.lastName}\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Customer Id: ${form.customerId}`}</h2>

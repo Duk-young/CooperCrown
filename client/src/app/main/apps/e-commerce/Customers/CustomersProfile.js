@@ -179,7 +179,7 @@ const CustomerProfile = (props) => {
   ) : (
     <FusePageCarded
       header={
-        <div className=" flex flex-col w-full mt-24">
+        <div className=" flex flex-col w-full mt-4">
           <Typography
             className="normal-case flex items-center sm:mb-12"
             component={Link}
@@ -215,8 +215,8 @@ const CustomerProfile = (props) => {
       }
       content={
         <div className="flex flex-col w-full">
-          <div className="flex flex-row p-16 sm:p-24 w-full">
-            <div className="p-12 w-1/3 h-auto  ">
+          <div className="flex flex-col p-16  md:flex-row w-full">
+            <div className=" w-full md:w-1/2 h-auto  ">
               <h1 className="font-700">Customer Info</h1>
               <div className="flex flex-row w-full">
                 <div className="flex flex-col w-1/3 border-black border-t-1 border-b-1 border-r-1">
@@ -329,7 +329,7 @@ const CustomerProfile = (props) => {
                 </div>
               </div>
             </div>
-            <div className="p-12 ml-10 w-2/3 h-auto  ">
+            <div className=" md:ml-10 w-full md:w-1/2 h-auto  ">
               <h1 className="font-700">Family Tree:</h1>
               <div className="flex flex-col w-full h-200">
                 <TableContainer
@@ -373,7 +373,7 @@ const CustomerProfile = (props) => {
               <div className="relative">
                 <div className="flex w-full">
                   <TextField
-                    className="mt-8  ml-10"
+                    className="mt-8  md:ml-10"
                     disabled={disabledState}
                     id="memos"
                     label="Memos"
@@ -415,8 +415,8 @@ const CustomerProfile = (props) => {
             </div>
           </div>
 
-          <div className="flex flex-row p-16 sm:p-24 w-full">
-            <div className="flex flex-col p-12 w-1/3 h-320  rounded-10 border-1 border-black">
+          <div className="flex flex-col md:flex-row p-16 w-full">
+            <div className="flex flex-col p-12 w-full md:w-1/3 h-320  rounded-10 border-1 border-black">
               <h2 className="font-700 text-center">INSURANCE</h2>
 
               <div className="flex flex-1 overflow-scroll">
@@ -485,7 +485,7 @@ const CustomerProfile = (props) => {
                 </Button>
               </div>
             </div>
-            <div className="flex flex-col p-12 ml-6 w-1/3 h-320  rounded-10 border-1 border-black">
+            <div className="flex flex-col p-12 md:ml-6 w-full md:w-1/3 h-320  rounded-10 border-1 border-black">
               <PrescriptionReceipt
                 mainForm={selectedPrescription}
                 openPrescriptionReceipt={openPrescriptionReceipt}
@@ -790,7 +790,7 @@ const CustomerProfile = (props) => {
                 </Button>
               </div>
             </div>
-            <div className="flex flex-col ml-6 p-12 w-1/3 h-320  rounded-10 border-1 border-black">
+            <div className="flex flex-col md:ml-6 p-12 w-full md:w-1/3 h-320  rounded-10 border-1 border-black">
               <h2 className="font-700 text-center">EXAM HISTORY</h2>
 
               <div className="flex flex-1 overflow-scroll">

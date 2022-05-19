@@ -284,7 +284,7 @@ function AddShowRoomInventory(props) {
                   autoFocus
                   id="sku"
                   name="sku"
-                  value={form?.sku}
+                  value={form?.sku ? form?.sku : ''}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth

@@ -26,6 +26,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import moment from 'moment';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
+import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useState, useEffect } from 'react';
@@ -287,6 +288,7 @@ export default function NewAppointmentDialog() {
                     target: { name: 'start', value: date }
                   });
                 }}
+                keyboardIcon={<QueryBuilderIcon />}
                 KeyboardButtonProps={{
                   'aria-label': 'change time'
                 }}

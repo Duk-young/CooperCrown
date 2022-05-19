@@ -64,12 +64,12 @@ const CustomHits = connectHits(({ hits, props }) => {
       <TableHead>
         <TableRow>
           <StyledTableCell>ORDER NO</StyledTableCell>
-          <StyledTableCell>Date</StyledTableCell>
-          <StyledTableCell>First Name</StyledTableCell>
-          <StyledTableCell>Last Name</StyledTableCell>
-          <StyledTableCell>Customer ID</StyledTableCell>
-          <StyledTableCell>Location</StyledTableCell>
-          <StyledTableCell>Status</StyledTableCell>
+          <StyledTableCell>DATE</StyledTableCell>
+          <StyledTableCell>FIRST NAME</StyledTableCell>
+          <StyledTableCell>LAST NAME</StyledTableCell>
+          <StyledTableCell>CUSTOMER No</StyledTableCell>
+          <StyledTableCell>LOCATION</StyledTableCell>
+          <StyledTableCell>STATUS</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>

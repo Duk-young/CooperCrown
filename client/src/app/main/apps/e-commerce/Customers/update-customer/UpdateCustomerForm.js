@@ -187,7 +187,7 @@ function UpdateCustomerForm(props) {
             <Typography
               className="username text-16 whitespace-no-wrap self-center"
               color="inherit">
-              ETHNICITY
+              Ethnicity
             </Typography>
             <FormControl className="ml-32 ">
               <Select
@@ -253,7 +253,7 @@ function UpdateCustomerForm(props) {
                   })
                 }
                 renderInput={(params) => (
-                  <TextField {...params} label="State Name" margin="normal" />
+                  <TextField {...params} label="State" margin="normal" />
                 )}
               />
             </div>

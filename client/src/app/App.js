@@ -21,11 +21,6 @@ import { Auth } from './auth';
 import routes from './fuse-configs/routesConfig';
 import store from './store';
 import { ToastContainer } from 'react-toastify';
-import { DateRangePicker } from '@algolia/react-instantsearch-widget-date-range-picker';
-import { defineCustomElements } from '@duetds/date-picker/dist/loader';
-
-// Defines the custom elements from the date picker for use on the window object
-defineCustomElements(window);
 
 const jss = create({
   ...jssPreset(),

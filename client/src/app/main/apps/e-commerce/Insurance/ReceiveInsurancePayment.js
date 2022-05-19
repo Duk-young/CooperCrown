@@ -147,7 +147,7 @@ export default function ReceiveInsurancePayment(props) {
             name={'amount'}
             onChange={handleChange}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            labelWidth={60}
+            labelWidth={120}
             type="number"
           />
           <FormHelperText id="filled-weight-helper-text">

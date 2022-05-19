@@ -242,7 +242,7 @@ function AddOther(props) {
                   autoFocus
                   id="sku"
                   name="sku"
-                  value={form?.sku}
+                  value={form?.sku ? form?.sku : ''}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
@@ -366,20 +366,6 @@ function AddOther(props) {
                   id="sizeZ"
                   name="sizeZ"
                   value={form?.sizeZ}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                  type="number"
-                />
-              </div>
-              <div className="flex w-96 pl-10">
-                <TextField
-                  className="mt-8 mb-16"
-                  required
-                  label="ED"
-                  id="sizeZ2"
-                  name="sizeZ2"
-                  value={form?.sizeZ2}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth

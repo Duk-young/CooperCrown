@@ -97,122 +97,113 @@ function EmailTemplates() {
       }
       content={
         form && (
-          <div className="flex flex-col w-full">
-            <div className="flex flex-row w-full px-20 justify-between">
-              <div className="flex w-1/2">
-                <TextField
-                  className="mt-8 "
-                  disabled={disabledState}
-                  id="birthday"
-                  label="Birthday Message"
-                  type="text"
-                  name="birthday"
-                  value={form?.birthday}
-                  onChange={handleChange}
-                  multiline
-                  rows={8}
-                  variant="outlined"
-                  fullWidth
-                />
+          <div className="flex flex-col w-full p-12">
+            <TextField
+              className="pb-12"
+              disabled={disabledState}
+              id="birthday"
+              label="Birthday Message"
+              type="text"
+              name="birthday"
+              value={form?.birthday}
+              onChange={handleChange}
+              multiline
+              rows={8}
+              variant="outlined"
+              fullWidth
+            />
+
+            <TextField
+              className="pb-12"
+              disabled={disabledState}
+              id="specialMessage"
+              label="Special Sale/Event Message"
+              type="text"
+              name="specialMessage"
+              value={form?.specialMessage}
+              onChange={handleChange}
+              multiline
+              rows={8}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              className="pb-12 "
+              disabled={disabledState}
+              id="examExpiry"
+              label="Exam Expiration Reminder"
+              type="text"
+              name="examExpiry"
+              value={form?.examExpiry}
+              onChange={handleChange}
+              multiline
+              rows={8}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              className="pb-12"
+              disabled={disabledState}
+              id="newCustomer"
+              label="New Customer Welcome Email"
+              type="text"
+              name="newCustomer"
+              value={form?.newCustomer}
+              onChange={handleChange}
+              multiline
+              rows={8}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              className="pb-12"
+              disabled={disabledState}
+              id="terms"
+              label="Terms & Conditions"
+              type="text"
+              name="terms"
+              value={form?.terms}
+              onChange={handleChange}
+              multiline
+              rows={12}
+              variant="outlined"
+              fullWidth
+            />
+
+            <div className="flex flex-row w-full ">
+              <div className="flex flex-row w-2/3 justify-around"></div>
+              <div className="flex flex-row w-1/3 justify-around">
+                {disabledState && (
+                  <Fab
+                    className="ml-20"
+                    onClick={() => {
+                      setDisabledState(false);
+                    }}
+                    color="secondary">
+                    <Icon>edit</Icon>
+                  </Fab>
+                )}
+                {!disabledState && (
+                  <Fab
+                    className="ml-20"
+                    onClick={() => {
+                      onSubmit();
+                      setDisabledState(true);
+                    }}
+                    color="secondary">
+                    <Icon>save</Icon>
+                  </Fab>
+                )}
+                {disabledState && (
+                  <Button
+                    className="ml-20"
+                    onClick={sendEventEmail}
+                    variant="contained"
+                    color="secondary">
+                    Send Event Email
+                  </Button>
+                )}
               </div>
-              <div className="flex w-1/2">
-                <TextField
-                  className="mt-8  ml-10"
-                  disabled={disabledState}
-                  id="specialMessage"
-                  label="Special Sale/Event Message"
-                  type="text"
-                  name="specialMessage"
-                  value={form?.specialMessage}
-                  onChange={handleChange}
-                  multiline
-                  rows={8}
-                  variant="outlined"
-                  fullWidth
-                />
-              </div>
-            </div>
-            <div className="flex flex-row w-full px-20 justify-between">
-              <div className="flex w-1/2">
-                <TextField
-                  className="mt-8 "
-                  disabled={disabledState}
-                  id="examExpiry"
-                  label="Exam Expiration Reminder"
-                  type="text"
-                  name="examExpiry"
-                  value={form?.examExpiry}
-                  onChange={handleChange}
-                  multiline
-                  rows={8}
-                  variant="outlined"
-                  fullWidth
-                />
-              </div>
-              <div className="flex w-1/2">
-                <TextField
-                  className="mt-8  ml-10"
-                  disabled={disabledState}
-                  id="newCustomer"
-                  label="New Customer Welcome Email"
-                  type="text"
-                  name="newCustomer"
-                  value={form?.newCustomer}
-                  onChange={handleChange}
-                  multiline
-                  rows={8}
-                  variant="outlined"
-                  fullWidth
-                />
-              </div>
-            </div>
-            <div className="flex flex-row w-full px-20 justify-between">
-              <TextField
-                className="mt-8 mb-10"
-                disabled={disabledState}
-                id="terms"
-                label="Terms & Conditions"
-                type="text"
-                name="terms"
-                value={form?.terms}
-                onChange={handleChange}
-                multiline
-                rows={12}
-                variant="outlined"
-                fullWidth
-              />
-            </div>
-            <div className="flex flex-row w-1/3 justify-around">
-              {disabledState && (
-                <Fab
-                  className="ml-20"
-                  onClick={() => {
-                    setDisabledState(false);
-                  }}
-                  color="secondary">
-                  <Icon>edit</Icon>
-                </Fab>
-              )}
-              {!disabledState && (
-                <Fab
-                  className="ml-20"
-                  onClick={() => {
-                    onSubmit();
-                    setDisabledState(true);
-                  }}
-                  color="secondary">
-                  <Icon>save</Icon>
-                </Fab>
-              )}
-              {disabledState && (
-                <Button
-                  className="ml-20"
-                  onClick={sendEventEmail}
-                  variant="contained"
-                  color="secondary">
-                  Send Event Email
-                </Button>
-              )}
             </div>
           </div>
         )

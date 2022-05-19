@@ -196,6 +196,7 @@ function AccountSettings(props) {
                 <TextField
                   className="mt-8 mb-16"
                   id="username"
+                  required
                   name="username"
                   onChange={handleChange}
                   label="Username"

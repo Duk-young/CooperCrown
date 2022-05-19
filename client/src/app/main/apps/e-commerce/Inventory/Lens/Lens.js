@@ -106,7 +106,7 @@ const Lens = (props) => {
         <TableContainer component={Paper} className="flex flex-col w-full ">
           <div className="flex flex-row">
             <div className="flex flex-col flex-1"></div>
-            <div className="flex flex-col flex-1 mb-10 border-1 rounded-6">
+            <div className="flex flex-col flex-1 mb-10 border-1 ">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for lens...'
@@ -130,6 +130,7 @@ const Lens = (props) => {
                     </g>
                   </svg>
                 }
+                reset={false}
               />
             </div>
             <div className="flex flex-col flex-1">
@@ -151,6 +152,7 @@ const Lens = (props) => {
               <div className="p-8 mb-10 rounded-12 shadow-5">
                 <Panel header="Sphere">
                   <RefinementList
+                    reset={false}
                     attribute="sphere"
                     limit={4}
                     searchable={true}

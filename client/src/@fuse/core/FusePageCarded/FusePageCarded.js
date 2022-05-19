@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 0,
     minHeight: 0,
     [theme.breakpoints.down('xs')]: {
-      padding: '0 1.6rem'
+      padding: '0 0rem'
     }
   },
   header: {

@@ -1,5 +1,4 @@
 import Frames from './Frames/Frames';
-import Search from './Search/Search';
 import Other from './Other/Other';
 import Lens from './Lens/Lens';
 import OutOfStock from './Out Of Stock/OutOfStock';
@@ -36,7 +35,7 @@ function Inventory() {
         <div className="py-24">
           <div className="flex items-center">
             <FuseAnimate animation="transition.expandIn" delay={300}>
-              <Icon className="text-32">people</Icon>
+              <Icon className="text-32">category</Icon>
             </FuseAnimate>
             <FuseAnimate animation="transition.slideLeftIn" delay={300}>
               <Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h6">
@@ -56,7 +55,7 @@ function Inventory() {
           scrollButtons="off"
           className="w-full h-64">
           <Tab className="h-64" label="FRAMES" />
-          <Tab disabled className="h-64" label="CONTACT LENS" />
+
           <Tab className="h-64" label="LENS" />
           <Tab className="h-64" label="OTHER" />
           <Tab className="h-64" label="OUT OF STOCK" />
@@ -70,28 +69,23 @@ function Inventory() {
               <Frames />
             </div>
           )}
+
           {selectedTab === 1 && (
-            <div>
-              <h3 className="mb-16">CONTACT LENS</h3>
-              <Search />
-            </div>
-          )}
-          {selectedTab === 2 && (
             <div>
               <Lens />
             </div>
           )}
-          {selectedTab === 3 && (
+          {selectedTab === 2 && (
             <div>
               <Other />
             </div>
           )}
-          {selectedTab === 4 && (
+          {selectedTab === 3 && (
             <div>
               <OutOfStock />
             </div>
           )}
-          {selectedTab === 5 && (
+          {selectedTab === 4 && (
             <div>
               <ShowRoomInventory />
             </div>
