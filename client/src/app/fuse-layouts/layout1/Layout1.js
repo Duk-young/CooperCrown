@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Layout1(props) {
   const config = useSelector(({ fuse }) => fuse.settings.current.layout.config);
-  const [displayState, setDisplayState] = useState(false);
+  const [displayState, setDisplayState] = useState(true);
   const appContext = useContext(AppContext);
   const classes = useStyles(props);
   const { routes } = appContext;
