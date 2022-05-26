@@ -58,7 +58,7 @@ const CustomHits = connectHits(({ hits, payments }) => {
         <TableRow>
           <StyledTableCell>DATE</StyledTableCell>
           <StyledTableCell>ORDER ID</StyledTableCell>
-          <StyledTableCell>CUSTOMER ID</StyledTableCell>
+          <StyledTableCell>CUSTOMER No.</StyledTableCell>
           <StyledTableCell>NAME</StyledTableCell>
           <StyledTableCell>INSURANCE</StyledTableCell>
           <StyledTableCell>POLICY No.</StyledTableCell>

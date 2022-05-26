@@ -176,9 +176,19 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+// let eyeglassesRx = filteredPrescription.filter(
+//   (word) => word.prescriptionType === 'eyeglassesRx'
+// );
+
+// setPrescription(eyeglassesRx);
+
 function CalendarApp(props) {
   const dispatch = useDispatch();
-  const events = useSelector(({ calendarApp }) => calendarApp.events.entities);
+  const appointments = useSelector(
+    ({ calendarApp }) => calendarApp.events.entities
+  );
+
+  const [events, setEvents] = useState([]);
   const classes = useStyles(props);
   const headerEl = useRef(null);
 
@@ -234,7 +244,7 @@ function CalendarApp(props) {
           toolbar: (_props) => {
             return headerEl.current
               ? ReactDOM.createPortal(
-                  <CalendarHeader {..._props} />,
+                  <CalendarHeader {..._props} setEvents={setEvents} />,
                   headerEl.current
                 )
               : null;
@@ -249,7 +259,8 @@ function CalendarApp(props) {
           dispatch(
             Actions.openNewEventDialog({
               start: slotInfo.start.toLocaleString(),
-              end: slotInfo.end.toLocaleString()
+              end: slotInfo.end.toLocaleString(),
+              showRoomId: events[0].showRoomId
             })
           );
         }}

@@ -26,7 +26,21 @@ export const getProduct = (params) => async (dispatch) => {
 export const saveShowRoom = (data) => async (dispatch) => {
   delete data.uid;
   try {
-    await firebaseService.firestoreDb.collection('showRooms').add(data);
+    const dbConfig = (
+      await firebaseService.firestoreDb
+        .collection('dbConfig')
+        .doc('dbConfig')
+        .get()
+    ).data();
+    await firebaseService.firestoreDb
+      .collection('showRooms')
+      .add({ ...data, showRoomId: dbConfig?.showRoomId + 1 });
+    await firebaseService.firestoreDb
+      .collection('dbConfig')
+      .doc('dbConfig')
+      .update({
+        showRoomId: dbConfig?.showRoomId + 1
+      });
     dispatch(Actions.getShowRooms());
     dispatch(showMessage({ message: 'Show Room Saved' }));
   } catch (error) {
@@ -34,7 +48,6 @@ export const saveShowRoom = (data) => async (dispatch) => {
   }
 };
 export const updateShowRoom = (data) => async (dispatch) => {
-
   const uuid = data.id;
   delete data.id;
   try {

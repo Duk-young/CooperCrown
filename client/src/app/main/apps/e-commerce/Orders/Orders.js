@@ -15,7 +15,6 @@ import '../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { Link } from 'react-router-dom';
 import { useForm } from '@fuse/hooks';
-import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import clsx from 'clsx';
@@ -24,11 +23,8 @@ import FuseAnimate from '@fuse/core/FuseAnimate';
 import FusePageSimple from '@fuse/core/FusePageSimple';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import moment from 'moment';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
-import Paper from '@material-ui/core/Paper';
 import React from 'react';
 import reducer from '../store/reducers';
 import SearchDialouge from './SearchDialouge';
@@ -40,6 +36,41 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import { createTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+
+// const color = '#fff';
+
+// const customMaterialTheme = createTheme({
+//   components: {
+//     MuiIconButton: {
+//       styleOverrides: {
+//         sizeMedium: {
+//           color
+//         }
+//       }
+//     },
+//     MuiOutlinedInput: {
+//       styleOverrides: {
+//         root: {
+//           color
+//         }
+//       }
+//     },
+//     MuiInputLabel: {
+//       styleOverrides: {
+//         root: {
+//           color
+//         }
+//       }
+//     },
+//     MuiSvgIcon: {
+//       root: {
+//         fill: '#fff'
+//       }
+//     }
+//   }
+// });
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -170,18 +201,6 @@ function Orders(props) {
   const { form, handleChange, setForm } = useForm(null);
   return (
     <FusePageSimple
-      // header={
-      //   <div className="flex flex-1 w-full items-center justify-between">
-      //     <div className="flex items-center">
-      //       <FuseAnimate animation="transition.expandIn" delay={300}>
-
-      //       </FuseAnimate>
-      //       <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-
-      //       </FuseAnimate>
-      //     </div>
-      //   </div>
-      // }
       content={
         <div className="flex w-full ">
           <TableContainer className="flex flex-col w-full">
@@ -204,15 +223,28 @@ function Orders(props) {
                     </Typography>
                   </div>
                   <div className="flex flex-row justify-around">
+                    {/* <ThemeProvider theme={customMaterialTheme}> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <Grid container justifyContent="start">
                         <KeyboardDatePicker
                           label="Start Date"
-                          className=" mt-0 mb-24 bg-white"
+                          className=" mt-0 mb-24 bg-transparent"
                           margin="normal"
                           id="date-picker-dialog"
                           format="MM/dd/yyyy"
                           value={form?.start}
+                          InputLabelProps={{
+                            style: {
+                              color: 'white'
+                            }
+                          }}
+                          InputProps={{
+                            style: {
+                              color: 'white',
+                              borderColor: 'white',
+                              borderRadius: 1
+                            }
+                          }}
                           onChange={(date) => {
                             handleChange({
                               target: { name: 'start', value: date }
@@ -244,6 +276,7 @@ function Orders(props) {
                         />
                       </Grid>
                     </MuiPickersUtilsProvider>
+                    {/* </ThemeProvider> */}
                   </div>
                 </div>
 

@@ -60,7 +60,6 @@ const CustomAutocomplete = (props) => {
             label={label}
             type={inputType}
             margin="normal"
-            variant="outlined"
           />
         )}
       />

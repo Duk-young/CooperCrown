@@ -218,7 +218,7 @@ function AddFrames(props) {
           <div className="flex flex-row">
             <Icon className="text-20 mt-4">listalt</Icon>
             <Typography className="text-16 pl-16 sm:text-20 truncate">
-              Frame's Details
+              Frame Detail
             </Typography>
           </div>
 

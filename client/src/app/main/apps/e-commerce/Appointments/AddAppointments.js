@@ -28,6 +28,7 @@ const AddAppointments = (props) => {
   const [isLoading, setisLoading] = useState(true);
   const [customer, setCustomer] = useState({});
   const [appointments, setAppointments] = useState([]);
+  const [showRooms, setShowRooms] = useState([]);
   const { form, handleChange, setForm } = useForm(null);
   const routeParams = useParams();
   const dispatch = useDispatch();
@@ -69,8 +70,19 @@ const AddAppointments = (props) => {
 
       setAppointments(resultAppointments);
 
+      let showroomdata = [];
+      const queryShowrooms = await firestore().collection('showRooms').get();
+
+      queryShowrooms.forEach((doc) => {
+        showroomdata.push(doc.data());
+      });
+      setShowRooms(showroomdata);
+
       if (history?.location?.state?.start != undefined) {
-        setForm({ start: history.location.state.start });
+        setForm({
+          start: history.location.state.start,
+          showRoomId: history.location.state.showRoomId
+        });
       }
       setisLoading(false);
     };
@@ -194,28 +206,54 @@ const AddAppointments = (props) => {
               />
             </Grid>
           </MuiPickersUtilsProvider>
-          <div className="flex flex-row justify-center">
-            <Typography
-              className="username text-16 whitespace-no-wrap self-center font-700 underline"
-              color="inherit">
-              Appointment Duration
-            </Typography>
-            <FormControl className="ml-32 ">
-              <Select
-                labelId="demo-simple-select-autowidth-label"
-                id="ethnicityId"
-                defaultValue={form?.duration}
-                value={form?.duration}
-                name="duration"
-                onChange={handleChange}
-                autoWidth>
-                <MenuItem value={15}>15 Minutes</MenuItem>
-                <MenuItem value={30}>30 Minutes</MenuItem>
-                <MenuItem value={45}>45 Minutes</MenuItem>
-                <MenuItem value={60}>One Hour</MenuItem>
-              </Select>
-              <FormHelperText>Select duration from the list</FormHelperText>
-            </FormControl>
+          <div className="flex flex-col w-full">
+            <div className="flex flex-row justify-start">
+              <Typography
+                className="username text-16 whitespace-no-wrap self-center font-700 underline pr-4"
+                color="inherit">
+                Appointment Duration
+              </Typography>
+              <FormControl>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="ethnicityId"
+                  defaultValue={form?.duration}
+                  value={form?.duration}
+                  name="duration"
+                  onChange={handleChange}
+                  autoWidth>
+                  <MenuItem value={15}>15 Minutes</MenuItem>
+                  <MenuItem value={30}>30 Minutes</MenuItem>
+                  <MenuItem value={45}>45 Minutes</MenuItem>
+                  <MenuItem value={60}>One Hour</MenuItem>
+                </Select>
+                <FormHelperText>Select duration from the list</FormHelperText>
+              </FormControl>
+            </div>
+            <div className="flex flex-row justify-start">
+              <Typography
+                className="username text-16 whitespace-no-wrap self-center font-700 underline pr-4"
+                color="inherit">
+                Showroom
+              </Typography>
+              <FormControl>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="showRoomId"
+                  defaultValue={form?.showRoomId}
+                  value={form?.showRoomId}
+                  name="showRoomId"
+                  onChange={handleChange}
+                  autoWidth>
+                  {showRooms.map((row) => (
+                    <MenuItem value={row?.showRoomId}>
+                      {row?.locationName}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Select Showroom from the list</FormHelperText>
+              </FormControl>
+            </div>
           </div>
         </div>
       </div>
@@ -246,23 +284,40 @@ const AddAppointments = (props) => {
         variant="contained"
         color="secondary"
         onClick={() => {
-          let start = firestore.Timestamp.fromDate(form?.start);
-          let end = firestore.Timestamp.fromDate(
-            moment(form?.start).add(form?.duration, 'm').toDate()
-          );
-          let count = 0;
-          appointments.map((row) => {
-            if (
-              (start >= row?.start && start < row?.end) ||
-              (end > row?.start && end <= row?.end) ||
-              (row?.start >= start && row?.start < end) ||
-              (row?.end > start && row?.end <= end)
-            ) {
-              count++;
+          if (form?.showRoomId) {
+            let start = firestore.Timestamp.fromDate(form?.start);
+            let end = firestore.Timestamp.fromDate(
+              moment(form?.start).add(form?.duration, 'm').toDate()
+            );
+            let count = 0;
+            appointments
+              .filter((word) => word.showRoomId === form?.showRoomId)
+              .map((row) => {
+                if (
+                  (start >= row?.start && start < row?.end) ||
+                  (end > row?.start && end <= row?.end) ||
+                  (row?.start >= start && row?.start < end) ||
+                  (row?.end > start && row?.end <= end)
+                ) {
+                  count++;
+                }
+              });
+            if (count > 0) {
+              toast.error('Selected slot is unavailable!', {
+                position: 'top-center',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                transition: Zoom
+              });
+            } else {
+              onSubmit();
             }
-          });
-          if (count > 0) {
-            toast.error('Selected slot is unavailable!', {
+          } else {
+            toast.error('Showroom cannot be empty!', {
               position: 'top-center',
               autoClose: 5000,
               hideProgressBar: false,
@@ -272,8 +327,6 @@ const AddAppointments = (props) => {
               progress: undefined,
               transition: Zoom
             });
-          } else {
-            onSubmit();
           }
         }}>
         Save Details

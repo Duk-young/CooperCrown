@@ -228,9 +228,8 @@ function AddShowRoomInventory(props) {
           </IconButton>
 
           <div className="flex flex-row">
-            <Icon className="text-20 mt-4">listalt</Icon>
             <Typography className="text-16 pl-16 sm:text-20 truncate">
-              Showroom Inventory Details
+              Showroom Inventory Detail
             </Typography>
           </div>
           <CustomAlert

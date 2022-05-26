@@ -19,8 +19,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import moment from 'moment';
@@ -79,7 +79,8 @@ const CustomHits = connectHits(({ hits, form }) => {
                   history.push(
                     `/apps/e-commerce/customers/addAppointment/${hit?.customerId}`,
                     {
-                      start: form?.start
+                      start: form?.start,
+                      showRoomId: form?.showRoomId
                     }
                   );
                 }}
@@ -121,6 +122,7 @@ export default function NewAppointmentDialog() {
   const { form, handleChange, setForm } = useForm(null);
   const [error, setError] = useState();
   const [appointments, setAppointments] = useState([]);
+  const [showRooms, setShowRooms] = useState([]);
   const dispatch = useDispatch();
 
   const newAppointmentDialog = useSelector(
@@ -137,6 +139,7 @@ export default function NewAppointmentDialog() {
         setForm({
           ...newAppointmentDialog.data,
           dob: new Date(),
+          showRoomId: newAppointmentDialog.data.showRoomId,
           start: moment(
             newAppointmentDialog.data.start,
             'MM/DD/YYYY, h:mm:ss a'
@@ -154,6 +157,15 @@ export default function NewAppointmentDialog() {
       });
 
       setAppointments(resultAppointments);
+
+      let showroomdata = [];
+      const queryShowrooms = await firestore().collection('showRooms').get();
+
+      queryShowrooms.forEach((doc) => {
+        showroomdata.push(doc.data());
+      });
+      setShowRooms(showroomdata);
+
       setError('');
     };
     fetchDetails();
@@ -194,7 +206,8 @@ export default function NewAppointmentDialog() {
           customerId: dbConfig?.customerId + 1,
           medicalHistory: form?.medicalHistory ? form?.medicalHistory : '',
           email: form?.email ? form?.email : '',
-          phone1: form?.phone1 ? form?.phone1 : ''
+          phone1: form?.phone1 ? form?.phone1 : '',
+          showRoomId: form?.showRoomId
         });
 
       await firestore()
@@ -319,16 +332,37 @@ export default function NewAppointmentDialog() {
               <FormHelperText>Select duration from the list</FormHelperText>
             </FormControl>
           </div>
-          <div className="flex flex-row m-6">
-            <TextField
-              className="content-center"
-              id="outlined-multiline-static"
-              label="Doctor"
-              value={form?.doctor}
-              onChange={handleChange}
-              name={'doctor'}
-              variant="outlined"
-            />
+          <div className="flex flex-row w-full p-6">
+            <div className="flex flex-col w-1/2">
+              <TextField
+                className="content-center"
+                id="outlined-multiline-static"
+                label="Doctor"
+                value={form?.doctor}
+                onChange={handleChange}
+                name={'doctor'}
+                variant="outlined"
+              />
+            </div>
+            <div className="flex flex-col w-1/2 pl-2">
+              <FormControl>
+                <FormHelperText>Select Showroom from the list</FormHelperText>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="showRoomId"
+                  defaultValue={form?.showRoomId}
+                  value={form?.showRoomId}
+                  name="showRoomId"
+                  onChange={handleChange}
+                  autoWidth>
+                  {showRooms.map((row) => (
+                    <MenuItem value={row?.showRoomId}>
+                      {row?.locationName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
           </div>
           <div className="flex flex-row w-full p-6">
             <div className="flex flex-col w-1/2">
@@ -408,7 +442,7 @@ export default function NewAppointmentDialog() {
             </MuiPickersUtilsProvider>
           </div>
           <TextField
-            className="p-10"
+            className="my-10 px-4"
             fullWidth
             id="outlined-multiline-static"
             label="Medical History"
@@ -423,29 +457,31 @@ export default function NewAppointmentDialog() {
           <div className="flex flex-col p-10 w-full ">
             <Fab
               onClick={() => {
-                if (form?.firstName && form?.lastName) {
+                if (form?.firstName && form?.lastName && form?.showRoomId) {
                   let start = firestore.Timestamp.fromDate(form?.start);
                   let end = firestore.Timestamp.fromDate(
                     moment(form?.start).add(form?.duration, 'm').toDate()
                   );
                   let count = 0;
-                  appointments.map((row) => {
-                    if (
-                      (start >= row?.start && start < row?.end) ||
-                      (end > row?.start && end <= row?.end) ||
-                      (row?.start >= start && row?.start < end) ||
-                      (row?.end > start && row?.end <= end)
-                    ) {
-                      count++;
-                    }
-                  });
+                  appointments
+                    .filter((word) => word.showRoomId === form?.showRoomId)
+                    .map((row) => {
+                      if (
+                        (start >= row?.start && start < row?.end) ||
+                        (end > row?.start && end <= row?.end) ||
+                        (row?.start >= start && row?.start < end) ||
+                        (row?.end > start && row?.end <= end)
+                      ) {
+                        count++;
+                      }
+                    });
                   if (count > 0) {
                     setError('Selected Slot is unavailable!');
                   } else {
                     onSubmit();
                   }
                 } else {
-                  setError('Name cannot be Empty!');
+                  setError('Name or showroom cannot be Empty!');
                 }
               }}
               variant="extended"

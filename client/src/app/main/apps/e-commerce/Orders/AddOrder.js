@@ -1458,6 +1458,7 @@ function AddOrder(props) {
                           <div className="flex flex-col w-3/4">
                             <TextField
                               fullWidth
+                              style={{ borderRadius: '0px' }}
                               variant="outlined"
                               disabled={true}
                               id="standard-basic"
@@ -2567,7 +2568,7 @@ function AddOrder(props) {
                                         $
                                       </InputAdornment>
                                     }
-                                    labelWidth={60}
+                                    labelWidth={100}
                                     type="number"
                                   />
                                 </FormControl>

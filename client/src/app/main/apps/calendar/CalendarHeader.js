@@ -10,6 +10,7 @@ import React from 'react';
 import Toolbar from 'react-big-calendar/lib/Toolbar';
 import { navigate } from 'react-big-calendar/lib/utils/constants';
 import connect from 'react-redux/es/connect/connect';
+import ShowroomSelect from './ShowroomSelect';
 
 /* eslint-disable react/jsx-no-bind */
 const styles = (theme) => ({
@@ -133,7 +134,8 @@ class CalendarHeader extends Toolbar {
   }
 
   render() {
-    const { classes, mainThemeDark, label, date } = this.props;
+    const { classes, mainThemeDark, label, date, appointments, setEvents } =
+      this.props;
 
     return (
       <ThemeProvider theme={mainThemeDark}>
@@ -145,13 +147,19 @@ class CalendarHeader extends Toolbar {
           )}>
           <div className="flex flex-1 flex-col p-12 justify-between z-10 container">
             <div className="flex flex-col items-center justify-between sm:flex-row">
-              <div className="flex items-center my-16 sm:mb-0">
-                <FuseAnimate animation="transition.expandIn" delay={300}>
-                  <Icon className="text-32 mx-12">today</Icon>
-                </FuseAnimate>
-                <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                  <Typography variant="h3">Appointments</Typography>
-                </FuseAnimate>
+              <div>
+                <div className="flex items-center my-16 sm:mb-0">
+                  <FuseAnimate animation="transition.expandIn" delay={300}>
+                    <Icon className="text-32 mx-12">today</Icon>
+                  </FuseAnimate>
+                  <FuseAnimate animation="transition.slideLeftIn" delay={300}>
+                    <Typography variant="h3">Appointments</Typography>
+                  </FuseAnimate>
+                </div>
+                <ShowroomSelect
+                  appointments={appointments}
+                  setEvents={setEvents}
+                />
               </div>
               <div className="flex items-center">
                 <Tooltip title="Today">

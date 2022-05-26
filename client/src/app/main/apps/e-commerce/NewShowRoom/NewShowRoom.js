@@ -162,10 +162,12 @@ function NewShowRoom(props) {
                     setisLoading(false);
                     await dispatch(await Actions.saveShowRoom(form));
                     setisLoading(true);
+                    props.history.push(`/apps/e-commerce/showRooms`);
                   } else {
                     setisLoading(false);
                     await dispatch(await Actions.updateShowRoom(form));
                     setisLoading(true);
+                    props.history.push(`/apps/e-commerce/showRooms`);
                   }
                 }}>
                 Save

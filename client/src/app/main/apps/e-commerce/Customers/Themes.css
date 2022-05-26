@@ -174,18 +174,21 @@ a[class^='ais-'] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  border: none;
-  border-radius: 3px;
-  color: rgba(33, 36, 61, 0.8);
+  border-width: 1px;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: white;
+  color: white;
   font-family: inherit;
   min-height: 54px;
   outline: none;
   padding-left: 56px;
   width: 100%;
+  background-color: transparent;
 }
 
 .ais-SearchBox-input::placeholder {
-  color: rgba(33, 36, 61, 0.5);
+  color: whitesmoke;
   opacity: 1; /* Firefox */
 }
 
