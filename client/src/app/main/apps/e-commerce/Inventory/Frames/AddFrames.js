@@ -31,7 +31,7 @@ import IconButton from '@material-ui/core/IconButton';
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import '../../Customers/Search.css';
+// import '../../Customers/Search.css';
 
 import {
   MuiPickersUtilsProvider,

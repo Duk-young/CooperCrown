@@ -17,8 +17,8 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import { firestore } from 'firebase';
 import { withRouter } from 'react-router';
-import '../../Customers/Search.css';
-import '../../Customers/Themes.css';
+// import '../../Customers/Search.css';
+// import '../../Customers/Themes.css';
 
 const searchClient = algoliasearch(
   '5AS4E06TDY',

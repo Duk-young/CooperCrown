@@ -1,6 +1,5 @@
-// import FuseLoading from '@fuse/core/FuseLoading';
-import '../../Customers/Search.css';
-import '../../Customers/Themes.css';
+// import '../../Customers/Search.css';
+// import '../Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
 import {
@@ -8,7 +7,8 @@ import {
   Panel,
   SearchBox,
   HitsPerPage,
-  Pagination
+  Pagination,
+  connectRefinementList
 } from 'react-instantsearch-dom';
 import { Link } from 'react-router-dom';
 import { RefinementList } from 'react-instantsearch-dom';
@@ -22,9 +22,7 @@ import Paper from '@material-ui/core/Paper';
 import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -36,6 +34,7 @@ const searchClient = algoliasearch(
   '5AS4E06TDY',
   '42176bd827d90462ba9ccb9578eb43b2'
 );
+const VirtualRefinementList = connectRefinementList(() => null);
 
 const CustomHits = connectHits(({ hits }) => {
   const [images, setImages] = useState([]);
@@ -153,7 +152,6 @@ const useStyles = makeStyles({
 
 const Frames = (props) => {
   const [openFiltersDialog, setOpenFiltersDialog] = useState(false);
-
   const [searchState, setSearchState] = useState({});
   const handleCloseFiltersDialog = () => {
     setOpenFiltersDialog(false);
@@ -169,10 +167,10 @@ const Frames = (props) => {
           <div className="flex flex-row">
             <div className="flex flex-col flex-1"></div>
             <div className="flex flex-col flex-1 mb-10 border-1">
+              <VirtualRefinementList attribute="brand" defaultRefinement="" />
               <SearchBox
                 onChange={(e) => {
                   setSearchState({ ...searchState, query: e.target.value });
-                  console.log(searchState);
                 }}
                 translations={{
                   placeholder: 'Searh for frames...'
@@ -235,13 +233,10 @@ const Frames = (props) => {
                   <h2>Select Filters!</h2>
                 </DialogTitle>
                 <DialogContent>
-                  <div className="flex flex-row justify-between">
+                  <div className="flex flex-col md:flex-row justify-between">
                     <InstantSearch
                       searchClient={searchClient}
                       indexName="frames"
-                      // onChange={(e) => {
-                      //   console.log(e);
-                      // }}
                       searchState={searchState}
                       onSearchStateChange={(e) => {
                         setSearchState(e);

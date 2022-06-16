@@ -1,28 +1,37 @@
-import React from 'react';
-import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Panel, SearchBox } from 'react-instantsearch-dom';
-import { connectHits } from 'react-instantsearch-dom';
-import { RefinementList } from 'react-instantsearch-dom';
+// import '../../Customers/Search.css';
+// import '../../Customers/Themes.css';
+import {
+  InstantSearch,
+  Panel,
+  SearchBox,
+  connectRefinementList,
+  RefinementList,
+  connectHits
+} from 'react-instantsearch-dom';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import algoliasearch from 'algoliasearch/lite';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import { withRouter } from 'react-router';
-import '../../Customers/Search.css';
-import '../../Customers/Themes.css';
 
 const searchClient = algoliasearch(
   '5AS4E06TDY',
   '42176bd827d90462ba9ccb9578eb43b2'
 );
+const VirtualRefinementList = connectRefinementList(() => null);
 
 const Hits = ({ hits }) => {
   const classes = useStyles();
@@ -97,16 +106,45 @@ const useStyles = makeStyles({
 });
 
 const Lens = (props) => {
-  // const [isLoading, setisLoading] = useState(false);
+  const [openFiltersDialog, setOpenFiltersDialog] = useState(false);
+  const [searchState, setSearchState] = useState({});
 
-  // if (!isLoading) return <FuseLoading />;
+  const handleCloseFiltersDialog = () => {
+    setOpenFiltersDialog(false);
+  };
+
   return (
     <div className="flex flex-col w-full h-full">
-      <InstantSearch searchClient={searchClient} indexName="lens">
+      <InstantSearch
+        searchClient={searchClient}
+        indexName="lens"
+        onSearchStateChange={(state) => {
+          if (
+            openFiltersDialog &&
+            (state.refinementList?.sphere ||
+              state.refinementList?.cylinder ||
+              state.refinementList?.material)
+          ) {
+            setSearchState(state.refinementList);
+          }
+        }}>
         <TableContainer component={Paper} className="flex flex-col w-full ">
           <div className="flex flex-row">
-            <div className="flex flex-col flex-1"></div>
-            <div className="flex flex-col flex-1 mb-10 border-1 ">
+            <div className="flex flex-col flex-1">
+              <VirtualRefinementList
+                defaultRefinement={searchState?.sphere}
+                attribute="sphere"
+              />
+              <VirtualRefinementList
+                defaultRefinement={searchState?.cylinder}
+                attribute="cylinder"
+              />
+              <VirtualRefinementList
+                defaultRefinement={searchState?.material}
+                attribute="material"
+              />
+            </div>
+            <div className="flex flex-col flex-1 mb-10 ">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for lens...'
@@ -136,6 +174,16 @@ const Lens = (props) => {
             <div className="flex flex-col flex-1">
               <div className="flex w-full justify-end">
                 <Button
+                  className="whitespace-no-wrap normal-case mt-10"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setOpenFiltersDialog(true);
+                    setSearchState({});
+                  }}>
+                  Filters
+                </Button>
+                <Button
                   className="whitespace-no-wrap normal-case mb-24 ml-24"
                   variant="contained"
                   color="secondary"
@@ -147,49 +195,64 @@ const Lens = (props) => {
               </div>
             </div>
           </div>
+
+          <div>
+            <Dialog
+              fullWidth
+              maxWidth="md"
+              open={openFiltersDialog}
+              onClose={handleCloseFiltersDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description">
+              <DialogTitle id="alert-dialog-title">
+                <h2>Select Filters!</h2>
+              </DialogTitle>
+              <DialogContent>
+                <div className="flex flex-col md:flex-row justify-between">
+                  <div className="p-8 mb-10 border-1 border-black border-dashed">
+                    <Panel header="Sphere">
+                      <RefinementList
+                        reset={false}
+                        attribute="sphere"
+                        limit={4}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for sphere…'
+                        }}
+                      />
+                    </Panel>
+                  </div>
+                  <div className="p-8 mb-10 rounded-12 shadow-5">
+                    <Panel header="Cylinder">
+                      <RefinementList
+                        attribute="cylinder"
+                        limit={4}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for cylinder…'
+                        }}
+                      />
+                    </Panel>
+                  </div>
+                  <div className="p-8 mb-10 rounded-12 shadow-5">
+                    <Panel header="Material">
+                      <RefinementList
+                        attribute="material"
+                        limit={4}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for materials…'
+                        }}
+                      />
+                    </Panel>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
           <div className="flex flex-row">
-            <div className="flex flex-col w-1/4 ">
-              <div className="p-8 mb-10 rounded-12 shadow-5">
-                <Panel header="Sphere">
-                  <RefinementList
-                    reset={false}
-                    attribute="sphere"
-                    limit={4}
-                    searchable={true}
-                    translations={{
-                      placeholder: 'Search for sphere…'
-                    }}
-                  />
-                </Panel>
-              </div>
-              <div className="p-8 mb-10 rounded-12 shadow-5">
-                <Panel header="Cylinder">
-                  <RefinementList
-                    attribute="cylinder"
-                    limit={4}
-                    searchable={true}
-                    translations={{
-                      placeholder: 'Search for cylinder…'
-                    }}
-                  />
-                </Panel>
-              </div>
-              <div className="p-8 mb-10 rounded-12 shadow-5">
-                <Panel header="Material">
-                  <RefinementList
-                    attribute="material"
-                    limit={4}
-                    searchable={true}
-                    translations={{
-                      placeholder: 'Search for materials…'
-                    }}
-                  />
-                </Panel>
-              </div>
-            </div>
-            <div className="flex flex-1">
-              <CustomHits />
-            </div>
+            <CustomHits />
           </div>
         </TableContainer>
       </InstantSearch>
