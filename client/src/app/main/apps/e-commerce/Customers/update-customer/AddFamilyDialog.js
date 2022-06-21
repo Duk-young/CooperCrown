@@ -125,38 +125,6 @@ export default function AddFamilyDialog(props) {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
-  const onSubmit = async () => {
-    try {
-      const dbConfig = (
-        await firestore().collection('dbConfig').doc('dbConfig').get()
-      ).data();
-
-      await firestore()
-        .collection('insurancePayments')
-        .add({
-          ...form,
-          paymentDate: firestore.Timestamp.fromDate(new Date()),
-          insurancePaymentId: dbConfig?.insurancePaymentId + 1
-          //   insuranceClaimId: claim?.insuranceClaimId
-        });
-
-      await firestore()
-        .collection('dbConfig')
-        .doc('dbConfig')
-        .update({ insurancePaymentId: dbConfig?.insurancePaymentId + 1 });
-
-      handleClose();
-
-      dispatch(
-        MessageActions.showMessage({
-          message: 'Payment Details Saved Successfully!'
-        })
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <Dialog
       maxWidth="md"

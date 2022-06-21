@@ -56,6 +56,14 @@ const StyledTableRow = withStyles((theme) => ({
 const useStyles = makeStyles({
   table: {
     minWidth: 450
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
   }
 });
 
@@ -196,142 +204,218 @@ const CustomerProfile = (props) => {
                 Customer's Details
               </Typography>
             </div>
-            <FuseAnimate animation="transition.slideRightIn" delay={300}>
-              <Button
-                onClick={() =>
-                  props.history.push(
-                    `/apps/e-commerce/customers/${customer?.customerId}`
-                  )
-                }
-                className="whitespace-no-wrap normal-case"
-                variant="contained"
-                color="secondary">
-                <EditIcon fontSize="small" />
-                Edit
-              </Button>
-            </FuseAnimate>
           </div>
         </div>
       }
       content={
         <div className="flex flex-col w-full">
-          <div className="flex flex-col p-16  md:flex-row w-full">
-            <div className=" w-full md:w-1/2 h-auto  ">
-              <h1 className="font-700">Customer Info</h1>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-t-1 border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700 bg-grey-200">Customer Id:</h2>
+          <div className="flex p-16 flex-row w-full">
+            <div className=" w-1/2 h-auto">
+              <div className="py-4 border-1 border-black border-solid rounded-6">
+                <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                    CUSTOMER INFO
+                  </h1>
                 </div>
-                <div className="flex flex-col w-2/3 border-black border-t-1 border-b-1">
-                  <h2 className="pl-6 bg-grey-200">{customer.customerId}</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-t-1 border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700 bg-grey-200">Customer Id:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-t-1 border-b-1">
+                    <h3 className="pl-6 bg-grey-200">{customer.customerId}</h3>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Name:</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700">Name:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6">{`${customer?.firstName} ${customer.lastName}`}</h3>
+                  </div>
                 </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{`${customer?.firstName} ${customer.lastName}`}</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700 bg-grey-200">
+                      Date of Birth:
+                    </h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6 bg-grey-200">
+                      {customer?.dob.toDateString()}
+                    </h3>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700 bg-grey-200">Date of Birth:</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700">Sex:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6">{customer?.gender}</h3>
+                  </div>
                 </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6 bg-grey-200">
-                    {customer?.dob.toDateString()}
-                  </h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700 bg-grey-200">Ethnicity:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6 bg-grey-200">{customer?.ethnicity}</h3>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Sex:</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700">Address:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6">{customer?.address}</h3>
+                  </div>
                 </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{customer?.gender}</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700 bg-grey-200">City:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6 bg-grey-200">{customer?.city}</h3>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700 bg-grey-200">Ethnicity:</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700">State:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6">{customer?.state}</h3>
+                  </div>
                 </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6 bg-grey-200">{customer?.ethnicity}</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700 bg-grey-200">Zip-Code:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6 bg-grey-200">{customer?.zipCode}</h3>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Address:</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700">Phone 1:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6">
+                      {formatPhoneNumber(customer?.phone1)}
+                    </h3>
+                  </div>
                 </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{customer?.address}</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700 bg-grey-200">Phone 2:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6 bg-grey-200">
+                      {formatPhoneNumber(customer?.phone2)}
+                    </h3>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700 bg-grey-200">City:</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700">Email:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6">{customer?.email}</h3>
+                  </div>
                 </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6 bg-grey-200">{customer?.city}</h2>
+                <div className="flex flex-row w-full">
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700 bg-grey-200">Other:</h3>
+                  </div>
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                    <h3 className="pl-6 bg-grey-200">{customer?.other}</h3>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">State:</h2>
-                </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{customer?.state}</h2>
-                </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700 bg-grey-200">Zip-Code:</h2>
-                </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6 bg-grey-200">{customer?.zipCode}</h2>
-                </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Phone 1:</h2>
-                </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">
-                    {formatPhoneNumber(customer?.phone1)}
-                  </h2>
-                </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700 bg-grey-200">Phone 2:</h2>
-                </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6 bg-grey-200">
-                    {formatPhoneNumber(customer?.phone2)}
-                  </h2>
-                </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700">Email:</h2>
-                </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6">{customer?.email}</h2>
-                </div>
-              </div>
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/3 border-black border-b-1 border-r-1">
-                  <h2 className="pl-6 font-700 bg-grey-200">Other:</h2>
-                </div>
-                <div className="flex flex-col w-2/3 border-black border-b-1">
-                  <h2 className="pl-6 bg-grey-200">{customer?.other}</h2>
+                <div className="flex flex-col p-6">
+                  <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() =>
+                      props.history.push(
+                        `/apps/e-commerce/customers/${customer?.customerId}`
+                      )
+                    }>
+                    <EditIcon fontSize="small" />
+                    EDIT
+                  </Button>
                 </div>
               </div>
             </div>
-            <div className=" md:ml-10 w-full md:w-1/2 h-auto  ">
-              <h1 className="font-700">Family Tree:</h1>
-              <div className="flex flex-col w-full h-200">
+            <div className="ml-10 w-1/2 h-auto  ">
+              <div className="py-4 border-1 border-black border-solid rounded-6">
+                <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                    NOTE
+                  </h1>
+                </div>
+                <div className="relative">
+                  <div className="flex w-full">
+                    <TextField
+                      className="my-10"
+                      disabled={disabledState}
+                      inputProps={{ style: { fontSize: 20, lineHeight: 1 } }}
+                      InputLabelProps={{ style: { fontSize: 16 } }}
+                      id="memos"
+                      label="Memos"
+                      type="text"
+                      name="memos"
+                      value={customer?.memos}
+                      onChange={(e) => {
+                        setCustomer({ ...customer, memos: e.target.value });
+                      }}
+                      multiline
+                      rows={13}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+
+                  {disabledState && (
+                    <div className="flex flex-col p-2">
+                      <Button
+                        className={classes.button}
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => {
+                          setDisabledState(false);
+                        }}>
+                        <EditIcon fontSize="small" />
+                        EDIT
+                      </Button>
+                    </div>
+                  )}
+                  {!disabledState && (
+                    <div className="flex flex-col p-2">
+                      <Button
+                        className={classes.button}
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => {
+                          setDisabledState(true);
+                          onMemosChange();
+                        }}>
+                        <Icon>save</Icon>
+                        SAVE
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col px-16">
+            <div className="py-4 border-1 border-black border-solid rounded-6">
+              <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  FAMILY TREE
+                </h1>
+              </div>
+              <div className="flex flex-col w-full h-auto">
                 <TableContainer
                   className="flex flex-col w-full"
                   component={Paper}>
@@ -342,6 +426,9 @@ const CustomerProfile = (props) => {
                         <StyledTableCell>NAME</StyledTableCell>
                         <StyledTableCell>BIRTHDAY</StyledTableCell>
                         <StyledTableCell>GENDER</StyledTableCell>
+                        <StyledTableCell>STATE</StyledTableCell>
+                        <StyledTableCell>ZIP CODE</StyledTableCell>
+                        <StyledTableCell>PHONE</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -364,179 +451,44 @@ const CustomerProfile = (props) => {
                               {moment(row.dob.toDate()).format('MM/DD/YYYY')}
                             </StyledTableCell>
                             <StyledTableCell>{row?.gender}</StyledTableCell>
+                            <StyledTableCell>{row?.state}</StyledTableCell>
+                            <StyledTableCell>{row?.zipCode}</StyledTableCell>
+                            <StyledTableCell>
+                              {formatPhoneNumber(row?.phone1)}
+                            </StyledTableCell>
                           </StyledTableRow>
                         ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
               </div>
-              <div className="relative">
-                <div className="flex w-full">
-                  <TextField
-                    className="mt-8  md:ml-10"
-                    disabled={disabledState}
-                    id="memos"
-                    label="Memos"
-                    type="text"
-                    name="memos"
-                    value={customer?.memos}
-                    onChange={(e) => {
-                      setCustomer({ ...customer, memos: e.target.value });
-                    }}
-                    multiline
-                    rows={8}
-                    variant="outlined"
-                    fullWidth
-                  />
-                </div>
-
-                {disabledState && (
-                  <Fab
-                    className="absolute bottom-0 right-0"
-                    onClick={() => {
-                      setDisabledState(false);
-                    }}
-                    color="secondary">
-                    <Icon>edit</Icon>
-                  </Fab>
-                )}
-                {!disabledState && (
-                  <Fab
-                    className="absolute bottom-0 right-0"
-                    onClick={() => {
-                      setDisabledState(true);
-                      onMemosChange();
-                    }}
-                    color="secondary">
-                    <Icon>save</Icon>
-                  </Fab>
-                )}
-              </div>
             </div>
           </div>
 
           <div className="flex flex-col md:flex-row p-16 w-full">
-            <div className="flex flex-col p-12 w-full md:w-1/3 h-320  rounded-10 border-1 border-black">
-              <h2 className="font-700 text-center">INSURANCE</h2>
-
-              <div className="flex flex-1 overflow-scroll">
-                <div className="flex flex-col w-full">
-                  <TableContainer component={Paper}>
-                    <Table
-                      className={classes.table}
-                      stickyHeader
-                      aria-label="customized table">
-                      <TableHead>
-                        <TableRow style={{ height: 10 }}>
-                          <StyledTableCell>Insurance</StyledTableCell>
-                          <StyledTableCell>Holder</StyledTableCell>
-                          <StyledTableCell>Policy #</StyledTableCell>
-                          <StyledTableCell>Options</StyledTableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {insurances
-                          .sort((a, b) =>
-                            a.insuranceId > b.insuranceId ? -1 : 1
-                          )
-                          .map((row) => (
-                            <StyledTableRow
-                              key={row.insuranceId}
-                              style={{ height: 10 }}>
-                              <StyledTableCell>
-                                {row.insuranceCompany}
-                              </StyledTableCell>
-                              <StyledTableCell>
-                                {row.primaryHolder}
-                              </StyledTableCell>
-                              <StyledTableCell>{row.policyNo}</StyledTableCell>
-                              <StyledTableCell>
-                                <IconButton
-                                  onClick={() => {
-                                    props.history.push(
-                                      `/apps/e-commerce/customers/profile/editinsurance/${row.insuranceId}`
-                                    );
-                                  }}
-                                  aria-label="edit">
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              </StyledTableCell>
-                            </StyledTableRow>
-                          ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+            <div className="flex flex-col  w-full md:w-1/3 h-400">
+              <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+                <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                    INSURANCE
+                  </h1>
                 </div>
-              </div>
-
-              <div className="flex justify-end">
-                <Button
-                  className="justify-center ml-160"
-                  variant="contained"
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/customers/addinsurance/${customer?.customerId}`
-                    );
-                  }}
-                  color="secondary"
-                  size="large"
-                  startIcon={<AddCircleOutlineOutlinedIcon />}>
-                  Add Insurance
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col p-12 md:ml-6 w-full md:w-1/3 h-320  rounded-10 border-1 border-black">
-              <PrescriptionReceipt
-                mainForm={selectedPrescription}
-                openPrescriptionReceipt={openPrescriptionReceipt}
-                handlePrescriptionReceiptClose={handlePrescriptionReceiptClose}
-                customer={customer}
-                // eyeglasses={eyeglasses}
-                // payments={payments}
-              />
-              <h2 className="font-700 text-center">Rx</h2>
-              <div className="flex justify-center">
-                <ButtonGroup
-                  variant="text"
-                  color="secondary"
-                  aria-label="text primary button group">
+                <div className="flex flex-col p-12">
                   <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
                     onClick={() => {
-                      let eyeglassesRx = prescription.filter(
-                        (word) => word.prescriptionType === 'eyeglassesRx'
+                      props.history.push(
+                        `/apps/e-commerce/customers/addinsurance/${customer?.customerId}`
                       );
-                      setFilteredPrescription(eyeglassesRx);
-                      setPrescriptionType('eyeglassesRx');
                     }}>
-                    Glasses
+                    <AddCircleOutlineOutlinedIcon />
+                    ADD NEW
                   </Button>
-                  <Button
-                    onClick={() => {
-                      let contactLensRx = prescription.filter(
-                        (word) => word.prescriptionType === 'contactLensRx'
-                      );
-
-                      setFilteredPrescription(contactLensRx);
-                      setPrescriptionType('contactLensRx');
-                    }}>
-                    Contacts
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      let medicationRx = prescription.filter(
-                        (word) => word.prescriptionType === 'medicationRx'
-                      );
-
-                      setFilteredPrescription(medicationRx);
-                      setPrescriptionType('medicationRx');
-                    }}>
-                    Medical
-                  </Button>
-                </ButtonGroup>
-              </div>
-              {prescriptionType === 'eyeglassesRx' && (
+                </div>
                 <div className="flex flex-1 overflow-scroll">
-                  <div className="flex flex-col w-full">
+                  <div className="flex flex-col w-full pl-12">
                     <TableContainer component={Paper}>
                       <Table
                         className={classes.table}
@@ -544,67 +496,35 @@ const CustomerProfile = (props) => {
                         aria-label="customized table">
                         <TableHead>
                           <TableRow style={{ height: 10 }}>
-                            <StyledTableCell>Date</StyledTableCell>
-                            <StyledTableCell>SPH</StyledTableCell>
-                            <StyledTableCell>CYL</StyledTableCell>
-                            <StyledTableCell>AXIS</StyledTableCell>
-                            <StyledTableCell>ADD</StyledTableCell>
+                            <StyledTableCell>Insurance</StyledTableCell>
+                            <StyledTableCell>Holder</StyledTableCell>
+                            <StyledTableCell>Policy #</StyledTableCell>
                             <StyledTableCell>Options</StyledTableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {filteredPrescription
+                          {insurances
                             .sort((a, b) =>
-                              a.prescriptionId > b.prescriptionId ? -1 : 1
+                              a.insuranceId > b.insuranceId ? -1 : 1
                             )
                             .map((row) => (
                               <StyledTableRow
-                                onClick={() => {
-                                  setSelectedPrescription(row);
-                                  setOpenPrescriptionReceipt(true);
-                                  console.log(row);
-                                }}
-                                key={row.prescriptionId}
+                                key={row.insuranceId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
-                                  {row?.onRx ? (
-                                    <LabelImportantIcon color="secondary" />
-                                  ) : (
-                                    '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
-                                  )}{' '}
-                                  {moment(
-                                    row?.prescriptionDate.toDate()
-                                  ).format('MM/DD/YYYY')}
+                                  {row.insuranceCompany}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                  <div className="flex flex-col">
-                                    <div>{row.eyeglassesSphereOd}</div>
-                                    <div>{row.eyeglassesSphereOs}</div>
-                                  </div>
+                                  {row.primaryHolder}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                  <div className="flex flex-col">
-                                    <div>{row.eyeglassesCylinderOd}</div>
-                                    <div>{row.eyeglassesCylinderOs}</div>
-                                  </div>
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                  <div className="flex flex-col">
-                                    <div>{row.eyeglassesAxisOd}</div>
-                                    <div>{row.eyeglassesAxisOs}</div>
-                                  </div>
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                  <div className="flex flex-col">
-                                    <div>{row.eyeglassesAddOd}</div>
-                                    <div>{row.eyeglassesAddOs}</div>
-                                  </div>
+                                  {row.policyNo}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <IconButton
                                     onClick={() => {
                                       props.history.push(
-                                        `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
+                                        `/apps/e-commerce/customers/profile/editinsurance/${row.insuranceId}`
                                       );
                                     }}
                                     aria-label="edit">
@@ -618,11 +538,342 @@ const CustomerProfile = (props) => {
                     </TableContainer>
                   </div>
                 </div>
-              )}
+              </div>
+            </div>
+            <div className="flex flex-col mt-6 md:mt-0 md:ml-6 w-full md:w-1/3 h-400">
+              <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+                <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                    RX
+                  </h1>
+                </div>
+                <div className="flex flex-col p-12">
+                  <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/customers/addRx/${customer?.customerId}`
+                      );
+                    }}>
+                    <AddCircleOutlineOutlinedIcon />
+                    ADD NEW
+                  </Button>
+                </div>
+                <PrescriptionReceipt
+                  mainForm={selectedPrescription}
+                  openPrescriptionReceipt={openPrescriptionReceipt}
+                  handlePrescriptionReceiptClose={
+                    handlePrescriptionReceiptClose
+                  }
+                  customer={customer}
+                />
 
-              {prescriptionType === 'contactLensRx' && (
+                <div className="flex justify-center">
+                  <ButtonGroup
+                    variant="text"
+                    color="secondary"
+                    aria-label="text primary button group">
+                    <Button
+                      onClick={() => {
+                        let eyeglassesRx = prescription.filter(
+                          (word) => word.prescriptionType === 'eyeglassesRx'
+                        );
+                        setFilteredPrescription(eyeglassesRx);
+                        setPrescriptionType('eyeglassesRx');
+                      }}>
+                      Glasses
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        let contactLensRx = prescription.filter(
+                          (word) => word.prescriptionType === 'contactLensRx'
+                        );
+
+                        setFilteredPrescription(contactLensRx);
+                        setPrescriptionType('contactLensRx');
+                      }}>
+                      Contacts
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        let medicationRx = prescription.filter(
+                          (word) => word.prescriptionType === 'medicationRx'
+                        );
+
+                        setFilteredPrescription(medicationRx);
+                        setPrescriptionType('medicationRx');
+                      }}>
+                      Medical
+                    </Button>
+                  </ButtonGroup>
+                </div>
+                {prescriptionType === 'eyeglassesRx' && (
+                  <div className="flex flex-1 overflow-scroll">
+                    <div className="flex flex-col w-full">
+                      <TableContainer component={Paper}>
+                        <Table
+                          className={classes.table}
+                          stickyHeader
+                          aria-label="customized table">
+                          <TableHead>
+                            <TableRow style={{ height: 10 }}>
+                              <StyledTableCell>Date</StyledTableCell>
+                              <StyledTableCell>SPH</StyledTableCell>
+                              <StyledTableCell>CYL</StyledTableCell>
+                              <StyledTableCell>AXIS</StyledTableCell>
+                              <StyledTableCell>ADD</StyledTableCell>
+                              <StyledTableCell>Options</StyledTableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {filteredPrescription
+                              .sort((a, b) =>
+                                a.prescriptionId > b.prescriptionId ? -1 : 1
+                              )
+                              .map((row) => (
+                                <StyledTableRow
+                                  onClick={() => {
+                                    setSelectedPrescription(row);
+                                    setOpenPrescriptionReceipt(true);
+                                    console.log(row);
+                                  }}
+                                  key={row.prescriptionId}
+                                  style={{ height: 10 }}>
+                                  <StyledTableCell>
+                                    {row?.onRx ? (
+                                      <LabelImportantIcon color="secondary" />
+                                    ) : (
+                                      '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
+                                    )}{' '}
+                                    {moment(
+                                      row?.prescriptionDate.toDate()
+                                    ).format('MM/DD/YYYY')}
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="flex flex-col">
+                                      <div>{row.eyeglassesSphereOd}</div>
+                                      <div>{row.eyeglassesSphereOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="flex flex-col">
+                                      <div>{row.eyeglassesCylinderOd}</div>
+                                      <div>{row.eyeglassesCylinderOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="flex flex-col">
+                                      <div>{row.eyeglassesAxisOd}</div>
+                                      <div>{row.eyeglassesAxisOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="flex flex-col">
+                                      <div>{row.eyeglassesAddOd}</div>
+                                      <div>{row.eyeglassesAddOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <IconButton
+                                      onClick={() => {
+                                        props.history.push(
+                                          `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
+                                        );
+                                      }}
+                                      aria-label="edit">
+                                      <EditIcon fontSize="small" />
+                                    </IconButton>
+                                  </StyledTableCell>
+                                </StyledTableRow>
+                              ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </div>
+                  </div>
+                )}
+
+                {prescriptionType === 'contactLensRx' && (
+                  <div className="flex flex-1 overflow-scroll">
+                    <div className="flex flex-col w-full">
+                      <TableContainer component={Paper}>
+                        <Table
+                          className={classes.table}
+                          stickyHeader
+                          aria-label="customized table">
+                          <TableHead>
+                            <TableRow style={{ height: 10 }}>
+                              <StyledTableCell>Date</StyledTableCell>
+                              <StyledTableCell>SPH</StyledTableCell>
+                              <StyledTableCell>CYL</StyledTableCell>
+                              <StyledTableCell>AXIS</StyledTableCell>
+                              <StyledTableCell>ADD</StyledTableCell>
+                              <StyledTableCell>Options</StyledTableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {filteredPrescription
+                              .sort((a, b) =>
+                                a.prescriptionId > b.prescriptionId ? -1 : 1
+                              )
+                              .map((row) => (
+                                <StyledTableRow
+                                  onClick={() => {
+                                    setSelectedPrescription(row);
+                                    setOpenPrescriptionReceipt(true);
+                                  }}
+                                  key={row.prescriptionId}
+                                  style={{ height: 10 }}>
+                                  <StyledTableCell>
+                                    {moment(
+                                      row?.prescriptionDate.toDate()
+                                    ).format('MM/DD/YYYY')}
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="flex flex-col">
+                                      <div>{row.contactLensSphereOd}</div>
+                                      <div>{row.contactLensSphereOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="flex flex-col">
+                                      <div>{row.contactLensCylinderOd}</div>
+                                      <div>{row.contactLensCylinderOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="flex flex-col">
+                                      <div>{row.contactLensAxisOd}</div>
+                                      <div>{row.contactLensAxisOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="flex flex-col">
+                                      <div>{row.contactLensAddOd}</div>
+                                      <div>{row.contactLensAddOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <IconButton
+                                      disabled={true}
+                                      onClick={() => {
+                                        props.history.push(
+                                          `/apps/e-commerce/customers/profile/${row.customerId}`
+                                        );
+                                      }}
+                                      aria-label="view">
+                                      <PageviewOutlinedIcon fontSize="small" />
+                                    </IconButton>
+                                    <IconButton
+                                      onClick={() => {
+                                        props.history.push(
+                                          `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
+                                        );
+                                      }}
+                                      aria-label="edit">
+                                      <EditIcon fontSize="small" />
+                                    </IconButton>
+                                  </StyledTableCell>
+                                </StyledTableRow>
+                              ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </div>
+                  </div>
+                )}
+
+                {prescriptionType === 'medicationRx' && (
+                  <div className="flex flex-1 overflow-scroll">
+                    <div className="flex flex-col w-full">
+                      <TableContainer component={Paper}>
+                        <Table
+                          className={classes.table}
+                          stickyHeader
+                          aria-label="customized table">
+                          <TableHead>
+                            <TableRow style={{ height: 10 }}>
+                              <StyledTableCell>Date</StyledTableCell>
+                              <StyledTableCell>Medication</StyledTableCell>
+
+                              <StyledTableCell>Options</StyledTableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {filteredPrescription
+                              .sort((a, b) =>
+                                a.prescriptionId > b.prescriptionId ? -1 : 1
+                              )
+                              .map((row) => (
+                                <StyledTableRow
+                                  key={row.prescriptionId}
+                                  style={{ height: 10 }}>
+                                  <StyledTableCell>
+                                    {moment(
+                                      row?.prescriptionDate.toDate()
+                                    ).format('MM/DD/YYYY')}
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="w-136 truncate">
+                                      {row?.medicationComments}
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <IconButton
+                                      disabled={true}
+                                      onClick={() => {
+                                        props.history.push(
+                                          `/apps/e-commerce/customers/profile/${row.customerId}`
+                                        );
+                                      }}
+                                      aria-label="view">
+                                      <PageviewOutlinedIcon fontSize="small" />
+                                    </IconButton>
+                                    <IconButton
+                                      onClick={() => {
+                                        props.history.push(
+                                          `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
+                                        );
+                                      }}
+                                      aria-label="edit">
+                                      <EditIcon fontSize="small" />
+                                    </IconButton>
+                                  </StyledTableCell>
+                                </StyledTableRow>
+                              ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col mt-6 md:mt-0 md:ml-6 w-full md:w-1/3 h-400">
+              <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+                <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                    EXAM HISTORY
+                  </h1>
+                </div>
+                <div className="flex flex-col p-12">
+                  <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/customers/addExam/${customer?.customerId}`
+                      );
+                    }}>
+                    <AddCircleOutlineOutlinedIcon />
+                    ADD NEW
+                  </Button>
+                </div>
                 <div className="flex flex-1 overflow-scroll">
-                  <div className="flex flex-col w-full">
+                  <div className="flex flex-col w-full pl-12">
                     <TableContainer component={Paper}>
                       <Table
                         className={classes.table}
@@ -631,75 +882,36 @@ const CustomerProfile = (props) => {
                         <TableHead>
                           <TableRow style={{ height: 10 }}>
                             <StyledTableCell>Date</StyledTableCell>
-                            <StyledTableCell>SPH</StyledTableCell>
-                            <StyledTableCell>CYL</StyledTableCell>
-                            <StyledTableCell>AXIS</StyledTableCell>
-                            <StyledTableCell>ADD</StyledTableCell>
+                            <StyledTableCell>Exam Type</StyledTableCell>
+
                             <StyledTableCell>Options</StyledTableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {filteredPrescription
-                            .sort((a, b) =>
-                              a.prescriptionId > b.prescriptionId ? -1 : 1
-                            )
+                          {exam
+                            .sort((a, b) => (a.examId > b.examId ? -1 : 1))
                             .map((row) => (
                               <StyledTableRow
-                                onClick={() => {
-                                  setSelectedPrescription(row);
-                                  setOpenPrescriptionReceipt(true);
-                                }}
-                                key={row.prescriptionId}
+                                key={row.examId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
-                                  {moment(
-                                    row?.prescriptionDate.toDate()
-                                  ).format('MM/DD/YYYY')}
+                                  {moment(row?.examTime.toDate()).format(
+                                    'MM/DD/YYYY'
+                                  )}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                  <div className="flex flex-col">
-                                    <div>{row.contactLensSphereOd}</div>
-                                    <div>{row.contactLensSphereOs}</div>
-                                  </div>
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                  <div className="flex flex-col">
-                                    <div>{row.contactLensCylinderOd}</div>
-                                    <div>{row.contactLensCylinderOs}</div>
-                                  </div>
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                  <div className="flex flex-col">
-                                    <div>{row.contactLensAxisOd}</div>
-                                    <div>{row.contactLensAxisOs}</div>
-                                  </div>
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                  <div className="flex flex-col">
-                                    <div>{row.contactLensAddOd}</div>
-                                    <div>{row.contactLensAddOs}</div>
-                                  </div>
+                                  Comprehensive Exam
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   <IconButton
-                                    disabled={true}
                                     onClick={() => {
                                       props.history.push(
-                                        `/apps/e-commerce/customers/profile/${row.customerId}`
+                                        `/apps/e-commerce/customers/profile/viewexam/${row.examId}`
                                       );
                                     }}
                                     aria-label="view">
                                     <PageviewOutlinedIcon fontSize="small" />
                                   </IconButton>
-                                  <IconButton
-                                    onClick={() => {
-                                      props.history.push(
-                                        `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
-                                      );
-                                    }}
-                                    aria-label="edit">
-                                    <EditIcon fontSize="small" />
-                                  </IconButton>
                                 </StyledTableCell>
                               </StyledTableRow>
                             ))}
@@ -708,176 +920,32 @@ const CustomerProfile = (props) => {
                     </TableContainer>
                   </div>
                 </div>
-              )}
-
-              {prescriptionType === 'medicationRx' && (
-                <div className="flex flex-1 overflow-scroll">
-                  <div className="flex flex-col w-full">
-                    <TableContainer component={Paper}>
-                      <Table
-                        className={classes.table}
-                        stickyHeader
-                        aria-label="customized table">
-                        <TableHead>
-                          <TableRow style={{ height: 10 }}>
-                            <StyledTableCell>Date</StyledTableCell>
-                            <StyledTableCell>Medication</StyledTableCell>
-
-                            <StyledTableCell>Options</StyledTableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {filteredPrescription
-                            .sort((a, b) =>
-                              a.prescriptionId > b.prescriptionId ? -1 : 1
-                            )
-                            .map((row) => (
-                              <StyledTableRow
-                                key={row.prescriptionId}
-                                style={{ height: 10 }}>
-                                <StyledTableCell>
-                                  {moment(
-                                    row?.prescriptionDate.toDate()
-                                  ).format('MM/DD/YYYY')}
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                  <div className="w-136 truncate">
-                                    {row?.medicationComments}
-                                  </div>
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                  <IconButton
-                                    disabled={true}
-                                    onClick={() => {
-                                      props.history.push(
-                                        `/apps/e-commerce/customers/profile/${row.customerId}`
-                                      );
-                                    }}
-                                    aria-label="view">
-                                    <PageviewOutlinedIcon fontSize="small" />
-                                  </IconButton>
-                                  <IconButton
-                                    onClick={() => {
-                                      props.history.push(
-                                        `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
-                                      );
-                                    }}
-                                    aria-label="edit">
-                                    <EditIcon fontSize="small" />
-                                  </IconButton>
-                                </StyledTableCell>
-                              </StyledTableRow>
-                            ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex justify-end">
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/customers/addRx/${customer?.customerId}`
-                    );
-                  }}
-                  color="secondary"
-                  size="large"
-                  startIcon={<AddCircleOutlineOutlinedIcon />}>
-                  Add Rx
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col md:ml-6 p-12 w-full md:w-1/3 h-320  rounded-10 border-1 border-black">
-              <h2 className="font-700 text-center">EXAM HISTORY</h2>
-
-              <div className="flex flex-1 overflow-scroll">
-                <div className="flex flex-col w-full">
-                  <TableContainer component={Paper}>
-                    <Table
-                      className={classes.table}
-                      stickyHeader
-                      aria-label="customized table">
-                      <TableHead>
-                        <TableRow style={{ height: 10 }}>
-                          <StyledTableCell>Date</StyledTableCell>
-                          <StyledTableCell>Exam Type</StyledTableCell>
-
-                          <StyledTableCell>Options</StyledTableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {exam
-                          .sort((a, b) => (a.examId > b.examId ? -1 : 1))
-                          .map((row) => (
-                            <StyledTableRow
-                              key={row.examId}
-                              style={{ height: 10 }}>
-                              <StyledTableCell>
-                                {moment(row?.examTime.toDate()).format(
-                                  'MM/DD/YYYY'
-                                )}
-                              </StyledTableCell>
-                              <StyledTableCell>
-                                Comprehensive Exam
-                              </StyledTableCell>
-                              <StyledTableCell>
-                                <IconButton
-                                  onClick={() => {
-                                    props.history.push(
-                                      `/apps/e-commerce/customers/profile/viewexam/${row.examId}`
-                                    );
-                                  }}
-                                  aria-label="view">
-                                  <PageviewOutlinedIcon fontSize="small" />
-                                </IconButton>
-                              </StyledTableCell>
-                            </StyledTableRow>
-                          ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </div>
-              </div>
-
-              <div className="flex justify-end">
-                <Button
-                  className="justify-center ml-160"
-                  variant="contained"
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/customers/addExam/${customer?.customerId}`
-                    );
-                  }}
-                  color="secondary"
-                  size="large"
-                  startIcon={<AddCircleOutlineOutlinedIcon />}>
-                  New Exam
-                </Button>
               </div>
             </div>
           </div>
-          <div className="flex flex-col h-400 p-16">
-            <div className="flex flex-row justify-between">
-              <h2 className="font-700 underline mb-6">Order History:</h2>
-              <Button
-                className="justify-center m-4"
-                variant="contained"
-                onClick={() => {
-                  props.history.push(
-                    `/apps/e-commerce/orders/addorder/${customer.customerId}`
-                  );
-                }}
-                color="secondary"
-                size="large"
-                startIcon={<AddCircleOutlineOutlinedIcon />}>
-                New Order
-              </Button>
+          <div className="flex flex-col h-400 px-16 py-6">
+            <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+              <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  ORDER HISTORY
+                </h1>
+              </div>
+              <div className="flex flex-col p-12">
+                <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    props.history.push(
+                      `/apps/e-commerce/orders/addorder/${customer.customerId}`
+                    );
+                  }}>
+                  <AddCircleOutlineOutlinedIcon />
+                  ADD NEW
+                </Button>
+              </div>
+              <OrderHistory customer={customer} />
             </div>
-            <OrderHistory customer={customer} />
-            <h3 className="text-white">Hi</h3>
           </div>
         </div>
       }

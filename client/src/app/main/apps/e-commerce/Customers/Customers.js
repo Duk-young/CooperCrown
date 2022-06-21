@@ -15,6 +15,7 @@ import FusePageSimple from '@fuse/core/FusePageSimple';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import Paper from '@material-ui/core/Paper';
@@ -83,7 +84,6 @@ const CustomHits = connectHits(({ hits, props }) => {
           <StyledTableCell>STATE</StyledTableCell>
           <StyledTableCell>ZIP CODE</StyledTableCell>
           <StyledTableCell>PHONE</StyledTableCell>
-          <StyledTableCell>EMAIL</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -114,7 +114,6 @@ const CustomHits = connectHits(({ hits, props }) => {
             <StyledTableCell>{hit.state}</StyledTableCell>
             <StyledTableCell>{hit.zipCode}</StyledTableCell>
             <StyledTableCell>{formatPhoneNumber(hit.phone1)}</StyledTableCell>
-            <StyledTableCell>{hit.email}</StyledTableCell>
           </StyledTableRow>
         ))}
       </TableBody>
@@ -152,15 +151,12 @@ function Customers(props) {
   return (
     <FusePageSimple
       content={
-        <div className="flex w-full ">
-          <TableContainer
-            stickyHeader
-            component={Paper}
-            className="flex flex-col w-full">
-            <InstantSearch
-              searchClient={searchClient}
-              indexName="customers"
-              refresh>
+        <div className="flex w-full">
+          <InstantSearch
+            searchClient={searchClient}
+            indexName="customers"
+            refresh>
+            <div className="flex flex-col w-full">
               <div className={clsx(classes.header)}>
                 <div className="flex flex-col w-1/3 mt-0 px-12">
                   <div className="flex flex-row p-4">
@@ -183,11 +179,19 @@ function Customers(props) {
                       <Grid container justifyContent="start">
                         <KeyboardDatePicker
                           label="Start Date"
-                          className="mt-0 mb-24 bg-white"
+                          className="mt-0 mb-24 bg-transparent"
                           margin="normal"
                           id="date-picker-dialog"
                           format="MM/dd/yyyy"
                           value={form?.start}
+                          InputLabelProps={{
+                            style: { color: 'white', marginLeft: 3 }
+                          }}
+                          InputProps={{
+                            inputProps: {
+                              style: { color: 'white', marginLeft: 3 }
+                            }
+                          }}
                           onChange={(date) => {
                             handleChange({
                               target: { name: 'start', value: date }
@@ -203,11 +207,19 @@ function Customers(props) {
                       <Grid container justifyContent="start">
                         <KeyboardDatePicker
                           label="End Date"
-                          className="mt-0 mb-24 bg-white"
+                          className="mt-0 mb-24 bg-transparent"
                           margin="normal"
                           id="date-picker-dialog"
                           format="MM/dd/yyyy"
                           value={form?.end}
+                          InputLabelProps={{
+                            style: { color: 'white', marginLeft: 3 }
+                          }}
+                          InputProps={{
+                            inputProps: {
+                              style: { color: 'white', marginLeft: 3 }
+                            }
+                          }}
                           onChange={(date) => {
                             handleChange({
                               target: { name: 'end', value: date }
@@ -302,7 +314,12 @@ function Customers(props) {
                   </div>
                 </div>
               </div>
-              <CustomHits props={props} />
+              <TableContainer
+                stickyHeader
+                component={Paper}
+                className="flex flex-col w-full overflow-scroll">
+                <CustomHits props={props} />
+              </TableContainer>
               <div className="flex flex-row justify-center">
                 <div className="flex flex-1"></div>
                 <div className="flex flex-1 justify-center mt-8">
@@ -319,8 +336,8 @@ function Customers(props) {
                   />
                 </div>
               </div>
-            </InstantSearch>
-          </TableContainer>
+            </div>
+          </InstantSearch>
         </div>
       }
       innerScroll
