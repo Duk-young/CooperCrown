@@ -27,7 +27,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { reorderCard } from '../../scrumboard/store/actions';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -672,31 +671,56 @@ const CustomerProfile = (props) => {
                                       row?.prescriptionDate.toDate()
                                     ).format('MM/DD/YYYY')}
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <div className="flex flex-col">
                                       <div>{row.eyeglassesSphereOd}</div>
                                       <div>{row.eyeglassesSphereOs}</div>
                                     </div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <div className="flex flex-col">
                                       <div>{row.eyeglassesCylinderOd}</div>
                                       <div>{row.eyeglassesCylinderOs}</div>
                                     </div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <div className="flex flex-col">
                                       <div>{row.eyeglassesAxisOd}</div>
                                       <div>{row.eyeglassesAxisOs}</div>
                                     </div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <div className="flex flex-col">
                                       <div>{row.eyeglassesAddOd}</div>
                                       <div>{row.eyeglassesAddOs}</div>
                                     </div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <div className="flex flex-col">
                                       <div>{row.eyeglassesPrismOd}</div>
                                       <div>{row.eyeglassesPrismOs}</div>
@@ -754,39 +778,79 @@ const CustomerProfile = (props) => {
                                   }}
                                   key={row.prescriptionId}
                                   style={{ height: 10 }}>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
+                                    {row?.onRx ? (
+                                      <LabelImportantIcon color="secondary" />
+                                    ) : (
+                                      '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
+                                    )}{' '}
                                     {moment(
                                       row?.prescriptionDate.toDate()
                                     ).format('MM/DD/YYYY')}
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <div className="flex flex-col">
                                       <div>{row.contactLensSphereOd}</div>
                                       <div>{row.contactLensSphereOs}</div>
                                     </div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <div className="flex flex-col">
                                       <div>{row.contactLensCylinderOd}</div>
                                       <div>{row.contactLensCylinderOs}</div>
                                     </div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <div className="flex flex-col">
                                       <div>{row.contactLensAxisOd}</div>
                                       <div>{row.contactLensAxisOs}</div>
                                     </div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <div className="flex flex-col">
                                       <div>{row.contactLensAddOd}</div>
                                       <div>{row.contactLensAddOs}</div>
                                     </div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     {row?.contactLensModel}
                                   </StyledTableCell>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     <IconButton
                                       onClick={() => {
                                         props.history.push(

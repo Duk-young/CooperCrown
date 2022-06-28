@@ -79,6 +79,7 @@ export default function SearchInsuranceDialouge(props) {
             .collection('insuranceClaims')
             .add({
               orderDate: form?.orderDate,
+              locationName: form?.locationName,
               insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1,
               orderId: form?.orderId,
               customerId: customer?.customerId,
@@ -124,6 +125,7 @@ export default function SearchInsuranceDialouge(props) {
             .collection('insuranceClaims')
             .add({
               orderDate: firestore.Timestamp.fromDate(new Date()),
+              locationName: form?.locationName,
               insuranceClaimId: dbConfigLoop?.insuranceClaimId + 1,
               orderId: newOrderId,
               customerId: customer?.customerId,
