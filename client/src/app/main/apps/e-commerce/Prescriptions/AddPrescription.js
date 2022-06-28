@@ -278,1250 +278,1472 @@ const AddPrescription = (props) => {
   return !customer || !filteredPrescription || !prescription ? (
     <></>
   ) : (
-    <div className="flex flex-col w-full">
-      <div className="flex flex-row p-16 sm:p-24 w-full">
-        <div className="p-8 w-1/3 h-auto border-grey-400 border-solid border-1">
-          <h1 className="underline font-700">Patient Details</h1>
-          <h2>{`Customer Id: ${customer.customerId}`}</h2>
-          <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
-          <h2>{`Address: ${customer.address}, ${customer.state}, ${customer.zipCode}`}</h2>
-          <h2>{`Phone: ${formatPhoneNumber(customer.phone1)}`}</h2>
-          <h2>{`Email: ${customer.email}`}</h2>
-          <h2>{`DOB: ${customer.dob.toDateString()}`}</h2>
-          <h2>{`Sex: ${customer.gender}`}</h2>
+    <div className="p-10">
+      <div className="py-4 border-1 border-black border-solid rounded-6">
+        <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+          <h1 className="font-700" style={{ color: '#f15a25' }}>
+            {`NEW RX (${customer?.firstName} ${customer.lastName})`}
+          </h1>
         </div>
-        <div className="p-8 w-2/3 h-auto relative">
-          <h1>Prescription Details</h1>
-          <h3>Select type of Prescription:</h3>
-          <FormControl component="fieldset">
-            <RadioGroup
-              className="ml-60"
-              row
-              aria-label="prescriptionType"
-              name="prescriptionType"
-              value={form?.prescriptionType}
-              onChange={handleChange}>
-              <FormControlLabel
-                value="eyeglassesRx"
-                onClick={() => {
-                  let eyeglassesRx = filteredPrescription.filter(
-                    (word) => word.prescriptionType === 'eyeglassesRx'
-                  );
-
-                  setPrescription(eyeglassesRx);
-                  setChangeOccured(true);
-                }}
-                control={<Radio />}
-                label="Eyeglasses Rx"
-              />
-              <FormControlLabel
-                onClick={() => {
-                  let contactLensRx = filteredPrescription.filter(
-                    (word) => word.prescriptionType === 'contactLensRx'
-                  );
-
-                  setPrescription(contactLensRx);
-                  setChangeOccured(true);
-                }}
-                value="contactLensRx"
-                control={<Radio />}
-                label="Contact Lens Rx"
-              />
-              <FormControlLabel
-                onClick={() => {
-                  setChangeOccured(true);
-                }}
-                value="medicationRx"
-                control={<Radio />}
-                label="Medication Rx"
-              />
-            </RadioGroup>
-          </FormControl>
-          <br></br>
-          <FormControlLabel
-            className="ml-52"
-            control={
-              <Checkbox
-                checked={form?.onRx}
-                onChange={handleChange}
-                name="onRx"
-              />
-            }
-            label="Outside Rx"
-          />
-        </div>
-      </div>
-      <div className="flex flex-row p-16 sm:p-24">
-        {form?.prescriptionType === 'eyeglassesRx' && (
-          <FuseAnimate animation="transition.slideRightIn" delay={500}>
-            <div className="p-16 sm:p-24 w-full border border-grey-400 ">
-              <h1 className="underline p-10">Eyeglasses Rx</h1>
-              <div className="flex flex-row px-60">
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700"></h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">Sphere</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">Cylinder</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">Axis</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">Add</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">Prism</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">VA</h3>
-                </div>
-              </div>
-              <div className="flex flex-row px-60">
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <h3 className="mt-20 text-center font-700">OD</h3>
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesSphereOd ? item.eyeglassesSphereOd : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesSphereOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesSphereOd}
-                    inputValue={eyeglassesSphereOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesSphereOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesSphereOd' }
-                      });
-                    }}
-                    name="eyeglassesSphereOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesSphereOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesCylinderOd
-                            ? item.eyeglassesCylinderOd
-                            : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesCylinderOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesCylinderOd}
-                    inputValue={eyeglassesCylinderOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesCylinderOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesCylinderOd' }
-                      });
-                    }}
-                    name="eyeglassesCylinderOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesCylinderOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesAxisOd ? item.eyeglassesAxisOd : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesAxisOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesAxisOd}
-                    inputValue={eyeglassesAxisOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesAxisOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesAxisOd' }
-                      });
-                    }}
-                    name="eyeglassesAxisOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesAxisOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesAddOd ? item.eyeglassesAddOd : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesAddOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesAddOd}
-                    inputValue={eyeglassesAddOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesAddOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesAddOd' }
-                      });
-                    }}
-                    name="eyeglassesAddOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesAddOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesPrismOd ? item.eyeglassesPrismOd : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesPrismOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesPrismOd}
-                    inputValue={eyeglassesPrismOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesPrismOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesPrismOd' }
-                      });
-                    }}
-                    name="eyeglassesPrismOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesPrismOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesVaOd ? item.eyeglassesVaOd : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesVaOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesVaOd}
-                    inputValue={eyeglassesVaOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesVaOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesVaOd' }
-                      });
-                    }}
-                    name="eyeglassesVaOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesVaOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-row px-60">
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <h3 className="mt-20 text-center font-700">OS</h3>
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesSphereOs ? item.eyeglassesSphereOs : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesSphereOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesSphereOs}
-                    inputValue={eyeglassesSphereOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesSphereOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesSphereOs' }
-                      });
-                    }}
-                    name="eyeglassesSphereOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesSphereOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesCylinderOs
-                            ? item.eyeglassesCylinderOs
-                            : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesCylinderOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesCylinderOs}
-                    inputValue={eyeglassesCylinderOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesCylinderOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesCylinderOs' }
-                      });
-                    }}
-                    name="eyeglassesCylinderOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesCylinderOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesAxisOs ? item.eyeglassesAxisOs : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesAxisOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesAxisOs}
-                    inputValue={eyeglassesAxisOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesAxisOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesAxisOs' }
-                      });
-                    }}
-                    name="eyeglassesAxisOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesAxisOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesAddOs ? item.eyeglassesAddOs : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesAddOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesAddOs}
-                    inputValue={eyeglassesAddOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesAddOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesAddOs' }
-                      });
-                    }}
-                    name="eyeglassesAddOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesAddOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesPrismOs ? item.eyeglassesPrismOs : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesPrismOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesPrismOs}
-                    inputValue={eyeglassesPrismOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesPrismOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesPrismOs' }
-                      });
-                    }}
-                    name="eyeglassesPrismOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesPrismOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.eyeglassesVaOs ? item.eyeglassesVaOs : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.eyeglassesVaOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.eyeglassesVaOs}
-                    inputValue={eyeglassesVaOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setEyeglassesVaOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'eyeglassesVaOs' }
-                      });
-                    }}
-                    name="eyeglassesVaOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'eyeglassesVaOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="flex mt-10 px-60">
-                <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                  <Button
-                    className="whitespace-no-wrap normal-case"
-                    variant="contained"
-                    color="secondary"
+        <div className="flex flex-col w-full">
+          <div className="flex flex-row p-16 sm:p-24 w-full">
+            <div className="flex flex-col md:p-8 px-72 w-full md:w-2/5 h-auto justify-around">
+              <FormControl component="fieldset">
+                <RadioGroup
+                  className="ml-6 justify-around"
+                  row
+                  aria-label="prescriptionType"
+                  name="prescriptionType"
+                  value={form?.prescriptionType}
+                  onChange={handleChange}>
+                  <FormControlLabel
+                    value="eyeglassesRx"
                     onClick={() => {
-                      if (form) {
-                        setOpenAlertOnSave(true);
-                      }
-                    }}>
-                    Save Eyeglasses Rx
-                  </Button>
-                </FuseAnimate>
-                <CustomAlert
-                  open={openAlertOnSave}
-                  setOpen={setOpenAlertOnSave}
-                  text1="Save Changes?"
-                  text2="Are you sure?"
-                  customFunction={onSubmit}
+                      let eyeglassesRx = filteredPrescription.filter(
+                        (word) => word.prescriptionType === 'eyeglassesRx'
+                      );
+
+                      setPrescription(eyeglassesRx);
+                      setChangeOccured(true);
+                    }}
+                    control={<Radio />}
+                    label="Eyeglasses Rx"
+                  />
+                  <FormControlLabel
+                    onClick={() => {
+                      let contactLensRx = filteredPrescription.filter(
+                        (word) => word.prescriptionType === 'contactLensRx'
+                      );
+
+                      setPrescription(contactLensRx);
+                      setChangeOccured(true);
+                    }}
+                    value="contactLensRx"
+                    control={<Radio />}
+                    label="Contact Lens Rx"
+                  />
+                  <FormControlLabel
+                    onClick={() => {
+                      setChangeOccured(true);
+                    }}
+                    value="medicationRx"
+                    control={<Radio />}
+                    label="Medication Rx"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <br></br>
+              <div className="flex flex-row w-full justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.onRx}
+                      onChange={handleChange}
+                      name="onRx"
+                    />
+                  }
+                  label="Outside Rx"
                 />
               </div>
             </div>
-          </FuseAnimate>
-        )}
+          </div>
+          <div className="flex flex-row p-16 sm:p-24">
+            {form?.prescriptionType === 'eyeglassesRx' && (
+              <FuseAnimate animation="transition.slideRightIn" delay={500}>
+                <div className="flex flex-col md:flex-row w-full">
+                  <div className="flex flex-col md:w-2/3 w-full">
+                    <div className="flex flex-row">
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700"></h3>
+                      </div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">Sphere</h3>
+                      </div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">Cylinder</h3>
+                      </div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">Axis</h3>
+                      </div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">Add</h3>
+                      </div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">Prism</h3>
+                      </div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">VA</h3>
+                      </div>
+                    </div>
+                    <div className="flex flex-row">
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <h3 className="mt-20 text-center font-700">OD</h3>
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesSphereOd
+                                  ? item.eyeglassesSphereOd
+                                  : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesSphereOd || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesSphereOd}
+                          inputValue={eyeglassesSphereOdInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesSphereOdInput(value);
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesSphereOd'
+                              }
+                            });
+                          }}
+                          name="eyeglassesSphereOd"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesSphereOd'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesCylinderOd
+                                  ? item.eyeglassesCylinderOd
+                                  : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesCylinderOd || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesCylinderOd}
+                          inputValue={eyeglassesCylinderOdInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesCylinderOdInput(value);
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesCylinderOd'
+                              }
+                            });
+                          }}
+                          name="eyeglassesCylinderOd"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesCylinderOd'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesAxisOd
+                                  ? item.eyeglassesAxisOd
+                                  : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesAxisOd || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesAxisOd}
+                          inputValue={eyeglassesAxisOdInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesAxisOdInput(value);
+                            handleChange({
+                              target: { value: value, name: 'eyeglassesAxisOd' }
+                            });
+                          }}
+                          name="eyeglassesAxisOd"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesAxisOd'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesAddOd ? item.eyeglassesAddOd : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesAddOd || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesAddOd}
+                          inputValue={eyeglassesAddOdInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesAddOdInput(value);
+                            handleChange({
+                              target: { value: value, name: 'eyeglassesAddOd' }
+                            });
+                          }}
+                          name="eyeglassesAddOd"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesAddOd'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesPrismOd
+                                  ? item.eyeglassesPrismOd
+                                  : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesPrismOd || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesPrismOd}
+                          inputValue={eyeglassesPrismOdInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesPrismOdInput(value);
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesPrismOd'
+                              }
+                            });
+                          }}
+                          name="eyeglassesPrismOd"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesPrismOd'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesVaOd ? item.eyeglassesVaOd : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesVaOd || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesVaOd}
+                          inputValue={eyeglassesVaOdInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesVaOdInput(value);
+                            handleChange({
+                              target: { value: value, name: 'eyeglassesVaOd' }
+                            });
+                          }}
+                          name="eyeglassesVaOd"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesVaOd'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                    </div>
 
-        {form?.prescriptionType === 'contactLensRx' && (
-          <FuseAnimate animation="transition.slideLeftIn" delay={500}>
-            <div className="p-16 sm:p-24 w-full border border-grey-400 ">
-              <h1 className="underline p-10">Contact Lens Rx</h1>
-              <div className="flex flex-row px-60">
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="hidden text-center font-700">Hi</h3>
+                    <div className="flex flex-row">
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <h3 className="mt-20 text-center font-700">OS</h3>
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesSphereOs
+                                  ? item.eyeglassesSphereOs
+                                  : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesSphereOs || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesSphereOs}
+                          inputValue={eyeglassesSphereOsInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesSphereOsInput(value);
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesSphereOs'
+                              }
+                            });
+                          }}
+                          name="eyeglassesSphereOs"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesSphereOs'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesCylinderOs
+                                  ? item.eyeglassesCylinderOs
+                                  : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesCylinderOs || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesCylinderOs}
+                          inputValue={eyeglassesCylinderOsInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesCylinderOsInput(value);
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesCylinderOs'
+                              }
+                            });
+                          }}
+                          name="eyeglassesCylinderOs"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesCylinderOs'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesAxisOs
+                                  ? item.eyeglassesAxisOs
+                                  : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesAxisOs || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesAxisOs}
+                          inputValue={eyeglassesAxisOsInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesAxisOsInput(value);
+                            handleChange({
+                              target: { value: value, name: 'eyeglassesAxisOs' }
+                            });
+                          }}
+                          name="eyeglassesAxisOs"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesAxisOs'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesAddOs ? item.eyeglassesAddOs : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesAddOs || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesAddOs}
+                          inputValue={eyeglassesAddOsInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesAddOsInput(value);
+                            handleChange({
+                              target: { value: value, name: 'eyeglassesAddOs' }
+                            });
+                          }}
+                          name="eyeglassesAddOs"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesAddOs'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesPrismOs
+                                  ? item.eyeglassesPrismOs
+                                  : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesPrismOs || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesPrismOs}
+                          inputValue={eyeglassesPrismOsInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesPrismOsInput(value);
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesPrismOs'
+                              }
+                            });
+                          }}
+                          name="eyeglassesPrismOs"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesPrismOs'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                        <Autocomplete
+                          options={[
+                            ...new Set(
+                              prescription.map((item) =>
+                                item.eyeglassesVaOs ? item.eyeglassesVaOs : ''
+                              )
+                            )
+                          ]}
+                          getOptionLabel={(option) =>
+                            option?.eyeglassesVaOs || option
+                          }
+                          id="prescriptionId"
+                          value={form?.eyeglassesVaOs}
+                          inputValue={eyeglassesVaOsInput}
+                          freeSolo
+                          onInputChange={(e, value) => {
+                            setEyeglassesVaOsInput(value);
+                            handleChange({
+                              target: { value: value, name: 'eyeglassesVaOs' }
+                            });
+                          }}
+                          name="eyeglassesVaOs"
+                          onChange={(_, value) =>
+                            handleChange({
+                              target: {
+                                value: value,
+                                name: 'eyeglassesVaOs'
+                              }
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} margin="normal" />
+                          )}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex mt-10">
+                      <FuseAnimate
+                        animation="transition.slideRightIn"
+                        delay={500}>
+                        <Button
+                          className="whitespace-no-wrap normal-case"
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => {
+                            if (form) {
+                              setOpenAlertOnSave(true);
+                            }
+                          }}>
+                          Save Eyeglasses Rx
+                        </Button>
+                      </FuseAnimate>
+                      <CustomAlert
+                        open={openAlertOnSave}
+                        setOpen={setOpenAlertOnSave}
+                        text1="Save Changes?"
+                        text2="Are you sure?"
+                        customFunction={onSubmit}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col p-8 mt-0 flex-1 h-auto justify-center">
+                    <div className="flex flex-row ">
+                      <div className="p-8 h-auto w-1/4">
+                        <h3 className="text-center font-700">PD</h3>
+                      </div>
+                      <div className="p-8 h-auto w-1/4">
+                        <h3 className="text-center font-700">OU</h3>
+                      </div>
+                      <div className="p-8 h-auto w-1/4">
+                        <h3 className="text-center font-700">OD</h3>
+                      </div>
+                      <div className="p-8 h-auto w-1/4">
+                        <h3 className="text-center font-700">OS</h3>
+                      </div>
+                    </div>
+                    <div className="flex flex-row ">
+                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h3 className="text-center font-700">Distance</h3>
+                      </div>
+                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.pdOuDistance}
+                          onChange={handleChange}
+                          // disabled={disabledState}
+                          name={'pdOuDistance'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.pdOdDistance}
+                          onChange={handleChange}
+                          // disabled={disabledState}
+                          name={'pdOdDistance'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.pdOsDistance}
+                          // disabled={disabledState}
+                          onChange={handleChange}
+                          name={'pdOsDistance'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-row ">
+                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h3 className="text-center font-700">Near</h3>
+                      </div>
+                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.pdOuNear}
+                          onChange={handleChange}
+                          // disabled={disabledState}
+                          name={'pdOuNear'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.pdOdNear}
+                          onChange={handleChange}
+                          // disabled={disabledState}
+                          name={'pdOdNear'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.pdOsNear}
+                          // disabled={disabledState}
+                          onChange={handleChange}
+                          name={'pdOsNear'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">Sphere</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">Cylinder</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">Axis</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">ADD</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">DIA</h3>
-                </div>
-                <div className="p-8 h-auto flex-1">
-                  <h3 className="text-center font-700">BC</h3>
-                </div>
-              </div>
-              <div className="flex flex-row px-60">
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <h3 className="mt-20 text-center font-700">OD</h3>
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensSphereOd
-                            ? item.contactLensSphereOd
-                            : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensSphereOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensSphereOd}
-                    inputValue={contactLensSphereOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensSphereOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensSphereOd' }
-                      });
-                    }}
-                    name="contactLensSphereOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensSphereOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensCylinderOd
-                            ? item.contactLensCylinderOd
-                            : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensCylinderOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensCylinderOd}
-                    inputValue={contactLensCylinderOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensCylinderOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensCylinderOd' }
-                      });
-                    }}
-                    name="contactLensCylinderOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensCylinderOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensAxisOd ? item.contactLensAxisOd : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensAxisOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensAxisOd}
-                    inputValue={contactLensAxisOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensAxisOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensAxisOd' }
-                      });
-                    }}
-                    name="contactLensAxisOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensAxisOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensAddOd ? item.contactLensAddOd : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensAddOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensAddOd}
-                    inputValue={contactLensAddOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensAddOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensAddOd' }
-                      });
-                    }}
-                    name="contactLensAddOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensAddOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensDiaOd ? item.contactLensDiaOd : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensDiaOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensDiaOd}
-                    inputValue={contactLensDiaOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensDiaOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensDiaOd' }
-                      });
-                    }}
-                    name="contactLensDiaOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensDiaOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensBcOd ? item.contactLensBcOd : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensBcOd || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensBcOd}
-                    inputValue={contactLensBcOdInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensBcOdInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensBcOd' }
-                      });
-                    }}
-                    name="contactLensBcOd"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensBcOd'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-              </div>
+              </FuseAnimate>
+            )}
 
-              <div className="flex flex-row px-60">
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <h3 className="mt-20 text-center font-700">OS</h3>
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensSphereOs
-                            ? item.contactLensSphereOs
-                            : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensSphereOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensSphereOs}
-                    inputValue={contactLensSphereOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensSphereOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensSphereOs' }
-                      });
-                    }}
-                    name="contactLensSphereOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensSphereOs'
+            {form?.prescriptionType === 'contactLensRx' && (
+              <FuseAnimate animation="transition.slideLeftIn" delay={500}>
+                <div className="p-16 sm:p-24 w-full border border-black ">
+                  <h1 className="underline p-10">Contact Lens Rx</h1>
+                  <div className="flex flex-row">
+                    <div className="p-8 h-auto flex-1">
+                      <h3 className="hidden text-center font-700">Hi</h3>
+                    </div>
+                    <div className="p-8 h-auto flex-1">
+                      <h3 className="text-center font-700">Sphere</h3>
+                    </div>
+                    <div className="p-8 h-auto flex-1">
+                      <h3 className="text-center font-700">Cylinder</h3>
+                    </div>
+                    <div className="p-8 h-auto flex-1">
+                      <h3 className="text-center font-700">Axis</h3>
+                    </div>
+                    <div className="p-8 h-auto flex-1">
+                      <h3 className="text-center font-700">ADD</h3>
+                    </div>
+                    <div className="p-8 h-auto flex-1">
+                      <h3 className="text-center font-700">DIA</h3>
+                    </div>
+                    <div className="p-8 h-auto flex-1">
+                      <h3 className="text-center font-700">BC</h3>
+                    </div>
+                  </div>
+                  <div className="flex flex-row">
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <h3 className="mt-20 text-center font-700">OD</h3>
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensSphereOd
+                                ? item.contactLensSphereOd
+                                : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensSphereOd || option
                         }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensCylinderOs
-                            ? item.contactLensCylinderOs
-                            : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensCylinderOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensCylinderOs}
-                    inputValue={contactLensCylinderOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensCylinderOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensCylinderOs' }
-                      });
-                    }}
-                    name="contactLensCylinderOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensCylinderOs'
+                        id="prescriptionId"
+                        value={form?.contactLensSphereOd}
+                        inputValue={contactLensSphereOdInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensSphereOdInput(value);
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensSphereOd'
+                            }
+                          });
+                        }}
+                        name="contactLensSphereOd"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensSphereOd'
+                            }
+                          })
                         }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensAxisOs ? item.contactLensAxisOs : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensAxisOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensAxisOs}
-                    inputValue={contactLensAxisOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensAxisOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensAxisOs' }
-                      });
-                    }}
-                    name="contactLensAxisOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensAxisOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensAddOs ? item.contactLensAddOs : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensAddOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensAddOs}
-                    inputValue={contactLensAddOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensAddOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensAddOs' }
-                      });
-                    }}
-                    name="contactLensAddOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensAddOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensDiaOs ? item.contactLensDiaOs : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensDiaOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensDiaOs}
-                    inputValue={contactLensDiaOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensDiaOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensDiaOs' }
-                      });
-                    }}
-                    name="contactLensDiaOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensDiaOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-                <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensBcOs ? item.contactLensBcOs : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensBcOs || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensBcOs}
-                    inputValue={contactLensBcOsInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensBcOsInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensBcOs' }
-                      });
-                    }}
-                    name="contactLensBcOs"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensBcOs'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} type="number" margin="normal" />
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-row p-8 w-2/3 mt-10 px-60 justify-around">
-                <div className=" flex-1">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensCompany ? item.contactLensCompany : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensCompany || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensCompany}
-                    inputValue={contactLensCompanyInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensCompanyInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensCompany' }
-                      });
-                    }}
-                    name="contactLensCompany"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensCompany'
-                        }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Company"
-                        variant="outlined"
-                        margin="normal"
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </div>
-                <div className="pl-8 flex-1">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensModel ? item.contactLensModel : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensModel || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensModel}
-                    inputValue={contactLensModelInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensModelInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensModel' }
-                      });
-                    }}
-                    name="contactLensModel"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensModel'
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensCylinderOd
+                                ? item.contactLensCylinderOd
+                                : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensCylinderOd || option
                         }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        label="Model"
-                        margin="normal"
-                      />
-                    )}
-                  />
-                </div>
-                <div className="pl-8 flex-1">
-                  <Autocomplete
-                    options={[
-                      ...new Set(
-                        prescription.map((item) =>
-                          item.contactLensModality
-                            ? item.contactLensModality
-                            : ''
-                        )
-                      )
-                    ]}
-                    getOptionLabel={(option) =>
-                      option?.contactLensModality || option
-                    }
-                    id="prescriptionId"
-                    value={form?.contactLensModality}
-                    inputValue={contactLensModalityInput}
-                    freeSolo
-                    onInputChange={(e, value) => {
-                      setContactLensModalityInput(value);
-                      handleChange({
-                        target: { value: value, name: 'contactLensModality' }
-                      });
-                    }}
-                    name="contactLensModality"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: {
-                          value: value,
-                          name: 'contactLensModality'
+                        id="prescriptionId"
+                        value={form?.contactLensCylinderOd}
+                        inputValue={contactLensCylinderOdInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensCylinderOdInput(value);
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensCylinderOd'
+                            }
+                          });
+                        }}
+                        name="contactLensCylinderOd"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensCylinderOd'
+                            }
+                          })
                         }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        label="Modality"
-                        margin="normal"
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="flex mt-10 px-60">
-                <Button
-                  className="whitespace-no-wrap normal-case"
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    if (form) {
-                      setOpenAlertOnSave(true);
-                    }
-                  }}>
-                  Save Contact Lens Rx
-                </Button>
-                <CustomAlert
-                  open={openAlertOnSave}
-                  setOpen={setOpenAlertOnSave}
-                  text1="Save Changes?"
-                  text2="Are you sure?"
-                  customFunction={onSubmit}
-                />
-              </div>
-            </div>
-          </FuseAnimate>
-        )}
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensAxisOd
+                                ? item.contactLensAxisOd
+                                : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensAxisOd || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensAxisOd}
+                        inputValue={contactLensAxisOdInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensAxisOdInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensAxisOd' }
+                          });
+                        }}
+                        name="contactLensAxisOd"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensAxisOd'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensAddOd ? item.contactLensAddOd : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensAddOd || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensAddOd}
+                        inputValue={contactLensAddOdInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensAddOdInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensAddOd' }
+                          });
+                        }}
+                        name="contactLensAddOd"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensAddOd'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensDiaOd ? item.contactLensDiaOd : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensDiaOd || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensDiaOd}
+                        inputValue={contactLensDiaOdInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensDiaOdInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensDiaOd' }
+                          });
+                        }}
+                        name="contactLensDiaOd"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensDiaOd'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensBcOd ? item.contactLensBcOd : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensBcOd || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensBcOd}
+                        inputValue={contactLensBcOdInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensBcOdInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensBcOd' }
+                          });
+                        }}
+                        name="contactLensBcOd"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensBcOd'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
 
-        {form?.prescriptionType === 'medicationRx' && (
-          <FuseAnimate animation="transition.slideLeftIn" delay={500}>
-            <div className="p-16 sm:p-24 w-full ">
-              <h1 className="underline p-10">Medication Rx</h1>
-              <TextField
-                className="mt-10 "
-                fullWidth
-                InputProps={{ style: { fontSize: 20 } }}
-                InputLabelProps={{ style: { fontSize: 20 } }}
-                id="outlined-multiline-static"
-                label="Comments"
-                multiline
-                rows={4}
-                value={form?.medicationComments}
-                onChange={handleChange}
-                name={'medicationComments'}
-                variant="outlined"
-              />
-              <div className="flex mt-10 px-60">
-                <Button
-                  className="whitespace-no-wrap normal-case"
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    if (form) {
-                      setOpenAlertOnSave(true);
-                    }
-                  }}>
-                  Save Medication Rx
-                </Button>
-                <CustomAlert
-                  open={openAlertOnSave}
-                  setOpen={setOpenAlertOnSave}
-                  text1="Save Changes?"
-                  text2="Are you sure?"
-                  customFunction={onSubmit}
-                />
-              </div>
-            </div>
-          </FuseAnimate>
-        )}
+                  <div className="flex flex-row">
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <h3 className="mt-20 text-center font-700">OS</h3>
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensSphereOs
+                                ? item.contactLensSphereOs
+                                : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensSphereOs || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensSphereOs}
+                        inputValue={contactLensSphereOsInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensSphereOsInput(value);
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensSphereOs'
+                            }
+                          });
+                        }}
+                        name="contactLensSphereOs"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensSphereOs'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensCylinderOs
+                                ? item.contactLensCylinderOs
+                                : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensCylinderOs || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensCylinderOs}
+                        inputValue={contactLensCylinderOsInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensCylinderOsInput(value);
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensCylinderOs'
+                            }
+                          });
+                        }}
+                        name="contactLensCylinderOs"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensCylinderOs'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensAxisOs
+                                ? item.contactLensAxisOs
+                                : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensAxisOs || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensAxisOs}
+                        inputValue={contactLensAxisOsInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensAxisOsInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensAxisOs' }
+                          });
+                        }}
+                        name="contactLensAxisOs"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensAxisOs'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensAddOs ? item.contactLensAddOs : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensAddOs || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensAddOs}
+                        inputValue={contactLensAddOsInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensAddOsInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensAddOs' }
+                          });
+                        }}
+                        name="contactLensAddOs"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensAddOs'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensDiaOs ? item.contactLensDiaOs : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensDiaOs || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensDiaOs}
+                        inputValue={contactLensDiaOsInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensDiaOsInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensDiaOs' }
+                          });
+                        }}
+                        name="contactLensDiaOs"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensDiaOs'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="p-8 flex-1 h-auto border-black border-solid border-1 justify-between">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensBcOs ? item.contactLensBcOs : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensBcOs || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensBcOs}
+                        inputValue={contactLensBcOsInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensBcOsInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensBcOs' }
+                          });
+                        }}
+                        name="contactLensBcOs"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensBcOs'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="number"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-row p-8 w-2/3 mt-10 justify-around">
+                    <div className=" flex-1">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensCompany
+                                ? item.contactLensCompany
+                                : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensCompany || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensCompany}
+                        inputValue={contactLensCompanyInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensCompanyInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensCompany' }
+                          });
+                        }}
+                        name="contactLensCompany"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensCompany'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Company"
+                            variant="outlined"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="pl-8 flex-1">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensModel ? item.contactLensModel : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensModel || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensModel}
+                        inputValue={contactLensModelInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensModelInput(value);
+                          handleChange({
+                            target: { value: value, name: 'contactLensModel' }
+                          });
+                        }}
+                        name="contactLensModel"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensModel'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="outlined"
+                            label="Model"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="pl-8 flex-1">
+                      <Autocomplete
+                        options={[
+                          ...new Set(
+                            prescription.map((item) =>
+                              item.contactLensModality
+                                ? item.contactLensModality
+                                : ''
+                            )
+                          )
+                        ]}
+                        getOptionLabel={(option) =>
+                          option?.contactLensModality || option
+                        }
+                        id="prescriptionId"
+                        value={form?.contactLensModality}
+                        inputValue={contactLensModalityInput}
+                        freeSolo
+                        onInputChange={(e, value) => {
+                          setContactLensModalityInput(value);
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensModality'
+                            }
+                          });
+                        }}
+                        name="contactLensModality"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: {
+                              value: value,
+                              name: 'contactLensModality'
+                            }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="outlined"
+                            label="Modality"
+                            margin="normal"
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex mt-10">
+                    <Button
+                      className="whitespace-no-wrap normal-case"
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        if (form) {
+                          setOpenAlertOnSave(true);
+                        }
+                      }}>
+                      Save Contact Lens Rx
+                    </Button>
+                    <CustomAlert
+                      open={openAlertOnSave}
+                      setOpen={setOpenAlertOnSave}
+                      text1="Save Changes?"
+                      text2="Are you sure?"
+                      customFunction={onSubmit}
+                    />
+                  </div>
+                </div>
+              </FuseAnimate>
+            )}
+
+            {form?.prescriptionType === 'medicationRx' && (
+              <FuseAnimate animation="transition.slideLeftIn" delay={500}>
+                <div className="p-16 sm:p-24 w-full ">
+                  <h1 className="underline p-10">Medication Rx</h1>
+                  <TextField
+                    className="mt-10 "
+                    fullWidth
+                    InputProps={{ style: { fontSize: 20 } }}
+                    InputLabelProps={{ style: { fontSize: 20 } }}
+                    id="outlined-multiline-static"
+                    label="Comments"
+                    multiline
+                    rows={4}
+                    value={form?.medicationComments}
+                    onChange={handleChange}
+                    name={'medicationComments'}
+                    variant="outlined"
+                  />
+                  <div className="flex mt-10">
+                    <Button
+                      className="whitespace-no-wrap normal-case"
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        if (form) {
+                          setOpenAlertOnSave(true);
+                        }
+                      }}>
+                      Save Medication Rx
+                    </Button>
+                    <CustomAlert
+                      open={openAlertOnSave}
+                      setOpen={setOpenAlertOnSave}
+                      text1="Save Changes?"
+                      text2="Are you sure?"
+                      customFunction={onSubmit}
+                    />
+                  </div>
+                </div>
+              </FuseAnimate>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

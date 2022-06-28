@@ -61,9 +61,7 @@ export default function PrescriptionReceipt(props) {
   const [disabledState, setDisabledState] = useState(false);
   const [insuranceError, setInsuranceError] = useState(false);
 
-  useEffect(() => {
-    console.log(mainForm);
-  }, [mainForm]);
+  useEffect(() => {}, [mainForm]);
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({

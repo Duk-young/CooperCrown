@@ -8,8 +8,6 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import EditIcon from '@material-ui/icons/Edit';
-import Fab from '@material-ui/core/Fab';
-import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
@@ -29,6 +27,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import { reorderCard } from '../../scrumboard/store/actions';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -80,6 +79,7 @@ const CustomerProfile = (props) => {
   const routeParams = useParams();
   const [openPrescriptionReceipt, setOpenPrescriptionReceipt] = useState(false);
   const [selectedPrescription, setSelectedPrescription] = useState({});
+  const [showRooms, setShowRooms] = useState();
   const [disabledState, setDisabledState] = useState(true);
   const dispatch = useDispatch();
 
@@ -96,6 +96,14 @@ const CustomerProfile = (props) => {
     }
     return phoneNumberString;
   }
+
+  const checkLocationName = (no) => {
+    for (var i = 0; i < showRooms.length; i++) {
+      if (showRooms[i].showRoomId === no) {
+        return showRooms[i].locationName;
+      }
+    }
+  };
 
   const onMemosChange = async () => {
     await firestore()
@@ -174,6 +182,13 @@ const CustomerProfile = (props) => {
         resultInsurance.push(doc.data());
       });
       setInsurances(resultInsurance);
+
+      const queryShowroom = await firestore().collection('showRooms').get();
+      let showroomdata = [];
+      queryShowroom.forEach((doc) => {
+        showroomdata.push(doc.data());
+      });
+      setShowRooms(showroomdata);
 
       setisLoading(false);
     };
@@ -624,6 +639,7 @@ const CustomerProfile = (props) => {
                               <StyledTableCell>CYL</StyledTableCell>
                               <StyledTableCell>AXIS</StyledTableCell>
                               <StyledTableCell>ADD</StyledTableCell>
+                              <StyledTableCell>PRISM</StyledTableCell>
                               <StyledTableCell>Options</StyledTableCell>
                             </TableRow>
                           </TableHead>
@@ -641,7 +657,12 @@ const CustomerProfile = (props) => {
                                   }}
                                   key={row.prescriptionId}
                                   style={{ height: 10 }}>
-                                  <StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
                                     {row?.onRx ? (
                                       <LabelImportantIcon color="secondary" />
                                     ) : (
@@ -673,6 +694,12 @@ const CustomerProfile = (props) => {
                                     <div className="flex flex-col">
                                       <div>{row.eyeglassesAddOd}</div>
                                       <div>{row.eyeglassesAddOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    <div className="flex flex-col">
+                                      <div>{row.eyeglassesPrismOd}</div>
+                                      <div>{row.eyeglassesPrismOs}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell>
@@ -710,6 +737,7 @@ const CustomerProfile = (props) => {
                               <StyledTableCell>CYL</StyledTableCell>
                               <StyledTableCell>AXIS</StyledTableCell>
                               <StyledTableCell>ADD</StyledTableCell>
+                              <StyledTableCell>MODEL</StyledTableCell>
                               <StyledTableCell>Options</StyledTableCell>
                             </TableRow>
                           </TableHead>
@@ -756,16 +784,9 @@ const CustomerProfile = (props) => {
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell>
-                                    <IconButton
-                                      disabled={true}
-                                      onClick={() => {
-                                        props.history.push(
-                                          `/apps/e-commerce/customers/profile/${row.customerId}`
-                                        );
-                                      }}
-                                      aria-label="view">
-                                      <PageviewOutlinedIcon fontSize="small" />
-                                    </IconButton>
+                                    {row?.contactLensModel}
+                                  </StyledTableCell>
+                                  <StyledTableCell>
                                     <IconButton
                                       onClick={() => {
                                         props.history.push(
@@ -797,7 +818,6 @@ const CustomerProfile = (props) => {
                             <TableRow style={{ height: 10 }}>
                               <StyledTableCell>Date</StyledTableCell>
                               <StyledTableCell>Medication</StyledTableCell>
-
                               <StyledTableCell>Options</StyledTableCell>
                             </TableRow>
                           </TableHead>
@@ -816,21 +836,9 @@ const CustomerProfile = (props) => {
                                     ).format('MM/DD/YYYY')}
                                   </StyledTableCell>
                                   <StyledTableCell>
-                                    <div className="w-136 truncate">
-                                      {row?.medicationComments}
-                                    </div>
+                                    <div>{row?.medicationComments}</div>
                                   </StyledTableCell>
                                   <StyledTableCell>
-                                    <IconButton
-                                      disabled={true}
-                                      onClick={() => {
-                                        props.history.push(
-                                          `/apps/e-commerce/customers/profile/${row.customerId}`
-                                        );
-                                      }}
-                                      aria-label="view">
-                                      <PageviewOutlinedIcon fontSize="small" />
-                                    </IconButton>
                                     <IconButton
                                       onClick={() => {
                                         props.history.push(
@@ -881,9 +889,9 @@ const CustomerProfile = (props) => {
                         aria-label="customized table">
                         <TableHead>
                           <TableRow style={{ height: 10 }}>
-                            <StyledTableCell>Date</StyledTableCell>
-                            <StyledTableCell>Exam Type</StyledTableCell>
-
+                            <StyledTableCell>DATE</StyledTableCell>
+                            <StyledTableCell>LOCATION</StyledTableCell>
+                            <StyledTableCell>DOCTOR</StyledTableCell>
                             <StyledTableCell>Options</StyledTableCell>
                           </TableRow>
                         </TableHead>
@@ -900,8 +908,9 @@ const CustomerProfile = (props) => {
                                   )}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                  Comprehensive Exam
+                                  {checkLocationName(row?.showRoomId)}
                                 </StyledTableCell>
+                                <StyledTableCell>{row?.doctor}</StyledTableCell>
                                 <StyledTableCell>
                                   <IconButton
                                     onClick={() => {

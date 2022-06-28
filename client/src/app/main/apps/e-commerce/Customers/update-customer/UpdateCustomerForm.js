@@ -107,359 +107,359 @@ function UpdateCustomerForm(props) {
   useEffect(() => {}, [form]);
 
   return (
-    <div className="flex md:flex-row flex-col">
-      <div className="p-10 md:w-3/5 w-full">
-        <div className="py-4 border-1 border-black border-solid rounded-6">
-          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-            <h1 className="font-700" style={{ color: '#f15a25' }}>
-              CUSTOMER INFO
-            </h1>
-          </div>
-          <div className="flex flex-col px-16">
-            <div className="flex flex-row flex-wrap">
-              <div className="flex flex-col w-1/2">
-                <TextField
-                  className="mt-8"
-                  error={error?.firstName}
-                  required
-                  label="First Name"
-                  autoFocus
-                  id="first-name"
-                  name="firstName"
-                  value={form?.firstName}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8"
-                  error={error?.lastName}
-                  required
-                  label="Last Name"
-                  id="last-name"
-                  name="lastName"
-                  value={form?.lastName}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <div className="flex">
-                  <Typography
-                    className="username text-16 whitespace-no-wrap self-center"
-                    color="inherit">
-                    Date of Birth
-                  </Typography>
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <Grid container justifyContent="start">
-                      <KeyboardDatePicker
-                        className="ml-24"
-                        margin="normal"
-                        id="date-picker-dialog"
-                        format="MM/dd/yyyy"
-                        value={form?.dob}
-                        onChange={(date) => {
-                          handleChange({
-                            target: { name: 'dob', value: date }
-                          });
-                        }}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date'
-                        }}
-                      />
-                    </Grid>
-                  </MuiPickersUtilsProvider>
-                </div>
-                <div className="flex mt-10">
-                  <Typography
-                    className={`username text-16 whitespace-no-wrap self-center ${
-                      error?.gender ? 'text-red' : ''
-                    } `}
-                    color="inherit">
-                    Gender
-                  </Typography>
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      className="ml-60"
-                      row
-                      aria-label="gender"
-                      name="gender"
-                      value={form?.gender}
-                      onChange={handleChange}>
-                      <FormControlLabel
-                        value="Female"
-                        control={<Radio />}
-                        label="Female"
-                      />
-                      <FormControlLabel
-                        value="Male"
-                        control={<Radio />}
-                        label="Male"
-                      />
-                      <FormControlLabel
-                        value="other"
-                        control={<Radio />}
-                        label="Other"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </div>
-                <div className="flex">
-                  <Typography
-                    className="username text-16 whitespace-no-wrap self-center"
-                    color="inherit">
-                    Ethnicity
-                  </Typography>
-                  <div className="w-full">
-                    <FormControl className="pl-32 w-full">
-                      <Select
-                        labelId="demo-simple-select-autowidth-label"
-                        id="ethnicityId"
-                        defaultValue={form?.ethnicity}
-                        value={form?.ethnicity}
-                        name="ethnicity"
-                        onChange={handleChange}
-                        error={error?.ethnicity}
-                        autoWidth>
-                        <MenuItem value={'White'}>White</MenuItem>
-                        <MenuItem value={'Black'}>Black</MenuItem>
-                        <MenuItem value={'Asian'}>Asian</MenuItem>
-                        <MenuItem value={'Amerindian'}>Amerindian</MenuItem>
-                        <MenuItem value={'Hawaiian'}>Hawaiian</MenuItem>
-                        <MenuItem value={'Mixed Ethnicity'}>
-                          Mixed Ethnicity
-                        </MenuItem>
-                      </Select>
-                      <FormHelperText>Select from the list</FormHelperText>
+    <div>
+      <div className="flex md:flex-row flex-col">
+        <div className="p-10 md:w-3/5 w-full">
+          <div className="py-4 border-1 border-black border-solid rounded-6">
+            <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+              <h1 className="font-700" style={{ color: '#f15a25' }}>
+                CUSTOMER INFO
+              </h1>
+            </div>
+            <div className="flex flex-col px-16">
+              <div className="flex flex-row flex-wrap">
+                <div className="flex flex-col w-1/2">
+                  <TextField
+                    className="mt-8"
+                    error={error?.firstName}
+                    required
+                    label="First Name"
+                    autoFocus
+                    id="first-name"
+                    name="firstName"
+                    value={form?.firstName}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <TextField
+                    className="mt-8"
+                    error={error?.lastName}
+                    required
+                    label="Last Name"
+                    id="last-name"
+                    name="lastName"
+                    value={form?.lastName}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <div className="flex">
+                    <Typography
+                      className="username text-16 whitespace-no-wrap self-center"
+                      color="inherit">
+                      Date of Birth
+                    </Typography>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <Grid container justifyContent="start">
+                        <KeyboardDatePicker
+                          className="ml-24"
+                          margin="normal"
+                          id="date-picker-dialog"
+                          format="MM/dd/yyyy"
+                          value={form?.dob}
+                          onChange={(date) => {
+                            handleChange({
+                              target: { name: 'dob', value: date }
+                            });
+                          }}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date'
+                          }}
+                        />
+                      </Grid>
+                    </MuiPickersUtilsProvider>
+                  </div>
+                  <div className="flex mt-10">
+                    <Typography
+                      className={`username text-16 whitespace-no-wrap self-center ${
+                        error?.gender ? 'text-red' : ''
+                      } `}
+                      color="inherit">
+                      Gender
+                    </Typography>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        className="ml-60"
+                        row
+                        aria-label="gender"
+                        name="gender"
+                        value={form?.gender}
+                        onChange={handleChange}>
+                        <FormControlLabel
+                          value="Female"
+                          control={<Radio />}
+                          label="Female"
+                        />
+                        <FormControlLabel
+                          value="Male"
+                          control={<Radio />}
+                          label="Male"
+                        />
+                        <FormControlLabel
+                          value="other"
+                          control={<Radio />}
+                          label="Other"
+                        />
+                      </RadioGroup>
                     </FormControl>
                   </div>
+                  <div className="flex">
+                    <Typography
+                      className="username text-16 whitespace-no-wrap self-center"
+                      color="inherit">
+                      Ethnicity
+                    </Typography>
+                    <div className="w-full">
+                      <FormControl className="pl-32 w-full">
+                        <Select
+                          labelId="demo-simple-select-autowidth-label"
+                          id="ethnicityId"
+                          defaultValue={form?.ethnicity}
+                          value={form?.ethnicity}
+                          name="ethnicity"
+                          onChange={handleChange}
+                          error={error?.ethnicity}
+                          autoWidth>
+                          <MenuItem value={'White'}>White</MenuItem>
+                          <MenuItem value={'Black'}>Black</MenuItem>
+                          <MenuItem value={'Asian'}>Asian</MenuItem>
+                          <MenuItem value={'Amerindian'}>Amerindian</MenuItem>
+                          <MenuItem value={'Hawaiian'}>Hawaiian</MenuItem>
+                          <MenuItem value={'Mixed Ethnicity'}>
+                            Mixed Ethnicity
+                          </MenuItem>
+                        </Select>
+                        <FormHelperText>Select from the list</FormHelperText>
+                      </FormControl>
+                    </div>
+                  </div>
+                  <TextField
+                    className="mt-10"
+                    error={form?.code === ''}
+                    required
+                    multiline
+                    maxRows={7}
+                    minRows={7}
+                    label="Other Information"
+                    id="other"
+                    name="other"
+                    value={form?.other}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
                 </div>
-                <TextField
-                  className="mt-10"
-                  error={form?.code === ''}
-                  required
-                  multiline
-                  maxRows={7}
-                  minRows={7}
-                  label="Other Information"
-                  id="other"
-                  name="other"
-                  value={form?.other}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-              </div>
-              <div className="flex flex-col w-1/2 pl-10">
-                <TextField
-                  className="mt-8"
-                  id="outlined-multiline-static"
-                  label="Address"
-                  error={error?.address}
-                  value={form?.address}
-                  onChange={handleChange}
-                  name="address"
-                  variant="outlined"
-                />
-                <TextField
-                  className="mt-8"
-                  required
-                  error={error?.city}
-                  label="City"
-                  id="city"
-                  name="city"
-                  value={form?.city}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <Autocomplete
-                  {...defaultStates}
-                  id="stateId"
-                  value={form?.state}
-                  fullWidth
-                  getOptionSelected={(option, value) => option.name === value}
-                  inputValue={state}
-                  onInputChange={(e, value) => setState(value)}
-                  name="state"
-                  onChange={(_, value) =>
-                    handleChange({
-                      target: { value: value?.name, name: 'state' }
-                    })
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} label="State" margin="normal" />
-                  )}
-                />
-                <TextField
-                  className="mt-8"
-                  required
-                  error={error?.zipCode}
-                  label="ZIP Code"
-                  id="zip-code"
-                  name="zipCode"
-                  value={form?.zipCode}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8"
-                  required
-                  label="Phone 1"
-                  id="phone1"
-                  name="phone1"
-                  error={error?.phone1}
-                  value={form?.phone1}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8"
-                  required
-                  label="Phone 2"
-                  id="phone2"
-                  name="phone2"
-                  value={form?.phone2}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8"
-                  required
-                  label="Email"
-                  id="email"
-                  name="email"
-                  error={error?.email}
-                  value={form?.email}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
+                <div className="flex flex-col w-1/2 pl-10">
+                  <TextField
+                    className="mt-8"
+                    id="outlined-multiline-static"
+                    label="Address"
+                    error={error?.address}
+                    value={form?.address}
+                    onChange={handleChange}
+                    name="address"
+                    variant="outlined"
+                  />
+                  <TextField
+                    className="mt-8"
+                    required
+                    error={error?.city}
+                    label="City"
+                    id="city"
+                    name="city"
+                    value={form?.city}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <Autocomplete
+                    {...defaultStates}
+                    id="stateId"
+                    value={form?.state}
+                    fullWidth
+                    getOptionSelected={(option, value) => option.name === value}
+                    inputValue={state}
+                    onInputChange={(e, value) => setState(value)}
+                    name="state"
+                    onChange={(_, value) =>
+                      handleChange({
+                        target: { value: value?.name, name: 'state' }
+                      })
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} label="State" margin="normal" />
+                    )}
+                  />
+                  <TextField
+                    className="mt-8"
+                    required
+                    error={error?.zipCode}
+                    label="ZIP Code"
+                    id="zip-code"
+                    name="zipCode"
+                    value={form?.zipCode}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <TextField
+                    className="mt-8"
+                    required
+                    label="Phone 1"
+                    id="phone1"
+                    name="phone1"
+                    error={error?.phone1}
+                    value={form?.phone1}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <TextField
+                    className="mt-8"
+                    required
+                    label="Phone 2"
+                    id="phone2"
+                    name="phone2"
+                    value={form?.phone2}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <TextField
+                    className="mt-8"
+                    required
+                    label="Email"
+                    id="email"
+                    name="email"
+                    error={error?.email}
+                    value={form?.email}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div className="flex flex-col mt-10">
-              <FuseAnimate animation="transition.slideRightIn" delay={300}>
-                <Button
-                  className={classes.button}
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    if (!form?.customerId) {
-                      let count = 0;
-                      customers.map((row) => {
-                        if (
-                          row?.firstName === form?.firstName &&
-                          row?.lastName === form?.lastName &&
-                          row?.dob.toDate().getDate() === form?.dob.getDate() &&
-                          row?.dob.toDate().getMonth() ===
-                            form?.dob.getMonth() &&
-                          row?.dob.toDate().getYear() === form?.dob.getYear()
-                        ) {
-                          count++;
-                        }
-                      });
-                      if (count > 0) {
-                        setOpenAlertOnSave(true);
-                        toast.error('Customer already exists!', {
-                          position: 'top-center',
-                          autoClose: 5000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          transition: Zoom
-                        });
-                      } else {
-                        setOpenAlertOnSave(true);
-                      }
-                    } else {
-                      setOpenAlertOnSave(true);
-                    }
-                  }}>
-                  Save Customer
-                </Button>
-              </FuseAnimate>
+        <div className="p-10 md:w-2/5 w-full md:pl-0 h-360">
+          <div className="py-4 border-1 border-black border-solid rounded-6">
+            <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+              <h1 className="font-700" style={{ color: '#f15a25' }}>
+                FAMILY TREE
+              </h1>
+            </div>
+            <div className="flex flex-col p-6">
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  setOpen(true);
+                }}>
+                <AddIcon />
+                ADD FAMILY
+              </Button>
+            </div>
+            <div className="flex flex-col w-full p-4">
+              <AddFamilyDialog
+                handleClose={handleClose}
+                open={open}
+                mainForm={form}
+                setMainForm={setForm}
+                familyMembers={familyMembers}
+                setFamilyMembers={setFamilyMembers}
+              />
+
+              <div className="flex flex-col w-full h-288">
+                <TableContainer
+                  className="flex flex-col w-full"
+                  component={Paper}>
+                  <Table
+                    // className={classes.table}
+                    stickyHeader
+                    aria-label="customized table">
+                    <TableHead>
+                      <TableRow style={{ height: 10 }}>
+                        <StyledTableCell>ID</StyledTableCell>
+                        <StyledTableCell>NAME</StyledTableCell>
+                        <StyledTableCell>BIRTHDAY</StyledTableCell>
+                        <StyledTableCell>GENDER</StyledTableCell>
+                        <StyledTableCell>STATE</StyledTableCell>
+                        <StyledTableCell>PHONE</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {familyMembers
+                        .sort((a, b) => (a.customerId > b.customerId ? -1 : 1))
+                        .map((row, index) => (
+                          <StyledTableRow
+                            key={row.customerId}
+                            style={{ height: 10 }}>
+                            <StyledTableCell>{row?.customerId}</StyledTableCell>
+                            <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
+                            <StyledTableCell>
+                              {moment(row.dob.toDate()).format('MM/DD/YYYY')}
+                            </StyledTableCell>
+                            <StyledTableCell>{row?.gender}</StyledTableCell>
+                            <StyledTableCell>{row?.state}</StyledTableCell>
+                            <StyledTableCell>
+                              {formatPhoneNumber(row?.phone1)}
+                            </StyledTableCell>
+                          </StyledTableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="p-10 md:w-2/5 w-full md:pl-0 h-360">
-        <div className="py-4 border-1 border-black border-solid rounded-6">
-          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-            <h1 className="font-700" style={{ color: '#f15a25' }}>
-              FAMILY TREE
-            </h1>
-          </div>
-          <div className="flex flex-col p-6">
-            <Button
-              className={classes.button}
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                setOpen(true);
-              }}>
-              <AddIcon />
-              ADD FAMILY
-            </Button>
-          </div>
-          <div className="flex flex-col w-full p-4">
-            <AddFamilyDialog
-              handleClose={handleClose}
-              open={open}
-              mainForm={form}
-              setMainForm={setForm}
-              familyMembers={familyMembers}
-              setFamilyMembers={setFamilyMembers}
-            />
-
-            <div className="flex flex-col w-full h-288">
-              <TableContainer
-                className="flex flex-col w-full"
-                component={Paper}>
-                <Table
-                  // className={classes.table}
-                  stickyHeader
-                  aria-label="customized table">
-                  <TableHead>
-                    <TableRow style={{ height: 10 }}>
-                      <StyledTableCell>ID</StyledTableCell>
-                      <StyledTableCell>NAME</StyledTableCell>
-                      <StyledTableCell>BIRTHDAY</StyledTableCell>
-                      <StyledTableCell>GENDER</StyledTableCell>
-                      <StyledTableCell>STATE</StyledTableCell>
-                      <StyledTableCell>PHONE</StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {familyMembers
-                      .sort((a, b) => (a.customerId > b.customerId ? -1 : 1))
-                      .map((row, index) => (
-                        <StyledTableRow
-                          key={row.customerId}
-                          style={{ height: 10 }}>
-                          <StyledTableCell>{row?.customerId}</StyledTableCell>
-                          <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
-                          <StyledTableCell>
-                            {moment(row.dob.toDate()).format('MM/DD/YYYY')}
-                          </StyledTableCell>
-                          <StyledTableCell>{row?.gender}</StyledTableCell>
-                          <StyledTableCell>{row?.state}</StyledTableCell>
-                          <StyledTableCell>
-                            {formatPhoneNumber(row?.phone1)}
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col p-10 mt-40">
+        <FuseAnimate animation="transition.slideRightIn" delay={300}>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              if (!form?.customerId) {
+                let count = 0;
+                customers.map((row) => {
+                  if (
+                    row?.firstName === form?.firstName &&
+                    row?.lastName === form?.lastName &&
+                    row?.dob.toDate().getDate() === form?.dob.getDate() &&
+                    row?.dob.toDate().getMonth() === form?.dob.getMonth() &&
+                    row?.dob.toDate().getYear() === form?.dob.getYear()
+                  ) {
+                    count++;
+                  }
+                });
+                if (count > 0) {
+                  setOpenAlertOnSave(true);
+                  toast.error('Customer already exists!', {
+                    position: 'top-center',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    transition: Zoom
+                  });
+                } else {
+                  setOpenAlertOnSave(true);
+                }
+              } else {
+                setOpenAlertOnSave(true);
+              }
+            }}>
+            Save Customer
+          </Button>
+        </FuseAnimate>
       </div>
     </div>
   );

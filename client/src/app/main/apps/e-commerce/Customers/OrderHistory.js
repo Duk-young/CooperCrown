@@ -76,9 +76,9 @@ const OrderHistory = (props) => {
           stickyHeader>
           <TableHead>
             <TableRow>
-              <StyledTableCell>ID</StyledTableCell>
+              <StyledTableCell>ORDER No</StyledTableCell>
               <StyledTableCell>DATE</StyledTableCell>
-              <StyledTableCell>TYPE</StyledTableCell>
+
               <StyledTableCell>AMOUNT</StyledTableCell>
               <StyledTableCell>INSURANCE</StyledTableCell>
               <StyledTableCell>PAID</StyledTableCell>
@@ -102,91 +102,47 @@ const OrderHistory = (props) => {
                       {' '}
                       {moment(row.orderDate.toDate()).format('MM/DD/YYYY')}
                     </StyledTableCell>
+
                     <StyledTableCell>
-                      {row?.prescriptionType === 'eyeglassesRx' && 'Eyeglasses'}
-                      {row?.prescriptionType === 'contactLensRx' &&
-                        'Contact Lens'}
-                      {row?.prescriptionType === 'medicationRx' && 'Medication'}
+                      {`$ ${(
+                        row?.eyeglasses.reduce((a, b) => +a + +b.lensRate, 0) +
+                        row?.eyeglasses.reduce((a, b) => +a + +b.frameRate, 0) +
+                        row?.medication.reduce((a, b) => +a + +b.price, 0) +
+                        row?.contactLenses.reduce(
+                          (a, b) => +a + +b.contactLensRate,
+                          0
+                        ) +
+                        (row?.additionalCost ? +row?.additionalCost : 0) -
+                        (row?.discount ? +row?.discount : 0)
+                      ).toLocaleString()}`}
                     </StyledTableCell>
                     <StyledTableCell>
-                      {row?.prescriptionType === 'eyeglassesRx' &&
-                        `$ ${(
-                          row?.eyeglasses.reduce(
-                            (a, b) => +a + +b.lensRate,
-                            0
-                          ) +
-                          row?.eyeglasses.reduce(
-                            (a, b) => +a + +b.frameRate,
-                            0
-                          ) +
-                          (row?.additionalCost ? +row?.additionalCost : 0) -
-                          (row?.discount ? +row?.discount : 0)
-                        ).toLocaleString()}`}
-                      {row?.prescriptionType === 'contactLensRx' &&
-                        `$ ${(
-                          row?.eyeglasses.reduce(
-                            (a, b) => +a + +b.contactLensRate,
-                            0
-                          ) +
-                          (row?.additionalCost ? +row?.additionalCost : 0) -
-                          (row?.discount ? +row?.discount : 0)
-                        ).toLocaleString()}`}
-                      {row?.prescriptionType === 'medicationRx' &&
-                        `$ ${(
-                          row?.eyeglasses.reduce((a, b) => +a + +b.price, 0) +
-                          (row?.additionalCost ? +row?.additionalCost : 0) -
-                          (row?.discount ? +row?.discount : 0)
-                        ).toLocaleString()}`}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {row?.insuranceCost ? `$ ${row?.insuranceCost}` : '$0'}
+                      {row?.insuranceCost
+                        ? `$ ${(row?.insuranceCost).toLocaleString()}`
+                        : '$0'}
                     </StyledTableCell>
                     <StyledTableCell>
                       {`$ ${payments
                         .filter(({ orderId }) => orderId === row?.orderId)
-                        .reduce((a, b) => +a + +b.amount, 0)}`}
+                        .reduce((a, b) => +a + +b.amount, 0)
+                        .toLocaleString()}`}
                     </StyledTableCell>
                     <StyledTableCell>
-                      {row?.prescriptionType === 'eyeglassesRx' &&
-                        `$ ${
-                          row?.eyeglasses.reduce(
-                            (a, b) => +a + +b?.frameRate,
-                            0
-                          ) +
-                          row?.eyeglasses.reduce(
-                            (a, b) => +a + +b?.lensRate,
-                            0
-                          ) -
-                          (row?.insuranceCost ? +row?.insuranceCost : 0) +
-                          (row?.additionalCost ? +row?.additionalCost : 0) -
-                          (row?.discount ? +row?.discount : 0) -
-                          payments
-                            .filter(({ orderId }) => orderId === row?.orderId)
-                            .reduce((a, b) => +a + +b.amount, 0)
-                        }`}
-                      {row?.prescriptionType === 'contactLensRx' &&
-                        `$ ${
-                          row?.eyeglasses.reduce(
-                            (a, b) => +a + +b?.contactLensRate,
-                            0
-                          ) -
-                          (row?.insuranceCost ? +row?.insuranceCost : 0) +
-                          (row?.additionalCost ? +row?.additionalCost : 0) -
-                          (row?.discount ? +row?.discount : 0) -
-                          payments
-                            .filter(({ orderId }) => orderId === row?.orderId)
-                            .reduce((a, b) => +a + +b.amount, 0)
-                        }`}
-                      {row?.prescriptionType === 'medicationRx' &&
-                        `$ ${
-                          row?.eyeglasses.reduce((a, b) => +a + +b?.price, 0) -
-                          (row?.insuranceCost ? +row?.insuranceCost : 0) +
-                          (row?.additionalCost ? +row?.additionalCost : 0) -
-                          (row?.discount ? +row?.discount : 0) -
-                          payments
-                            .filter(({ orderId }) => orderId === row?.orderId)
-                            .reduce((a, b) => +a + +b.amount, 0)
-                        }`}
+                      {`$ ${(
+                        row?.eyeglasses.reduce((a, b) => +a + +b.lensRate, 0) +
+                        row?.eyeglasses.reduce((a, b) => +a + +b.frameRate, 0) +
+                        row?.medication.reduce((a, b) => +a + +b.price, 0) +
+                        row?.contactLenses.reduce(
+                          (a, b) => +a + +b.contactLensRate,
+                          0
+                        ) +
+                        (row?.additionalCost ? +row?.additionalCost : 0) -
+                        (row?.discount ? +row?.discount : 0) -
+                        (row?.insuranceCost ? +row?.insuranceCost : 0) -
+                        payments
+                          .filter(({ orderId }) => orderId === row?.orderId)
+                          .reduce((a, b) => +a + +b.amount, 0)
+                      ).toLocaleString()}`}
                     </StyledTableCell>
                     <StyledTableCell>{row?.orderStatus}</StyledTableCell>
                   </StyledTableRow>

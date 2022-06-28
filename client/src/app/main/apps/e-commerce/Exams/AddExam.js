@@ -18,6 +18,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useEffect, useState } from 'react';
 import SaveIcon from '@material-ui/icons/Save';
 import Sketch from './Sketch';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import TextField from '@material-ui/core/TextField';
 import {
   MuiPickersUtilsProvider,
@@ -39,6 +42,7 @@ const AddExam = (props) => {
   const [customer, setCustomer] = useState({});
   const [disabledState, setDisabledState] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
+  const [showRooms, setShowRooms] = useState();
   const dispatch = useDispatch();
   const routeParams = useParams();
 
@@ -67,6 +71,12 @@ const AddExam = (props) => {
         result.dob = result.dob && result.dob.toDate();
         result.id = query.docs[0].id;
         setCustomer(result);
+        const queryShowroom = await firestore().collection('showRooms').get();
+        let showroomdata = [];
+        queryShowroom.forEach((doc) => {
+          showroomdata.push(doc.data());
+        });
+        setShowRooms(showroomdata);
         setisLoading(false);
       };
       fetchCustomer();
@@ -96,6 +106,13 @@ const AddExam = (props) => {
         result.dob = result.dob && result.dob.toDate();
         result.id = query.docs[0].id;
         setCustomer(result);
+        let showroomdata = [];
+        const queryShowroom = await firestore().collection('showRooms').get();
+
+        queryShowroom.forEach((doc) => {
+          showroomdata.push(doc.data());
+        });
+        setShowRooms(showroomdata);
         setisLoading(false);
       };
 
@@ -224,6 +241,36 @@ const AddExam = (props) => {
           <h2>{`Email: ${customer.email}`}</h2>
           <h2>{`DOB: ${customer.dob.toDateString()}`}</h2>
           <h2>{`Sex: ${customer.gender}`}</h2>
+          <div className="flex flex-row justify-around">
+            <FormControl>
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="showRoomId"
+                disabled={disabledState}
+                defaultValue={form?.showRoomId}
+                value={form?.showRoomId}
+                name="showRoomId"
+                onChange={handleChange}
+                autoWidth>
+                {showRooms.map((row) => (
+                  <MenuItem value={row?.showRoomId}>
+                    {row?.locationName}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>Select Showroom from the list</FormHelperText>
+            </FormControl>
+            <TextField
+              size="small"
+              disabled={disabledState}
+              id="outlined-multiline-static"
+              label="Doctor"
+              value={form?.doctor}
+              onChange={handleChange}
+              name={'doctor'}
+              variant="outlined"
+            />
+          </div>
         </div>
         <div className="w-full">
           <TextField

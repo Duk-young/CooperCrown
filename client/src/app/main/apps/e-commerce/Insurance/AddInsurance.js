@@ -27,7 +27,23 @@ import CustomAlert from '../ReusableComponents/CustomAlert';
 import CameraDialog from './CameraDialog';
 
 const useStyles = makeStyles((theme) => ({
-  layoutRoot: {}
+  layoutRoot: {},
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  },
+  buttonBlack: {
+    backgroundColor: '#000000',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#372b25',
+      color: '#fff'
+    }
+  }
 }));
 
 function AddInsurance(props) {
@@ -198,6 +214,30 @@ function AddInsurance(props) {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const queryInsurance = await firestore()
+        .collection('insurances')
+        .where('insuranceId', '==', Number(form.insuranceId))
+        .limit(1)
+        .get();
+
+      let result = queryInsurance.docs[0].data();
+      result.id = queryInsurance.docs[0].id;
+      await firestore().collection('insurances').doc(result.id).delete();
+      dispatch(
+        MessageActions.showMessage({
+          message: 'Insurance deleted successfully'
+        })
+      );
+      props.history.push(
+        `/apps/e-commerce/customers/profile/${form?.customerId}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <FusePageCarded
       header={
@@ -250,11 +290,11 @@ function AddInsurance(props) {
         ) : (
           <FuseAnimate animation="transition.slideRightIn" delay={500}>
             <div className="p-16 sm:p-24 w-full">
-              <h1 className="underline p-10">Insurance Details</h1>
+              <h1 className="underline">Insurance Details</h1>
 
-              <div className="flex flex-row px-60">
-                <div className="w-1/4">
-                  <div className="p-8 h-auto justify-between">
+              <div className="flex flex-row pl-16">
+                <div className="md:w-1/4 w-1/2">
+                  <div className="h-auto justify-between">
                     <Autocomplete
                       options={insurances}
                       getOptionLabel={(option) =>
@@ -321,66 +361,23 @@ function AddInsurance(props) {
                       name={'ssn'}
                       variant="outlined"
                     />
-                    <div className="flex justify-center">
-                      <Button
-                        className="whitespace-no-wrap mt-20 normal-case"
-                        variant="contained"
-                        color="secondary"
-                        onClick={!form ? undefined : onSubmit}>
-                        Save Insurance
-                      </Button>
-                    </div>
+                    <TextField
+                      className="mt-12 "
+                      fullWidth
+                      // disabled={disabledState}
+                      id="outlined-multiline-static"
+                      label="Other"
+                      value={form?.other}
+                      onChange={handleChange}
+                      name={'other'}
+                      variant="outlined"
+                    />
                   </div>
                 </div>
 
                 <div className="p-8 flex-1 ml-10 h-auto justify-between">
                   <div className="flex flex-col overflow-scroll">
-                    <div className="flex flex-row overflow-scroll">
-                      {images.map((img, index) => (
-                        <div className="mb-8 w-224 mr-6 ">
-                          <img
-                            className="w-full shadow-1 rounded-4"
-                            src={img.url}
-                            key={img.name}
-                            alt={''}
-                          />
-                          <div className="flex flex-row justify-between items-center">
-                            <div className="truncate">
-                              <TextField
-                                className="mt-12 "
-                                fullWidth
-                                // disabled={disabledState}
-                                id="outlined-multiline-static"
-                                value={images[index].name.split('.', 1)}
-                                onChange={(e) => {
-                                  let newImages = images;
-                                  newImages[index].name = e.target.value;
-                                  setImages([...newImages]);
-                                }}
-                                name={'ssn'}
-                                variant="outlined"
-                              />
-                            </div>
-
-                            <IconButton
-                              onClick={() => {
-                                let newImages = images;
-                                newImages.splice(index, 1);
-                                setImages([...newImages]);
-                              }}
-                              aria-label="delete"
-                              className={classes.margin}>
-                              <DeleteIcon
-                                style={{ color: red[500] }}
-                                fontSize="small"
-                              />
-                            </IconButton>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex flex-col w-1/5"></div>
-                    <label htmlFor="upload-photo1" style={{ width: 153 }}>
+                    <label htmlFor="upload-photo1">
                       <input
                         style={{ display: 'none' }}
                         id="upload-photo1"
@@ -401,31 +398,35 @@ function AddInsurance(props) {
                           ])
                         }
                       />
-
-                      <Fab
-                        color="secondary"
-                        size="small"
-                        component="span"
-                        aria-label="add"
-                        variant="extended">
-                        <AddIcon /> Upload photo
-                      </Fab>
-
-                      <br />
-                      <br />
+                      <div className="flex flex-col p-12 w-full md:w-1/3">
+                        <Button
+                          className={classes.buttonBlack}
+                          style={{
+                            maxHeight: '100px',
+                            minHeight: '100px'
+                          }}
+                          variant="contained"
+                          component="span"
+                          color="secondary">
+                          <AddIcon /> UPLOAD PHOTO
+                        </Button>
+                      </div>
                     </label>
-                    <div className="flex flex-row w-1/5 h-44">
-                      <Fab
+                    <div className="flex flex-col p-12 pt-0 w-full md:w-1/3">
+                      <Button
                         onClick={() => {
                           setOpenCameraDialog(true);
                         }}
-                        color="secondary"
-                        size="small"
+                        className={classes.buttonBlack}
+                        style={{
+                          maxHeight: '100px',
+                          minHeight: '100px'
+                        }}
+                        variant="contained"
                         component="span"
-                        aria-label="add"
-                        variant="extended">
-                        <CameraAltIcon /> Capture Photo
-                      </Fab>
+                        color="secondary">
+                        <CameraAltIcon /> CAPTURE PHOTO
+                      </Button>
                       <CameraDialog
                         open={openCameraDialog}
                         handleClose={handleCameraDilogClose}
@@ -435,6 +436,81 @@ function AddInsurance(props) {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="flex flex-col w-full overflow-scroll">
+                <div className="flex flex-row w-full overflow-scroll flex-wrap mt-10">
+                  {images.map((img, index) => (
+                    <div className="mb-8 w-224 mr-6 object-contain">
+                      <img
+                        className="w-224 h-128 shadow-1 rounded-4"
+                        src={img.url}
+                        key={img.name}
+                        alt={''}
+                      />
+                      <div className="flex flex-row justify-between items-center">
+                        <div className="truncate">
+                          <TextField
+                            className="mt-12 "
+                            fullWidth
+                            // disabled={disabledState}
+                            id="outlined-multiline-static"
+                            value={images[index].name.split('.', 1)}
+                            onChange={(e) => {
+                              let newImages = images;
+                              newImages[index].name = e.target.value;
+                              setImages([...newImages]);
+                            }}
+                            name={'ssn'}
+                            variant="outlined"
+                          />
+                        </div>
+
+                        <IconButton
+                          onClick={() => {
+                            let newImages = images;
+                            newImages.splice(index, 1);
+                            setImages([...newImages]);
+                          }}
+                          aria-label="delete"
+                          className={classes.margin}>
+                          <DeleteIcon
+                            style={{ color: red[500] }}
+                            fontSize="small"
+                          />
+                        </IconButton>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-col p-12 md:w-1/4">
+                  <Button
+                    className={classes.button}
+                    style={{
+                      maxHeight: '70px',
+                      minHeight: '70px'
+                    }}
+                    variant="contained"
+                    color="secondary"
+                    onClick={!form ? undefined : onSubmit}>
+                    <Icon>save</Icon>
+                    SAVE INSURANCE
+                  </Button>
+                </div>
+                {routeParams?.insuranceId && (
+                  <div className="flex flex-row p-12 md:w-1/3">
+                    <Button
+                      style={{
+                        maxHeight: '70px',
+                        minHeight: '70px',
+                        color: 'red'
+                      }}
+                      variant="outlined"
+                      onClick={handleDelete}>
+                      <Icon>delete</Icon>
+                      DELETE INSURANCE
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </FuseAnimate>

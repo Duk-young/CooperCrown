@@ -52,6 +52,14 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
     backgroundSize: 'cover',
     backgroundColor: theme.palette.primary.dark
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
   }
 }));
 
@@ -302,14 +310,15 @@ function Customers(props) {
                   </div>
                   <div className="pt-10">
                     <Button
+                      className={classes.button}
                       onClick={() =>
                         props.history.push('/apps/e-commerce/create-customer')
                       }
-                      className="whitespace-no-wrap normal-case"
+                      // className="whitespace-no-wrap normal-case"
                       variant="contained"
                       color="secondary">
-                      <span className="hidden sm:flex">Create Customer</span>
-                      <span className="flex sm:hidden">Create</span>
+                      <span className="hidden sm:flex">ADD NEW</span>
+                      <span className="flex sm:hidden">ADD</span>
                     </Button>
                   </div>
                 </div>
