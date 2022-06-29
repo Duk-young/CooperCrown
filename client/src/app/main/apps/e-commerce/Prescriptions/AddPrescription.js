@@ -313,7 +313,7 @@ const AddPrescription = (props) => {
     }
   };
 
-  return !customer || !filteredPrescription || !prescription || !form ? (
+  return !customer || !filteredPrescription || !prescription ? (
     <></>
   ) : (
     <div className="p-10">
