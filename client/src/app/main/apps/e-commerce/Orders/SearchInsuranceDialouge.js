@@ -85,9 +85,10 @@ export default function SearchInsuranceDialouge(props) {
               customerId: customer?.customerId,
               firstName: customer?.firstName,
               lastName: customer?.lastName,
+              insuranceId: selectedInsurances[i]?.insuranceId,
               insuranceCompany: selectedInsurances[i]?.insuranceCompany,
               policyNo: selectedInsurances[i]?.policyNo,
-              insuranceCost: form?.insuranceCost,
+              insuranceCost: Number(form?.insuranceCost),
               claimStatus: 'Unclaimed'
             });
 
@@ -133,7 +134,7 @@ export default function SearchInsuranceDialouge(props) {
               lastName: customer?.lastName,
               insuranceCompany: selectedInsurances[i]?.insuranceCompany,
               policyNo: selectedInsurances[i]?.policyNo,
-              insuranceCost: form?.insuranceCost,
+              insuranceCost: Number(form?.insuranceCost),
               claimStatus: 'Unclaimed'
             });
 

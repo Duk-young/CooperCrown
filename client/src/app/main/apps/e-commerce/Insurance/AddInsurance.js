@@ -8,9 +8,11 @@ import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddIcon from '@material-ui/icons/Add';
-import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import CameraDialog from './CameraDialog';
+import CustomAlert from '../ReusableComponents/CustomAlert';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
@@ -22,8 +24,6 @@ import reducer from '../store/reducers';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import CustomAlert from '../ReusableComponents/CustomAlert';
-import CameraDialog from './CameraDialog';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},

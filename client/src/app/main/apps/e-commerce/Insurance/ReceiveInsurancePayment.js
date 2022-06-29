@@ -1,13 +1,16 @@
 import { firestore } from 'firebase';
+import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import Icon from '@material-ui/core/Icon';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -16,8 +19,17 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles({
+  orangeButton: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 
 export default function ReceiveInsurancePayment(props) {
   const {
@@ -29,6 +41,7 @@ export default function ReceiveInsurancePayment(props) {
     setPayments,
     setEditablePayment
   } = props;
+  const classes = useStyles();
   const { form, handleChange, setForm } = useForm(null);
   const [error, setError] = useState(null);
   const [disabledState, setDisabledState] = useState(false);
@@ -125,92 +138,95 @@ export default function ReceiveInsurancePayment(props) {
       }}
       aria-labelledby="simple-dialog-title"
       open={open}>
-      <AppBar position="static">
-        <Toolbar className="flex w-full">
-          <Typography variant="subtitle1" color="inherit">
-            {form?.insurancePaymentId
-              ? 'Edit Payment Details!'
-              : 'Fill Payment Details!'}
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <div className="flex flex-col p-8">
+        <div className="my-6 border-1 border-black border-solid rounded-6 w-full">
+          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+            <h1 className="font-700" style={{ color: '#f15a25' }}>
+              {form?.insurancePaymentId
+                ? `EDIT PAYMENT (${claim?.firstName} ${claim?.lastName})`
+                : `NEW PAYMENT (${claim?.firstName} ${claim?.lastName})`}
+            </h1>
+          </div>
+          <div className="flex flex-col w-full p-6">
+            <FormControl>
+              <FormHelperText>Select Payment Method...</FormHelperText>
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                defaultValue={form?.paymentMode}
+                value={form?.paymentMode}
+                name="paymentMode"
+                onChange={handleChange}
+                autoWidth>
+                <MenuItem value={'Cash'}>Cash</MenuItem>
+                <MenuItem value={'Credit Card'}>Credit Card</MenuItem>
+                <MenuItem value={'Cheque'}>Cheque</MenuItem>
+                <MenuItem value={'Store Credit / Gift Card'}>
+                  Store Credit / Gift Card
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl className="mt-12" fullWidth variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-amount">
+                Payment Amount
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-amount"
+                value={form?.amount}
+                error={error ? true : false}
+                name={'amount'}
+                onChange={handleChange}
+                startAdornment={
+                  <InputAdornment position="start">$</InputAdornment>
+                }
+                labelWidth={120}
+                type="number"
+              />
+              <FormHelperText id="filled-weight-helper-text">
+                {error}{' '}
+              </FormHelperText>
+            </FormControl>
 
-      <div className="flex flex-col p-10 w-full ">
-        <FormControl className="mt-6" fullWidth variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-amount">
-            Payment Amount
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-amount"
-            value={form?.amount}
-            error={error ? true : false}
-            name={'amount'}
-            onChange={handleChange}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            labelWidth={120}
-            type="number"
-          />
-          <FormHelperText id="filled-weight-helper-text">
-            {error}{' '}
-          </FormHelperText>
-        </FormControl>
+            <TextField
+              className="mt-8 mb-16"
+              id="extraNotes"
+              label="Memo"
+              type="text"
+              name="extraNotes"
+              value={form?.extraNotes}
+              onChange={handleChange}
+              multiline
+              rows={5}
+              variant="outlined"
+              fullWidth
+            />
+            <div className="flex flex-col p-6">
+              <Button
+                className={classes.orangeButton}
+                disabled={disabledState}
+                variant="contained"
+                onClick={() => {
+                  if (form?.amount > 0) {
+                    let balance =
+                      +claim?.insuranceCost -
+                      payments.reduce((a, b) => +a + +b.amount, 0) +
+                      (form?.index >= 0 ? +payments[form?.index].amount : 0);
 
-        <FormControl variant="outlined">
-          <FormHelperText>Select Payment Method...</FormHelperText>
-          <Select
-            labelId="demo-simple-select-autowidth-label"
-            defaultValue={form?.paymentMode}
-            value={form?.paymentMode}
-            name="paymentMode"
-            onChange={handleChange}
-            autoWidth>
-            <MenuItem value={'Cash'}>Cash</MenuItem>
-            <MenuItem value={'Credit Card'}>Credit Card</MenuItem>
-            <MenuItem value={'Cheque'}>Cheque</MenuItem>
-            <MenuItem value={'Store Credit / Gift Card'}>
-              Store Credit / Gift Card
-            </MenuItem>
-          </Select>
-        </FormControl>
-
-        <TextField
-          className="mt-8 mb-16"
-          id="extraNotes"
-          label="Extra Notes"
-          type="text"
-          name="extraNotes"
-          value={form?.extraNotes}
-          onChange={handleChange}
-          multiline
-          rows={5}
-          variant="outlined"
-          fullWidth
-        />
-        <Fab
-          onClick={() => {
-            if (form?.amount > 0) {
-              let balance =
-                +claim?.insuranceCost -
-                payments.reduce((a, b) => +a + +b.amount, 0) +
-                (form?.index >= 0 ? +payments[form?.index].amount : 0);
-
-              if (balance >= form?.amount) {
-                setDisabledState(true);
-                onSubmit();
-              } else {
-                setError('Balance amount is less than the receiving!');
-              }
-            } else {
-              setError('Amount cannot be empty!');
-            }
-          }}
-          variant="extended"
-          disabled={disabledState}
-          color="primary"
-          aria-label="add">
-          <AddIcon />
-          Save Details
-        </Fab>
+                    if (balance >= form?.amount) {
+                      setDisabledState(true);
+                      onSubmit();
+                    } else {
+                      setError('Balance amount is less than the receiving!');
+                    }
+                  } else {
+                    setError('Amount cannot be empty!');
+                  }
+                }}>
+                <Icon>save</Icon>
+                SAVE
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </Dialog>
   );

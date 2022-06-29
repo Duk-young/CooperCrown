@@ -12,6 +12,7 @@ import { firestore } from 'firebase';
 import {
   InstantSearch,
   SearchBox,
+  SortBy,
   HitsPerPage,
   Pagination
 } from 'react-instantsearch-dom';
@@ -51,67 +52,107 @@ const searchClient = algoliasearch(
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
-const CustomHits = connectHits(({ hits, payments }) => {
+const CustomHits = connectHits(({ hits, payments, props }) => {
   return (
     <Table aria-label="customized table">
       <TableHead>
         <TableRow>
           <StyledTableCell>DATE</StyledTableCell>
-          <StyledTableCell>ORDER ID</StyledTableCell>
-          <StyledTableCell>CUSTOMER No.</StyledTableCell>
+          <StyledTableCell>LOCATION</StyledTableCell>
+          <StyledTableCell>ID</StyledTableCell>
+          <StyledTableCell>ORDER No</StyledTableCell>
           <StyledTableCell>NAME</StyledTableCell>
           <StyledTableCell>INSURANCE</StyledTableCell>
           <StyledTableCell>POLICY No.</StyledTableCell>
           <StyledTableCell>CLAIM AMOUNT</StyledTableCell>
           <StyledTableCell>RECEIVED AMOUNT</StyledTableCell>
           <StyledTableCell>STATUS</StyledTableCell>
-          <StyledTableCell>OPTIONS</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {hits
-          .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
-          .map((hit) => (
-            <StyledTableRow key={hit.objectID} hover>
-              <StyledTableCell component="th" scope="row">
-                {moment(hit?.orderDate).format('MM/DD/YYYY')}
-              </StyledTableCell>
-              <StyledTableCell>
-                <Link to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}>
-                  <h3 className="text-black">{hit?.orderId}</h3>
-                </Link>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Link
-                  to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
-                  <h3 className="text-black">{hit?.customerId}</h3>
-                </Link>
-              </StyledTableCell>
-              <StyledTableCell>{`${hit?.firstName} ${hit?.lastName}`}</StyledTableCell>
-              <StyledTableCell>{hit?.insuranceCompany}</StyledTableCell>
-              <StyledTableCell>{hit?.policyNo}</StyledTableCell>
-              <StyledTableCell>{`$ ${hit?.insuranceCost}`}</StyledTableCell>
-              <StyledTableCell>
-                ${' '}
-                {payments
-                  .filter(
-                    ({ insuranceClaimId }) =>
-                      insuranceClaimId === hit?.insuranceClaimId
-                  )
-                  .reduce((a, b) => +a + +b.amount, 0)}
-              </StyledTableCell>
-              <StyledTableCell>{hit?.claimStatus}</StyledTableCell>
-              <StyledTableCell>
-                <Link
-                  to={`/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`}
-                  className="btn btn-primary">
-                  <IconButton aria-label="view">
-                    <PageviewOutlinedIcon fontSize="small" />
-                  </IconButton>
-                </Link>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+        {hits.map((hit) => (
+          <StyledTableRow key={hit.objectID} hover className="cursor-pointer">
+            <StyledTableCell
+              component="th"
+              scope="row"
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>
+              {moment(hit?.orderDate).format('MM/DD/YYYY')}
+            </StyledTableCell>
+            <StyledTableCell
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>
+              {hit?.locationName}
+            </StyledTableCell>
+            <StyledTableCell>
+              <Link to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
+                <h3 className="text-black">{hit?.customerId}</h3>
+              </Link>
+            </StyledTableCell>
+            <StyledTableCell>
+              <Link to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}>
+                <h3 className="text-black">{hit?.orderId}</h3>
+              </Link>
+            </StyledTableCell>
+
+            <StyledTableCell
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>{`${hit?.firstName} ${hit?.lastName}`}</StyledTableCell>
+            <StyledTableCell
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>
+              {hit?.insuranceCompany}
+            </StyledTableCell>
+            <StyledTableCell
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>
+              {hit?.policyNo}
+            </StyledTableCell>
+            <StyledTableCell
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>{`$ ${hit?.insuranceCost}`}</StyledTableCell>
+            <StyledTableCell
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>
+              ${' '}
+              {payments
+                .filter(
+                  ({ insuranceClaimId }) =>
+                    insuranceClaimId === hit?.insuranceClaimId
+                )
+                .reduce((a, b) => +a + +b.amount, 0)}
+            </StyledTableCell>
+            <StyledTableCell
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>
+              {hit?.claimStatus}
+            </StyledTableCell>
+          </StyledTableRow>
+        ))}
       </TableBody>
     </Table>
   );
@@ -169,68 +210,114 @@ function Insurance(props) {
   return (
     <FusePageSimple
       content={
-        <div className="flex w-full ">
-          <TableContainer component={Paper} className="flex flex-col w-full">
-            <InstantSearch
-              searchClient={searchClient}
-              indexName="insuranceClaims">
-              <div className={clsx(classes.header)}>
-                <div className="flex flex-col flex-1">
-                  <div className="flex flex-row mt-12">
-                    <FuseAnimate animation="transition.expandIn" delay={300}>
-                      <PolicyOutlinedIcon className="mt-2 mr-4" />
-                    </FuseAnimate>
-                    <h1>INSURANCE</h1>
-                  </div>
+        <div className="flex flex-col w-full ">
+          <InstantSearch
+            searchClient={searchClient}
+            indexName="insuranceClaims">
+            <div className={clsx(classes.header)}>
+              <div className="flex flex-col flex-1">
+                <div className="flex flex-row mt-12">
+                  <FuseAnimate animation="transition.expandIn" delay={300}>
+                    <PolicyOutlinedIcon className="mt-2 mr-4" />
+                  </FuseAnimate>
+                  <h1>INSURANCE</h1>
                 </div>
-                <div className="flex flex-col flex-1 border-1">
-                  <SearchBox
-                    translations={{
-                      placeholder: 'Search for claims...'
-                    }}
-                    submit={
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 18 18">
-                        <g
-                          fill="none"
-                          fillRule="evenodd"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.67"
-                          transform="translate(1 1)">
-                          <circle cx="7.11" cy="7.11" r="7.11" />
-                          <path d="M16 16l-3.87-3.87" />
-                        </g>
-                      </svg>
-                    }
-                    reset={false}
-                  />
-                </div>
-                <div className="flex flex-col flex-1"></div>
               </div>
-              <CustomHits payments={payments} />
-              <div className="flex flex-row justify-center">
-                <div className="flex flex-1"></div>
-                <div className="flex flex-1 justify-center mt-8">
-                  <Pagination />
-                </div>
-                <div className="flex flex-1 justify-center mt-8">
-                  <HitsPerPage
-                    defaultRefinement={50}
+              <div className="flex flex-col flex-1 border-1">
+                <SearchBox
+                  translations={{
+                    placeholder: 'Search for claims...'
+                  }}
+                  submit={
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 18 18">
+                      <g
+                        fill="none"
+                        fillRule="evenodd"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.67"
+                        transform="translate(1 1)">
+                        <circle cx="7.11" cy="7.11" r="7.11" />
+                        <path d="M16 16l-3.87-3.87" />
+                      </g>
+                    </svg>
+                  }
+                  reset={false}
+                />
+              </div>
+              <div className="flex flex-col md:flex-row flex-1">
+                <div className="w-1/3"></div>
+                <div className="flex flex-col ml-10 md:ml-0 w-full md:w-1/3">
+                  <h5>Sort By:</h5>
+                  <SortBy
+                    className="w-full"
+                    defaultRefinement="insuranceClaims"
                     items={[
-                      { value: 50, label: 'Show 50' },
-                      { value: 100, label: 'Show 100' },
-                      { value: 200, label: 'Show 200' }
+                      { value: 'insuranceClaims', label: 'By Date' },
+                      {
+                        value: 'insuranceClaimsIdAsc',
+                        label: 'ID (Asc)'
+                      },
+                      {
+                        value: 'insuranceClaimsIdAsc',
+                        label: 'ID (Desc)'
+                      },
+                      {
+                        value: 'insuranceClaimsOrderAsc',
+                        label: 'Order ID (Asc)'
+                      },
+                      {
+                        value: 'insuranceClaimsOrderDesc',
+                        label: 'Order ID (Desc)'
+                      },
+                      {
+                        value: 'insuranceClaimAmountAsc',
+                        label: 'Claim Amount (Asc)'
+                      },
+                      {
+                        value: 'insuranceClaimAmountDesc',
+                        label: 'Claim Amount (Desc)'
+                      }
+                      // ,
+                      // {
+                      //   value: 'customersLastExam',
+                      //   label: 'Last Exam (Asc)'
+                      // },
+                      // {
+                      //   value: 'customersLastExamDesc',
+                      //   label: 'Last Exam (Desc)'
+                      // }
                     ]}
                   />
                 </div>
+                <div className="w-1/3"></div>
               </div>
-            </InstantSearch>
-          </TableContainer>
+            </div>
+            <TableContainer component={Paper} className="flex flex-col w-full">
+              <CustomHits payments={payments} props={props} />
+            </TableContainer>
+            <div className="flex flex-row justify-center">
+              <div className="flex flex-1"></div>
+              <div className="flex flex-1 justify-center mt-8">
+                <Pagination />
+              </div>
+              <div className="flex flex-1 justify-center mt-8">
+                <HitsPerPage
+                  defaultRefinement={50}
+                  items={[
+                    { value: 50, label: 'Show 50' },
+                    { value: 100, label: 'Show 100' },
+                    { value: 200, label: 'Show 200' }
+                  ]}
+                />
+              </div>
+            </div>
+          </InstantSearch>
         </div>
       }
       innerScroll
