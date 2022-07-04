@@ -459,7 +459,6 @@ function AddInsurance(props) {
                               newImages[index].name = e.target.value;
                               setImages([...newImages]);
                             }}
-                            name={'ssn'}
                             variant="outlined"
                           />
                         </div>

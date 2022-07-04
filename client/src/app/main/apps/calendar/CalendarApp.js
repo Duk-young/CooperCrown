@@ -7,7 +7,7 @@ import * as Actions from './store/actions';
 import * as ReactDOM from 'react-dom';
 import CalendarHeader from './CalendarHeader';
 import clsx from 'clsx';
-import CustomWeek from './CustomWeek';
+// import CustomWeek from './CustomWeek';
 import EventDialog from './EventDialog';
 import moment from 'moment';
 import NewAppointmentDialog from './NewAppointmentDialog';
@@ -27,7 +27,7 @@ const localizer = momentLocalizer(moment);
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
-const allViews = Object.keys(Views).map((k) => Views[k]);
+// const allViews = Object.keys(Views).map((k) => Views[k]);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -184,9 +184,9 @@ const useStyles = makeStyles((theme) => ({
 
 function CalendarApp(props) {
   const dispatch = useDispatch();
-  const appointments = useSelector(
-    ({ calendarApp }) => calendarApp.events.entities
-  );
+  // const appointments = useSelector(
+  //   ({ calendarApp }) => calendarApp.events.entities
+  // );
 
   const [events, setEvents] = useState([]);
   const classes = useStyles(props);

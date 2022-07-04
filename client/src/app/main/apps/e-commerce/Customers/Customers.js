@@ -241,7 +241,7 @@ function Customers(props) {
                     </MuiPickersUtilsProvider>
                   </div>
                 </div>
-                <div className="flex flex-col w-1/3 pt-32 border-1">
+                <div className="flex flex-col w-1/3 pt-32 border-1 headerSearch">
                   <SearchBox
                     translations={{
                       placeholder: 'Searh for customers...'

@@ -4,7 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import CapturePhotos from '../ReusableComponents/CapturePhotos';
 import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
@@ -22,7 +22,9 @@ export default function CameraDialog(props) {
         file: imageData?.blob
       }
     ]);
-    setShowImgCapture(false);
+    if (showImgCapture) {
+      setShowImgCapture(false);
+    }
     handleClose();
   };
 

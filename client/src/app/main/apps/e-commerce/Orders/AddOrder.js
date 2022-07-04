@@ -5,7 +5,7 @@ import { toast, Zoom } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -76,12 +76,6 @@ const StyledTableRow = withStyles((theme) => ({
     }
   }
 }))(TableRow);
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 700
-  }
-});
 
 function AddOrder(props) {
   const [isLoading, setisLoading] = useState(true);
@@ -155,6 +149,7 @@ function AddOrder(props) {
       queryExisting.forEach((doc) => {
         doc.ref.delete();
       });
+      return;
     }
   };
 
@@ -193,6 +188,7 @@ function AddOrder(props) {
               return null;
             }
           }
+          return null;
         });
       } else {
         toast.error('Please enter Sphere & Cylinder Values...', {
@@ -220,6 +216,7 @@ function AddOrder(props) {
       });
       return null;
     }
+    return null;
   };
 
   const fetchContactLensRate = () => {
@@ -236,6 +233,7 @@ function AddOrder(props) {
             })
           );
         }
+        return null;
       });
     } else {
       toast.error('Please select Contact Lens Type...', {
@@ -263,6 +261,7 @@ function AddOrder(props) {
           : event.target.value
       )
     );
+    return null;
   }, []);
 
   const handleSelectedContactLensChange = useCallback((event) => {
@@ -1682,7 +1681,7 @@ function AddOrder(props) {
                                 if (row?.frameId === selectedFrame?.frameId) {
                                   count++;
                                 }
-                                return;
+                                return null;
                               });
                               if (selectedFrame?.frameQuantity < count) {
                                 toast.error(
@@ -2354,6 +2353,7 @@ function AddOrder(props) {
                                     ) {
                                       count++;
                                     }
+                                    return null;
                                   });
 
                                   if (count > 0) {
@@ -2383,6 +2383,7 @@ function AddOrder(props) {
                                           }
                                         ]);
                                       }
+                                      return null;
                                     });
                                   }
                                 } else {

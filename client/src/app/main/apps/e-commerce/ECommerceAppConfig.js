@@ -155,6 +155,10 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Inventory/Frames/AddFrames'))
     },
     {
+      path: '/apps/inventory/viewframe/:frameId',
+      component: React.lazy(() => import('./Inventory/Frames/ViewFrame'))
+    },
+    {
       path: '/apps/inventory/addother/:otherId',
       component: React.lazy(() => import('./Inventory/Other/AddOther'))
     },

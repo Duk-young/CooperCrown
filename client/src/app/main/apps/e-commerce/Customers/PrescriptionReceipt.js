@@ -15,26 +15,6 @@ import TableRow from '@material-ui/core/TableRow';
 import { Mailer } from 'nodemailer-react';
 // const nodemailer = window.require('nodemailer');
 
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    textAlign: 'center'
-  },
-  body: {
-    fontSize: 14,
-    textAlign: 'center'
-  }
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover
-    }
-  }
-}))(TableRow);
-
 const useStyles = makeStyles({
   avatar: {
     backgroundColor: blue[100],
@@ -46,20 +26,12 @@ const useStyles = makeStyles({
 });
 
 export default function PrescriptionReceipt(props) {
-  const classes = useStyles();
   const {
     mainForm,
     openPrescriptionReceipt,
     handlePrescriptionReceiptClose,
-    customer,
-    eyeglasses,
-    payments
+    customer
   } = props;
-  const dispatch = useDispatch();
-  const [hits, setHits] = useState([]);
-  const [selectedInsurances, setSelectedInsurances] = useState([]);
-  const [disabledState, setDisabledState] = useState(false);
-  const [insuranceError, setInsuranceError] = useState(false);
 
   useEffect(() => {}, [mainForm]);
 
@@ -225,16 +197,6 @@ export default function PrescriptionReceipt(props) {
   //     }
   //   });
   // };
-
-  function formatPhoneNumber(phoneNumberString) {
-    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
-    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-      var intlCode = match[1] ? '+1 ' : '';
-      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-    }
-    return phoneNumberString;
-  }
 
   return (
     <Dialog

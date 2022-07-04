@@ -12,8 +12,7 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import React, { useState } from 'react';
 import { withRouter } from 'react-router';
-import './Themes.css';
-import './Search.css';
+import './Inventory.css';
 
 const useStyles = makeStyles({
   layoutRoot: {}

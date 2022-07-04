@@ -336,6 +336,3 @@ mark {
   --toastify-toast-width: 500px;
 }
 
-.MuiOutlinedInput-root {
-  border-radius: 0;
-}

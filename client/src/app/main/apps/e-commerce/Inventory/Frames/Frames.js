@@ -1,7 +1,3 @@
-// import '../../Customers/Search.css';
-// import '../Themes.css';
-import { connectHits } from 'react-instantsearch-dom';
-import { firestore } from 'firebase';
 import {
   InstantSearch,
   Panel,
@@ -10,20 +6,23 @@ import {
   Pagination,
   connectRefinementList
 } from 'react-instantsearch-dom';
+import { connectHits } from 'react-instantsearch-dom';
+import { firestore } from 'firebase';
 import { Link } from 'react-router-dom';
 import { RefinementList } from 'react-instantsearch-dom';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Edit';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import React, { useState } from 'react';
-import Table from '@material-ui/core/Table';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import EditIcon from '@material-ui/icons/Edit';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import React, { useState } from 'react';
+import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -50,7 +49,7 @@ const CustomHits = connectHits(({ hits }) => {
     setImages(result?.images?.urls);
   };
   return (
-    <div className="flex flex-col ml-8 w-full">
+    <div className="flex flex-col w-full">
       <div className="flex flex-row">
         {images?.length
           ? images?.map((img, index) => (
@@ -74,14 +73,13 @@ const CustomHits = connectHits(({ hits }) => {
           <TableHead>
             <TableRow style={{ height: 10 }}>
               <StyledTableCell>SKU</StyledTableCell>
-              <StyledTableCell>BRANDS</StyledTableCell>
+              <StyledTableCell>BRAND</StyledTableCell>
               <StyledTableCell>MODEL</StyledTableCell>
               <StyledTableCell>COLOUR</StyledTableCell>
               <StyledTableCell>MATERIAL</StyledTableCell>
               <StyledTableCell>SHAPE</StyledTableCell>
               <StyledTableCell>SIZE</StyledTableCell>
-              <StyledTableCell>INITIAL QTY</StyledTableCell>
-              <StyledTableCell>CURRENT QTY</StyledTableCell>
+              <StyledTableCell>QTY</StyledTableCell>
               <StyledTableCell>OPTIONS</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -94,7 +92,10 @@ const CustomHits = connectHits(({ hits }) => {
                   onClick={() => handleClick(hit.frameId)}
                   key={hit.frameId}
                   className="cursor-pointer">
-                  <StyledTableCell component="th" scope="row">
+                  <StyledTableCell
+                    component="th"
+                    scope="row"
+                    style={{ color: 'red' }}>
                     {hit.sku}
                   </StyledTableCell>
                   <StyledTableCell>{hit.brand}</StyledTableCell>
@@ -102,12 +103,22 @@ const CustomHits = connectHits(({ hits }) => {
                   <StyledTableCell>{hit.colour}</StyledTableCell>
                   <StyledTableCell>{hit.material}</StyledTableCell>
                   <StyledTableCell>{hit.shape}</StyledTableCell>
-                  <StyledTableCell>{`  ${hit.sizeX}-${hit.sizeY}-${hit.sizeZ}-${
-                    hit?.sizeZ2 ? hit?.sizeZ2 : ''
-                  }   `}</StyledTableCell>
-                  <StyledTableCell>{hit.initialQuantity}</StyledTableCell>
+                  <StyledTableCell>
+                    <div>
+                      <div>{hit.sizeX}</div>
+                      <div>{hit.sizeY}</div>
+                      <div>{hit.sizeZ}</div>
+                    </div>
+                  </StyledTableCell>
                   <StyledTableCell>{hit.quantity}</StyledTableCell>
                   <StyledTableCell>
+                    <Link
+                      to={`/apps/inventory/viewframe/${hit.frameId}`}
+                      className="btn btn-primary">
+                      <IconButton aria-label="edit">
+                        <PageviewOutlinedIcon fontSize="small" />
+                      </IconButton>
+                    </Link>
                     <Link
                       to={`/apps/inventory/addframes/${hit.frameId}`}
                       className="btn btn-primary">
@@ -147,10 +158,29 @@ const StyledTableRow = withStyles((theme) => ({
 const useStyles = makeStyles({
   table: {
     minWidth: 900
+  },
+  orangeButton: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  },
+  transparentButton: {
+    backgroundColor: '#fff',
+    color: '#000000',
+    boxShadow: 'none',
+    fontSize: '20px',
+    '&:hover': {
+      backgroundColor: '#F5F5F5',
+      color: '#000000'
+    }
   }
 });
 
 const Frames = (props) => {
+  const classes = useStyles();
   const [openFiltersDialog, setOpenFiltersDialog] = useState(false);
   const [searchState, setSearchState] = useState({});
   const handleCloseFiltersDialog = () => {
@@ -162,16 +192,59 @@ const Frames = (props) => {
       <InstantSearch
         searchClient={searchClient}
         indexName="frames"
-        searchState={searchState}>
-        <TableContainer component={Paper} className="flex flex-col w-full ">
+        onSearchStateChange={(state) => {
+          if (
+            openFiltersDialog &&
+            (state.refinementList?.brand ||
+              state.refinementList?.colour ||
+              state.refinementList?.material)
+          ) {
+            setSearchState(state.refinementList);
+          }
+        }}>
+        <TableContainer className="flex flex-col w-full ">
           <div className="flex flex-row">
-            <div className="flex flex-col flex-1"></div>
-            <div className="flex flex-col flex-1 mb-10 border-1">
-              <VirtualRefinementList attribute="brand" defaultRefinement="" />
+            <div className="flex flex-row flex-1 justify-around mt-10">
+              <Button
+                className={classes.transparentButton}
+                style={{ minHeight: '50px', maxHeight: '50px' }}
+                variant="contained"
+                onClick={() => {
+                  setOpenFiltersDialog(true);
+                  setSearchState({});
+                }}>
+                <div className="h-16 w-16 mr-4">
+                  <img src="https://img.icons8.com/ios/50/000000/empty-filter.png" />
+                </div>
+                FILTERS
+              </Button>
+              <Button
+                className={classes.transparentButton}
+                style={{ minHeight: '50px', maxHeight: '50px' }}
+                variant="contained"
+                onClick={() => {
+                  setSearchState({});
+                }}>
+                <div className="h-16 w-16 mr-4">
+                  <img src="https://img.icons8.com/ios/50/000000/clear-filters.png" />
+                </div>
+                CLEAR
+              </Button>
+              <VirtualRefinementList
+                defaultRefinement={searchState?.brand}
+                attribute="brand"
+              />
+              <VirtualRefinementList
+                defaultRefinement={searchState?.colour}
+                attribute="colour"
+              />
+              <VirtualRefinementList
+                defaultRefinement={searchState?.material}
+                attribute="material"
+              />
+            </div>
+            <div className="flex flex-col flex-1 my-10 inventorySearch">
               <SearchBox
-                onChange={(e) => {
-                  setSearchState({ ...searchState, query: e.target.value });
-                }}
                 translations={{
                   placeholder: 'Searh for frames...'
                 }}
@@ -198,24 +271,15 @@ const Frames = (props) => {
               />
             </div>
             <div className="flex flex-col flex-1">
-              <div className="flex w-full justify-around">
+              <div className="flex w-full justify-center mt-16">
                 <Button
-                  className="whitespace-no-wrap normal-case mt-10"
+                  className={classes.orangeButton}
                   variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    setOpenFiltersDialog(true);
-                  }}>
-                  Filters
-                </Button>
-                <Button
-                  className="whitespace-no-wrap normal-case mt-10"
-                  variant="contained"
-                  color="secondary"
                   onClick={() => {
                     props.history.push('/apps/inventory/addframes');
                   }}>
-                  Add Inventory
+                  <Icon>add</Icon>
+                  ADD NEW
                 </Button>
               </div>
             </div>
@@ -234,45 +298,36 @@ const Frames = (props) => {
                 </DialogTitle>
                 <DialogContent>
                   <div className="flex flex-col md:flex-row justify-between">
-                    <InstantSearch
-                      searchClient={searchClient}
-                      indexName="frames"
-                      searchState={searchState}
-                      onSearchStateChange={(e) => {
-                        setSearchState(e);
-                        console.log(searchState);
-                      }}>
-                      <Panel header="Brands">
-                        <RefinementList
-                          attribute="brand"
-                          limit={4}
-                          searchable={true}
-                          translations={{
-                            placeholder: 'Search for brands…'
-                          }}
-                        />
-                      </Panel>
-                      <Panel header="Colour">
-                        <RefinementList
-                          attribute="colour"
-                          limit={4}
-                          searchable={true}
-                          translations={{
-                            placeholder: 'Search for colours…'
-                          }}
-                        />
-                      </Panel>
-                      <Panel header="Material">
-                        <RefinementList
-                          attribute="material"
-                          limit={4}
-                          searchable={true}
-                          translations={{
-                            placeholder: 'Search for materials…'
-                          }}
-                        />
-                      </Panel>
-                    </InstantSearch>
+                    <Panel header="Brands">
+                      <RefinementList
+                        attribute="brand"
+                        limit={4}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for brands…'
+                        }}
+                      />
+                    </Panel>
+                    <Panel header="Colour">
+                      <RefinementList
+                        attribute="colour"
+                        limit={4}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for colours…'
+                        }}
+                      />
+                    </Panel>
+                    <Panel header="Material">
+                      <RefinementList
+                        attribute="material"
+                        limit={4}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for materials…'
+                        }}
+                      />
+                    </Panel>
                   </div>
                 </DialogContent>
               </Dialog>
@@ -281,10 +336,10 @@ const Frames = (props) => {
           <CustomHits props={props} />
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>
-            <div className="flex flex-1 justify-center mt-8">
-              <Pagination />
+            <div className="flex flex-1 justify-center pt-8">
+              <Pagination showLast={true} />
             </div>
-            <div className="flex flex-1 justify-center mt-8">
+            <div className="flex flex-1 justify-center pt-8">
               <HitsPerPage
                 defaultRefinement={50}
                 items={[

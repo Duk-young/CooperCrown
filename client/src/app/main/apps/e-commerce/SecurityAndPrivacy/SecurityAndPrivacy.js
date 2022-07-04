@@ -4,8 +4,6 @@ import FusePageCarded from '@fuse/core/FusePageCarded';
 import { useForm, useDeepCompareEffect } from '@fuse/hooks';
 // import _ from '@lodash';
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
@@ -13,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import * as Actions from '../store/actions';
 import reducer from '../store/reducers';
 
@@ -61,8 +59,6 @@ function SecurityAndPrivacy(props) {
       mainId: auth.user.uid
     })
   );
-
-  const theme = useTheme();
 
   // const classes = useStyles(props);
   const [tabValue, setTabValue] = useState(0);

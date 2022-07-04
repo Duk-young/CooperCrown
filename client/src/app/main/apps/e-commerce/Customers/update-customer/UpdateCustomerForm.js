@@ -7,7 +7,6 @@ import AddFamilyDialog from './AddFamilyDialog';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
-import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -455,6 +454,7 @@ function UpdateCustomerForm(props) {
                 }
               } else {
                 setOpenAlertOnSave(true);
+                return;
               }
             }}>
             Save Customer

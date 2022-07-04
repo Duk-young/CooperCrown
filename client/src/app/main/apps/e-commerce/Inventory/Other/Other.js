@@ -1,6 +1,3 @@
-// import FuseLoading from '@fuse/core/FuseLoading';
-// import '../../Customers/Search.css';
-// import '../../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
 import { InstantSearch, Panel, SearchBox } from 'react-instantsearch-dom';

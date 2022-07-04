@@ -1,5 +1,3 @@
-// import '../../Customers/Search.css';
-// import '../../Customers/Themes.css';
 import {
   InstantSearch,
   Panel,
@@ -17,6 +15,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
+import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import React, { useState } from 'react';
@@ -55,7 +54,10 @@ const Hits = ({ hits }) => {
               .sort((a, b) => (a.lensId < b.lensId ? -1 : 1))
               .map((row) => (
                 <StyledTableRow key={row.lensId}>
-                  <StyledTableCell component="th" scope="row">
+                  <StyledTableCell
+                    component="th"
+                    scope="row"
+                    style={{ color: 'red' }}>
                     {row.sku}
                   </StyledTableCell>
                   <StyledTableCell>{row.material}</StyledTableCell>
@@ -87,7 +89,8 @@ const StyledTableCell = withStyles((theme) => ({
     color: theme.palette.common.white
   },
   body: {
-    fontSize: 14
+    fontSize: 14,
+    padding: 0
   }
 }))(TableCell);
 
@@ -102,10 +105,29 @@ const StyledTableRow = withStyles((theme) => ({
 const useStyles = makeStyles({
   table: {
     minWidth: 700
+  },
+  orangeButton: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  },
+  transparentButton: {
+    backgroundColor: '#fff',
+    color: '#000000',
+    boxShadow: 'none',
+    fontSize: '20px',
+    '&:hover': {
+      backgroundColor: '#F5F5F5',
+      color: '#000000'
+    }
   }
 });
 
 const Lens = (props) => {
+  const classes = useStyles();
   const [openFiltersDialog, setOpenFiltersDialog] = useState(false);
   const [searchState, setSearchState] = useState({});
 
@@ -130,7 +152,32 @@ const Lens = (props) => {
         }}>
         <TableContainer component={Paper} className="flex flex-col w-full ">
           <div className="flex flex-row">
-            <div className="flex flex-col flex-1">
+            <div className="flex flex-row flex-1 justify-around mt-10">
+              <Button
+                className={classes.transparentButton}
+                style={{ minHeight: '50px', maxHeight: '50px' }}
+                variant="contained"
+                onClick={() => {
+                  setOpenFiltersDialog(true);
+                  setSearchState({});
+                }}>
+                <div className="h-16 w-16 mr-4">
+                  <img src="https://img.icons8.com/ios/50/000000/empty-filter.png" />
+                </div>
+                FILTERS
+              </Button>
+              <Button
+                className={classes.transparentButton}
+                style={{ minHeight: '50px', maxHeight: '50px' }}
+                variant="contained"
+                onClick={() => {
+                  setSearchState({});
+                }}>
+                <div className="h-16 w-16 mr-4">
+                  <img src="https://img.icons8.com/ios/50/000000/clear-filters.png" />
+                </div>
+                CLEAR
+              </Button>
               <VirtualRefinementList
                 defaultRefinement={searchState?.sphere}
                 attribute="sphere"
@@ -144,7 +191,7 @@ const Lens = (props) => {
                 attribute="material"
               />
             </div>
-            <div className="flex flex-col flex-1 mb-10 ">
+            <div className="flex flex-col flex-1 my-10 ">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for lens...'
@@ -172,25 +219,15 @@ const Lens = (props) => {
               />
             </div>
             <div className="flex flex-col flex-1">
-              <div className="flex w-full justify-end">
+              <div className="flex w-full justify-center mt-16">
                 <Button
-                  className="whitespace-no-wrap normal-case mt-10"
+                  className={classes.orangeButton}
                   variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    setOpenFiltersDialog(true);
-                    setSearchState({});
-                  }}>
-                  Filters
-                </Button>
-                <Button
-                  className="whitespace-no-wrap normal-case mb-24 ml-24"
-                  variant="contained"
-                  color="secondary"
                   onClick={() => {
                     props.history.push('/apps/inventory/addlens');
                   }}>
-                  Add Inventory
+                  <Icon>add</Icon>
+                  ADD NEW
                 </Button>
               </div>
             </div>

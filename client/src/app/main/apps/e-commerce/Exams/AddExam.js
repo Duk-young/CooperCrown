@@ -118,7 +118,7 @@ const AddExam = (props) => {
 
       fetchExam();
     }
-  }, []);
+  });
   if (isLoading) return <FuseLoading />;
 
   const onSubmit = async () => {
