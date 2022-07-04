@@ -1,50 +1,17 @@
 import { firestore } from 'firebase';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import Button from '@material-ui/core/Button';
-import CustomAlert from '../../ReusableComponents/CustomAlert';
 import FormControl from '@material-ui/core/FormControl';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import React, { useState, useEffect } from 'react';
-import RemoveIcon from '@material-ui/icons/Remove';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import moment from 'moment';
-
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    textAlign: 'center'
-  },
-  body: {
-    fontSize: 14,
-    padding: 0,
-    textAlign: 'center'
-  }
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover
-    }
-  }
-}))(TableRow);
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -82,22 +49,9 @@ const useStyles = makeStyles((theme) => ({
 function ViewOther(props) {
   const classes = useStyles();
   const [images, setImages] = useState([]);
-  const [errors, setErrors] = useState({});
-  const dispatch = useDispatch();
   const { form, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
   const routeParams = useParams();
-  const [addStock, setAddStock] = useState({});
-  const [openAddStockAlert, setOpenAddStockAlert] = useState(false);
-  const [subtractStock, setSubtractStock] = useState({});
-  const [subtractedStocks, setSubtractedStocks] = useState([]);
-  const [openSubtractStockAlert, setOpenSubtractStockAlert] = useState(false);
-  const [restocks, setRestocks] = useState([]);
-  const [editRestockState, setEditRestockState] = useState(false);
-  const [openUpdateRestockAlert, setOpenUpdateRestockAlert] = useState(false);
-  const [editSubtractStockState, seteditSubtractStockState] = useState(false);
-  const [openUpdateSubtractStockAlert, setOpenUpdateSubtractStockAlert] =
-    useState(false);
 
   useEffect(() => {
     const id = routeParams.otherId;
