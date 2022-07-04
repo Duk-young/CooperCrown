@@ -162,7 +162,10 @@ const ECommerceAppConfig = {
       path: '/apps/inventory/addother/:otherId',
       component: React.lazy(() => import('./Inventory/Other/AddOther'))
     },
-
+    {
+      path: '/apps/inventory/viewother/:otherId',
+      component: React.lazy(() => import('./Inventory/Other/ViewOther'))
+    },
     {
       path: '/apps/inventory/addother',
       component: React.lazy(() => import('./Inventory/Other/AddOther'))
@@ -182,6 +185,10 @@ const ECommerceAppConfig = {
     {
       path: '/apps/inventory/addlens/:lensId',
       component: React.lazy(() => import('./Inventory/Lens/AddLens'))
+    },
+    {
+      path: '/apps/inventory/viewlens/:lensId',
+      component: React.lazy(() => import('./Inventory/Lens/ViewLens'))
     },
     {
       path: '/apps/inventory/addlens',

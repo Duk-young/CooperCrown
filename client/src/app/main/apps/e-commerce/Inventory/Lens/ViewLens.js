@@ -1,24 +1,13 @@
 import { firestore } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import BarcodeDialog from '../BarcodeDialog';
-import Button from '@material-ui/core/Button';
-import CustomAlert from '../../ReusableComponents/CustomAlert';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
@@ -57,24 +46,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function AddLens(props) {
+function ViewLens(props) {
   const classes = useStyles();
-  const [images, setImages] = useState([]);
-  const dispatch = useDispatch();
-  const { form, handleChange, setForm } = useForm(null);
+  const { form, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
   const routeParams = useParams();
-  const [openAlert, setOpenAlert] = useState(false);
-  const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
-  const [openBarcodeDialog, setOpenBarcodeDialog] = useState(false);
-
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
-  };
-
-  const handleBarCodeDilogClose = () => {
-    setOpenBarcodeDialog(false);
-  };
 
   useEffect(() => {
     const id = routeParams.lensId;
@@ -104,66 +80,6 @@ function AddLens(props) {
     return <FuseLoading />;
   }
 
-  const onSubmit = async () => {
-    if (form.lensId) {
-      setisLoading(true);
-
-      try {
-        const ref = firestore().collection('lens').doc(form?.id);
-
-        let data = {
-          ...form,
-          initialQuantity: form.quantity
-        };
-
-        await ref.set(data);
-
-        dispatch(
-          MessageActions.showMessage({
-            message: 'Lens updated successfully'
-          })
-        );
-        props.history.push('/apps/inventory');
-      } catch (error) {
-        console.log(error);
-      }
-
-      setisLoading(false);
-    } else {
-      setisLoading(true);
-
-      try {
-        const dbConfig = (
-          await firestore().collection('dbConfig').doc('dbConfig').get()
-        ).data();
-
-        await firestore()
-          .collection('lens')
-          .add({
-            ...form,
-            date: firestore.Timestamp.fromDate(new Date()),
-            lensId: dbConfig?.lensId + 1,
-            initialQuantity: form.quantity
-          });
-
-        await firestore()
-          .collection('dbConfig')
-          .doc('dbConfig')
-          .update({ lensId: dbConfig?.lensId + 1 });
-        dispatch(
-          MessageActions.showMessage({
-            message: 'Lens saved successfully'
-          })
-        );
-
-        props.history.push('/apps/inventory');
-      } catch (error) {
-        console.log(error);
-      }
-      setisLoading(false);
-    }
-  };
-
   return (
     <FusePageCarded
       classes={{
@@ -173,14 +89,7 @@ function AddLens(props) {
         <div>
           <IconButton
             onClick={() => {
-              if (
-                Object.keys(form).length === 0 &&
-                form.constructor === Object
-              ) {
-                props.history.push(`/apps/inventory`);
-              } else {
-                setOpenAlert(true);
-              }
+              props.history.push(`/apps/inventory`);
             }}>
             <Icon className="text-20">arrow_back</Icon>
             <span className="mx-4 text-12">Inventory</span>
@@ -191,39 +100,6 @@ function AddLens(props) {
             <Typography className="text-16 pl-16 sm:text-20 truncate">
               Lens Detail
             </Typography>
-          </div>
-
-          <div>
-            <Dialog
-              fullWidth
-              maxWidth="sm"
-              open={openAlert}
-              onClose={handleCloseAlert}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description">
-              <DialogTitle id="alert-dialog-title">
-                <h2>Discard Changes?</h2>
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  All the Changes will be lost. Are you sure?
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloseAlert} color="secondary">
-                  Disagree
-                </Button>
-                <Button
-                  onClick={() => {
-                    handleCloseAlert();
-                    props.history.push(`/apps/inventory`);
-                  }}
-                  color="secondary"
-                  autoFocus>
-                  Agree
-                </Button>
-              </DialogActions>
-            </Dialog>
           </div>
         </div>
       }
@@ -251,32 +127,6 @@ function AddLens(props) {
                             id="standard-adornment-password"
                             value={form?.sku ? form?.sku : ''}
                             name="sku"
-                            onChange={handleChange}
-                            endAdornment={
-                              <InputAdornment position="end">
-                                <BarcodeDialog
-                                  open={openBarcodeDialog}
-                                  handleClose={handleBarCodeDilogClose}
-                                  form={form}
-                                  setForm={setForm}
-                                  setImages={setImages}
-                                  images={images}
-                                  inventory={'lens'}
-                                />
-                                <IconButton
-                                  onClick={() => {
-                                    setOpenBarcodeDialog(true);
-                                  }}
-                                  key="barcode"
-                                  aria-label="Barcode"
-                                  color="inherit">
-                                  <img
-                                    src="https://img.icons8.com/ios/30/000000/barcode-scanner.png"
-                                    alt=""
-                                  />
-                                </IconButton>
-                              </InputAdornment>
-                            }
                           />
                         </FormControl>
                       </div>
@@ -287,7 +137,6 @@ function AddLens(props) {
                         id="lensType"
                         name="lensType"
                         value={form?.lensType}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -298,7 +147,6 @@ function AddLens(props) {
                         id="brand"
                         name="brand"
                         value={form?.brand}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -309,7 +157,6 @@ function AddLens(props) {
                         id="model"
                         name="model"
                         value={form?.model}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -320,7 +167,6 @@ function AddLens(props) {
                         id="colour"
                         name="colour"
                         value={form?.colour}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -332,7 +178,6 @@ function AddLens(props) {
                         id="material"
                         name="material"
                         value={form?.material}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -343,7 +188,6 @@ function AddLens(props) {
                         id="sphere"
                         name="sphere"
                         value={form?.sphere}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -354,7 +198,6 @@ function AddLens(props) {
                         id="cylinder"
                         name="cylinder"
                         value={form?.cylinder}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -366,7 +209,6 @@ function AddLens(props) {
                         id="quantity"
                         name="quantity"
                         value={form?.quantity}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -389,7 +231,6 @@ function AddLens(props) {
                         id="madeIn"
                         name="madeIn"
                         value={form?.madeIn}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -400,7 +241,6 @@ function AddLens(props) {
                         id="supplier"
                         name="supplier"
                         value={form?.supplier}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -414,7 +254,6 @@ function AddLens(props) {
                         id="supplierAddress"
                         name="supplierAddress"
                         value={form?.supplierAddress}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -425,7 +264,6 @@ function AddLens(props) {
                         id="supplierContact"
                         name="supplierContact"
                         value={form?.supplierContact}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -440,7 +278,6 @@ function AddLens(props) {
                         id="supplierNotes"
                         name="supplierNotes"
                         value={form?.supplierNotes}
-                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                       />
@@ -463,7 +300,6 @@ function AddLens(props) {
                     id="ws"
                     name="ws"
                     value={form?.ws}
-                    onChange={handleChange}
                     variant="outlined"
                     type="number"
                   />
@@ -472,33 +308,11 @@ function AddLens(props) {
                     id="retailRate"
                     name="retailRate"
                     value={form?.retailRate}
-                    onChange={handleChange}
                     variant="outlined"
                     type="number"
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="flex flex-col p-12">
-              <CustomAlert
-                open={openAlertOnSave}
-                setOpen={setOpenAlertOnSave}
-                text1="Save Changes?"
-                text2="Are you sure?"
-                customFunction={onSubmit}
-              />
-              <Button
-                className={classes.orangeButton}
-                variant="contained"
-                style={{ minHeight: '60px', maxHeight: '60px' }}
-                onClick={() => {
-                  if (form) {
-                    setOpenAlertOnSave(true);
-                  }
-                }}>
-                <Icon>save</Icon> SAVE
-              </Button>
             </div>
           </div>
         )
@@ -507,4 +321,4 @@ function AddLens(props) {
   );
 }
 
-export default AddLens;
+export default ViewLens;

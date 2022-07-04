@@ -4,7 +4,8 @@ import {
   SearchBox,
   HitsPerPage,
   Pagination,
-  connectRefinementList
+  connectRefinementList,
+  ClearRefinements
 } from 'react-instantsearch-dom';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
@@ -92,11 +93,8 @@ const CustomHits = connectHits(({ hits }) => {
                   onClick={() => handleClick(hit.frameId)}
                   key={hit.frameId}
                   className="cursor-pointer">
-                  <StyledTableCell
-                    component="th"
-                    scope="row"
-                    style={{ color: 'red' }}>
-                    {hit.sku}
+                  <StyledTableCell style={{ color: 'red' }}>
+                    {`\xa0\xa0\xa0 ${hit.sku}`}
                   </StyledTableCell>
                   <StyledTableCell>{hit.brand}</StyledTableCell>
                   <StyledTableCell>{hit.productDescription}</StyledTableCell>
@@ -211,7 +209,6 @@ const Frames = (props) => {
                 variant="contained"
                 onClick={() => {
                   setOpenFiltersDialog(true);
-                  setSearchState({});
                 }}>
                 <div className="h-16 w-16 mr-4">
                   <img
@@ -294,7 +291,7 @@ const Frames = (props) => {
             <div>
               <Dialog
                 fullWidth
-                maxWidth="sm"
+                maxWidth="lg"
                 open={openFiltersDialog}
                 onClose={handleCloseFiltersDialog}
                 aria-labelledby="alert-dialog-title"
@@ -303,37 +300,53 @@ const Frames = (props) => {
                   <h2>Select Filters!</h2>
                 </DialogTitle>
                 <DialogContent>
-                  <div className="flex flex-col md:flex-row justify-between">
-                    <Panel header="Brands">
-                      <RefinementList
-                        attribute="brand"
-                        limit={4}
-                        searchable={true}
-                        translations={{
-                          placeholder: 'Search for brands…'
-                        }}
-                      />
-                    </Panel>
-                    <Panel header="Colour">
-                      <RefinementList
-                        attribute="colour"
-                        limit={4}
-                        searchable={true}
-                        translations={{
-                          placeholder: 'Search for colours…'
-                        }}
-                      />
-                    </Panel>
-                    <Panel header="Material">
-                      <RefinementList
-                        attribute="material"
-                        limit={4}
-                        searchable={true}
-                        translations={{
-                          placeholder: 'Search for materials…'
-                        }}
-                      />
-                    </Panel>
+                  <div className="flex flex-row justify-between refinementList">
+                    <div className="p-6">
+                      <Panel header="Brands">
+                        <RefinementList
+                          attribute="brand"
+                          limit={8}
+                          showMore={true}
+                          searchable={true}
+                          translations={{
+                            placeholder: 'Search for brands…'
+                          }}
+                        />
+                      </Panel>
+                    </div>
+                    <div className="p-6">
+                      <Panel header="Colour">
+                        <RefinementList
+                          attribute="colour"
+                          limit={8}
+                          showMore={true}
+                          searchable={true}
+                          translations={{
+                            placeholder: 'Search for colours…'
+                          }}
+                        />
+                      </Panel>
+                    </div>
+                    <div className="p-6">
+                      <Panel header="Material">
+                        <RefinementList
+                          attribute="material"
+                          limit={8}
+                          showMore={true}
+                          searchable={true}
+                          translations={{
+                            placeholder: 'Search for materials…'
+                          }}
+                        />
+                      </Panel>
+                    </div>
+                  </div>
+                  <div className="flex flex-row p-12 justify-center">
+                    <ClearRefinements
+                      translations={{
+                        reset: 'CLEAR ALL'
+                      }}
+                    />
                   </div>
                 </DialogContent>
               </Dialog>

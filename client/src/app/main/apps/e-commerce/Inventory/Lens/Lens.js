@@ -2,11 +2,14 @@ import {
   InstantSearch,
   Panel,
   SearchBox,
+  HitsPerPage,
+  Pagination,
   connectRefinementList,
-  RefinementList,
-  connectHits
+  ClearRefinements
 } from 'react-instantsearch-dom';
+import { connectHits } from 'react-instantsearch-dom';
 import { Link } from 'react-router-dom';
+import { RefinementList } from 'react-instantsearch-dom';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
@@ -17,7 +20,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -32,42 +35,52 @@ const searchClient = algoliasearch(
 );
 const VirtualRefinementList = connectRefinementList(() => null);
 
-const Hits = ({ hits }) => {
+const CustomHits = connectHits(({ hits }) => {
   const classes = useStyles();
 
   return (
-    <div className="flex flex-col ml-8 w-full">
+    <div className="flex flex-col w-full">
       <div className="flex flex-row w-full">
-        <Table className={classes.table} aria-label="customized table">
+        <Table
+          className={classes.table}
+          stickyHeader
+          aria-label="customized table">
           <TableHead>
-            <TableRow>
+            <TableRow style={{ height: 10 }}>
               <StyledTableCell>SKU</StyledTableCell>
-              <StyledTableCell>LENS MATERIAL</StyledTableCell>
+              <StyledTableCell>BRAND</StyledTableCell>
+              <StyledTableCell>LENS TYPE</StyledTableCell>
+              <StyledTableCell>LENS COLOR</StyledTableCell>
               <StyledTableCell>SPHERE</StyledTableCell>
               <StyledTableCell>CYLINDER</StyledTableCell>
-              <StyledTableCell>QUANTITY</StyledTableCell>
+              <StyledTableCell>QTY</StyledTableCell>
               <StyledTableCell>OPTIONS</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {hits
               .sort((a, b) => (a.lensId < b.lensId ? -1 : 1))
-              .map((row) => (
-                <StyledTableRow key={row.lensId}>
-                  <StyledTableCell
-                    component="th"
-                    scope="row"
-                    style={{ color: 'red' }}>
-                    {row.sku}
+              .map((hit) => (
+                <StyledTableRow
+                  style={{ height: 10 }}
+                  key={hit.lensId}
+                  className="cursor-pointer">
+                  <StyledTableCell style={{ color: 'red' }}>
+                    {`\xa0\xa0\xa0 ${hit.sku}`}
                   </StyledTableCell>
-                  <StyledTableCell>{row.material}</StyledTableCell>
-                  <StyledTableCell>{row.sphere}</StyledTableCell>
-                  <StyledTableCell>{row.cylinder}</StyledTableCell>
-                  <StyledTableCell>{row.quantity}</StyledTableCell>
+                  <StyledTableCell>{hit.brand}</StyledTableCell>
+                  <StyledTableCell>{hit.lensType}</StyledTableCell>
+                  <StyledTableCell>{hit.colour}</StyledTableCell>
+                  <StyledTableCell>{hit.sphere}</StyledTableCell>
+                  <StyledTableCell>{hit.cylinder}</StyledTableCell>
+                  <StyledTableCell>{hit.quantity}</StyledTableCell>
                   <StyledTableCell>
-                    <Link
-                      to={`/apps/inventory/addlens/${row.lensId}`}
-                      className="btn btn-primary">
+                    <Link to={`/apps/inventory/viewlens/${hit.lensId}`}>
+                      <IconButton aria-label="edit">
+                        <PageviewOutlinedIcon fontSize="small" />
+                      </IconButton>
+                    </Link>
+                    <Link to={`/apps/inventory/addlens/${hit.lensId}`}>
                       <IconButton aria-label="edit">
                         <EditIcon fontSize="small" />
                       </IconButton>
@@ -80,8 +93,7 @@ const Hits = ({ hits }) => {
       </div>
     </div>
   );
-};
-const CustomHits = connectHits(Hits);
+});
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -104,7 +116,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 700
+    minWidth: 900
   },
   orangeButton: {
     backgroundColor: '#f15a25',
@@ -130,27 +142,26 @@ const Lens = (props) => {
   const classes = useStyles();
   const [openFiltersDialog, setOpenFiltersDialog] = useState(false);
   const [searchState, setSearchState] = useState({});
-
   const handleCloseFiltersDialog = () => {
     setOpenFiltersDialog(false);
   };
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full ">
       <InstantSearch
         searchClient={searchClient}
         indexName="lens"
         onSearchStateChange={(state) => {
           if (
             openFiltersDialog &&
-            (state.refinementList?.sphere ||
-              state.refinementList?.cylinder ||
-              state.refinementList?.material)
+            (state.refinementList?.brand ||
+              state.refinementList?.colour ||
+              state.refinementList?.lensType)
           ) {
             setSearchState(state.refinementList);
           }
         }}>
-        <TableContainer component={Paper} className="flex flex-col w-full ">
+        <TableContainer className="flex flex-col w-full ">
           <div className="flex flex-row">
             <div className="flex flex-row flex-1 justify-around mt-10">
               <Button
@@ -159,7 +170,6 @@ const Lens = (props) => {
                 variant="contained"
                 onClick={() => {
                   setOpenFiltersDialog(true);
-                  setSearchState({});
                 }}>
                 <div className="h-16 w-16 mr-4">
                   <img
@@ -185,19 +195,19 @@ const Lens = (props) => {
                 CLEAR
               </Button>
               <VirtualRefinementList
-                defaultRefinement={searchState?.sphere}
-                attribute="sphere"
+                defaultRefinement={searchState?.brand}
+                attribute="brand"
               />
               <VirtualRefinementList
-                defaultRefinement={searchState?.cylinder}
-                attribute="cylinder"
+                defaultRefinement={searchState?.colour}
+                attribute="colour"
               />
               <VirtualRefinementList
-                defaultRefinement={searchState?.material}
-                attribute="material"
+                defaultRefinement={searchState?.lensType}
+                attribute="lensType"
               />
             </div>
-            <div className="flex flex-col flex-1 my-10 ">
+            <div className="flex flex-col flex-1 my-10 inventorySearch">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for lens...'
@@ -238,64 +248,87 @@ const Lens = (props) => {
               </div>
             </div>
           </div>
-
           <div>
-            <Dialog
-              fullWidth
-              maxWidth="md"
-              open={openFiltersDialog}
-              onClose={handleCloseFiltersDialog}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description">
-              <DialogTitle id="alert-dialog-title">
-                <h2>Select Filters!</h2>
-              </DialogTitle>
-              <DialogContent>
-                <div className="flex flex-col md:flex-row justify-between">
-                  <div className="p-8 mb-10 border-1 border-black border-dashed">
-                    <Panel header="Sphere">
-                      <RefinementList
-                        reset={false}
-                        attribute="sphere"
-                        limit={4}
-                        searchable={true}
-                        translations={{
-                          placeholder: 'Search for sphere…'
-                        }}
-                      />
-                    </Panel>
+            <div>
+              <Dialog
+                fullWidth
+                maxWidth="lg"
+                open={openFiltersDialog}
+                onClose={handleCloseFiltersDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">
+                  <h2>Select Filters!</h2>
+                </DialogTitle>
+                <DialogContent>
+                  <div className="flex flex-row justify-between refinementList">
+                    <div className="p-6">
+                      <Panel header="Brands">
+                        <RefinementList
+                          attribute="brand"
+                          limit={2}
+                          showMore={true}
+                          searchable={true}
+                          translations={{
+                            placeholder: 'Search for brands…'
+                          }}
+                        />
+                      </Panel>
+                    </div>
+                    <div className="p-6">
+                      <Panel header="Color">
+                        <RefinementList
+                          attribute="colour"
+                          limit={8}
+                          showMore={true}
+                          searchable={true}
+                          translations={{
+                            placeholder: 'Search for colours…'
+                          }}
+                        />
+                      </Panel>
+                    </div>
+                    <div className="p-6">
+                      <Panel header="Lens Type">
+                        <RefinementList
+                          attribute="lensType"
+                          limit={8}
+                          showMore={true}
+                          searchable={true}
+                          translations={{
+                            placeholder: 'Search for lens type…'
+                          }}
+                        />
+                      </Panel>
+                    </div>
                   </div>
-                  <div className="p-8 mb-10 rounded-12 shadow-5">
-                    <Panel header="Cylinder">
-                      <RefinementList
-                        attribute="cylinder"
-                        limit={4}
-                        searchable={true}
-                        translations={{
-                          placeholder: 'Search for cylinder…'
-                        }}
-                      />
-                    </Panel>
+                  <div className="flex flex-row p-12 justify-center">
+                    <ClearRefinements
+                      translations={{
+                        reset: 'CLEAR ALL'
+                      }}
+                    />
                   </div>
-                  <div className="p-8 mb-10 rounded-12 shadow-5">
-                    <Panel header="Material">
-                      <RefinementList
-                        attribute="material"
-                        limit={4}
-                        searchable={true}
-                        translations={{
-                          placeholder: 'Search for materials…'
-                        }}
-                      />
-                    </Panel>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
-
-          <div className="flex flex-row">
-            <CustomHits />
+          <CustomHits props={props} />
+          <div className="flex flex-row justify-center">
+            <div className="flex flex-1"></div>
+            <div className="flex flex-1 justify-center pt-8">
+              <Pagination showLast={true} />
+            </div>
+            <div className="flex flex-1 justify-center pt-8">
+              <HitsPerPage
+                defaultRefinement={50}
+                items={[
+                  { value: 50, label: 'Show 50' },
+                  { value: 100, label: 'Show 100' },
+                  { value: 200, label: 'Show 200' }
+                ]}
+              />
+            </div>
           </div>
         </TableContainer>
       </InstantSearch>

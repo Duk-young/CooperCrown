@@ -60,7 +60,7 @@ h2 {
 .ais-Stats,
 .ais-ToggleRefinement {
   color: #21243d;
-  font-size: 0.75rem;
+  font-size: 1.4rem;
 }
 
 /* Highlighting */
@@ -202,6 +202,20 @@ h2 {
   border-radius: 10px;
   border-style: solid;
   border-color: black;
+  color: black;
+  font-family: inherit;
+  min-height: 54px;
+  outline: none;
+  padding-left: 56px;
+  width: 100%;
+  background-color: white;
+}
+
+.refinementList .ais-SearchBox-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-bottom: 1px solid black;
   color: black;
   font-family: inherit;
   min-height: 54px;
@@ -367,7 +381,7 @@ h2 {
 
 .ais-ClearRefinements,
 .ais-ClearRefinements-button {
-  color: rgba(33, 36, 61, 0.7);
+  color: #f15a25
 }
 
 .ais-ClearRefinements-button--disabled {
