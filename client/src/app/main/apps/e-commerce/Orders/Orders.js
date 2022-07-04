@@ -36,8 +36,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import { createTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
 
 // const color = '#fff';
 
@@ -198,7 +196,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 function Orders(props) {
   const classes = useStyles(props);
-  const { form, handleChange, setForm } = useForm(null);
+  const { form, handleChange } = useForm(null);
   return (
     <FusePageSimple
       content={

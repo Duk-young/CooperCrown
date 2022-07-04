@@ -31,6 +31,7 @@ function Prescriptions(props) {
       };
       fetchDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeParams.customerId]);
 
   return (

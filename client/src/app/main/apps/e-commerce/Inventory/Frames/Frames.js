@@ -214,7 +214,10 @@ const Frames = (props) => {
                   setSearchState({});
                 }}>
                 <div className="h-16 w-16 mr-4">
-                  <img src="https://img.icons8.com/ios/50/000000/empty-filter.png" />
+                  <img
+                    src="https://img.icons8.com/ios/50/000000/empty-filter.png"
+                    alt=""
+                  />
                 </div>
                 FILTERS
               </Button>
@@ -226,7 +229,10 @@ const Frames = (props) => {
                   setSearchState({});
                 }}>
                 <div className="h-16 w-16 mr-4">
-                  <img src="https://img.icons8.com/ios/50/000000/clear-filters.png" />
+                  <img
+                    src="https://img.icons8.com/ios/50/000000/clear-filters.png"
+                    alt=""
+                  />
                 </div>
                 CLEAR
               </Button>

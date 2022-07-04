@@ -1,7 +1,5 @@
 import './Themes.css';
-import { blue } from '@material-ui/core/colors';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
+
 import { useReactToPrint } from 'react-to-print';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,21 +7,9 @@ import Fab from '@material-ui/core/Fab';
 import logo from './images/logo.JPG';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useState, useRef, useEffect } from 'react';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import React, { useRef, useEffect } from 'react';
 import { Mailer } from 'nodemailer-react';
 // const nodemailer = window.require('nodemailer');
-
-const useStyles = makeStyles({
-  avatar: {
-    backgroundColor: blue[100],
-    color: blue[600]
-  },
-  table: {
-    minWidth: 700
-  }
-});
 
 export default function PrescriptionReceipt(props) {
   const {
@@ -290,9 +276,7 @@ export default function PrescriptionReceipt(props) {
                     <div className="p-16 sm:p-24 w-full">
                       <h1 className="underline p-10">Eyeglasses Rx</h1>
                       <div className="flex flex-row px-20">
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700"></h3>
-                        </div>
+                        <div className="p-8 h-auto flex-1"></div>
                         <div className="p-8 h-auto flex-1">
                           <h3 className="text-center font-700">Sphere</h3>
                         </div>
@@ -390,9 +374,7 @@ export default function PrescriptionReceipt(props) {
                     <div className="p-16 sm:p-24 w-full">
                       <h1 className="underline p-10">Contact Lens Rx</h1>
                       <div className="flex flex-row px-20">
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700"></h3>
-                        </div>
+                        <div className="p-8 h-auto flex-1"></div>
                         <div className="p-8 h-auto flex-1">
                           <h3 className="text-center font-700">Sphere</h3>
                         </div>

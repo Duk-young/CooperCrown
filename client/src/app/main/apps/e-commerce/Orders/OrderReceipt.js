@@ -1,59 +1,14 @@
-import { blue } from '@material-ui/core/colors';
+import '../Customers/Themes.css';
 import { firestore } from 'firebase';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import AddIcon from '@material-ui/icons/Add';
-import AddToQueueIcon from '@material-ui/icons/AddToQueue';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { useReactToPrint } from 'react-to-print';
+import AddIcon from '@material-ui/icons/Add';
+import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
-import Paper from '@material-ui/core/Paper';
+import logo from './images/logo.JPG';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import logo from './images/logo.JPG';
-import '../Customers/Themes.css';
-
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    textAlign: 'center'
-  },
-  body: {
-    fontSize: 14,
-    textAlign: 'center'
-  }
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover
-    }
-  }
-}))(TableRow);
-
-const useStyles = makeStyles({
-  avatar: {
-    backgroundColor: blue[100],
-    color: blue[600]
-  },
-  table: {
-    minWidth: 700
-  }
-});
 
 export default function OrderReceipt(props) {
-  const classes = useStyles();
   const {
     mainForm,
     openOrderReceipt,
@@ -64,11 +19,7 @@ export default function OrderReceipt(props) {
     medication,
     payments
   } = props;
-  const dispatch = useDispatch();
-  const [hits, setHits] = useState([]);
-  const [selectedInsurances, setSelectedInsurances] = useState([]);
-  const [disabledState, setDisabledState] = useState(false);
-  const [insuranceError, setInsuranceError] = useState(false);
+
   const [templates, setTemplates] = useState([]);
 
   const componentRef = useRef();

@@ -118,7 +118,8 @@ const AddExam = (props) => {
 
       fetchExam();
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   if (isLoading) return <FuseLoading />;
 
   const onSubmit = async () => {

@@ -9,7 +9,6 @@ import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import CustomAlert from '../ReusableComponents/CustomAlert';
 import EditIcon from '@material-ui/icons/Edit';
-import Fab from '@material-ui/core/Fab';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
@@ -76,7 +75,7 @@ const InsuranceClaim = (props) => {
   const [beingDeletedPayment, setBeingDeletedPayment] = useState(false);
   const [openStatusChangeAlert, setOpenStatusChangeAlert] = useState(false);
   const [openPaymentDeleteAlert, setOpenPaymentDeleteAlert] = useState(false);
-  const { form, handleChange, setForm } = useForm({});
+  const { form, setForm } = useForm({});
   const [editablePayment, setEditablePayment] = useState({});
   const [insuranceCompany, setInsuranceCompany] = useState({});
   const [images, setImages] = useState([]);
@@ -171,6 +170,7 @@ const InsuranceClaim = (props) => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (isLoading) return <FuseLoading />;
   return !form || !payments ? (
@@ -226,7 +226,7 @@ const InsuranceClaim = (props) => {
                 }
                 variant="contained"
                 onClick={() => {
-                  if (form?.claimStatus != 'Unclaimed') {
+                  if (form?.claimStatus !== 'Unclaimed') {
                     setBeingChangedStatus('Unclaimed');
                     setOpenStatusChangeAlert(true);
                   }
@@ -244,7 +244,7 @@ const InsuranceClaim = (props) => {
                 color={form?.claimStatus === 'Claimed' ? 'secondary' : 'custom'}
                 variant="contained"
                 onClick={() => {
-                  if (form?.claimStatus != 'Claimed') {
+                  if (form?.claimStatus !== 'Claimed') {
                     setBeingChangedStatus('Claimed');
                     setOpenStatusChangeAlert(true);
                   }
@@ -266,7 +266,7 @@ const InsuranceClaim = (props) => {
                 }
                 variant="contained"
                 onClick={() => {
-                  if (form?.claimStatus != 'Received Partial') {
+                  if (form?.claimStatus !== 'Received Partial') {
                     setBeingChangedStatus('Received Partial');
                     setOpenStatusChangeAlert(true);
                   }
@@ -286,7 +286,7 @@ const InsuranceClaim = (props) => {
                 }
                 variant="contained"
                 onClick={() => {
-                  if (form?.claimStatus != 'Received Full') {
+                  if (form?.claimStatus !== 'Received Full') {
                     setBeingChangedStatus('Received Full');
                     setOpenStatusChangeAlert(true);
                   }
@@ -306,7 +306,7 @@ const InsuranceClaim = (props) => {
                 }
                 variant="contained"
                 onClick={() => {
-                  if (form?.claimStatus != 'Disputed') {
+                  if (form?.claimStatus !== 'Disputed') {
                     setBeingChangedStatus('Disputed');
                     setOpenStatusChangeAlert(true);
                   }

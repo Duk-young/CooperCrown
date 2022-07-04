@@ -169,6 +169,7 @@ export default function NewAppointmentDialog() {
       setError('');
     };
     fetchDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newAppointmentDialog.props.open]);
 
   const onSubmit = async () => {
@@ -474,6 +475,7 @@ export default function NewAppointmentDialog() {
                       ) {
                         count++;
                       }
+                      return null;
                     });
                   if (count > 0) {
                     setError('Selected Slot is unavailable!');

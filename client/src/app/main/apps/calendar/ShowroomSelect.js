@@ -11,7 +11,7 @@ export default function ShowroomSelect({ setEvents }) {
   const appointments = useSelector(
     ({ calendarApp }) => calendarApp.events.entities
   );
-  const { form, handleChange } = useForm(null);
+  const { handleChange } = useForm(null);
   const [showRooms, setShowRooms] = useState([]);
 
   useEffect(() => {
@@ -25,6 +25,7 @@ export default function ShowroomSelect({ setEvents }) {
       setShowRooms(showroomdata);
     };
     fetchDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return !showRooms ? (

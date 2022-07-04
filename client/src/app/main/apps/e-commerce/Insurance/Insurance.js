@@ -18,13 +18,10 @@ import {
 } from 'react-instantsearch-dom';
 import { Link, useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import FuseLoading from '@fuse/core/FuseLoading';
-import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import Paper from '@material-ui/core/Paper';
 import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
@@ -190,7 +187,7 @@ function Insurance(props) {
 
   useEffect(() => {
     setisLoading(true);
-    const id = routeParams.insuranceClaimId;
+
     const fetchData = async () => {
       const queryPayments = await firestore()
         .collection('insurancePayments')

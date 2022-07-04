@@ -1,6 +1,6 @@
 import { firestore, storage } from 'firebase';
 import { red } from '@material-ui/core/colors';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
@@ -21,8 +21,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
@@ -113,6 +111,7 @@ function AddFrames(props) {
       setForm({});
       setisLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) {
@@ -312,7 +311,10 @@ function AddFrames(props) {
                                   key="barcode"
                                   aria-label="Barcode"
                                   color="inherit">
-                                  <img src="https://img.icons8.com/ios/30/000000/barcode-scanner.png" />
+                                  <img
+                                    src="https://img.icons8.com/ios/30/000000/barcode-scanner.png"
+                                    alt=""
+                                  />
                                 </IconButton>
                               </InputAdornment>
                             }

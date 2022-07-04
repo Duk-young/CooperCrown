@@ -1,21 +1,21 @@
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import Input from '@material-ui/core/Input';
-import Paper from '@material-ui/core/Paper';
-import { ThemeProvider } from '@material-ui/core/styles';
+// import Input from '@material-ui/core/Input';
+// import Paper from '@material-ui/core/Paper';
+// import { ThemeProvider } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import * as Actions from '../store/actions';
+// import * as Actions from '../store/actions';
 
 function ContactsHeader(props) {
-  const dispatch = useDispatch();
-  const searchText = useSelector(
-    ({ eCommerceApp }) => eCommerceApp.products.searchText
-  );
-  const mainTheme = useSelector(({ fuse }) => fuse.settings.mainTheme);
+  // const dispatch = useDispatch();
+  // const searchText = useSelector(
+  //   ({ eCommerceApp }) => eCommerceApp.products.searchText
+  // );
+  // const mainTheme = useSelector(({ fuse }) => fuse.settings.mainTheme);
 
   return (
     <div className="flex flex-1 w-full items-center justify-between">

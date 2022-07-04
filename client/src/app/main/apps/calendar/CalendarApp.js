@@ -2,7 +2,7 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as Actions from './store/actions';
 import * as ReactDOM from 'react-dom';
 import CalendarHeader from './CalendarHeader';
@@ -15,6 +15,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import reducer from './store/reducers';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import withReducer from 'app/store/withReducer';
+import { useSelector } from 'react-redux';
 
 moment.locale('ko', {
   week: {
@@ -176,17 +177,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// let eyeglassesRx = filteredPrescription.filter(
-//   (word) => word.prescriptionType === 'eyeglassesRx'
-// );
-
-// setPrescription(eyeglassesRx);
-
 function CalendarApp(props) {
   const dispatch = useDispatch();
-  // const appointments = useSelector(
-  //   ({ calendarApp }) => calendarApp.events.entities
-  // );
+  const appointments = useSelector(
+    ({ calendarApp }) => calendarApp.events.entities
+  );
 
   const [events, setEvents] = useState([]);
   const classes = useStyles(props);

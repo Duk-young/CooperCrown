@@ -210,6 +210,7 @@ function AddOther(props) {
                   handleClose={handleBarCodeDilogClose}
                   form={form}
                   setForm={setForm}
+                  images={images}
                   setImages={setImages}
                   inventory={'lens'}
                 />
@@ -220,7 +221,10 @@ function AddOther(props) {
                   key="barcode"
                   aria-label="Barcode"
                   color="inherit">
-                  <img src="https://img.icons8.com/ios/30/000000/barcode-scanner.png" />
+                  <img
+                    src="https://img.icons8.com/ios/30/000000/barcode-scanner.png"
+                    alt=""
+                  />
                 </IconButton>
               </div>
 

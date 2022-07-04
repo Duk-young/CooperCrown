@@ -2,7 +2,7 @@ import { firestore } from 'firebase';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -92,12 +92,12 @@ const AddPrescription = (props) => {
   const [contactLensAddOdInput, setContactLensAddOdInput] = useState(
     form?.contactLensAddOd
   );
-  const [contactLensDiaOdInput, setContactLensDiaOdInput] = useState(
-    form?.contactLensDiaOd
-  );
-  const [contactLensBcOdInput, setContactLensBcOdInput] = useState(
-    form?.contactLensBcOd
-  );
+  // const [contactLensDiaOdInput, setContactLensDiaOdInput] = useState(
+  //   form?.contactLensDiaOd
+  // );
+  // const [contactLensBcOdInput, setContactLensBcOdInput] = useState(
+  //   form?.contactLensBcOd
+  // );
 
   const [contactLensSphereOsInput, setContactLensSphereOsInput] = useState(
     form?.contactLensSphereOs
@@ -111,12 +111,12 @@ const AddPrescription = (props) => {
   const [contactLensAddOsInput, setContactLensAddOsInput] = useState(
     form?.contactLensAddOs
   );
-  const [contactLensDiaOsInput, setContactLensDiaOsInput] = useState(
-    form?.contactLensDiaOs
-  );
-  const [contactLensBcOsInput, setContactLensBcOsInput] = useState(
-    form?.contactLensBcOs
-  );
+  // const [contactLensDiaOsInput, setContactLensDiaOsInput] = useState(
+  //   form?.contactLensDiaOs
+  // );
+  // const [contactLensBcOsInput, setContactLensBcOsInput] = useState(
+  //   form?.contactLensBcOs
+  // );
 
   const [contactLensCompanyInput, setContactLensCompanyInput] = useState(
     form?.contactLensCompany
@@ -128,15 +128,15 @@ const AddPrescription = (props) => {
     form?.contactLensModality
   );
 
-  function formatPhoneNumber(phoneNumberString) {
-    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
-    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-      var intlCode = match[1] ? '+1 ' : '';
-      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-    }
-    return phoneNumberString;
-  }
+  // function formatPhoneNumber(phoneNumberString) {
+  //   var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+  //   var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+  //   if (match) {
+  //     var intlCode = match[1] ? '+1 ' : '';
+  //     return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+  //   }
+  //   return phoneNumberString;
+  // }
 
   useEffect(() => {
     if (routeParams.prescriptionId) {
@@ -216,6 +216,7 @@ const AddPrescription = (props) => {
       };
       fetchDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeParams.customerId]);
   if (isLoading) return <FuseLoading />;
 
@@ -394,9 +395,7 @@ const AddPrescription = (props) => {
                   <div className="flex flex-row w-full">
                     <div className="flex flex-col w-full">
                       <div className="flex flex-row">
-                        <div className=" h-auto w-44">
-                          <h3 className="text-center font-700"></h3>
-                        </div>
+                        <div className=" h-auto w-44"></div>
                         <div className=" h-auto flex-1">
                           <h3 className="text-center font-700">Sphere</h3>
                         </div>

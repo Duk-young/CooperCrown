@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import ImageCapture from 'react-image-data-capture';
 
@@ -11,8 +11,8 @@ const CapturePhotos = (props) => {
     { video: { facingMode: environment } } - Back Camera
     { video: { facingMode: "user" } } - Front Camera
   */
-  const [imgSrc, setImgSrc] = useState(null);
-  const [imgFile, setImgFile] = useState(null);
+
+  let imgFile = null;
 
   const onError = useCallback((error) => {
     console.log(error);

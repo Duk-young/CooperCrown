@@ -3,11 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import AddIcon from '@material-ui/icons/Add';
-import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Icon from '@material-ui/core/Icon';
@@ -49,6 +46,7 @@ export default function ReceiveInsurancePayment(props) {
 
   useEffect(() => {
     setForm(editablePayment);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editablePayment]);
 
   const onSubmit = async () => {

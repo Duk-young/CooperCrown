@@ -39,6 +39,7 @@ export default function ReceiveOrderPayment(props) {
 
   useEffect(() => {
     setForm(editablePayment);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editablePayment]);
 
   const onSubmit = async () => {

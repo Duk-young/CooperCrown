@@ -378,6 +378,7 @@ function AddOrder(props) {
           ) {
             count++;
           }
+          return null;
         });
 
         if (count > 0) {
@@ -661,6 +662,7 @@ function AddOrder(props) {
       };
       fetchDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (isLoading) return <FuseLoading />;
 

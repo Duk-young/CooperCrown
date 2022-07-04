@@ -4,8 +4,6 @@ import '../Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
 import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
-import { useDispatch } from 'react-redux';
-import { useForm } from '@fuse/hooks';
 import { withStyles } from '@material-ui/core/styles';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import algoliasearch from 'algoliasearch/lite';
@@ -15,7 +13,7 @@ import Dialog from '@material-ui/core/Dialog';
 import moment from 'moment';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -119,9 +117,6 @@ export default function AddFamilyDialog(props) {
     familyMembers,
     setFamilyMembers
   } = props;
-  const { form, handleChange, setForm } = useForm(null);
-  const [error, setError] = useState(null);
-  const dispatch = useDispatch();
 
   return (
     <Dialog

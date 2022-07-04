@@ -1,4 +1,3 @@
-import { Fab } from '@material-ui/core';
 import { firestore, storage } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
@@ -110,6 +109,7 @@ function AddInsurance(props) {
       };
       fetchInsurance();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeParams.customerId]);
   if (isLoading) return <FuseLoading />;
 

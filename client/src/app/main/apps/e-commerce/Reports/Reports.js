@@ -15,7 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { firestore } from 'firebase';
 
 function AnalyticsDashboardApp() {
-  const { form, handleChange, setForm } = useForm({});
+  const { form, handleChange } = useForm({});
   const [orders, setOrders] = useState([]);
   const [labels, setLabels] = useState([]);
   const [datasets, setDatasets] = useState([]);
@@ -40,6 +40,7 @@ function AnalyticsDashboardApp() {
         } else {
           counter['Greater than 60'] = (counter['Greater than 60'] || 0) + 1;
         }
+        return null;
       });
       let keys = Object.keys(counter);
       let label = [];
@@ -47,6 +48,7 @@ function AnalyticsDashboardApp() {
       keys.map((row) => {
         label.push(row.replace(/"/g, ''));
         values.push(counter[row]);
+        return null;
       });
       setLabels(label);
       setDatasets([
@@ -82,6 +84,7 @@ function AnalyticsDashboardApp() {
       keys.map((row) => {
         label.push(row.replace(/"/g, ''));
         values.push(counter[row]);
+        return null;
       });
       setLabels(label);
       setDatasets([

@@ -1,6 +1,5 @@
 import { useForm } from '@fuse/hooks';
 import CustomAutocomplete from '../ReusableComponents/Autocomplete';
-import Fab from '@material-ui/core/Fab';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import React, { useState, useEffect } from 'react';

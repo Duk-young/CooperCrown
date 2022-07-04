@@ -436,6 +436,7 @@ function UpdateCustomerForm(props) {
                   ) {
                     count++;
                   }
+                  return null;
                 });
                 if (count > 0) {
                   setOpenAlertOnSave(true);

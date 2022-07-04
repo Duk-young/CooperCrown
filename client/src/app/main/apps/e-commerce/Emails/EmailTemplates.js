@@ -39,6 +39,7 @@ function EmailTemplates() {
             console.log(error);
           });
       }
+      return null;
     });
     dispatch(
       MessageActions.showMessage({
@@ -64,6 +65,7 @@ function EmailTemplates() {
       setCustomers(resultCustomers);
     };
     fetchTemplates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async () => {

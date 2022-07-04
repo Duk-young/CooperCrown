@@ -1,23 +1,16 @@
 import './App.mobile.css';
 import './Search.css';
 import './Themes.css';
-import { Link } from 'react-router-dom';
 import { useForm } from '@fuse/hooks';
-import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import DateFnsUtils from '@date-io/date-fns';
-import EditIcon from '@material-ui/icons/Edit';
-import FuseAnimate from '@fuse/core/FuseAnimate';
 import FusePageSimple from '@fuse/core/FusePageSimple';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import Paper from '@material-ui/core/Paper';
 import React from 'react';
 import reducer from '../store/reducers';
@@ -154,7 +147,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 function Customers(props) {
   const classes = useStyles(props);
-  const { form, handleChange, setForm } = useForm(null);
+  const { form, handleChange } = useForm(null);
 
   return (
     <FusePageSimple

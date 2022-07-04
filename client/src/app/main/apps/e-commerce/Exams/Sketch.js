@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sketch = (props) => {
-  const { form, setForm, handleChange } = props;
+  const { form, setForm } = props;
   const [saveableCanvas, setSaveableCanvas] = useState();
   const [selectedColour, setSelectedColour] = useState('#000000');
   const classes = useStyles();

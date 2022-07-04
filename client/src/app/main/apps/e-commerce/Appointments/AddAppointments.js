@@ -1,5 +1,5 @@
 import { firestore } from 'firebase';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
@@ -78,7 +78,7 @@ const AddAppointments = (props) => {
       });
       setShowRooms(showroomdata);
 
-      if (history?.location?.state?.start != undefined) {
+      if (history?.location?.state?.start !== undefined) {
         setForm({
           start: history.location.state.start,
           showRoomId: history.location.state.showRoomId
@@ -87,6 +87,7 @@ const AddAppointments = (props) => {
       setisLoading(false);
     };
     fetchCustomer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeParams.customerId]);
   if (isLoading) return <FuseLoading />;
 
@@ -301,6 +302,7 @@ const AddAppointments = (props) => {
                 ) {
                   count++;
                 }
+                return null;
               });
             if (count > 0) {
               toast.error('Selected slot is unavailable!', {

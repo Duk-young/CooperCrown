@@ -149,6 +149,7 @@ export default function SearchInsuranceDialouge(props) {
           })
         );
       }
+      setSelectedInsurances([]);
     } catch (error) {
       console.log(error);
     }
@@ -168,6 +169,7 @@ export default function SearchInsuranceDialouge(props) {
       setHits(test);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return !hits ? (

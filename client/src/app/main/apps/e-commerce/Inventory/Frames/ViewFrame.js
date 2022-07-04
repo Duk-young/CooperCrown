@@ -316,6 +316,7 @@ function ViewFrame(props) {
       setForm({});
       setisLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) {
