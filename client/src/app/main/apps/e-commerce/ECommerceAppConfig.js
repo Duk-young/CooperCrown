@@ -177,6 +177,12 @@ const ECommerceAppConfig = {
       )
     },
     {
+      path: '/apps/inventory/viewshowroominventory/:showRoomInventoryId',
+      component: React.lazy(() =>
+        import('./Inventory/ShowRoom Inventory/ViewShowRoomInventory')
+      )
+    },
+    {
       path: '/apps/inventory/addshowroominventory',
       component: React.lazy(() =>
         import('./Inventory/ShowRoom Inventory/AddShowRoomInventory')

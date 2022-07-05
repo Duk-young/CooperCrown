@@ -266,7 +266,7 @@ const Lens = (props) => {
                       <Panel header="Brands">
                         <RefinementList
                           attribute="brand"
-                          limit={2}
+                          limit={10}
                           showMore={true}
                           searchable={true}
                           translations={{
@@ -279,7 +279,7 @@ const Lens = (props) => {
                       <Panel header="Color">
                         <RefinementList
                           attribute="colour"
-                          limit={8}
+                          limit={10}
                           showMore={true}
                           searchable={true}
                           translations={{
@@ -292,7 +292,7 @@ const Lens = (props) => {
                       <Panel header="Lens Type">
                         <RefinementList
                           attribute="lensType"
-                          limit={8}
+                          limit={10}
                           showMore={true}
                           searchable={true}
                           translations={{

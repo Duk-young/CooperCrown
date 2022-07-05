@@ -307,7 +307,7 @@ const Other = (props) => {
                       <Panel header="Brands">
                         <RefinementList
                           attribute="brand"
-                          limit={8}
+                          limit={10}
                           showMore={true}
                           searchable={true}
                           translations={{
@@ -320,7 +320,7 @@ const Other = (props) => {
                       <Panel header="Colour">
                         <RefinementList
                           attribute="colour"
-                          limit={8}
+                          limit={10}
                           showMore={true}
                           searchable={true}
                           translations={{
@@ -333,7 +333,7 @@ const Other = (props) => {
                       <Panel header="Material">
                         <RefinementList
                           attribute="material"
-                          limit={8}
+                          limit={10}
                           showMore={true}
                           searchable={true}
                           translations={{

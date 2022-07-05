@@ -305,7 +305,7 @@ const Frames = (props) => {
                       <Panel header="Brands">
                         <RefinementList
                           attribute="brand"
-                          limit={8}
+                          limit={10}
                           showMore={true}
                           searchable={true}
                           translations={{
@@ -318,7 +318,7 @@ const Frames = (props) => {
                       <Panel header="Colour">
                         <RefinementList
                           attribute="colour"
-                          limit={8}
+                          limit={10}
                           showMore={true}
                           searchable={true}
                           translations={{
@@ -331,7 +331,7 @@ const Frames = (props) => {
                       <Panel header="Material">
                         <RefinementList
                           attribute="material"
-                          limit={8}
+                          limit={10}
                           showMore={true}
                           searchable={true}
                           translations={{
