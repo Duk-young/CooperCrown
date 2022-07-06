@@ -1349,7 +1349,11 @@ function AddOrder(props) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={selectedFrame.frameLater}
+                              checked={
+                                selectedFrame?.frameLater
+                                  ? selectedFrame?.frameLater
+                                  : ''
+                              }
                               onChange={handleSelectedFrameChange}
                               name="frameLater"
                               disabled={disabledState}

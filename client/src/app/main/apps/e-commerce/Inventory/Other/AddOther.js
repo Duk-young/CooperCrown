@@ -355,7 +355,7 @@ function AddOther(props) {
                         label="Brand"
                         id="brand"
                         name="brand"
-                        value={form?.brand}
+                        value={form?.brand ? form?.brand : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -366,7 +366,11 @@ function AddOther(props) {
                         label="Model Name"
                         id="productDescription"
                         name="productDescription"
-                        value={form?.productDescription}
+                        value={
+                          form?.productDescription
+                            ? form?.productDescription
+                            : ''
+                        }
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -377,7 +381,7 @@ function AddOther(props) {
                         label="Colour"
                         id="colour"
                         name="colour"
-                        value={form?.colour}
+                        value={form?.colour ? form?.colour : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -389,7 +393,7 @@ function AddOther(props) {
                         label="Material"
                         id="material"
                         name="material"
-                        value={form?.material}
+                        value={form?.material ? form?.material : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -400,7 +404,7 @@ function AddOther(props) {
                         label="Shape"
                         id="shape"
                         name="shape"
-                        value={form?.shape}
+                        value={form?.shape ? form?.shape : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -412,7 +416,7 @@ function AddOther(props) {
                         type="number"
                         id="quantity"
                         name="quantity"
-                        value={form?.quantity}
+                        value={form?.quantity ? form?.quantity : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -430,7 +434,7 @@ function AddOther(props) {
                         label="A"
                         id="sizeX"
                         name="sizeX"
-                        value={form?.sizeX}
+                        value={form?.sizeX ? form?.sizeX : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -441,7 +445,7 @@ function AddOther(props) {
                         label="B"
                         id="sizeY"
                         name="sizeY"
-                        value={form?.sizeY}
+                        value={form?.sizeY ? form?.sizeY : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -452,7 +456,7 @@ function AddOther(props) {
                         label="TEMPLE"
                         id="sizeZ"
                         name="sizeZ"
-                        value={form?.sizeZ}
+                        value={form?.sizeZ ? form?.sizeZ : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -470,7 +474,7 @@ function AddOther(props) {
                         label="A"
                         id="sizeA"
                         name="sizeA"
-                        value={form?.sizeA}
+                        value={form?.sizeA ? form?.sizeA : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -481,7 +485,7 @@ function AddOther(props) {
                         label="B"
                         id="sizeB"
                         name="sizeB"
-                        value={form?.sizeB}
+                        value={form?.sizeB ? form?.sizeB : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -492,7 +496,7 @@ function AddOther(props) {
                         label="DBL"
                         id="sizeDbl"
                         name="sizeDbl"
-                        value={form?.sizeDbl}
+                        value={form?.sizeDbl ? form?.sizeDbl : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -503,7 +507,7 @@ function AddOther(props) {
                         label="ED"
                         id="sizeEd"
                         name="sizeEd"
-                        value={form?.sizeEd}
+                        value={form?.sizeEd ? form?.sizeEd : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -629,7 +633,7 @@ function AddOther(props) {
                         label="Made In"
                         id="madeIn"
                         name="madeIn"
-                        value={form?.madeIn}
+                        value={form?.madeIn ? form?.madeIn : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -640,7 +644,7 @@ function AddOther(props) {
                         label="Company"
                         id="supplier"
                         name="supplier"
-                        value={form?.supplier}
+                        value={form?.supplier ? form?.supplier : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -654,7 +658,9 @@ function AddOther(props) {
                         label="Address"
                         id="supplierAddress"
                         name="supplierAddress"
-                        value={form?.supplierAddress}
+                        value={
+                          form?.supplierAddress ? form?.supplierAddress : ''
+                        }
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -665,7 +671,9 @@ function AddOther(props) {
                         label="Contact"
                         id="supplierContact"
                         name="supplierContact"
-                        value={form?.supplierContact}
+                        value={
+                          form?.supplierContact ? form?.supplierContact : ''
+                        }
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -680,7 +688,7 @@ function AddOther(props) {
                         label="Note"
                         id="supplierNotes"
                         name="supplierNotes"
-                        value={form?.supplierNotes}
+                        value={form?.supplierNotes ? form?.supplierNotes : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -703,7 +711,7 @@ function AddOther(props) {
                     label="W.S $"
                     id="ws"
                     name="ws"
-                    value={form?.ws}
+                    value={form?.ws ? form?.ws : ''}
                     onChange={handleChange}
                     variant="outlined"
                     type="number"
@@ -712,7 +720,7 @@ function AddOther(props) {
                     label="Retail $"
                     id="retailRate"
                     name="retailRate"
-                    value={form?.retailRate}
+                    value={form?.retailRate ? form?.retailRate : ''}
                     onChange={handleChange}
                     variant="outlined"
                     type="number"

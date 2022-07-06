@@ -312,7 +312,7 @@ function AddLens(props) {
                         label="Lens Type"
                         id="lensType"
                         name="lensType"
-                        value={form?.lensType}
+                        value={form?.lensType ? form?.lensType : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -323,7 +323,7 @@ function AddLens(props) {
                         label="Brand"
                         id="brand"
                         name="brand"
-                        value={form?.brand}
+                        value={form?.brand ? form?.brand : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -334,7 +334,7 @@ function AddLens(props) {
                         label="Model Name"
                         id="model"
                         name="model"
-                        value={form?.model}
+                        value={form?.model ? form?.model : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -345,7 +345,7 @@ function AddLens(props) {
                         label="Colour"
                         id="colour"
                         name="colour"
-                        value={form?.colour}
+                        value={form?.colour ? form?.colour : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -357,7 +357,7 @@ function AddLens(props) {
                         label="Material"
                         id="material"
                         name="material"
-                        value={form?.material}
+                        value={form?.material ? form?.material : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -368,7 +368,7 @@ function AddLens(props) {
                         label="Sphere"
                         id="sphere"
                         name="sphere"
-                        value={form?.sphere}
+                        value={form?.sphere ? form?.sphere : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -379,7 +379,7 @@ function AddLens(props) {
                         label="Cylinder"
                         id="cylinder"
                         name="cylinder"
-                        value={form?.cylinder}
+                        value={form?.cylinder ? form?.cylinder : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -391,7 +391,7 @@ function AddLens(props) {
                         type="number"
                         id="quantity"
                         name="quantity"
-                        value={form?.quantity}
+                        value={form?.quantity ? form?.quantity : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -414,7 +414,7 @@ function AddLens(props) {
                         label="Made In"
                         id="madeIn"
                         name="madeIn"
-                        value={form?.madeIn}
+                        value={form?.madeIn ? form?.madeIn : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -425,7 +425,7 @@ function AddLens(props) {
                         label="Company"
                         id="supplier"
                         name="supplier"
-                        value={form?.supplier}
+                        value={form?.supplier ? form?.supplier : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -439,7 +439,9 @@ function AddLens(props) {
                         label="Address"
                         id="supplierAddress"
                         name="supplierAddress"
-                        value={form?.supplierAddress}
+                        value={
+                          form?.supplierAddress ? form?.supplierAddress : ''
+                        }
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -450,7 +452,9 @@ function AddLens(props) {
                         label="Contact"
                         id="supplierContact"
                         name="supplierContact"
-                        value={form?.supplierContact}
+                        value={
+                          form?.supplierContact ? form?.supplierContact : ''
+                        }
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -465,7 +469,7 @@ function AddLens(props) {
                         label="Note"
                         id="supplierNotes"
                         name="supplierNotes"
-                        value={form?.supplierNotes}
+                        value={form?.supplierNotes ? form?.supplierNotes : ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -488,7 +492,7 @@ function AddLens(props) {
                     label="W.S $"
                     id="ws"
                     name="ws"
-                    value={form?.ws}
+                    value={form?.ws ? form?.ws : ''}
                     onChange={handleChange}
                     variant="outlined"
                     type="number"
@@ -497,7 +501,7 @@ function AddLens(props) {
                     label="Retail $"
                     id="retailRate"
                     name="retailRate"
-                    value={form?.retailRate}
+                    value={form?.retailRate ? form?.retailRate : ''}
                     onChange={handleChange}
                     variant="outlined"
                     type="number"
