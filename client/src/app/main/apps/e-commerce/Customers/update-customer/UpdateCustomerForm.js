@@ -2,21 +2,21 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
+import { toast, Zoom } from 'react-toastify';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import AddFamilyDialog from './AddFamilyDialog';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Button from '@material-ui/core/Button';
 import DateFnsUtils from '@date-io/date-fns';
 import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseAnimate from '@fuse/core/FuseAnimate';
+import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
-import { toast, Zoom } from 'react-toastify';
-import Paper from '@material-ui/core/Paper';
 import moment from 'moment';
+import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useEffect, useState } from 'react';
@@ -115,6 +115,7 @@ function UpdateCustomerForm(props) {
                 CUSTOMER INFO
               </h1>
             </div>
+
             <div className="flex flex-col px-16">
               <div className="flex flex-row flex-wrap">
                 <div className="flex flex-col w-1/2">

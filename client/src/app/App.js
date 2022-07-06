@@ -21,6 +21,7 @@ import { Auth } from './auth';
 import routes from './fuse-configs/routesConfig';
 import store from './store';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const jss = create({
   ...jssPreset(),
@@ -36,7 +37,7 @@ const App = () => {
       value={{
         routes
       }}>
-      <ToastContainer />
+      <ToastContainer pauseOnFocusLoss />
       <StylesProvider jss={jss} generateClassName={generateClassName}>
         <Provider store={store}>
           <MuiPickersUtilsProvider utils={MomentUtils}>

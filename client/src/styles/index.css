@@ -9,6 +9,10 @@ body.no-animate *::after {
   animation: none !important;
 }
 
+:root {
+  --toastify-toast-width: 500px !important;
+}
+
 html {
   font-size: 50%;
   font-family: Muli, Roboto, Helvetica Neue, Arial, sans-serif;

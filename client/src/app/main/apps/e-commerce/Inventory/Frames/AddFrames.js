@@ -1,6 +1,7 @@
 import { firestore, storage } from 'firebase';
-import { red } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
+import { red } from '@material-ui/core/colors';
+import { toast, Zoom } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
@@ -162,46 +163,73 @@ function AddFrames(props) {
     } else {
       setisLoading(true);
 
-      try {
-        const frameId = (
-          await firestore().collection('dbConfig').doc('dbConfig').get()
-        ).data();
-
-        let urls = [];
-        for (let img of images) {
-          await storage().ref(`images/${img.id}`).put(img.file);
-
-          const url = await storage()
-            .ref('images')
-            .child(img.id)
-            .getDownloadURL();
-          urls.push({ url, name: img.name });
+      const queryFrames = await firestore().collection('frames').get();
+      let resultFrames = [];
+      queryFrames.forEach((doc) => {
+        resultFrames.push(doc.data());
+      });
+      let count = 0;
+      resultFrames.map((row) => {
+        if (row?.sku === form?.sku) {
+          count++;
         }
+        return null;
+      });
 
-        await firestore()
-          .collection('frames')
-          .add({
-            ...form,
-            date: firestore.Timestamp.fromDate(new Date()),
-            frameId: frameId?.frameId + 1,
-            images: { urls },
-            initialQuantity: form.quantity
-          });
+      if (count > 0) {
+        toast.error('Selected SKU already exists in inventory', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          transition: Zoom
+        });
+      } else {
+        try {
+          const dbConfig = (
+            await firestore().collection('dbConfig').doc('dbConfig').get()
+          ).data();
 
-        await firestore()
-          .collection('dbConfig')
-          .doc('dbConfig')
-          .update({ frameId: frameId?.frameId + 1 });
-        dispatch(
-          MessageActions.showMessage({
-            message: 'Frames data saved to firebase'
-          })
-        );
+          let urls = [];
+          for (let img of images) {
+            await storage().ref(`images/${img.id}`).put(img.file);
 
-        props.history.push('/apps/inventory');
-      } catch (error) {
-        console.log(error);
+            const url = await storage()
+              .ref('images')
+              .child(img.id)
+              .getDownloadURL();
+            urls.push({ url, name: img.name });
+          }
+
+          await firestore()
+            .collection('frames')
+            .add({
+              ...form,
+              date: firestore.Timestamp.fromDate(new Date()),
+              frameId: dbConfig?.frameId + 1,
+              images: { urls },
+              initialQuantity: form.quantity
+            });
+
+          await firestore()
+            .collection('dbConfig')
+            .doc('dbConfig')
+            .update({ frameId: dbConfig?.frameId + 1 });
+          dispatch(
+            MessageActions.showMessage({
+              message: 'Frames data saved to firebase'
+            })
+          );
+
+          props.history.push('/apps/inventory');
+        } catch (error) {
+          console.log(error);
+        }
       }
+
       setisLoading(false);
     }
   };
@@ -705,8 +733,19 @@ function AddFrames(props) {
                 variant="contained"
                 style={{ minHeight: '60px', maxHeight: '60px' }}
                 onClick={() => {
-                  if (form) {
+                  if (form && form?.sku) {
                     setOpenAlertOnSave(true);
+                  } else {
+                    toast.error('SKU is mandatory', {
+                      position: 'top-center',
+                      autoClose: 5000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      transition: Zoom
+                    });
                   }
                 }}>
                 <Icon>save</Icon> SAVE

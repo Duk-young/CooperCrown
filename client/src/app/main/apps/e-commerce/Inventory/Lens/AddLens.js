@@ -23,6 +23,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import { toast, Zoom } from 'react-toastify';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -131,34 +132,59 @@ function AddLens(props) {
       setisLoading(false);
     } else {
       setisLoading(true);
+      const queryLens = await firestore().collection('lens').get();
+      let resultLens = [];
+      queryLens.forEach((doc) => {
+        resultLens.push(doc.data());
+      });
+      let count = 0;
+      resultLens.map((row) => {
+        if (row?.sku === form?.sku) {
+          count++;
+        }
+        return null;
+      });
 
-      try {
-        const dbConfig = (
-          await firestore().collection('dbConfig').doc('dbConfig').get()
-        ).data();
+      if (count > 0) {
+        toast.error('Selected SKU already exists in inventory', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          transition: Zoom
+        });
+      } else {
+        try {
+          const dbConfig = (
+            await firestore().collection('dbConfig').doc('dbConfig').get()
+          ).data();
 
-        await firestore()
-          .collection('lens')
-          .add({
-            ...form,
-            date: firestore.Timestamp.fromDate(new Date()),
-            lensId: dbConfig?.lensId + 1,
-            initialQuantity: form.quantity
-          });
+          await firestore()
+            .collection('lens')
+            .add({
+              ...form,
+              date: firestore.Timestamp.fromDate(new Date()),
+              lensId: dbConfig?.lensId + 1,
+              initialQuantity: form?.quantity ? form?.quantity : ''
+            });
 
-        await firestore()
-          .collection('dbConfig')
-          .doc('dbConfig')
-          .update({ lensId: dbConfig?.lensId + 1 });
-        dispatch(
-          MessageActions.showMessage({
-            message: 'Lens saved successfully'
-          })
-        );
+          await firestore()
+            .collection('dbConfig')
+            .doc('dbConfig')
+            .update({ lensId: dbConfig?.lensId + 1 });
+          dispatch(
+            MessageActions.showMessage({
+              message: 'Lens saved successfully'
+            })
+          );
 
-        props.history.push('/apps/inventory');
-      } catch (error) {
-        console.log(error);
+          props.history.push('/apps/inventory');
+        } catch (error) {
+          console.log(error);
+        }
       }
       setisLoading(false);
     }
@@ -488,13 +514,25 @@ function AddLens(props) {
                 text2="Are you sure?"
                 customFunction={onSubmit}
               />
+
               <Button
                 className={classes.orangeButton}
                 variant="contained"
                 style={{ minHeight: '60px', maxHeight: '60px' }}
                 onClick={() => {
-                  if (form) {
+                  if (form && form?.sku) {
                     setOpenAlertOnSave(true);
+                  } else {
+                    toast.error('SKU is mandatory!', {
+                      position: 'top-center',
+                      autoClose: 5000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      transition: Zoom
+                    });
                   }
                 }}>
                 <Icon>save</Icon> SAVE

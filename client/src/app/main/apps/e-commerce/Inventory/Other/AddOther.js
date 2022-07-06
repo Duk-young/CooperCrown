@@ -1,6 +1,7 @@
 import { firestore, storage } from 'firebase';
-import { red } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
+import { red } from '@material-ui/core/colors';
+import { toast, Zoom } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
@@ -161,46 +162,73 @@ function AddOther(props) {
     } else {
       setisLoading(true);
 
-      try {
-        const dbConfig = (
-          await firestore().collection('dbConfig').doc('dbConfig').get()
-        ).data();
-
-        let urls = [];
-        for (let img of images) {
-          await storage().ref(`images/${img.id}`).put(img.file);
-
-          const url = await storage()
-            .ref('images')
-            .child(img.id)
-            .getDownloadURL();
-          urls.push({ url, name: img.name });
+      const queryOther = await firestore().collection('other').get();
+      let resultOther = [];
+      queryOther.forEach((doc) => {
+        resultOther.push(doc.data());
+      });
+      let count = 0;
+      resultOther.map((row) => {
+        if (row?.sku === form?.sku) {
+          count++;
         }
+        return null;
+      });
 
-        await firestore()
-          .collection('other')
-          .add({
-            ...form,
-            date: firestore.Timestamp.fromDate(new Date()),
-            otherId: dbConfig?.otherId + 1,
-            images: { urls },
-            initialQuantity: form.quantity
-          });
+      if (count > 0) {
+        toast.error('Selected SKU already exists in inventory', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          transition: Zoom
+        });
+      } else {
+        try {
+          const dbConfig = (
+            await firestore().collection('dbConfig').doc('dbConfig').get()
+          ).data();
 
-        await firestore()
-          .collection('dbConfig')
-          .doc('dbConfig')
-          .update({ otherId: dbConfig?.otherId + 1 });
-        dispatch(
-          MessageActions.showMessage({
-            message: 'Other product saved successfully'
-          })
-        );
+          let urls = [];
+          for (let img of images) {
+            await storage().ref(`images/${img.id}`).put(img.file);
 
-        props.history.push('/apps/inventory');
-      } catch (error) {
-        console.log(error);
+            const url = await storage()
+              .ref('images')
+              .child(img.id)
+              .getDownloadURL();
+            urls.push({ url, name: img.name });
+          }
+
+          await firestore()
+            .collection('other')
+            .add({
+              ...form,
+              date: firestore.Timestamp.fromDate(new Date()),
+              otherId: dbConfig?.otherId + 1,
+              images: { urls },
+              initialQuantity: form.quantity
+            });
+
+          await firestore()
+            .collection('dbConfig')
+            .doc('dbConfig')
+            .update({ otherId: dbConfig?.otherId + 1 });
+          dispatch(
+            MessageActions.showMessage({
+              message: 'Other product saved successfully'
+            })
+          );
+
+          props.history.push('/apps/inventory');
+        } catch (error) {
+          console.log(error);
+        }
       }
+
       setisLoading(false);
     }
   };
@@ -706,8 +734,19 @@ function AddOther(props) {
                 variant="contained"
                 style={{ minHeight: '60px', maxHeight: '60px' }}
                 onClick={() => {
-                  if (form) {
+                  if (form && form?.sku) {
                     setOpenAlertOnSave(true);
+                  } else {
+                    toast.error('SKU is mandatory', {
+                      position: 'top-center',
+                      autoClose: 5000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      transition: Zoom
+                    });
                   }
                 }}>
                 <Icon>save</Icon> SAVE

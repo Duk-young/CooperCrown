@@ -333,6 +333,6 @@ mark {
 
 
 :root {
-  --toastify-toast-width: 500px;
+  --toastify-toast-width: 500px !important;
 }
 

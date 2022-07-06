@@ -633,6 +633,11 @@ h2 {
   padding: 0px 2px 1px;
 }
 
+:root {
+  --toastify-toast-width: 500px !important;
+}
+
+
 
 
 @media print {
