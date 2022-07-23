@@ -54,7 +54,7 @@ const navigationConfig = [
         id: 'orders',
         title: 'Orders',
         translate: 'Orders',
-        auth: authRoles.staff,
+        auth: authRoles.admin,
         type: 'item',
         icon: 'description',
         url: '/apps/e-commerce/orders'
