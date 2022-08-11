@@ -43,11 +43,7 @@ const Sketch = (props) => {
       {!form?.examId && (
         <div className="relative">
           <div className="flex flex-row justify-evenly">
-            <Typography
-              className="username text-16 whitespace-no-wrap self-center"
-              color="inherit">
-              Colour
-            </Typography>
+          <div className="flex-1 flex flex-row ">
             <FormControl className="ml-32 ">
               <Select
                 labelId="demo-simple-select-autowidth-label"
@@ -63,8 +59,10 @@ const Sketch = (props) => {
                 <MenuItem value={'Green'}>Green</MenuItem>
                 <MenuItem value={'Blue'}>Blue</MenuItem>
               </Select>
-              <FormHelperText>Select from the list</FormHelperText>
+              <FormHelperText>Color</FormHelperText>
             </FormControl>
+            </div>
+            <div className="flex-1 flex flex-row ">
             <TextField
               className="ml-4"
               size="small"
@@ -78,6 +76,7 @@ const Sketch = (props) => {
               variant="outlined"
               type="number"
             />
+          </div>
           </div>
           <CanvasDraw
             ref={(canvasDraw) => setSaveableCanvas(canvasDraw)}
