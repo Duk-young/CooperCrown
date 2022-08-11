@@ -1384,7 +1384,7 @@ const AddExam = (props) => {
                         <h3>Unaided</h3>
                         <h3>Aided</h3>
                       </div>
-                      <div className="flex flex-row">
+                      <div className="flex w-1/2 flex-row">
                         <h3 className="font-700">{`OD\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A020\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
                         <TextField
                           size="small"
@@ -1441,7 +1441,7 @@ const AddExam = (props) => {
                         <h3>Unaided</h3>
                         <h3>Aided</h3>
                       </div>
-                      <div className="flex flex-row">
+                      <div className="flex w-1/2 flex-row">
                         <h3 className="font-700">{`OD\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A020\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
                         <TextField
                           size="small"
@@ -1498,7 +1498,7 @@ const AddExam = (props) => {
                     <div className="px-36 py-12 w-1/2 h-auto justify-between">
                       <div className="flex flex-row justify-center">
                       {/* <h3 className="font-700">{`IOP:\u00A0\u00A0NCT\u00A0\u00A0\u00A0GAT`}</h3> */}
-                      <h3 className="font-700"> {`IOP:\u00A0\u00A0`}</h3>
+                      <h3 className="font-700"> {`IOP:`}</h3>
                       <FormControl component="fieldset">
                   <RadioGroup
                     className="ml-10"
@@ -1816,19 +1816,19 @@ const AddExam = (props) => {
                     </MuiPickersUtilsProvider>
                   </div>
                   <div className="flex flex-row px-60">
-                    <div className="p-8 w-1/5 h-auto ">
+                    <div className="p-2 w-1/5 h-auto ">
                       <h4 className="text-center">EG Rx</h4>
                     </div>
-                    <div className="p-8 w-1/5 h-auto ">
+                    <div className="p-2 w-1/5 h-auto ">
                       <h4 className="text-center">Sphere</h4>
                     </div>
-                    <div className="p-8 w-1/5 h-auto ">
+                    <div className="p-2 w-1/5 h-auto ">
                       <h4 className="text-center">Cylinder</h4>
                     </div>
-                    <div className="p-8 w-1/5 h-auto ">
+                    <div className="p-2 w-1/5 h-auto ">
                       <h4 className="text-center">Axis</h4>
                     </div>
-                    <div className="p-8 w-1/5 h-auto ">
+                    <div className="p-2 w-1/5 h-auto ">
                       <h4 className="text-center">ADD</h4>
                     </div>
                   </div>
@@ -2150,7 +2150,8 @@ const AddExam = (props) => {
 
               <div className=" w-full h-auto justify-between">
                 <div className="flex flex-row justify-around">
-                  <FormControlLabel
+                <div className="flex-1 w-1/5 flex flex-row ">
+                <FormControlLabel
                     control={
                       <Checkbox
                         checked={form?.diagnosticLenses}
@@ -2161,7 +2162,9 @@ const AddExam = (props) => {
                     }
                     label="Diagnostic Lenses"
                   />
-                  <FormControlLabel
+                </div>
+                <div className="flex-1 w-1/5 flex flex-row ">
+                <FormControlLabel
                     control={
                       <Checkbox
                         checked={form?.seeAtDispense}
@@ -2172,7 +2175,9 @@ const AddExam = (props) => {
                     }
                     label="See At Dispense"
                   />
-                  <FormControlLabel
+                </div>
+                <div className="flex-1 w-1/5 flex flex-row ">
+                <FormControlLabel
                     control={
                       <Checkbox
                         checked={form?.finalRx}
@@ -2183,7 +2188,9 @@ const AddExam = (props) => {
                     }
                     label="Final Rx"
                   />
-                  <FormControlLabel
+                </div>
+                <div className="flex-1 w-1/5 flex flex-row ">
+                <FormControlLabel
                     control={
                       <Checkbox
                         checked={form?.followUpRequired}
@@ -2194,7 +2201,9 @@ const AddExam = (props) => {
                     }
                     label="Follow-Up Required"
                   />
-                  <FormControlLabel
+                </div>
+                <div className="flex-1 w-1/5 flex flex-row ">
+                <FormControlLabel
                     control={
                       <Checkbox
                         checked={form?.R1}
@@ -2206,34 +2215,35 @@ const AddExam = (props) => {
                     label={`1 \u00A0\u00A0& \u00A0\u00A0R`}
                   />
                 </div>
-                <div className="flex flex-row px-60">
-                  <div className="p-8 h-auto flex-1">
+                </div>
+                <div className="flex flex-row px-25">
+                  <div className="p-2 w-1/7  h-auto flex-1">
                     <h3 className="text-center font-700">CL RX</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7  h-auto flex-1">
                     <h3 className="text-center font-700">Sphere</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7  h-auto flex-1">
                     <h3 className="text-center font-700">Cylinder</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7  h-auto flex-1">
                     <h3 className="text-center font-700">Axis</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7  h-auto flex-1">
                     <h3 className="text-center font-700">BC</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7  h-auto flex-1">
                     <h3 className="text-center font-700">DIA</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7  h-auto flex-1">
                     <h3 className="text-center font-700">Brand</h3>
                   </div>
                 </div>
                 <div className="flex flex-row px-60">
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 flex-1 w-1/7  h-auto border-grey-400 border-solid border-1 justify-between">
                     <h3 className="text-center font-700">OD</h3>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 flex-1 w-1/7   h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2250,7 +2260,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2267,7 +2277,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  lex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2284,7 +2294,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2301,7 +2311,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2318,7 +2328,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2337,10 +2347,10 @@ const AddExam = (props) => {
                 </div>
 
                 <div className="flex flex-row px-60">
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <h3 className="text-center font-700">OS</h3>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2357,7 +2367,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2374,7 +2384,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2391,7 +2401,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2408,7 +2418,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2425,7 +2435,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2442,37 +2452,37 @@ const AddExam = (props) => {
                     />
                   </div>
                 </div>
-                <div className="flex flex-row px-60">
-                  <div className="p-8 h-auto flex-1">
+                <div className="flex flex-row px-25">
+                  <div className="p-1 w-1/8  h-auto flex-1">
                     <h3 className="text-center font-700">SUBJ RX</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-1 w-1/8 h-auto flex-1">
                     <h3 className="text-center font-700">Sphere</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-1 w-1/8 h-auto flex-1">
                     <h3 className="text-center font-700">Cylinder</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-1 w-1/8 h-auto flex-1">
                     <h3 className="text-center font-700">Axis</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-1 w-1/8 h-auto flex-1">
                     <h3 className="text-center font-700">Prism/Base</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-1 w-1/8 h-auto flex-1">
                     <h3 className="text-center font-700">VA</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-1 w-1/8 h-auto flex-1">
                     <h3 className="text-center font-700">Add</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-1 w-1/8 h-auto flex-1">
                     <h3 className="text-center font-700">VA</h3>
                   </div>
                 </div>
                 <div className="flex flex-row px-60">
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <h3 className="text-center font-700">OD</h3>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2489,7 +2499,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2506,7 +2516,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2523,7 +2533,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2539,7 +2549,7 @@ const AddExam = (props) => {
                       }}
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <div className="flex flex-row justify-center">
                       <h3 className="text-center font-700">20/</h3>
                       <TextField
@@ -2559,7 +2569,7 @@ const AddExam = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2576,7 +2586,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <div className="flex flex-row justify-center">
                       <h3 className="text-center font-700">20/</h3>
                       <TextField
@@ -2599,10 +2609,10 @@ const AddExam = (props) => {
                 </div>
 
                 <div className="flex flex-row px-60">
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <h3 className="text-center font-700">OS</h3>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2619,7 +2629,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2636,7 +2646,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2653,7 +2663,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2669,7 +2679,7 @@ const AddExam = (props) => {
                       }}
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <div className="flex flex-row justify-center">
                       <h3 className="text-center font-700">20/</h3>
                       <TextField
@@ -2689,7 +2699,7 @@ const AddExam = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2706,7 +2716,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <div className="flex flex-row justify-center">
                       <h3 className="text-center font-700">20/</h3>
                       <TextField
@@ -2728,34 +2738,34 @@ const AddExam = (props) => {
                   </div>
                 </div>
 
-                <div className="flex flex-row px-60">
-                  <div className="p-8 h-auto flex-1">
+                <div className="flex flex-row px-px-60">
+                  <div className="p-2  w-1/7 h-auto flex-1">
                     <h3 className="text-center font-700">EG RX</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7 h-auto flex-1">
                     <h3 className="text-center font-700">Sphere</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7 h-auto flex-1">
                     <h3 className="text-center font-700">Cylinder</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7 h-auto flex-1">
                     <h3 className="text-center font-700">Axis</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7 h-auto flex-1">
                     <h3 className="text-center font-700">Prism/Base</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7 h-auto flex-1">
                     <h3 className="text-center font-700">VA</h3>
                   </div>
-                  <div className="p-8 h-auto flex-1">
+                  <div className="p-2 w-1/7 h-auto flex-1">
                     <h3 className="text-center font-700">Add</h3>
                   </div>
                 </div>
                 <div className="flex flex-row px-60">
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <h3 className="text-center font-700">OD</h3>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2772,7 +2782,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2789,7 +2799,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2806,7 +2816,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8  w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2823,7 +2833,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <div className="flex flex-row justify-center">
                       <h3 className="text-center font-700">20/</h3>
                       <TextField
@@ -2843,7 +2853,7 @@ const AddExam = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2863,10 +2873,10 @@ const AddExam = (props) => {
                 </div>
 
                 <div className="flex flex-row px-60">
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <h3 className="text-center font-700">OS</h3>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2883,7 +2893,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2900,7 +2910,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2917,7 +2927,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -2934,7 +2944,7 @@ const AddExam = (props) => {
                       type="number"
                     />
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <div className="flex flex-row justify-center">
                       <h3 className="text-center font-700">20/</h3>
                       <TextField
@@ -2954,7 +2964,7 @@ const AddExam = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                     <TextField
                       size="small"
                       fullWidth
@@ -3025,7 +3035,8 @@ const AddExam = (props) => {
             <div className="  h-auto justify-center">
               <div className="flex flex-row">
                 <br></br><br></br>
-                <h3 className="font-700 " >{`CT:\u00A0\u00A0\u00A0 UCT \u00A0\u00A0\u00A0`}</h3>
+                <div className="flex-1 w-1/3 flex flex-row ">
+                <h3 className="font-700 " >{`CT: UCT `}</h3>
                 <TextField
                   size="small"
                   id="outlined-multiline-static"
@@ -3036,10 +3047,10 @@ const AddExam = (props) => {
                   name={'ctUct'}
                   
                 />
-                <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
-
-                <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 CF:\u00A0\u00A0\u00A0OD\u00A0\u00A0\u00A0`}</h3>
-                <TextField
+                </div>
+                <div className="flex-1 w-1/3 flex flex-row ">
+                <h3 className="font-700 pl-6 pt-6">CF: OD</h3>
+                <TextField 
                   size="small"
                   id="outlined-multiline-static"
                   style={{ width: 100 }}
@@ -3049,9 +3060,10 @@ const AddExam = (props) => {
                   name={'cfod'}
                   
                 />
-                 <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
-
-                <div className="ml-10">
+                </div>
+                <div className="flex-1 w-1/3 flex flex-row ">
+                 
+                
                   <FormControl component="fieldset">
                     <RadioGroup
                       row
@@ -3087,7 +3099,15 @@ const AddExam = (props) => {
                       variant="outlined"
                     />
                   )}
+                
                 </div>
+                
+                {/* <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+
+                <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 CF:\u00A0\u00A0\u00A0OD\u00A0\u00A0\u00A0`}</h3>
+                */}
+                 {/* <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3> */}
+
               </div>
 
               <div className="flex flex-row justify-center">
