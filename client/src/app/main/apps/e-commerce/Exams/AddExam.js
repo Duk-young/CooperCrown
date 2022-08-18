@@ -26,6 +26,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker
 } from '@material-ui/pickers';
+import DoctorSignature from './DoctorSignature';
 
 const GreenCheckbox = withStyles({
   root: {
@@ -234,8 +235,8 @@ const AddExam = (props) => {
 
     <div className="flex flex-col w-full">
       <div className="flex p-16 flex-row w-full">
-        <div className=" w-1/2 h-auto">
-          <div className="py-4 border-1 border-black border-solid rounded-6">
+        <div className=" w-1/2 h-600">
+          <div className="py-8  border-1 border-black border-solid rounded-6">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
               <h1 className="font-700" style={{ color: '#f15a25' }}>
                 CUSTOMER INFO
@@ -361,23 +362,21 @@ const AddExam = (props) => {
                 <h3 className="pl-6 bg-grey-200">{customer?.other}</h3>
               </div>
             </div>
-            <br></br>
-            <div className="flex flex-row justify-around">
-
-
-            </div>
+       <br></br>
           </div>
 
 
-          <div className="p-8 py-6 my-10 border-1 border-black border-solid rounded-6">
+          <div className=" p-8 py-6 my-10 border-1 border-black border-solid rounded-6">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
               <h1 className="font-700" style={{ color: '#f15a25' }}>
                 Occupation
               </h1>
             </div>
-            <br></br>
+
             <TextField
-              className="mx-10"
+              className="px-25"
+              multiline
+              rows={2}
               fullWidth
               disabled={disabledState}
               id="outlined-multiline-static"
@@ -387,14 +386,15 @@ const AddExam = (props) => {
               name={'occupation'}
             // variant="outlined"
             />
-            <br></br>
+            <br></br> 
           </div>
+        
         </div>
 
-        <div className="ml-10 w-1/2 h-auto  ">
+        <div className="ml-10 w-1/2 h-600  ">
           <div className="w-full">
-            <div className="flex flex-col h-260 px-16">
-              <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+            <div className="flex flex-col h-600 px-16">
+              <div className="flex flex-col h-600 py-8 py-4 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                   <h1 className="font-700" style={{ color: '#f15a25' }}>
                     Note
@@ -402,13 +402,12 @@ const AddExam = (props) => {
                 </div>
 
                 <TextField
-                  className="mx-10 "
+                  className="px-25"
                   fullWidth
                   disabled={disabledState}
                   id="outlined-multiline-static"
-
                   multiline
-                  rows={29}
+                  rows={27}
                   value={customer?.medicalHistory}
                   onChange={(e) => {
                     setCustomer({
@@ -432,479 +431,483 @@ const AddExam = (props) => {
           </div>
           <br></br>
           <div className="flex flex-row justify-center">
-            
-            <div className="flex-1">
-              <h3 className="hidden font-700 text-center">Hidden</h3>
+            <div className="flex-1 pl-30">
+              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
             </div>
             <div className="flex-1">
               <h3 className="hidden font-700 text-center">Hidden</h3>
             </div>
-            <div className="flex-1 flex flex-row justify-center">
+            <div className="flex-1 flex flex-row  justify-center">
               <h3> ( Patient ) </h3>
             </div>
-              <div className="flex-1 flex-row justify-center">
-                <h3> ( Blood Relatives )</h3>
-              </div>
-             
-          </div>
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-              <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0High Blood Pressure`}</h3>
+            <div className="flex-1 flex-row justify-center">
+              <h3> ( Blood Relatives )</h3>
             </div>
-            <div className="flex-1">
+
+          </div>
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1  pl-30">
+                <h3 className=" ml-40 font-700  ">High Blood Pressure</h3>
+              </div>
+              <div className="flex-1">
               <h3 className="hidden font-700 text-center">Hidden</h3>
             </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patienthighbp}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patienthighbp"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativehighbp}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativehighbp"
-                      />
-                    }
-                  />
+              <div className="flex-1 flex flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patienthighbp}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patienthighbp"
+                    />
+                  }
+                />
               </div>
-             
-          </div>
-          </div>
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Diabetes`}</h3>
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativehighbp}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativehighbp"
+                    />
+                  }
+                />
+              </div>
+
             </div>
-            <div className="flex-1">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.dmi}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="dmi"
-                      />
-                    }
+          </div>
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row ">
+              <div className="flex-1  pl-30">
+                <h3 className=" ml-40 font-700  ">Diabetes</h3>
+               
+              </div>
+              
+            
+            <div className="flex-1 flex flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.dmi}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="dmi"
+                    />
+                  }
                   label="DM I"
-                  />
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.dmii}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="dmii"
-                      />
-                    }
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.dmii}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="dmii"
+                    />
+                  }
                   label="DM II"
-                  /> 	
-            </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientdiabetes}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientdiabetes"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativediabetes}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativediabetes"
-                      />
-                    }
-                  />
+                />
               </div>
-             
-          </div>
-          </div>
-          
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Cholestrol`}</h3>
+
+              <div className="flex-1 flex flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientdiabetes}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientdiabetes"
+                    />
+                  }
+                />
+              </div>
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativediabetes}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativediabetes"
+                    />
+                  }
+                />
+              </div>
 
             </div>
-            <div className="flex-1">
-              <h3 className="hidden font-700 text-center">Hidden</h3>
-            </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientcholestrol}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientcholestrol"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativecholestrol}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativecholestrol"
-                      />
-                    }
-                  />
-              </div>
-             
-          </div>
-          </div>
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Heart Problems`}</h3>
-            </div>
-            <div className="flex-1">
-              <h3 className="hidden font-700 text-center">Hidden</h3>
-            </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientHeartProblems}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientHeartProblems"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativeHeartProblems}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativeHeartProblems"
-                      />
-                    }
-                  />
-              </div>
-             
-          </div>
-          </div>
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Asthma`}</h3>
-            </div>
-            <div className="flex-1">
-              <h3 className="hidden font-700 text-center">Hidden</h3>
-            </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientAsthma}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientAsthma"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativeAsthma}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativeAsthma"
-                      />
-                    }
-                  />
-              </div>
-             
-          </div>
-          </div>
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Cataracts`}</h3>
-            </div>
-            <div className="flex-1">
-              <h3 className="hidden font-700 text-center">Hidden</h3>
-            </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientCataracts}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientCataracts"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativeCataracts}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativeCataracts"
-                      />
-                    }
-                  />
-              </div>
-             
-          </div>
-          </div>
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Retincal Detachment`}</h3>
-            </div>
-            <div className="flex-1">
-              <h3 className="hidden font-700 text-center">Hidden</h3>
-            </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientRetincalDetachment}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientRetincalDetachment"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativeRetincalDetachment}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativeRetincalDetachment"
-                      />
-                    }
-                  />
-              </div>
-             
-          </div>
           </div>
 
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Blindness`}</h3>
-            </div>
-            <div className="flex-1">
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 pl-30">
+                <h3 className="ml-40 font-700  ">Cholestrol</h3>
+
+              </div>
+              <div className="flex-1">
               <h3 className="hidden font-700 text-center">Hidden</h3>
             </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientBlindness}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientBlindness"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativeBlindness}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativeBlindness"
-                      />
-                    }
-                  />
+              <div className="flex-1 flex flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientcholestrol}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientcholestrol"
+                    />
+                  }
+                />
               </div>
-             
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativecholestrol}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativecholestrol"
+                    />
+                  }
+                />
+              </div>
+
+            </div>
           </div>
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 justify-around pl-30">
+                <h3 className=" ml-40 font-700  ">Heart Problems</h3>
+              </div>
+              <div className="flex-1">
+              <h3 className="hidden font-700 text-center">Hidden</h3>
+            </div>
+              <div className="flex-1 flex flex-row  justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientHeartProblems}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientHeartProblems"
+                    />
+                  }
+                />
+              </div>
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativeHeartProblems}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativeHeartProblems"
+                    />
+                  }
+                />
+              </div>
+
+            </div>
+          </div>
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 pl-30">
+                <h3 className=" ml-40 font-700  ">Asthma</h3>
+              </div>
+              <div className="flex-1">
+              <h3 className="hidden font-700 text-center">Hidden</h3>
+            </div>
+              <div className="flex-1 flex flex-row  justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientAsthma}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientAsthma"
+                    />
+                  }
+                />
+              </div>
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativeAsthma}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativeAsthma"
+                    />
+                  }
+                />
+              </div>
+
+            </div>
+          </div>
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 pl-30">
+                <h3 className=" font-700 ml-40 ">{`Cataracts`}</h3>
+              </div>
+              <div className="flex-1">
+              <h3 className="hidden font-700 text-center">Hidden</h3>
+            </div>
+              <div className="flex-1 flex flex-row  justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientCataracts}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientCataracts"
+                    />
+                  }
+                />
+              </div>
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativeCataracts}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativeCataracts"
+                    />
+                  }
+                />
+              </div>
+
+            </div>
+          </div>
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 pl-30">
+                <h3 className=" font-700 ml-40 ">{`Retincal Detachment`}</h3>
+              </div>
+              <div className="flex-1">
+              <h3 className="hidden font-700 text-center">Hidden</h3>
+            </div>
+              <div className="flex-1 flex flex-row   justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientRetincalDetachment}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientRetincalDetachment"
+                    />
+                  }
+                />
+              </div>
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativeRetincalDetachment}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativeRetincalDetachment"
+                    />
+                  }
+                />
+              </div>
+
+            </div>
           </div>
 
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Lazy or Crossed Eyes`}</h3>
-            </div>
-            <div className="flex-1">
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 pl-30">
+                <h3 className=" font-700 ml-40 ">Blindness</h3>
+              </div>
+              <div className="flex-1">
               <h3 className="hidden font-700 text-center">Hidden</h3>
             </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientLazyorCrossedEyes}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientLazyorCrossedEyes"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativeLazyorCrossedEyes}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativeLazyorCrossedEyes"
-                      />
-                    }
-                  />
+              <div className="flex-1 flex flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientBlindness}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientBlindness"
+                    />
+                  }
+                />
               </div>
-             
-          </div>
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativeBlindness}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativeBlindness"
+                    />
+                  }
+                />
+              </div>
+
+            </div>
           </div>
 
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Glaucoma`}</h3>
-            </div>
-            <div className="flex-1">
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 pl-30">
+                <h3 className=" font-700  ml-40">{`Lazy or Crossed Eyes`}</h3>
+              </div>
+              <div className="flex-1">
               <h3 className="hidden font-700 text-center">Hidden</h3>
             </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientGlaucoma}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientGlaucoma"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativeGlaucoma}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativeGlaucoma"
-                      />
-                    }
-                  />
+              <div className="flex-1 flex flex-row justify-center  ">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientLazyorCrossedEyes}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientLazyorCrossedEyes"
+                    />
+                  }
+                />
               </div>
-             
-          </div>
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativeLazyorCrossedEyes}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativeLazyorCrossedEyes"
+                    />
+                  }
+                />
+              </div>
+
+            </div>
           </div>
 
-          <div className=" border-b-1 border-black border-solid px-11"> 
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 pl-30">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Macular Degeneration`}</h3>
-            </div>
-            <div className="flex-1">
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 pl-30">
+                <h3 className=" font-700  ml-40">{`Glaucoma`}</h3>
+              </div>
+              <div className="flex-1">
               <h3 className="hidden font-700 text-center">Hidden</h3>
             </div>
-            <div className="flex-1 flex flex-row justify-center">
-            <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.patientMacularDegeneration}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="patientMacularDegeneration"
-                      />
-                    }                
-                  />
-            </div>
-              <div className="flex-1 flex-row justify-center">
-              <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.relativeMacularDegeneration}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="relativeMacularDegeneration"
-                      />
-                    }
-                  />
+              <div className="flex-1 flex flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientGlaucoma}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientGlaucoma"
+                    />
+                  }
+                />
               </div>
-             
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativeGlaucoma}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativeGlaucoma"
+                    />
+                  }
+                />
+              </div>
+
+            </div>
           </div>
+
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 pl-30">
+                <h3 className=" font-700  ml-40 ">{`Macular Degeneration`}</h3>
+              </div>
+              <div className="flex-1">
+              <h3 className="hidden font-700 text-center">Hidden</h3>
+            </div>
+              <div className="flex-1 flex flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.patientMacularDegeneration}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="patientMacularDegeneration"
+                    />
+                  }
+                />
+              </div>
+              <div className="flex-1 flex-row justify-center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.relativeMacularDegeneration}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="relativeMacularDegeneration"
+                    />
+                  }
+                />
+              </div>
+
+            </div>
           </div>
           <br></br>
           <div className="flex flex-row justify-center ">
-          <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Other Ocular ( eye ) Problems: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
-
-              <TextField
-                className="mx-10"
-                fullWidth
-                multiline
-                rows={4}
-                id="outlined-multiline-static"
-                disabled={disabledState}
-                value={form?.otherocular}
-                onChange={handleChange}
-                name={'otherocular'}
-                variant="outlined"
-              />
-             
-
-            </div>
-            <br></br>
-            <div className="flex flex-row justify-center ">
-            
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Other General Health Problems: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
-
-              <TextField
-                className="mx-10"
-                fullWidth
-                multiline
-                rows={4}
-                id="outlined-multiline-static"
-                
-                disabled={disabledState}
-                value={form?.otherhealth}
-                onChange={handleChange}
-                name={'otherhealth'}
-                variant="outlined"
-              />
-              
-
-            </div>
-            <br></br>
-            <div className="justify-center ">
-            <h3 className=" font-700  ">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0List of medications currently taking ( Including Aspirin, Birth Control, and OTC medications ):`}</h3>
+            <h3 className=" ml-40 font-700  ">{`Other Ocular ( eye ) Problems: `}</h3>
 
             <TextField
-             
+              className="mx-10"
+              fullWidth
+              multiline
+              rows={4}
+              id="outlined-multiline-static"
+              disabled={disabledState}
+              value={form?.otherocular}
+              onChange={handleChange}
+              name={'otherocular'}
+              variant="outlined"
+            />
+
+
+          </div>
+          <br></br>
+          <div className="flex flex-row justify-center ">
+
+            <h3 className="ml-40 font-700  ">{`Other General Health Problems: `}</h3>
+
+
+            <TextField
+              className="mx-10"
+              fullWidth
+              multiline
+              rows={4}
+              id="outlined-multiline-static"
+
+              disabled={disabledState}
+              value={form?.otherhealth}
+              onChange={handleChange}
+              name={'otherhealth'}
+              variant="outlined"
+            />
+
+
+          </div>
+          <br></br>
+          <div className="justify-center ">
+            <h3 className="ml-40 font-700  ">{`List of medications currently taking ( Including Aspirin, Birth Control, and OTC medications ):`}</h3>
+
+            <TextField
+
               fullWidth
               multiline
               rows={4}
@@ -914,23 +917,24 @@ const AddExam = (props) => {
               onChange={handleChange}
               name={'currentmedication'}
               variant="outlined"
-            />       
+            />
 
-            </div> 
-            <br></br><br></br>           
-        </div>        
+          </div>
+          <br></br><br></br>
+        </div>
       </div>
-      
+
       <div className="flex flex-col h-260 px-16 py-6">
         <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
             <h1 className="font-700" style={{ color: '#f15a25' }}>
-            CHIEF COMPLAINTS
+              CHIEF COMPLAINTS
             </h1>
           </div>
           <br></br>
-          <div className="flex flex-row justify-center">
-            <div className="flex-1 flex flex-row ">
+
+          <div className="flex flex-row  justify-center">
+            <div className="flex-1 flex flex-row justify-around ">
               <FormControlLabel
                 control={
                   <Checkbox
@@ -990,7 +994,7 @@ const AddExam = (props) => {
           </div>
 
           <div className="flex flex-row justify-center">
-            <div className="flex-1 flex flex-row ">
+            <div className="flex-1 flex flex-row justify-around">
               <FormControlLabel
                 control={
                   <Checkbox
@@ -1055,11 +1059,75 @@ const AddExam = (props) => {
         <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
             <h1 className="font-700" style={{ color: '#f15a25' }}>
-            GLASSES CONDITION 
+              GLASSES CONDITION
             </h1>
           </div>
           <br></br>
           <div className="flex flex-row justify-center">
+            <div className="flex flex-row ml-10 justify-around">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    classname="ml-20"
+                    checked={form?.lost}
+                    onChange={handleChange}
+                    disabled={disabledState}
+                    name="lost"
+                  />
+                }
+                label="Lost"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    classname="ml-20"
+                    checked={form?.broken}
+                    onChange={handleChange}
+                    disabled={disabledState}
+                    name="broken"
+                  />
+                }
+                label="Broken"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    classname="ml-20"
+                    checked={form?.tooWeak}
+                    onChange={handleChange}
+                    disabled={disabledState}
+                    name="tooWeak"
+                  />
+                }
+                label="Too Weak"
+
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    classname="ml-20"
+                    checked={form?.tooStrong}
+                    onChange={handleChange}
+                    disabled={disabledState}
+                    name="tooStrong"
+                  />
+                }
+                label="Too Strong"
+              />
+              <TextField
+                className="ml-15"
+                size="small"
+                id="outlined-multiline-static"
+                label="Other"
+                disabled={disabledState}
+                value={form?.otherCondition}
+                onChange={handleChange}
+                name={'otherCondition'}
+                variant="outlined"
+              />
+            </div>
+          </div>
+          {/* <div className="flex flex-row justify-center">
             <div className="flex-1 flex flex-row justify-center">
               <FormControlLabel
                 control={
@@ -1133,7 +1201,7 @@ const AddExam = (props) => {
 
             </div>
             <br></br><br></br>
-          </div>
+          </div> */}
 
         </div>
       </div>
@@ -1142,7 +1210,7 @@ const AddExam = (props) => {
         <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
             <h1 className="font-700" style={{ color: '#f15a25' }}>
-            PURPOSE OF GLASSES
+              PURPOSE OF GLASSES
             </h1>
           </div>
           <br></br>
@@ -1186,11 +1254,11 @@ const AddExam = (props) => {
         <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
             <h1 className="font-700" style={{ color: '#f15a25' }}>
-            LENS TYPE
+              LENS TYPE
             </h1>
           </div>
           <br></br>
-          <div className="flex flex-row justify-center ">
+          <div className="flex flex-row  justify-around">
 
             <div className="ml-24">
               <FormControl component="fieldset">
@@ -1238,12 +1306,12 @@ const AddExam = (props) => {
         <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
             <h1 className="font-700" style={{ color: '#f15a25' }}>
-            CONTACT LENS
+              CONTACT LENS
             </h1>
           </div>
           <br></br>
 
-          <div className="flex flex-row justify-center ">
+          <div className="flex flex-row  justify-around">
 
             <div className="ml-24">
               <FormControl component="fieldset">
@@ -1319,7 +1387,7 @@ const AddExam = (props) => {
         <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
             <h1 className="font-700" style={{ color: '#f15a25' }}>
-            VISUAL FIELD
+              VISUAL FIELD
             </h1>
           </div>
           <br></br>
@@ -1352,13 +1420,13 @@ const AddExam = (props) => {
                 onChange={handleChange}
                 name={'confrontation'}
 
-              />              
+              />
             </div>
           </div>
           <br></br><br></br>
-        </div>        
+        </div>
       </div>
-      
+
       <div className="flex flex-col h-260 px-16 py-6">
         <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
@@ -1367,10 +1435,10 @@ const AddExam = (props) => {
             </h1>
           </div>
           <br></br>
-          <div className=" border-b-1 border-black border-solid px-11"> 
+          {/* <div className=" border-b-1 border-black border-solid px-11">
 
-          <div className="flex flex-row justify-center w-full">
-            <div className="flex flex-col h-260 py-6">
+            <div className=   "flex flex-row justify-around px-10 w-full">
+              <div className="flex flex-col h-260 py-6">
                 <div className="justify-around py-30">
                   <div className="flex flex-row justify-around px-60">
 
@@ -1497,30 +1565,30 @@ const AddExam = (props) => {
                   <div className="flex flex-row px-16  sm:px-18 w-full">
                     <div className="px-36 py-12 w-1/2 h-auto justify-between">
                       <div className="flex flex-row justify-center">
-                      {/* <h3 className="font-700">{`IOP:\u00A0\u00A0NCT\u00A0\u00A0\u00A0GAT`}</h3> */}
-                      <h3 className="font-700"> {`IOP:`}</h3>
-                      <FormControl component="fieldset">
-                  <RadioGroup
-                    className="ml-10"
-                    row
-                    aria-label="IOP"
-                    name="IOP"
-                    value={form?.IOP}
-                    onChange={handleChange}>
-                    <FormControlLabel
-                      value="NCT"
-                      control={<Radio />}
-                      disabled={disabledState}
-                      label="NCT"
-                    />
-                    <FormControlLabel
-                      value="GAT"
-                      disabled={disabledState}
-                      control={<Radio />}
-                      label="GAT"
-                    />
-                  </RadioGroup>
-                </FormControl>
+                         <h3 className="font-700">{`IOP:\u00A0\u00A0NCT\u00A0\u00A0\u00A0GAT`}</h3> 
+                        <h3 className="font-700"> {`IOP:`}</h3>
+                        <FormControl component="fieldset">
+                          <RadioGroup
+                            className="ml-10"
+                            row
+                            aria-label="IOP"
+                            name="IOP"
+                            value={form?.IOP}
+                            onChange={handleChange}>
+                            <FormControlLabel
+                              value="NCT"
+                              control={<Radio />}
+                              disabled={disabledState}
+                              label="NCT"
+                            />
+                            <FormControlLabel
+                              value="GAT"
+                              disabled={disabledState}
+                              control={<Radio />}
+                              label="GAT"
+                            />
+                          </RadioGroup>
+                        </FormControl>
 
                       </div>
 
@@ -1548,7 +1616,7 @@ const AddExam = (props) => {
                           </Grid>
                         </MuiPickersUtilsProvider>
                       </div>
-                     <br></br>
+                      <br></br>
                     </div>
                     <div className="px-36 py-12 w-1/2 h-auto justify-between">
                       <div className="flex flex-row">
@@ -1590,7 +1658,7 @@ const AddExam = (props) => {
                     </div>
                   </div>
 
-                  
+
                   <div className="flex flex-row px-60">
                     <h3 className="font-700">{`Color Vision/Ishihara:\u00A0\u00A0\u00A0\u00A0 OD:`}</h3>
                     <TextField
@@ -1649,30 +1717,30 @@ const AddExam = (props) => {
                                               \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0
                                               \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Binoular:\u00A0\u00A0`}</h3>
 
-                    
+
                     <FormControl component="fieldset">
-                  <RadioGroup
-                    className="ml-10"
-                    row
-                    aria-label="binouler"
-                    name="binouler"
-                    value={form?.binouler}
-                    onChange={handleChange}>
-                    <FormControlLabel
-                      value="Yes"
-                      control={<Radio />}
-                      disabled={disabledState}
-                      label="Yes"
-                    />
-                    <FormControlLabel
-                      value="No"
-                      disabled={disabledState}
-                      control={<Radio />}
-                      label="No"
-                    />
-                  </RadioGroup>
-                </FormControl>
-                <br></br>
+                      <RadioGroup
+                        className="ml-10"
+                        row
+                        aria-label="binouler"
+                        name="binouler"
+                        value={form?.binouler}
+                        onChange={handleChange}>
+                        <FormControlLabel
+                          value="Yes"
+                          control={<Radio />}
+                          disabled={disabledState}
+                          label="Yes"
+                        />
+                        <FormControlLabel
+                          value="No"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="No"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    <br></br>
                   </div>
                   <div className="flex flex-row px-60">
                     <h3 className="font-700">{`Phoria:\u00A0(H)\u00A0\u00A0`}</h3>
@@ -1691,38 +1759,38 @@ const AddExam = (props) => {
                       }}
                       type="number"
                     />
-                    
-                    
-                    <FormControl component="fieldset">
-                  <RadioGroup
-                    className="ml-10"
-                    row
-                    aria-label="Phoriah"
-                    name="Phoriah"
-                    value={form?.Phoriah}
-                    onChange={handleChange}>
-                    <FormControlLabel
-                      value="XP"
-                      control={<Radio />}
-                      disabled={disabledState}
-                      label="XP"
-                    />
-                    <h3 className="font-700">{`\u00A0/\u00A0\u00A0`}</h3>
 
-                    <FormControlLabel
-                      value="EP"
-                      disabled={disabledState}
-                      control={<Radio />}
-                      label="EP"
-                    />
-                  </RadioGroup>
-                </FormControl>
+
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        className="ml-10"
+                        row
+                        aria-label="Phoriah"
+                        name="Phoriah"
+                        value={form?.Phoriah}
+                        onChange={handleChange}>
+                        <FormControlLabel
+                          value="XP"
+                          control={<Radio />}
+                          disabled={disabledState}
+                          label="XP"
+                        />
+                        <h3 className="font-700">{`\u00A0/\u00A0\u00A0`}</h3>
+
+                        <FormControlLabel
+                          value="EP"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="EP"
+                        />
+                      </RadioGroup>
+                    </FormControl>
 
                     <h3 className="font-700">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0
                                               \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0
                                                ( V ):\u00A0\u00A0`}</h3>
 
-<TextField
+                    <TextField
                       size="small"
                       style={{ width: 50 }}
                       id="standard-basic"
@@ -1738,31 +1806,31 @@ const AddExam = (props) => {
                       type="number"
                     />
                     <FormControl component="fieldset">
-                  <RadioGroup
-                    className="ml-10"
-                    row
-                    aria-label="Phoriav"
-                    name="Phoriav"
-                    value={form?.Phoriav}
-                    onChange={handleChange}>
-                    <FormControlLabel
-                      value="RH"
-                      control={<Radio />}
-                      disabled={disabledState}
-                      label="RH"
-                    />
-                    <h3 className="font-700">{`\u00A0/\u00A0\u00A0`}</h3>
-                    <FormControlLabel
-                      value="LH"
-                      disabled={disabledState}
-                      control={<Radio />}
-                      label="LH"
-                    />
-                  </RadioGroup>
-                </FormControl>
-                <br></br>
+                      <RadioGroup
+                        className="ml-10"
+                        row
+                        aria-label="Phoriav"
+                        name="Phoriav"
+                        value={form?.Phoriav}
+                        onChange={handleChange}>
+                        <FormControlLabel
+                          value="RH"
+                          control={<Radio />}
+                          disabled={disabledState}
+                          label="RH"
+                        />
+                        <h3 className="font-700">{`\u00A0/\u00A0\u00A0`}</h3>
+                        <FormControlLabel
+                          value="LH"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="LH"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    <br></br>
                   </div>
-                  
+
                   <div className="flex flex-row px-60">
                     <h3 className="font-700">{`Blood Pressure: \u00A0`}</h3>
                     <TextField
@@ -1815,7 +1883,23 @@ const AddExam = (props) => {
                       </Grid>
                     </MuiPickersUtilsProvider>
                   </div>
-                  <div className="flex flex-row px-60">
+                  <div className="p-16 sm:p-24 w-full">
+                    <div className="flex flex-row px-20">
+                      <div className="p-8 h-auto flex-1"></div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">Sphere</h3>
+                      </div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">Cylinder</h3>
+                      </div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">Axis</h3>
+                      </div>
+                      <div className="p-8 h-auto flex-1">
+                        <h3 className="text-center font-700">Add</h3>
+                      </div>
+                    </div>
+                    {/* <div className="flex flex-row px-60">
                     <div className="p-2 w-1/5 h-auto ">
                       <h4 className="text-center">EG Rx</h4>
                     </div>
@@ -1831,156 +1915,157 @@ const AddExam = (props) => {
                     <div className="p-2 w-1/5 h-auto ">
                       <h4 className="text-center">ADD</h4>
                     </div>
-                  </div>
-                  <div className="flex flex-row px-60">
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <h4 className="text-center font-700">OD</h4>
+                  </div> 
+                    <div className="flex flex-row px-20">
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h4 className="text-center font-700">OD</h4>
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          disabled={disabledState}
+                          id="standard-basic"
+                          value={form?.odSphere}
+                          onChange={handleChange}
+                          name={'odSphere'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.odCylinder}
+                          onChange={handleChange}
+                          name={'odCylinder'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.odAxis}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'odAxis'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.odAdd}
+                          onChange={handleChange}
+                          disabled={disabledState}
+                          name={'odAdd'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
                     </div>
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        disabled={disabledState}
-                        id="standard-basic"
-                        value={form?.odSphere}
-                        onChange={handleChange}
-                        name={'odSphere'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        disabled={disabledState}
-                        value={form?.odCylinder}
-                        onChange={handleChange}
-                        name={'odCylinder'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.odAxis}
-                        disabled={disabledState}
-                        onChange={handleChange}
-                        name={'odAxis'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.odAdd}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name={'odAdd'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-row px-60">
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <h4 className="text-center font-700">OS</h4>
-                    </div>
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        disabled={disabledState}
-                        id="standard-basic"
-                        value={form?.osSphere}
-                        onChange={handleChange}
-                        name={'osSphere'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        disabled={disabledState}
-                        id="standard-basic"
-                        value={form?.osCylinder}
-                        onChange={handleChange}
-                        name={'osCylinder'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        disabled={disabledState}
-                        value={form?.osAxis}
-                        onChange={handleChange}
-                        name={'osAxis'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                    <div className="p-8 w-1/5 h-auto border-grey-400 border-solid border-1">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.osAdd}
-                        disabled={disabledState}
-                        onChange={handleChange}
-                        name={'osAdd'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                      <br></br><br></br>
+                    <div className="flex flex-row px-20">
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h4 className="text-center font-700">OS</h4>
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          disabled={disabledState}
+                          id="standard-basic"
+                          value={form?.osSphere}
+                          onChange={handleChange}
+                          name={'osSphere'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          disabled={disabledState}
+                          id="standard-basic"
+                          value={form?.osCylinder}
+                          onChange={handleChange}
+                          name={'osCylinder'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.osAxis}
+                          onChange={handleChange}
+                          name={'osAxis'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.osAdd}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'osAdd'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                        <br></br><br></br>
+                      </div>
                     </div>
                   </div>
                 </div>
-                {/* <div className="p-8 ">
+               <div className="p-8 ">
               <div className="flex flex-row px-60">
                 <h3 className="font-700 pt-10">{`Amsler Grid:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 OD \u00A0\u00A0`}</h3>
                 <FormControl component="fieldset">
@@ -2140,487 +2225,181 @@ const AddExam = (props) => {
                 </div>
               </div>
               
-            </div> */}
+            </div> 
               </div>
             </div>
-          </div>
-          <div className=" border-b-1 border-black border-solid px-11"> 
+          </div> */}
+          <div className=" border-b-1 border-black border-solid px-11">
+            <div className="p-16 sm:p-24 w-full">
+            <div className="flex flex-row justify-around px-10 w-full">
+              <div className="flex flex-col h-260 py-6">
+                <div className="justify-around py-30">
+                  <div className="flex flex-row justify-around px-60">
 
-          <div className="flex flex-row w-full">
+                    <h3 className="font-700">Far</h3>
 
-              <div className=" w-full h-auto justify-between">
-                <div className="flex flex-row justify-around">
-                <div className="flex-1 w-1/5 flex flex-row ">
-                <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.diagnosticLenses}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="diagnosticLenses"
-                      />
-                    }
-                    label="Diagnostic Lenses"
-                  />
-                </div>
-                <div className="flex-1 w-1/5 flex flex-row ">
-                <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.seeAtDispense}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="seeAtDispense"
-                      />
-                    }
-                    label="See At Dispense"
-                  />
-                </div>
-                <div className="flex-1 w-1/5 flex flex-row ">
-                <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.finalRx}
-                        disabled={disabledState}
-                        onChange={handleChange}
-                        name="finalRx"
-                      />
-                    }
-                    label="Final Rx"
-                  />
-                </div>
-                <div className="flex-1 w-1/5 flex flex-row ">
-                <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.followUpRequired}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="followUpRequired"
-                      />
-                    }
-                    label="Follow-Up Required"
-                  />
-                </div>
-                <div className="flex-1 w-1/5 flex flex-row ">
-                <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.R1}
-                        disabled={disabledState}
-                        onChange={handleChange}
-                        name="R1"
-                      />
-                    }
-                    label={`1 \u00A0\u00A0& \u00A0\u00A0R`}
-                  />
-                </div>
-                </div>
-                <div className="flex flex-row px-25">
-                  <div className="p-2 w-1/7  h-auto flex-1">
-                    <h3 className="text-center font-700">CL RX</h3>
+                    <h3 className="font-700">Near</h3>
                   </div>
-                  <div className="p-2 w-1/7  h-auto flex-1">
-                    <h3 className="text-center font-700">Sphere</h3>
-                  </div>
-                  <div className="p-2 w-1/7  h-auto flex-1">
-                    <h3 className="text-center font-700">Cylinder</h3>
-                  </div>
-                  <div className="p-2 w-1/7  h-auto flex-1">
-                    <h3 className="text-center font-700">Axis</h3>
-                  </div>
-                  <div className="p-2 w-1/7  h-auto flex-1">
-                    <h3 className="text-center font-700">BC</h3>
-                  </div>
-                  <div className="p-2 w-1/7  h-auto flex-1">
-                    <h3 className="text-center font-700">DIA</h3>
-                  </div>
-                  <div className="p-2 w-1/7  h-auto flex-1">
-                    <h3 className="text-center font-700">Brand</h3>
-                  </div>
-                </div>
-                <div className="flex flex-row px-60">
-                  <div className="p-8 flex-1 w-1/7  h-auto border-grey-400 border-solid border-1 justify-between">
-                    <h3 className="text-center font-700">OD</h3>
-                  </div>
-                  <div className="p-8 flex-1 w-1/7   h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOdSphere}
-                      onChange={handleChange}
-                      disabled={disabledState}
-                      name={'clrxOdSphere'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOdCylinder}
-                      onChange={handleChange}
-                      disabled={disabledState}
-                      name={'clrxOdCylinder'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  lex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOdAxis}
-                      onChange={handleChange}
-                      disabled={disabledState}
-                      name={'clrxOdAxis'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOdBc}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'clrxOdBc'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOdDia}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'clrxOdDia'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOdBrand}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'clrxOdBrand'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-row px-60">
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <h3 className="text-center font-700">OS</h3>
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOsSphere}
-                      onChange={handleChange}
-                      disabled={disabledState}
-                      name={'clrxOsSphere'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOsCylinder}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'clrxOsCylinder'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOsAxis}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'clrxOsAxis'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOsBc}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'clrxOsBc'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOsDia}
-                      onChange={handleChange}
-                      disabled={disabledState}
-                      name={'clrxOsDia'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7  flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.clrxOsBrand}
-                      onChange={handleChange}
-                      disabled={disabledState}
-                      name={'clrxOsBrand'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-row px-25">
-                  <div className="p-1 w-1/8  h-auto flex-1">
-                    <h3 className="text-center font-700">SUBJ RX</h3>
-                  </div>
-                  <div className="p-1 w-1/8 h-auto flex-1">
-                    <h3 className="text-center font-700">Sphere</h3>
-                  </div>
-                  <div className="p-1 w-1/8 h-auto flex-1">
-                    <h3 className="text-center font-700">Cylinder</h3>
-                  </div>
-                  <div className="p-1 w-1/8 h-auto flex-1">
-                    <h3 className="text-center font-700">Axis</h3>
-                  </div>
-                  <div className="p-1 w-1/8 h-auto flex-1">
-                    <h3 className="text-center font-700">Prism/Base</h3>
-                  </div>
-                  <div className="p-1 w-1/8 h-auto flex-1">
-                    <h3 className="text-center font-700">VA</h3>
-                  </div>
-                  <div className="p-1 w-1/8 h-auto flex-1">
-                    <h3 className="text-center font-700">Add</h3>
-                  </div>
-                  <div className="p-1 w-1/8 h-auto flex-1">
-                    <h3 className="text-center font-700">VA</h3>
-                  </div>
-                </div>
-                <div className="flex flex-row px-60">
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <h3 className="text-center font-700">OD</h3>
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.subjRxOdSphere}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'subjRxOdSphere'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.subjRxOdCylinder}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'subjRxOdCylinder'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.subjRxOdAxis}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'subjRxOdAxis'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.subjRxOdPrismBase}
-                      onChange={handleChange}
-                      name={'subjRxOdPrismBase'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <div className="flex flex-row justify-center">
-                      <h3 className="text-center font-700">20/</h3>
-                      <TextField
-                        size="small"
-                        style={{ width: 50 }}
-                        id="standard-basic"
-                        disabled={disabledState}
-                        value={form?.subjRxOdVa1}
-                        onChange={handleChange}
-                        name={'subjRxOdVa1'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
+                  <div className="flex flex-row w-full">
+                    <div className="px-36 py-12 h-auto border-grey-400 border-solid border-1 justify-between">
+                      <div className="flex flex-row justify-around">
+                        <h3>Unaided</h3>
+                        <h3>Aided</h3>
+                      </div>
+                      <div className="flex  flex-row">
+                        <h3 className="font-700">{`OD\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A020\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+                        <TextField
+                          size="small"
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.farOd}
+                          onChange={handleChange}
+                          name={'farOd'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="flex flex-row">
+                        <h3 className="font-700">{`OS\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A020\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+                        <TextField
+                          size="small"
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.farOs}
+                          onChange={handleChange}
+                          name={'farOs'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="flex flex-row">
+                        <h3 className="font-700">{`OU\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A020\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+                        <TextField
+                          size="small"
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.farOu}
+                          onChange={handleChange}
+                          name={'farOu'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                    </div>
+                    <div className="px-36 py-12 w-1/2 h-auto border-grey-400 border-solid border-1 justify-between">
+                      <div className="flex flex-row justify-around">
+                        <h3>Unaided</h3>
+                        <h3>Aided</h3>
+                      </div>
+                      <div className="flex  flex-row">
+                        <h3 className="font-700">{`OD\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A020\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+                        <TextField
+                          size="small"
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.nearOd}
+                          onChange={handleChange}
+                          name={'nearOd'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="flex flex-row">
+                        <h3 className="font-700">{`OS\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A020\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+                        <TextField
+                          size="small"
+                          id="standard-basic"
+                          value={form?.nearOs}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'nearOs'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="flex flex-row">
+                        <h3 className="font-700">{`OU\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A020\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+                        <TextField
+                          size="small"
+                          id="standard-basic"
+                          value={form?.nearOu}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'nearOu'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.subjRxOdAdd}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'subjRxOdAdd'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <div className="flex flex-row justify-center">
-                      <h3 className="text-center font-700">20/</h3>
-                      <TextField
-                        size="small"
-                        style={{ width: 50 }}
-                        id="standard-basic"
-                        disabled={disabledState}
-                        value={form?.subjRxOdVa2}
-                        onChange={handleChange}
-                        name={'subjRxOdVa2'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
+                 
                   </div>
                 </div>
+               </div>
+              <div className="p-16  sm:p-24 w-full">
+              <div className="flex flex-row px-20">
+                        <div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                    <h3 className="font-700 pt-10"> IOP</h3>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        className="ml-4"
+                        row
+                        aria-label="IOP"
+                        name="IOP"
+                        value={form?.IOP}
+                        onChange={handleChange}>
+                        <FormControlLabel
+                          value="NCT"
+                          control={<Radio />}
+                          disabled={disabledState}
+                          label="NCT"
+                        />
+                        <FormControlLabel
+                          value="GAT"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="GAT"
+                        />
+                      </RadioGroup>
+                    </FormControl>
 
-                <div className="flex flex-row px-60">
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <h3 className="text-center font-700">OS</h3>
                   </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  </div>
+                  <div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                    <h3 className="font-700 pt-10">OD:</h3>
                     <TextField
                       size="small"
-                      fullWidth
                       id="standard-basic"
                       disabled={disabledState}
-                      value={form?.subjRxOsSphere}
+                      value={form?.odmmhg}
                       onChange={handleChange}
-                      name={'subjRxOsSphere'}
+                      name={'odmmhg'}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -2628,152 +2407,48 @@ const AddExam = (props) => {
                       }}
                       type="number"
                     />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.subjRxOsCylinder}
-                      onChange={handleChange}
-                      name={'subjRxOsCylinder'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.subjRxOsAxis}
-                      onChange={handleChange}
-                      name={'subjRxOsAxis'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      disabled={disabledState}
-                      id="standard-basic"
-                      value={form?.subjRxOsPrismBase}
-                      onChange={handleChange}
-                      name={'subjRxOsPrismBase'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <div className="flex flex-row justify-center">
-                      <h3 className="text-center font-700">20/</h3>
-                      <TextField
-                        size="small"
-                        style={{ width: 50 }}
-                        id="standard-basic"
-                        disabled={disabledState}
-                        value={form?.subjRxOsVa1}
-                        onChange={handleChange}
-                        name={'subjRxOsVa1'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      value={form?.subjRxOsAdd}
-                      disabled={disabledState}
-                      onChange={handleChange}
-                      name={'subjRxOsAdd'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <div className="flex flex-row justify-center">
-                      <h3 className="text-center font-700">20/</h3>
-                      <TextField
-                        size="small"
-                        style={{ width: 50 }}
-                        id="standard-basic"
-                        disabled={disabledState}
-                        value={form?.subjRxOsVa2}
-                        onChange={handleChange}
-                        name={'subjRxOsVa2'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                  </div>
-                </div>
+                    <h3 className="font-700">mm/Hg</h3>
 
-                <div className="flex flex-row px-px-60">
-                  <div className="p-2  w-1/7 h-auto flex-1">
-                    <h3 className="text-center font-700">EG RX</h3>
                   </div>
-                  <div className="p-2 w-1/7 h-auto flex-1">
-                    <h3 className="text-center font-700">Sphere</h3>
                   </div>
-                  <div className="p-2 w-1/7 h-auto flex-1">
-                    <h3 className="text-center font-700">Cylinder</h3>
-                  </div>
-                  <div className="p-2 w-1/7 h-auto flex-1">
-                    <h3 className="text-center font-700">Axis</h3>
-                  </div>
-                  <div className="p-2 w-1/7 h-auto flex-1">
-                    <h3 className="text-center font-700">Prism/Base</h3>
-                  </div>
-                  <div className="p-2 w-1/7 h-auto flex-1">
-                    <h3 className="text-center font-700">VA</h3>
-                  </div>
-                  <div className="p-2 w-1/7 h-auto flex-1">
-                    <h3 className="text-center font-700">Add</h3>
-                  </div>
-                </div>
-                <div className="flex flex-row px-60">
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <h3 className="text-center font-700">OD</h3>
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+</div>
+<div className="p-16 sm:p-24 w-full">
+<div className="flex flex-row px-60">
+<div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                    
+                    <h3 className="pt-4 font-700">Time:</h3>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <Grid container>
+                        <KeyboardTimePicker
+                          className="m-0 px-18"
+                          size="small"
+                          margin="normal"
+                          disabled={disabledState}
+                          id="time-picker"
+                          value={form?.examTime}
+                          onChange={(date) => {
+                            handleChange({
+                              target: { name: 'examTime', value: date }
+                            });
+                          }}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change time'
+                          }}
+                        />
+                      </Grid>
+                    </MuiPickersUtilsProvider>
+                  </div></div>
+                  <div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                        <h3 className="font-700">OS:</h3>
                     <TextField
                       size="small"
-                      fullWidth
                       id="standard-basic"
-                      value={form?.egRxOdSphere}
-                      onChange={handleChange}
                       disabled={disabledState}
-                      name={'egRxOdSphere'}
+                      value={form?.osmmhg}
+                      onChange={handleChange}
+                      name={'osmmhg'}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -2781,16 +2456,22 @@ const AddExam = (props) => {
                       }}
                       type="number"
                     />
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                    <h3 className="font-700">mm/Hg</h3>
+                        </div></div>   
+         </div>
+         </div>
+                
+                
+                {/* <div className="px-36 py-12  h-auto justify-between">
+                  <div className="flex flex-row justify-center">
+                    <h3 className="font-700">OD:</h3>
                     <TextField
                       size="small"
-                      fullWidth
                       id="standard-basic"
-                      value={form?.egRxOdCylinder}
-                      onChange={handleChange}
                       disabled={disabledState}
-                      name={'egRxOdCylinder'}
+                      value={form?.odmmhg}
+                      onChange={handleChange}
+                      name={'odmmhg'}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -2798,16 +2479,17 @@ const AddExam = (props) => {
                       }}
                       type="number"
                     />
+                    <h3 className="font-700">mm/Hg</h3>
                   </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <div className="flex flex-row">
+                    <h3 className="font-700">OS:</h3>
                     <TextField
                       size="small"
-                      fullWidth
                       id="standard-basic"
-                      value={form?.egRxOdAxis}
                       disabled={disabledState}
+                      value={form?.osmmhg}
                       onChange={handleChange}
-                      name={'egRxOdAxis'}
+                      name={'osmmhg'}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -2815,255 +2497,1448 @@ const AddExam = (props) => {
                       }}
                       type="number"
                     />
+                    <h3 className="font-700">mm/Hg</h3>
                   </div>
-                  <div className="p-8  w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.egRxOdPrismBase}
-                      onChange={handleChange}
-                      name={'egRxOdPrismBase'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <div className="flex flex-row justify-center">
-                      <h3 className="text-center font-700">20/</h3>
-                      <TextField
-                        size="small"
-                        style={{ width: 50 }}
-                        id="standard-basic"
-                        disabled={disabledState}
-                        value={form?.egRxOdVa1}
-                        onChange={handleChange}
-                        name={'egRxOdVa1'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.egRxOdAdd}
-                      onChange={handleChange}
-                      name={'egRxOdAdd'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                </div>
+                </div> */}
+              </div>
+              
+                        <div className="p-16 sm:p-24 w-full">
+                        <div className="flex flex-row px-20">
+              <div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">Color Vision/Ishihara:</h3>
+                          <h3 className="ml-20 font-700">OD:</h3>
 
-                <div className="flex flex-row px-60">
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <h3 className="text-center font-700">OS</h3>
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.egRxOsSphere}
-                      onChange={handleChange}
-                      name={'egRxOsSphere'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.egRxOsCylinder}
-                      onChange={handleChange}
-                      name={'egRxOsCylinder'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.egRxOsAxis}
-                      onChange={handleChange}
-                      name={'egRxOsAxis'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.egRxOsPrismBase}
-                      onChange={handleChange}
-                      name={'egRxOsPrismBase'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <div className="flex flex-row justify-center">
-                      <h3 className="text-center font-700">20/</h3>
-                      <TextField
-                        size="small"
-                        style={{ width: 50 }}
-                        disabled={disabledState}
-                        id="standard-basic"
-                        value={form?.egRxOsVa1}
-                        onChange={handleChange}
-                        name={'egRxOsVa1'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
-                    </div>
-                  </div>
-                  <div className="p-8 w-1/7 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      disabled={disabledState}
-                      id="standard-basic"
-                      value={form?.egRxOsAdd}
-                      onChange={handleChange}
-                      name={'egRxOsAdd'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-row px-60">
-                  <TextField
-                    className="mt-12"
-                    size="medium"
+<TextField
+  size="small"
+  style={{ width: 50 }}
+  id="standard-basic"
+  value={form?.odVision}
+  disabled={disabledState}
+  onChange={handleChange}
+  name={'odVision '}
+  InputProps={{
+    inputProps: {
+      style: { textAlign: 'center' }
+    }
+  }}
+  type="number"
+/>
+<h3 className="font-700">/7</h3>
+
+                  
+                        </div>
+                        </div>
+                        <div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">OS:</h3>
+                          <TextField
+                    size="small"
+                    style={{ width: 50 }}
+                    id="standard-basic"
+                    value={form?.osVision}
                     disabled={disabledState}
-                    id="outlined-multiline-static"
-                    label="NRA/PRA"
-                    value={form?.nraPra}
                     onChange={handleChange}
-                    name={'nraPra'}
-                    variant="outlined"
-                  />
-                  <TextField
-                    className="ml-12 mt-12"
-                    size="medium"
-                    disabled={disabledState}
-                    id="outlined-multiline-static"
-                    label="BCC"
-                    value={form?.bcc}
-                    onChange={handleChange}
-                    name={'bcc'}
-                    variant="outlined"
-                  />
-                </div>
-                <div className="flex flex-row px-60">
-                  <TextField
-                    className="mt-10 "
-                    fullWidth
-                    InputProps={{ style: { fontSize: 20 } }}
-                    disabled={disabledState}
-                    InputLabelProps={{ style: { fontSize: 20 } }}
-                    id="outlined-multiline-static"
-                    label="Additional Testing"
-                    multiline
-                    rows={3}
-                    value={form?.additionalTesting}
-                    onChange={handleChange}
-                    name={'additionalTesting'}
-                    variant="outlined"
+                    name={'osVision '}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
                   />
 
+<h3 className="font-700">{`/ 7`}</h3>
+
+                  
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        <div className="p-16 sm:p-24 w-full">
+
+                        <div className="flex flex-row px-20">
+                        <div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">Stereopsis:</h3>
+                          <TextField
+                    size="small"
+                    style={{ width: 85 }}
+                    id="standard-basic"
+                    value={form?.Stereopsistime}
+                    disabled={disabledState}
+                    onChange={handleChange}
+                    name={'Stereopsistime '}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+                   <h3 className="font-700">sec</h3>
+                        </div>
+                        </div>
+                        
+                        <div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">Binoular:</h3>
+                          <FormControl component="fieldset">
+                    <RadioGroup
+                      className="ml-10"
+                      row
+                      aria-label="binouler"
+                      name="binouler"
+                      value={form?.binouler}
+                      onChange={handleChange}>
+                      <FormControlLabel
+                        value="Yes"
+                        control={<Radio />}
+                        disabled={disabledState}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="No"
+                        disabled={disabledState}
+                        control={<Radio />}
+                        label="No"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+              
+              {/* <div className="flex ">
+                <div className="flex flex-row px-60">
+
+                  <h3 className="font-700">{`Stereopsis:`}</h3>
+                  <h3 className="font-700 ml-40">{` `}</h3>
+                
+                  <h3 className="font-700">{`sec `}</h3>
+                  <h3 className="font-700 ml-70">{` `}</h3>
+                  <h3 className="font-700 ml-70">{`Binoular:`}</h3>
+                  <h3 className="font-700 ml-20">{` `}</h3>
+
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      className="ml-10"
+                      row
+                      aria-label="binouler"
+                      name="binouler"
+                      value={form?.binouler}
+                      onChange={handleChange}>
+                      <FormControlLabel
+                        value="Yes"
+                        control={<Radio />}
+                        disabled={disabledState}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="No"
+                        disabled={disabledState}
+                        control={<Radio />}
+                        label="No"
+                      />
+                    </RadioGroup>
+                  </FormControl>
                   <br></br>
                 </div>
-                <br></br><br></br>
+              </div> */}
+              <div className="p-16 sm:p-24 w-full">
+
+              <div className="flex flex-row px-20">
+                        <div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">Phoria:  (H)</h3>
+                          <TextField
+                    size="small"
+                    style={{ width: 85 }}
+                    id="standard-basic"
+                    value={form?.Phoriah}
+                    disabled={disabledState}
+                    onChange={handleChange}
+                    name={'Phoriah '}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      className="ml-2"
+                      row
+                      aria-label="Phoriah"
+                      name="Phoriah"
+                      value={form?.Phoriah}
+                      onChange={handleChange}>
+                      <FormControlLabel
+                        value="XP"
+                        control={<Radio />}
+                        disabled={disabledState}
+                        label="XP"
+                      />
+                      <h3 className="font-700 pt-10">/</h3>
+                      <FormControlLabel
+                      
+                        value="EP"
+                        disabled={disabledState}
+                        control={<Radio />}
+                        label="EP"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                        </div>
+                        </div>
+              <div className="p-3 flex-1 h-auto  justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">(V):</h3>
+                          <TextField
+                    size="small"
+                    style={{ width: 85 }}
+                    id="standard-basic"
+                    value={form?.Phoriav}
+                    disabled={disabledState}
+                    onChange={handleChange}
+                    name={'Phoriav '}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      className="ml-2"
+                      row
+                      aria-label="Phoriav"
+                      name="Phoriav"
+                      value={form?.Phoriav}
+                      onChange={handleChange}>
+                      <FormControlLabel
+                        value="RH"
+                        control={<Radio />}
+                        disabled={disabledState}
+                        label="RH"
+                      />
+                      <h3 className="font-700 pt-10">/</h3>
+
+                      <FormControlLabel
+                        value="LH"
+                        disabled={disabledState}
+                        control={<Radio />}
+                        label="LH"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                  
+                        </div>
+                        </div>
+              </div>
+              </div>
+              <div className="flex flex-row px-60 justify-around">
+                <h3 className="font-700">{`Blood `}</h3>
+                <h3 className="ml-7 font-700">{` Pressure: `}</h3>
+                <h3 className="ml-10 font-700">{` `}</h3>
+
+                <TextField
+                  size="small"
+                  style={{ width: 85 }}
+                  id="standard-basic"
+                  disabled={disabledState}
+                  value={form?.bpUp}
+                  onChange={handleChange}
+                  name={'bpUp'}
+                  InputProps={{
+                    inputProps: {
+                      style: { textAlign: 'center' }
+                    }
+                  }}
+                  type="number"
+                />
+                <h3 className="font-700 pt-10">/</h3>
+                <TextField
+                  size="small"
+                  style={{ width: 85 }}
+                  id="standard-basic"
+                  disabled={disabledState}
+                  value={form?.bpDown}
+                  onChange={handleChange}
+                  name={'bpDown'}
+                  InputProps={{
+                    inputProps: {
+                      style: { textAlign: 'center' }
+                    }
+                  }}
+                  type="number"
+                />
+                <h3 className="font-700 ml-10">@ </h3>
+                <h3 className="font-700 ml-20">Time</h3>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid container>
+                    <KeyboardTimePicker
+                      className="m-0 px-24"
+                      margin="normal"
+                      disabled={disabledState}
+                      id="time-picker"
+                      value={form?.bpTime}
+                      onChange={(date) => {
+                        handleChange({ target: { name: 'bpTime', value: date } });
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change time'
+                      }}
+                    />
+                  </Grid>
+                </MuiPickersUtilsProvider>
+              </div>
+            </div>
+            <div className="p-16 sm:p-24 w-full">
+
+              <div className="flex flex-row px-20">
+                <div className="p-1 h-auto flex-1">
+                  <h3 className="text-center font-700">EG RX</h3>
+                </div>
+                <div className="p-1 h-auto flex-1">
+                  <h3 className="text-center font-700">Sphere</h3>
+                </div>
+                <div className="p-1 h-auto flex-1">
+                  <h3 className="text-center font-700">Cylinder</h3>
+                </div>
+                <div className="p-1 h-auto flex-1">
+                  <h3 className="text-center font-700">Axis</h3>
+                </div>
+                <div className="p-1 h-auto flex-1">
+                  <h3 className="text-center font-700">Add</h3>
+                </div>
+              </div>
+
+              <div className="flex flex-row px-20">
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <h4 className="text-center font-700">OD</h4>
+                </div>
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <TextField
+                    size="small"
+                    fullWidth
+                    disabled={disabledState}
+                    id="standard-basic"
+                    value={form?.odSphere}
+                    onChange={handleChange}
+                    name={'odSphere'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+                </div>
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <TextField
+                    size="small"
+                    fullWidth
+                    id="standard-basic"
+                    disabled={disabledState}
+                    value={form?.odCylinder}
+                    onChange={handleChange}
+                    name={'odCylinder'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+                </div>
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <TextField
+                    size="small"
+                    fullWidth
+                    id="standard-basic"
+                    value={form?.odAxis}
+                    disabled={disabledState}
+                    onChange={handleChange}
+                    name={'odAxis'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+                </div>
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <TextField
+                    size="small"
+                    fullWidth
+                    id="standard-basic"
+                    value={form?.odAdd}
+                    onChange={handleChange}
+                    disabled={disabledState}
+                    name={'odAdd'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-row px-20">
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <h4 className="text-center font-700">OS</h4>
+                </div>
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <TextField
+                    size="small"
+                    fullWidth
+                    disabled={disabledState}
+                    id="standard-basic"
+                    value={form?.osSphere}
+                    onChange={handleChange}
+                    name={'osSphere'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+                </div>
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <TextField
+                    size="small"
+                    fullWidth
+                    disabled={disabledState}
+                    id="standard-basic"
+                    value={form?.osCylinder}
+                    onChange={handleChange}
+                    name={'osCylinder'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+                </div>
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <TextField
+                    size="small"
+                    fullWidth
+                    id="standard-basic"
+                    disabled={disabledState}
+                    value={form?.osAxis}
+                    onChange={handleChange}
+                    name={'osAxis'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+                </div>
+                <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                  <TextField
+                    size="small"
+                    fullWidth
+                    id="standard-basic"
+                    value={form?.osAdd}
+                    disabled={disabledState}
+                    onChange={handleChange}
+                    name={'osAdd'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+
+                </div>
+              </div>
+              <br></br><br></br>
+            </div>
+            <div className="p-16 sm:p-24 w-full">
+
+              <div className="flex justify-around flex-row w-full">
+
+                <div className=" w-full h-auto justify-between">
+                  <div className="flex flex-row justify-around">
+                    <div className="ml-20 h-auto flex-1">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={form?.diagnosticLenses}
+                            onChange={handleChange}
+                            disabled={disabledState}
+                            name="diagnosticLenses"
+                          />
+                        }
+                        label="Diagnostic Lenses"
+                      />
+                    </div>
+                    <div className=" h-auto flex-1">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={form?.seeAtDispense}
+                            onChange={handleChange}
+                            disabled={disabledState}
+                            name="seeAtDispense"
+                          />
+                        }
+                        label="See At Dispense"
+                      />
+                    </div>
+                    <div className=" h-auto flex-1">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={form?.finalRx}
+                            disabled={disabledState}
+                            onChange={handleChange}
+                            name="finalRx"
+                          />
+                        }
+                        label="Final Rx"
+                      />
+                    </div>
+                    <div className=" h-auto flex-1">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={form?.followUpRequired}
+                            onChange={handleChange}
+                            disabled={disabledState}
+                            name="followUpRequired"
+                          />
+                        }
+                        label="Follow-Up Required"
+                      />
+                    </div>
+                    <div className=" h-auto flex-1">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={form?.R1}
+                            disabled={disabledState}
+                            onChange={handleChange}
+                            name="R1"
+                          />
+                        }
+                        label={`1 \u00A0\u00A0& \u00A0\u00A0R`}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="p-16 sm:p-24 w-full">
+                    <div className="flex flex-row px-20">
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">CL RX</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Sphere</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Cylinder</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Axis</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">DIA</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">BC</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Brand</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Model</h3>
+                      </div>
+
+
+
+                    </div>
+
+                    <div className="flex flex-row px-20">
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h3 className="text-center font-700">OD</h3>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOdSphere}
+                          onChange={handleChange}
+                          disabled={disabledState}
+                          name={'clrxOdSphere'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOdCylinder}
+                          onChange={handleChange}
+                          disabled={disabledState}
+                          name={'clrxOdCylinder'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOdAxis}
+                          onChange={handleChange}
+                          disabled={disabledState}
+                          name={'clrxOdAxis'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOdDia}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'clrxOdDia'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOdBc}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'clrxOdBc'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOdBrand}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'clrxOdBrand'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOdModel}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'clrxOdModel'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row px-20">
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h3 className="text-center font-700">OS</h3>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOsSphere}
+                          onChange={handleChange}
+                          disabled={disabledState}
+                          name={'clrxOsSphere'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOsCylinder}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'clrxOsCylinder'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOsAxis}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'clrxOsAxis'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOsDia}
+                          onChange={handleChange}
+                          disabled={disabledState}
+                          name={'clrxOsDia'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOsBc}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'clrxOsBc'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOsBrand}
+                          onChange={handleChange}
+                          disabled={disabledState}
+                          name={'clrxOsBrand'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.clrxOdModel}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'clrxOdModel'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-16 sm:p-24 w-full">
+
+                    <div className="flex flex-row justify-around px-20">
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">SUBJ RX</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Sphere</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Cylinder</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Axis</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Prism/Base</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">VA</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Add</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">VA</h3>
+                      </div>
+                    </div>
+                    <div className="flex flex-row px-20">
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h3 className="text-center font-700">OD</h3>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.subjRxOdSphere}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'subjRxOdSphere'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.subjRxOdCylinder}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'subjRxOdCylinder'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.subjRxOdAxis}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'subjRxOdAxis'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.subjRxOdPrismBase}
+                          onChange={handleChange}
+                          name={'subjRxOdPrismBase'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">20/</h3>
+                          <TextField
+                            size="small"
+                            style={{ width: 50 }}
+                            id="standard-basic"
+                            disabled={disabledState}
+                            value={form?.subjRxOdVa1}
+                            onChange={handleChange}
+                            name={'subjRxOdVa1'}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: 'center' }
+                              }
+                            }}
+                            type="number"
+                          />
+                        </div>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.subjRxOdAdd}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'subjRxOdAdd'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">20/</h3>
+                          <TextField
+                            size="small"
+                            style={{ width: 50 }}
+                            id="standard-basic"
+                            disabled={disabledState}
+                            value={form?.subjRxOdVa2}
+                            onChange={handleChange}
+                            name={'subjRxOdVa2'}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: 'center' }
+                              }
+                            }}
+                            type="number"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row px-20">
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h3 className="text-center font-700">OS</h3>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.subjRxOsSphere}
+                          onChange={handleChange}
+                          name={'subjRxOsSphere'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.subjRxOsCylinder}
+                          onChange={handleChange}
+                          name={'subjRxOsCylinder'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.subjRxOsAxis}
+                          onChange={handleChange}
+                          name={'subjRxOsAxis'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          disabled={disabledState}
+                          id="standard-basic"
+                          value={form?.subjRxOsPrismBase}
+                          onChange={handleChange}
+                          name={'subjRxOsPrismBase'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">20/</h3>
+                          <TextField
+                            size="small"
+                            style={{ width: 50 }}
+                            id="standard-basic"
+                            disabled={disabledState}
+                            value={form?.subjRxOsVa1}
+                            onChange={handleChange}
+                            name={'subjRxOsVa1'}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: 'center' }
+                              }
+                            }}
+                            type="number"
+                          />
+                        </div>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.subjRxOsAdd}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'subjRxOsAdd'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">20/</h3>
+                          <TextField
+                            size="small"
+                            style={{ width: 50 }}
+                            id="standard-basic"
+                            disabled={disabledState}
+                            value={form?.subjRxOsVa2}
+                            onChange={handleChange}
+                            name={'subjRxOsVa2'}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: 'center' }
+                              }
+                            }}
+                            type="number"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-16 sm:p-24 w-full justify-around">
+
+                    <div className="flex flex-row px-20">
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">EG RX</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Sphere</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Cylinder</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Axis</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Prism/Base</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">VA</h3>
+                      </div>
+                      <div className="p-1 h-auto flex-1">
+                        <h3 className="text-center font-700">Add</h3>
+                      </div>
+                    </div>
+                    <div className="flex flex-row px-20">
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h3 className="text-center font-700">OD</h3>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.egRxOdSphere}
+                          onChange={handleChange}
+                          disabled={disabledState}
+                          name={'egRxOdSphere'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.egRxOdCylinder}
+                          onChange={handleChange}
+                          disabled={disabledState}
+                          name={'egRxOdCylinder'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          value={form?.egRxOdAxis}
+                          disabled={disabledState}
+                          onChange={handleChange}
+                          name={'egRxOdAxis'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.egRxOdPrismBase}
+                          onChange={handleChange}
+                          name={'egRxOdPrismBase'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">20/</h3>
+                          <TextField
+                            size="small"
+                            style={{ width: 50 }}
+                            id="standard-basic"
+                            disabled={disabledState}
+                            value={form?.egRxOdVa1}
+                            onChange={handleChange}
+                            name={'egRxOdVa1'}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: 'center' }
+                              }
+                            }}
+                            type="number"
+                          />
+                        </div>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.egRxOdAdd}
+                          onChange={handleChange}
+                          name={'egRxOdAdd'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-row px-20">
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <h3 className="text-center font-700">OS</h3>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.egRxOsSphere}
+                          onChange={handleChange}
+                          name={'egRxOsSphere'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.egRxOsCylinder}
+                          onChange={handleChange}
+                          name={'egRxOsCylinder'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.egRxOsAxis}
+                          onChange={handleChange}
+                          name={'egRxOsAxis'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          id="standard-basic"
+                          disabled={disabledState}
+                          value={form?.egRxOsPrismBase}
+                          onChange={handleChange}
+                          name={'egRxOsPrismBase'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <div className="flex flex-row justify-center">
+                          <h3 className="text-center font-700">20/</h3>
+                          <TextField
+                            size="small"
+                            style={{ width: 50 }}
+                            disabled={disabledState}
+                            id="standard-basic"
+                            value={form?.egRxOsVa1}
+                            onChange={handleChange}
+                            name={'egRxOsVa1'}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: 'center' }
+                              }
+                            }}
+                            type="number"
+                          />
+                        </div>
+                      </div>
+                      <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          disabled={disabledState}
+                          id="standard-basic"
+                          value={form?.egRxOsAdd}
+                          onChange={handleChange}
+                          name={'egRxOsAdd'}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }
+                            }
+                          }}
+                          type="number"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-row px-60">
+                    <TextField
+                      className="mt-12"
+                      size="medium"
+                      disabled={disabledState}
+                      id="outlined-multiline-static"
+                      label="NRA/PRA"
+                      value={form?.nraPra}
+                      onChange={handleChange}
+                      name={'nraPra'}
+                      variant="outlined"
+                    />
+                    <TextField
+                      className="ml-12 mt-12"
+                      size="medium"
+                      disabled={disabledState}
+                      id="outlined-multiline-static"
+                      label="BCC"
+                      value={form?.bcc}
+                      onChange={handleChange}
+                      name={'bcc'}
+                      variant="outlined"
+                    />
+                  </div>
+                  <div className="flex flex-row px-60">
+                    <TextField
+                      className="mt-10 "
+                      fullWidth
+                      InputProps={{ style: { fontSize: 20 } }}
+                      disabled={disabledState}
+                      InputLabelProps={{ style: { fontSize: 20 } }}
+                      id="outlined-multiline-static"
+                      label="Additional Testing"
+                      multiline
+                      rows={3}
+                      value={form?.additionalTesting}
+                      onChange={handleChange}
+                      name={'additionalTesting'}
+                      variant="outlined"
+                    />
+
+                    <br></br>
+                  </div>
+                  <br></br><br></br>
+                </div>
               </div>
             </div>
             <br></br>
           </div>
           <br></br>
-          <div className="flex flex-row justify-center ">
-            <div className="  h-auto justify-center">
-              <div className="flex flex-row">
-                <br></br><br></br>
-                <div className="flex-1 w-1/3 flex flex-row ">
-                <h3 className="font-700 " >{`CT: UCT `}</h3>
-                <TextField
-                  size="small"
-                  id="outlined-multiline-static"
-                  style={{ width: 100 }}
-                  disabled={disabledState}
-                  value={form?.ctUct}
-                  onChange={handleChange}
-                  name={'ctUct'}
-                  
-                />
+          <div className="p-16 sm:p-24 w-full">
+            <div className="flex flex-row px-5">
+              <div className="p-1 flex-1 h-auto  justify-between">
+                <div className="flex flex-row justify-center">
+                  <h3 className="text-center font-700">CT: UCT</h3>
+                  <TextField
+                    size="small"
+                    id="outlined-multiline-static"
+                    style={{ width: 100 }}
+                    disabled={disabledState}
+                    value={form?.ctUct}
+                    onChange={handleChange}
+                    name={'ctUct'}
+
+                  />
                 </div>
-                <div className="flex-1 w-1/3 flex flex-row ">
-                <h3 className="font-700 pl-6 pt-6">CF: OD</h3>
-                <TextField 
-                  size="small"
-                  id="outlined-multiline-static"
-                  style={{ width: 100 }}
-                  disabled={disabledState}
-                  value={form?.cfod}
-                  onChange={handleChange}
-                  name={'cfod'}
-                  
-                />
+              </div>
+              <div className="p-1 flex-1 h-auto  justify-between">
+
+                <div className="flex flex-row justify-center">
+                  <h3 className="text-center font-700">CF: OD</h3>
+                  <TextField
+                    size="small"
+                    id="outlined-multiline-static"
+                    style={{ width: 100 }}
+                    disabled={disabledState}
+                    value={form?.cfod}
+                    onChange={handleChange}
+                    name={'cfod'}
+
+                  />
                 </div>
-                <div className="flex-1 w-1/3 flex flex-row ">
-                 
-                
+              </div>
+
+              <div className="p-1 flex-1 h-auto  justify-between">
+                <div className="flex flex-row justify-center">
                   <FormControl component="fieldset">
                     <RadioGroup
                       row
@@ -3099,19 +3974,14 @@ const AddExam = (props) => {
                       variant="outlined"
                     />
                   )}
-                
+
                 </div>
-                
-                {/* <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
-
-                <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 CF:\u00A0\u00A0\u00A0OD\u00A0\u00A0\u00A0`}</h3>
-                */}
-                 {/* <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3> */}
-
               </div>
-
-              <div className="flex flex-row justify-center">
-              <FormControl component="fieldset">
+            </div>
+            <div className="flex flex-row px-5">
+            <div className="p-1 flex-1 h-auto  justify-between">
+                <div className="flex flex-row justify-center">
+                <FormControl component="fieldset">
                     <RadioGroup
                       row
                       aria-label="act"
@@ -3124,7 +3994,118 @@ const AddExam = (props) => {
                         control={<Radio />}
                         label="C"
                       />
-                       <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+
+                      <FormControlLabel
+                      classname="ml-3"
+                        value="SC"
+                        disabled={disabledState}
+                        control={<Radio />}
+                        label="SC"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+
+
+                  
+                  <TextField                 
+                    size="small"
+                    classname="font-700 pt-10"
+                    id="outlined-multiline-static"
+                    style={{ width: 100 }}
+                    disabled={disabledState}
+                    value={form?.cscAct}
+                    onChange={handleChange}
+                    name={'cscAct'}
+varient="outlined"
+label="ACT"
+                  />
+                </div>
+              </div>
+              <div className="p-1 flex-1 h-auto  justify-between">
+
+                <div className="flex flex-row justify-center">
+                  <h3 className="text-center font-700">CF: OS</h3>
+                  <TextField
+                    size="small"
+                    id="outlined-multiline-static"
+                    style={{ width: 100 }}
+                    disabled={disabledState}
+                    value={form?.cfos}
+                    onChange={handleChange}
+                    name={'cfos'}
+
+                  />
+                </div>
+              </div>
+              <div className="p-1 flex-1 h-auto  justify-between">
+
+<div className="flex flex-row justify-center">
+  <h3 className="text-center font-700"></h3>
+  
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        row
+                        aria-label="eodos"
+                        name="eodos"
+                        value={form?.eodos}
+                        onChange={handleChange}>
+                        <FormControlLabel
+                          value="From"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="From"
+                        />
+                        <FormControlLabel
+                          value="other"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="Other"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    {form?.eodos === 'other' && (
+                      <TextField
+                        className="ml-8"
+                        style={{ width: 100 }}
+                        size="small"
+                        disabled={disabledState}
+                        id="outlined-multiline-static"
+                        label="Other"
+                        value={form?.eomOsFromOther}
+                        onChange={handleChange}
+                        name={'eomOsFromOther'}
+
+                      />
+                    )}
+                    <br></br><br></br>
+                  
+</div>
+</div>
+
+            </div>
+
+          </div>
+          <div className="p-16 sm:p-24 w-full">
+
+            <div className="flex flex-row justify-center ">
+              <div className="  h-auto justify-around">
+{/*               
+
+                <div className="flex flex-row justify-center">
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      row
+                      aria-label="act"
+                      name="act"
+                      value={form?.act}
+                      onChange={handleChange}>
+                      <FormControlLabel
+                        value="C"
+                        disabled={disabledState}
+                        control={<Radio />}
+                        label="C"
+                      />
+                      <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
 
                       <FormControlLabel
                         value="SC"
@@ -3134,155 +4115,156 @@ const AddExam = (props) => {
                       />
                     </RadioGroup>
                   </FormControl>
-                  
 
-                <h3 className="font-700 p-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0ACT\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
-                <TextField
-                  size="small"
-                  id="outlined-multiline-static"
-                  style={{ width: 100 }}
-                  disabled={disabledState}
-                  value={form?.cscAct}
-                  onChange={handleChange}
-                  name={'cscAct'}
-                  
-                />
-                <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 CF:\u00A0\u00A0\u00A0OS\u00A0\u00A0\u00A0`}</h3>
-                <TextField
-                  size="small"
-                  id="outlined-multiline-static"
-                  style={{ width: 100 }}
-                  disabled={disabledState}
-                  value={form?.cfos}
-                  onChange={handleChange}
-                  name={'cfos'}
-                  
-                />
-                 <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
 
-                <div className="ml-10">
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      row
-                      aria-label="cfOs"
-                      name="cfOs"
-                      value={form?.cfOs}
-                      onChange={handleChange}>
-                      <FormControlLabel
-                        value="ftfc"
-                        disabled={disabledState}
-                        control={<Radio />}
-                        label="FTFC"
-                      />
-                      <FormControlLabel
-                        value="other"
-                        disabled={disabledState}
-                        control={<Radio />}
-                        label="Other"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                  {form?.cfOs === 'other' && (
-                    <TextField
-                      className="ml-8"
-                      style={{ width: 100 }}
-                      size="small"
-                      disabled={disabledState}
-                      id="outlined-multiline-static"
-                      label="Other"
-                      value={form?.otherCfos}
-                      onChange={handleChange}
-                      name={'otherCfos'}
-                     
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-row justify-center">
-              <h3 className="font-700 pl-6 pt-6">{`EOM'S OD\u00A0\u00A0\u00A0\u00A0`}</h3>
-                    
-                <div className="ml-10">
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      row
-                      aria-label="eodod"
-                      name="eodod"
-                      value={form?.eodod}
-                      onChange={handleChange}>
-                      <FormControlLabel
-                        value="From"
-                        disabled={disabledState}
-                        control={<Radio />}
-                        label="From"
-                      />
-                      <FormControlLabel
-                        value="other"
-                        disabled={disabledState}
-                        control={<Radio />}
-                        label="Other"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                  {form?.eodod === 'other' && (
-                    <TextField
-                      className="ml-8"
-                      style={{ width: 100 }}
-                      size="small"
-                      disabled={disabledState}
-                      id="outlined-multiline-static"
-                      label="Other"
-                      value={form?.eomOdFromOther1}
-                      onChange={handleChange}
-                      name={'eomOdFromOther1'}
-                     
-                    />
-                  )}
-                </div>
-               
-              </div>
-              <div className="flex flex-row justify-center">
-              <h3 className="font-700 pl-6 pt-6">{`EOM'S OS\u00A0\u00A0\u00A0\u00A0`}</h3>
-                    
-                    <div className="ml-10">
-                      <FormControl component="fieldset">
-                        <RadioGroup
-                          row
-                          aria-label="eodos"
-                          name="eodos"
-                          value={form?.eodos}
-                          onChange={handleChange}>
-                          <FormControlLabel
-                            value="From"
-                            disabled={disabledState}
-                            control={<Radio />}
-                            label="From"
-                          />
-                          <FormControlLabel
-                            value="other"
-                            disabled={disabledState}
-                            control={<Radio />}
-                            label="Other"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                      {form?.eodos === 'other' && (
-                        <TextField
-                          className="ml-8"
-                          style={{ width: 100 }}
-                          size="small"
+                  <h3 className="font-700 p-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0ACT\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+                  <TextField
+                    size="small"
+                    id="outlined-multiline-static"
+                    style={{ width: 100 }}
+                    disabled={disabledState}
+                    value={form?.cscAct}
+                    onChange={handleChange}
+                    name={'cscAct'}
+
+                  />
+                  <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 CF:\u00A0\u00A0\u00A0OS\u00A0\u00A0\u00A0`}</h3>
+                  <TextField
+                    size="small"
+                    id="outlined-multiline-static"
+                    style={{ width: 100 }}
+                    disabled={disabledState}
+                    value={form?.cfos}
+                    onChange={handleChange}
+                    name={'cfos'}
+
+                  />
+                  <h3 className="font-700 pl-6 pt-6">{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+
+                  <div className="ml-10">
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        row
+                        aria-label="cfOs"
+                        name="cfOs"
+                        value={form?.cfOs}
+                        onChange={handleChange}>
+                        <FormControlLabel
+                          value="ftfc"
                           disabled={disabledState}
-                          id="outlined-multiline-static"
-                          label="Other"
-                          value={form?.eomOsFromOther}
-                          onChange={handleChange}
-                          name={'eomOsFromOther'}
-                         
+                          control={<Radio />}
+                          label="FTFC"
                         />
-                      )}
-                      <br></br><br></br>
-                    </div>
-               
-                
+                        <FormControlLabel
+                          value="other"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="Other"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    {form?.cfOs === 'other' && (
+                      <TextField
+                        className="ml-8"
+                        style={{ width: 100 }}
+                        size="small"
+                        disabled={disabledState}
+                        id="outlined-multiline-static"
+                        label="Other"
+                        value={form?.otherCfos}
+                        onChange={handleChange}
+                        name={'otherCfos'}
+
+                      />
+                    )}
+                  </div>
+                </div> */}
+                <div className="flex flex-row justify-center">
+                  <h3 className="font-700 pl-6 pt-6">{`EOM'S OD\u00A0\u00A0\u00A0\u00A0`}</h3>
+
+                  <div className="ml-10">
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        row
+                        aria-label="eodod"
+                        name="eodod"
+                        value={form?.eodod}
+                        onChange={handleChange}>
+                        <FormControlLabel
+                          value="From"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="From"
+                        />
+                        <FormControlLabel
+                          value="other"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="Other"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    {form?.eodod === 'other' && (
+                      <TextField
+                        className="ml-8"
+                        style={{ width: 100 }}
+                        size="small"
+                        disabled={disabledState}
+                        id="outlined-multiline-static"
+                        label="Other"
+                        value={form?.eomOdFromOther1}
+                        onChange={handleChange}
+                        name={'eomOdFromOther1'}
+
+                      />
+                    )}
+                  </div>
+
+                </div>
+                <div className="flex flex-row justify-center">
+                  <h3 className="font-700 pl-6 pt-6">{`EOM'S OS\u00A0\u00A0\u00A0\u00A0`}</h3>
+
+                  <div className="ml-10">
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        row
+                        aria-label="eodos"
+                        name="eodos"
+                        value={form?.eodos}
+                        onChange={handleChange}>
+                        <FormControlLabel
+                          value="From"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="From"
+                        />
+                        <FormControlLabel
+                          value="other"
+                          disabled={disabledState}
+                          control={<Radio />}
+                          label="Other"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    {form?.eodos === 'other' && (
+                      <TextField
+                        className="ml-8"
+                        style={{ width: 100 }}
+                        size="small"
+                        disabled={disabledState}
+                        id="outlined-multiline-static"
+                        label="Other"
+                        value={form?.eomOsFromOther}
+                        onChange={handleChange}
+                        name={'eomOsFromOther'}
+
+                      />
+                    )}
+                    <br></br><br></br>
+                  </div>
+
+
+                </div>
               </div>
             </div>
           </div>
@@ -3452,130 +4434,133 @@ const AddExam = (props) => {
           </div>
         </div>
       </div> */}
-  <div className="flex flex-col h-260 py-6">
+        <div className="flex flex-col h-260 py-6">
           <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
               <h1 className="font-700" style={{ color: '#f15a25' }}>
-              PUPILS
+                PUPILS
               </h1>
             </div>
             <br></br>
             <div className="flex flex-row justify-center">
-            <h3 className="font-700">{`Dim \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
-            <h3 className="font-700">{`Light \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
-            <h3 className="font-700">{`Reaction`}</h3>
+              <h3 className="font-700">{`Dim \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+              <h3 className="font-700">{`Light \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+              <h3 className="font-700">{`Reaction`}</h3>
 
-<br></br>
+              <br></br>
             </div>
             <div className="flex flex-row justify-center">
-                    <h3 className="font-700">{`OD: \u00A0`}</h3>
-                    <TextField
-                      size="small"
-                      style={{ width: 80 }}
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.oddim}
-                      onChange={handleChange}
-                      name={'oddim'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                    <h3 className="font-700 pt-10">{`\u00A0-\u00A0`}</h3>
-                    <TextField
-                      size="small"
-                      style={{ width: 80 }}
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.odlight}
-                      onChange={handleChange}
-                      name={'odlight'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                   <h3 className="font-700 pt-10">{`\u00A0PERRLA\u00A0`}</h3>
-                   <TextField
-                      size="small"
-                      style={{ width: 80 }}
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.odreaction}
-                      onChange={handleChange}
-                      name={'odreaction'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
+              <h3 className="font-700">{`OD: \u00A0`}</h3>
+              <TextField
+                size="small"
+                style={{ width: 80 }}
+                id="standard-basic"
+                disabled={disabledState}
+                value={form?.oddim}
+                onChange={handleChange}
+                name={'oddim'}
+                InputProps={{
+                  inputProps: {
+                    style: { textAlign: 'center' }
+                  }
+                }}
+                type="number"
+              />
+              <h3 className="font-700 pt-10">{`\u00A0-\u00A0`}</h3>
+              <TextField
+                size="small"
+                style={{ width: 80 }}
+                id="standard-basic"
+                disabled={disabledState}
+                value={form?.odlight}
+                onChange={handleChange}
+                name={'odlight'}
+                InputProps={{
+                  inputProps: {
+                    style: { textAlign: 'center' }
+                  }
+                }}
+                type="number"
+              />
+              <h3 className="font-700 pt-10">{`\u00A0PERRLA\u00A0`}</h3>
+              <TextField
+                size="small"
+                style={{ width: 80 }}
+                id="standard-basic"
+                disabled={disabledState}
+                value={form?.odreaction}
+                onChange={handleChange}
+                name={'odreaction'}
+                InputProps={{
+                  inputProps: {
+                    style: { textAlign: 'center' }
+                  }
+                }}
+                type="number"
+              />
 
-                  </div>
-                  
+            </div>
+
             <div className="flex flex-row justify-center">
-                    <h3 className="font-700">{`OS: \u00A0`}</h3>
-                    <TextField
-                      size="small"
-                      style={{ width: 80 }}
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.osdim}
-                      onChange={handleChange}
-                      name={'osdim'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                    <h3 className="font-700 pt-10">{`\u00A0-\u00A0`}</h3>
-                    <TextField
-                      size="small"
-                      style={{ width: 80 }}
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.oslight}
-                      onChange={handleChange}
-                      name={'oslight'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-                   <h3 className="font-700 pt-10">{`\u00A0PERRLA\u00A0`}</h3>
-                   <TextField
-                      size="small"
-                      style={{ width: 80 }}
-                      id="standard-basic"
-                      disabled={disabledState}
-                      value={form?.osreaction}
-                      onChange={handleChange}
-                      name={'osreaction'}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      type="number"
-                    />
-<br></br>
-                  </div>
-                  <div className="flex flex-row justify-center">
-				
+              <h3 className="font-700">{`OS: \u00A0`}</h3>
+              <TextField
+                size="small"
+                style={{ width: 80 }}
+                id="standard-basic"
+                disabled={disabledState}
+                value={form?.osdim}
+                onChange={handleChange}
+                name={'osdim'}
+                InputProps={{
+                  inputProps: {
+                    style: { textAlign: 'center' }
+                  }
+                }}
+                type="number"
+              />
+              <h3 className="font-700 pt-10">{`\u00A0-\u00A0`}</h3>
+              <TextField
+                size="small"
+                style={{ width: 80 }}
+                id="standard-basic"
+                disabled={disabledState}
+                value={form?.oslight}
+                onChange={handleChange}
+                name={'oslight'}
+                InputProps={{
+                  inputProps: {
+                    style: { textAlign: 'center' }
+                  }
+                }}
+                type="number"
+              />
+              <h3 className="font-700 pt-10">{`\u00A0PERRLA\u00A0`}</h3>
+              <TextField
+                size="small"
+                style={{ width: 80 }}
+                id="standard-basic"
+                disabled={disabledState}
+                value={form?.osreaction}
+                onChange={handleChange}
+                name={'osreaction'}
+                InputProps={{
+                  inputProps: {
+                    style: { textAlign: 'center' }
+                  }
+                }}
+                type="number"
+              />
+              <br></br>
+            </div>
+            <div className="flex flex-row justify-center">
 
-        <div className="flex-1 flex flex-row ">
-         <h3 className=" font-700 text-center"> {`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0RAPD\u00A0\u00A0\u00A0\u00A0`}</h3>
-         <FormControl component="fieldset">
+
+              <div className="flex-1 flex flex-row ">
+                <div>
+                <h3 className=" font-700 text-center pt-10"> {`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0RAPD\u00A0\u00A0\u00A0\u00A0`}</h3>
+                </div>
+                <div>
+                <FormControl component="fieldset">
                   <RadioGroup
                     className="ml-10"
                     row
@@ -3597,55 +4582,56 @@ const AddExam = (props) => {
                     />
                   </RadioGroup>
                 </FormControl>
-        </div>
-        <div className="flex-1">
+                </div>
+              </div>
+              <div className="flex-1">
                 <h3 className="hidden font-700 text-center">Hidden</h3>
               </div>
 
-<div className="flex-1 flex flex-row justify-center ">
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={form?.pupilod}
-                onChange={handleChange}
-                disabled={disabledState}
-                name="pupilod"
-              />
-            }
-           label="OD"
-          />
-                   <h3 >{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
-           <FormControlLabel
-            control={
-              <Checkbox
-                checked={form?.pupiloos}
-                onChange={handleChange}
-                disabled={disabledState}
-                name="pupilos"
-              />
-            }
-           label="OS"
-          />
-                             <h3 >{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+              <div className="flex-1 flex flex-row justify-center ">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.pupilod}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="pupilod"
+                    />
+                  }
+                  label="OD"
+                />
+                <h3 >{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.pupiloos}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="pupilos"
+                    />
+                  }
+                  label="OS"
+                />
+                <h3 >{`\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0`}</h3>
 
-           <FormControlLabel
-            control={
-              <Checkbox
-                checked={form?.pupilou}
-                onChange={handleChange}
-                disabled={disabledState}
-                name="pupilou"
-              />
-            }
-           label="OU"
-          />
-  
-        </div>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.pupilou}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="pupilou"
+                    />
+                  }
+                  label="OU"
+                />
 
-        
-      </div>
+              </div>
 
-                  
+
+            </div>
+
+
 
           </div>
         </div>
@@ -3654,14 +4640,18 @@ const AddExam = (props) => {
           <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
               <h1 className="font-700" style={{ color: '#f15a25' }}>
-              SLIT LAMP EXAMINATION
+                SLIT LAMP EXAMINATION
               </h1>
             </div>
             <br></br>
             <div className="flex flex-row justify-center">
-              <div className=" flex  flex-1 justify-around">
-                <h3 className="font-700 text-center pt-8">OD</h3>
-                <FormControlLabel
+              <div className="flex-1 flex flex-row justify-around">
+                <h4 className="font-700  ">
+                   OD
+                  </h4> </div>
+
+              <div className="flex-1 flex flex-row justify-around">
+            <FormControlLabel
                   control={
                     <Checkbox
                       checked={form?.slitOdNormal}
@@ -3702,11 +4692,16 @@ const AddExam = (props) => {
                   label="None"
                 />
               </div>
-              <div className="flex-1">
+			  <div className="flex-1">
                 <h3 className="hidden font-700 text-center">Hidden</h3>
               </div>
-              <div className=" flex  flex-1 justify-around">
-                <h3 className="font-700 text-center pt-8">OS</h3>
+              <div className="flex-1 flex flex-row justify-around">
+<h4 className="font-700  ">
+                   OS
+                  </h4> 
+              </div>
+              
+			  <div className="flex-1 flex flex-row justify-around">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -3748,22 +4743,17 @@ const AddExam = (props) => {
                   label="None"
                 />
               </div>
+
             </div>
-            <div className="flex flex-row justify-center">
-              <div className="flex-1">
-                <h3 className="font-700 text-center">Other</h3>
+
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+                              <h3 className="font-700 text-center ">CL </h3>
+
               </div>
-              <div className="flex-1">
-                <h3 className="hidden font-700 text-center">Hidden</h3>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-700 text-center">Other</h3>
-              </div>
-            </div>
-            <div className="flex flex-row justify-center">
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center ">CL </h3>
-                <TextField
+
+              <div className="flex-1 flex flex-row ">
+              <TextField
                   size="small"
                   id="standard-basic"
                   disabled={disabledState}
@@ -3777,12 +4767,16 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-              <div className="flex-1 flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">Tears</h3>
+
               </div>
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">CL </h3>
-                <TextField
+              <div className="flex-1 flex flex-row justify-around ">
+                              <h3 className="font-700 text-center ">CL </h3>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+        <TextField
                   size="small"
                   id="standard-basic"
                   disabled={disabledState}
@@ -3796,12 +4790,17 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="flex flex-row ">
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">CL </h3>
-                <TextField
+            </div>
+			
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+                              <h3 className="font-700 text-center">CL </h3>
+
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+              <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.odLashes}
@@ -3815,12 +4814,16 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-              <div className="flex-1 flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">Lids/Lashes</h3>
+
               </div>
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">CL </h3>
-                <TextField
+              <div className="flex-1 flex flex-row justify-around ">
+                              <h3 className="font-700 text-center">CL </h3>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+        <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.osLashes}
@@ -3834,12 +4837,19 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="flex flex-row ">
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">CL </h3>
-                <TextField
+            </div>
+			
+
+			
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+                                            <h3 className="font-700 text-center">CL </h3>
+
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+              <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.odCornea}
@@ -3852,13 +4862,18 @@ const AddExam = (props) => {
                     }
                   }}
                 />
+    
               </div>
-              <div className="flex-1 flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">Cornea</h3>
+
               </div>
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">CL </h3>
-                <TextField
+              <div className="flex-1 flex flex-row justify-around ">
+                              <h3 className="font-700 text-center">CL </h3>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+        <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.osCornea}
@@ -3872,12 +4887,17 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="flex flex-row ">
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">Q </h3>
-                <TextField
+            </div>
+			
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+                              <h3 className="font-700 text-center">Q </h3>
+
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.odPalConj}
@@ -3891,12 +4911,16 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-              <div className="flex-1 flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">Pal Conj</h3>
+
               </div>
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">Q </h3>
-                <TextField
+              <div className="flex-1 flex flex-row justify-around ">
+                              <h3 className="font-700 text-center">Q </h3>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+        <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.osPalConj}
@@ -3910,12 +4934,17 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="flex flex-row ">
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">Q </h3>
-                <TextField
+            </div>
+			
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+                              <h3 className="font-700 text-center">Q </h3>
+
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.odBulConj}
@@ -3929,12 +4958,16 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-              <div className="flex-1 flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">Bul Conj</h3>
+
               </div>
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">Q </h3>
-                <TextField
+              <div className="flex-1 flex flex-row justify-around ">
+                              <h3 className="font-700 text-center">Q </h3>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+        <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.osBulConj}
@@ -3948,12 +4981,17 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="flex flex-row ">
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">D/Q </h3>
-                <TextField
+            </div>
+			
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+                              <h3 className="font-700 text-center">D/Q </h3>
+
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.odAntChamber}
@@ -3967,12 +5005,16 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-              <div className="flex-1 flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">Ant Chamber</h3>
+
               </div>
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">D/Q </h3>
-                <TextField
+              <div className="flex-1 flex flex-row justify-around ">
+                              <h3 className="font-700 text-center">D/Q </h3>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+        <TextField
                   size="small"
                   id="standard-basic"
                   disabled={disabledState}
@@ -3986,12 +5028,17 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="flex flex-row ">
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">Flat </h3>
-                <TextField
+            </div>
+			
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+                              <h3 className="font-700 text-center">Flat </h3>
+
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                   size="small"
                   id="standard-basic"
                   disabled={disabledState}
@@ -4005,12 +5052,16 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-              <div className="flex-1 flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">Iris</h3>
+
               </div>
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">Flat </h3>
-                <TextField
+              <div className="flex-1 flex flex-row justify-around ">
+                              <h3 className="font-700 text-center">Flat </h3>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+       <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.osIris}
@@ -4024,12 +5075,17 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="flex flex-row ">
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">CL </h3>
-                <TextField
+            </div>
+			
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+                              <h3 className="font-700 text-center">CL </h3>
+
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.odLens}
@@ -4043,12 +5099,16 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-              <div className="flex-1 flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">Lens</h3>
+
               </div>
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">CL </h3>
-                <TextField
+              <div className="flex-1 flex flex-row justify-around ">
+                              <h3 className="font-700 text-center">CL </h3>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+       <TextField
                   size="small"
                   id="standard-basic"
                   disabled={disabledState}
@@ -4062,12 +5122,16 @@ const AddExam = (props) => {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="flex flex-row ">
-              <div className="flex-1 flex flex-row justify-center">
+            </div>
+			<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">CL </h3>
-                <TextField
+
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+<TextField
                   size="small"
                   id="standard-basic"
                   value={form?.odAntVit}
@@ -4079,14 +5143,18 @@ const AddExam = (props) => {
                       style: { textAlign: 'center' }
                     }
                   }}
-                />
-              </div>
-              <div className="flex-1 flex flex-row justify-center">
+                />              
+			  </div>
+              <div className="flex-1 flex flex-row justify-around">
                 <h3 className="font-700 text-center">Ant Vit</h3>
+
               </div>
-              <div className="flex-1 flex flex-row justify-center">
-                <h3 className="font-700 text-center">CL </h3>
-                <TextField
+              <div className="flex-1 flex flex-row justify-around ">
+                              <h3 className="font-700 text-center">CL </h3>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+        <TextField
                   size="small"
                   id="standard-basic"
                   value={form?.osAntVit}
@@ -4101,8 +5169,54 @@ const AddExam = (props) => {
                 />
               </div>
 
-
             </div>
+			<div className="flex flex-row justify-center">
+              <div className="flex-1">
+                <h3 className="hidden font-700 text-center">Hidden</h3>
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
+                    size="small"
+                    id="standard-basic"
+                    value={form?.odAngleEstimate}
+                    disabled={disabledState}
+                    onChange={handleChange}
+                    name={'odAngleEstimate'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                                 <h3 className="font-700 text-center">Angle Estimate</h3>
+
+              </div>
+              <div className="flex-1">
+                <h3 className="hidden font-700 text-center">Hidden</h3>
+              </div>
+			  <div className="flex-1 flex flex-row ">
+                <TextField
+                    size="small"
+                    id="standard-basic"
+                    disabled={disabledState}
+                    value={form?.osAngleEstimate}
+                    onChange={handleChange}
+                    name={'osAngleEstimate'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                    type="number"
+                  />
+              </div>
+<br></br>
+            </div>
+			
           </div>
 
 
@@ -4110,14 +5224,19 @@ const AddExam = (props) => {
             <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                 <h1 className="font-700" style={{ color: '#f15a25' }}>
-                FUNDUS EXAMINATION
+                  FUNDUS EXAMINATION
                 </h1>
               </div>
               <br></br>
+
               <div className="flex flex-row justify-center">
-                <div className=" flex flex-row flex-1 justify-around">
-                  <h3 className="font-700 text-center pt-8">OD</h3>
-                  <FormControlLabel
+              <div className="flex-1 flex flex-row justify-around">
+                <h4 className="font-700  ">
+                   OD
+                  </h4> </div>
+
+              <div className="flex-1 flex flex-row justify-around">
+            <FormControlLabel
                     control={
                       <Checkbox
                         checked={form?.fundusOdNormal}
@@ -4153,13 +5272,18 @@ const AddExam = (props) => {
                     }
                     label="None"
                   />
-                </div>
-                <div className="flex-1">
-                  <h3 className="hidden font-700 text-center">Hidden</h3>
-                </div>
-                <div className=" flex flex-row flex-1 justify-around">
-                  <h3 className="font-700 text-center pt-8">OS</h3>
-                  <FormControlLabel
+              </div>
+			  <div className="flex-1">
+                <h3 className="hidden font-700 text-center">Hidden</h3>
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+<h4 className="font-700  ">
+                   OS
+                  </h4> 
+              </div>
+              
+			  <div className="flex-1 flex flex-row justify-around">
+                <FormControlLabel
                     control={
                       <Checkbox
                         checked={form?.fundusOsNormal}
@@ -4195,46 +5319,45 @@ const AddExam = (props) => {
                     }
                     label="None"
                   />
-                </div>
               </div>
-              {/* <div className="flex flex-row justify-center">
-                <div className="flex-1">
-                  <h3 className="font-700 text-center">Other</h3>
-                </div>
-                <div className="flex-1">
-                  <h3 className="hidden font-700 text-center">hidden</h3>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-700 text-center">Other</h3>
-                </div>
-              </div> */}
+
+            </div>
+            
               <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row justify-center">
-                  <h4 className="font-700 text-center whitespace-no-wrap">
-                    Norm Caliber{' '}
+              <div className="flex-1 flex flex-row justify-around">
+              <h4 className="font-700  ">
+                    Norm Caliber
                   </h4>
-                  <TextField
-                    size="small"
-                    id="standard-basic"
-                    disabled={disabledState}
-                    value={form?.odVessels}
-                    onChange={handleChange}
-                    name={'odVessels'}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: 'center' }
-                      }
-                    }}
-                  />
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">Vessels</h3>
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h4 className="font-700 text-center whitespace-no-wrap">
-                    Norm Caliber{' '}
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+              <TextField
+                  
+                  size="small"
+                  id="standard-basic"
+                  disabled={disabledState}
+                  value={form?.odVessels}
+                  onChange={handleChange}
+                  name={'odVessels'}
+                  InputProps={{
+                    inputProps: {
+                      style: { textAlign: 'center' }
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+              <h3 className="font-700 text-center">Vessels</h3>
+
+              </div>
+              <div className="flex-1 flex flex-row justify-around ">
+              <h4 className="font-700  ">
+                    Norm Caliber
                   </h4>
-                  <TextField
+              </div>
+			  <div className="flex-1 flex flex-row ">
+        <TextField
+                  classname="pl-30"
                     size="small"
                     id="standard-basic"
                     value={form?.osVessels}
@@ -4247,13 +5370,17 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
               </div>
 
-              <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">2/3 </h3>
-                  <TextField
+            </div>
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+               <h3 className="font-700 ">2/3 </h3>
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+                <TextField
+                  classname="pl-30"
                     size="small"
                     id="standard-basic"
                     value={form?.odAV}
@@ -4266,13 +5393,17 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">A / V</h3>
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">2/3 </h3>
-                  <TextField
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+              <h3 className="font-700 text-center">A / V</h3>
+
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                 <h3 className="font-700 ">2/3 </h3>
+              </div>
+			  <div className="flex-1 flex flex-row ">
+                <TextField
+                  classname="pl-30"
                     size="small"
                     disabled={disabledState}
                     id="standard-basic"
@@ -4285,13 +5416,17 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
+              </div>
               </div>
 
-              <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">CL </h3>
-                  <TextField
+
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+              <h3 className="font-700 ">CL </h3>
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+              <TextField
                     size="small"
                     id="standard-basic"
                     value={form?.odMedia}
@@ -4304,13 +5439,17 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">Media</h3>
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">CL </h3>
-                  <TextField
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+              <h3 className="font-700 text-center">Media</h3>
+
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+              <div><h3 className="font-700 ">CL </h3></div>
+
+              </div>
+			  <div className="flex-1 flex flex-row ">
+        <TextField
                     size="small"
                     id="standard-basic"
                     value={form?.osMedia}
@@ -4323,13 +5462,17 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
               </div>
 
-              <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">CL </h3>
-                  <TextField
+            </div>
+             
+			<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+               <h3 className="font-700 ">CL </h3>
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                     size="small"
                     id="standard-basic"
                     disabled={disabledState}
@@ -4342,13 +5485,16 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">Macula</h3>
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">CL </h3>
-                  <TextField
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                                 <h3 className="font-700 text-center">Macula</h3>
+
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                <h3 className="font-700 ">CL </h3>
+              </div>
+			  <div className="flex-1 flex flex-row ">
+                <TextField
                     size="small"
                     id="standard-basic"
                     value={form?.osMacula}
@@ -4361,15 +5507,19 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
               </div>
 
-              <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center whitespace-no-wrap">
-                    Flat Norm{' '}
+            </div>
+
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+               <h3 className="font-700  ">
+                    Flat Norm
                   </h3>
-                  <TextField
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                     size="small"
                     id="standard-basic"
                     value={form?.odPostPole}
@@ -4382,17 +5532,19 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center whitespace-no-wrap">
+              </div>
+              <div className="flex-1 flex flex-row justify-around ">
+               <h3 className="font-700 text-center ">
                     Post Pole
                   </h3>
-                </div>
-                <div className="flex-1 flex flex-row justify-center ">
-                  <h3 className="font-700 text-center whitespace-no-wrap">
-                    Flat Norm{' '}
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                <h3 className="font-700  ">
+                    Flat Norm
                   </h3>
-                  <TextField
+              </div>
+			  <div className="flex-1 flex flex-row ">
+                <TextField
                     size="small"
                     id="standard-basic"
                     value={form?.osPostPole}
@@ -4405,13 +5557,17 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
               </div>
 
-              <div className="flex flex-row justify-center ">
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">CL </h3>
-                  <TextField
+            </div>
+
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+                <h3 className="font-700 ">CL </h3>
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                     size="small"
                     id="standard-basic"
                     value={form?.odVitreous}
@@ -4424,13 +5580,16 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">Vitreous</h3>
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">CL </h3>
-                  <TextField
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                               <h3 className="font-700 text-center">Vitreous</h3>
+
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                 <h3 className="font-700 ">CL </h3>
+              </div>
+			  <div className="flex-1 flex flex-row ">
+                <TextField
                     size="small"
                     id="standard-basic"
                     value={form?.osVitreous}
@@ -4443,13 +5602,17 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
               </div>
 
-              <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">Distinct </h3>
-                  <TextField
+            </div>
+
+<div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-around">
+               <h3 className="font-700 ">Distinct </h3>
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                     size="small"
                     id="standard-basic"
                     disabled={disabledState}
@@ -4462,13 +5625,16 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">Disc Margins</h3>
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">Distinct </h3>
-                  <TextField
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                                 <h3 className="font-700 text-center">Disc Margins</h3>
+
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                <h3 className="font-700 ">Distinct </h3>
+              </div>
+			  <div className="flex-1 flex flex-row ">
+                <TextField
                     size="small"
                     id="standard-basic"
                     value={form?.osDiscMargins}
@@ -4481,12 +5647,16 @@ const AddExam = (props) => {
                       }
                     }}
                   />
-                </div>
               </div>
 
-              <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row justify-around">
-                  <FormControlLabel
+            </div>
+            <div className="flex flex-row justify-center">
+              <div className="flex-1">
+                <h3 className="hidden font-700 text-center">Hidden</h3>
+              </div>
+
+              <div className="flex-1 flex flex-row justify-around">
+                 <FormControlLabel
                     control={
                       <Checkbox
                         checked={form?.fovealLightReflexOd}
@@ -4497,11 +5667,17 @@ const AddExam = (props) => {
                     }
                     label="Yes"
                   />
-                  <h3 className="font-700 text-center pt-10">
-                    Foveal Light Reflex{' '}
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+               <h3 className="font-700 text-center pt-10">
+                    Foveal Light Reflex
                   </h3>
-
-                  <FormControlLabel
+              </div>
+              <div className="flex-1">
+                <h3 className="hidden font-700 text-center">Hidden</h3>
+              </div>
+			  <div className="flex-1 flex flex-row justify-around">
+                 <FormControlLabel
                     control={
                       <Checkbox
                         checked={form?.fovealLightReflexOs}
@@ -4512,12 +5688,17 @@ const AddExam = (props) => {
                     }
                     label="Yes"
                   />
-                </div>
               </div>
 
-              <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row justify-center">
-                  <TextField
+            </div>
+
+<div className="flex flex-row justify-center">
+              <div className="flex-1">
+                <h3 className="hidden font-700 text-center">Hidden</h3>
+              </div>
+
+              <div className="flex-1 flex flex-row ">
+               <TextField
                     size="small"
                     id="standard-basic"
                     value={form?.odCDRatio}
@@ -4531,12 +5712,16 @@ const AddExam = (props) => {
                     }}
                     type="number"
                   />
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <h3 className="font-700 text-center">C/D Ratio</h3>
-                </div>
-                <div className="flex-1 flex flex-row justify-center">
-                  <TextField
+              </div>
+              <div className="flex-1 flex flex-row justify-around">
+                                 <h3 className="font-700 text-center">C/D Ratio</h3>
+
+              </div>
+              <div className="flex-1">
+                <h3 className="hidden font-700 text-center">Hidden</h3>
+              </div>
+			  <div className="flex-1 flex flex-row ">
+                <TextField
                     size="small"
                     id="standard-basic"
                     disabled={disabledState}
@@ -4550,10 +5735,9 @@ const AddExam = (props) => {
                     }}
                     type="number"
                   />
-                  <br></br><br></br>
-                </div>
               </div>
-
+<br></br>
+            </div>
             </div>
           </div>
 
@@ -4561,7 +5745,7 @@ const AddExam = (props) => {
             <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                 <h1 className="font-700" style={{ color: '#f15a25' }}>
-                DILATION
+                  DILATION
                 </h1>
               </div>
               <br></br>
@@ -4590,7 +5774,7 @@ const AddExam = (props) => {
                 />
               </div>
               <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row ">
+                <div className="flex-1 flex flex-row justify-around">
 
                   <FormControlLabel
                     control={
@@ -4604,7 +5788,7 @@ const AddExam = (props) => {
                     label=".5% Proparacaine"
                   />
                 </div>
-                <div className="flex-1 flex flex-row ">
+                <div className="flex-1 flex flex-row justify-around ">
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -4618,7 +5802,7 @@ const AddExam = (props) => {
                   />
 
                 </div>
-                <div className="flex-1 flex flex-row ">
+                <div className="flex-1 flex flex-row  justify-around">
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -4635,7 +5819,7 @@ const AddExam = (props) => {
 
               </div>
               <div className="flex flex-row justify-center">
-                <div className="flex-1 flex flex-row ">
+                <div className="flex-1 flex flex-row  justify-around">
 
                   <FormControlLabel
                     control={
@@ -4649,7 +5833,7 @@ const AddExam = (props) => {
                     label="2.5% Phenylephrine"
                   />
                 </div>
-                <div className="flex-1 flex flex-row ">
+                <div className="flex-1 flex flex-row  justify-around">
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -4662,71 +5846,76 @@ const AddExam = (props) => {
                     label="1% Cyclopentolate"
                   />
                 </div>
-                <div className="flex-1 flex flex-row ">
+                <div className="flex-1 flex flex-row justify-around ">
 
 
                 </div>
 
               </div>
+              <div className="flex flex-row justify-center">
 
-              <div className="flex flex-row">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={form?.otherDilation}
-                      onChange={handleChange}
-                      disabled={disabledState}
-                      name="otherDilation"
-                    />
-                  }
-                  label="Other"
-                />
+                <div className="flex flex-row justify-around">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={form?.otherDilation}
+                        onChange={handleChange}
+                        disabled={disabledState}
+                        name="otherDilation"
+                      />
+                    }
+                    label="Other"
+                  />
 
 
-                <TextField
-                  className="mt-10 "
-                  fullWidth
-                  InputProps={{ style: { fontSize: 20 } }}
-                  InputLabelProps={{ style: { fontSize: 20 } }}
-                  id="outlined-multiline-static"
+                  <TextField
+                    className="mt-10 "
+                    fullWidth
+                    InputProps={{ style: { fontSize: 20 } }}
+                    InputLabelProps={{ style: { fontSize: 20 } }}
+                    id="outlined-multiline-static"
 
-                  disabled={disabledState}
-                  multiline
-                  rows={1}
-                  value={form?.otherDilation}
-                  onChange={handleChange}
-                  name={'otherDilation'}
+                    disabled={disabledState}
+                    multiline
+                    rows={1}
+                    value={form?.otherDilation}
+                    onChange={handleChange}
+                    name={'otherDilation'}
 
-                />
+                  />
+                </div>
               </div>
-              <div className="flex flex-row">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={form?.patientRS}
-                      onChange={handleChange}
-                      disabled={disabledState}
-                      name="Patient R/S"
-                    />
-                  }
-                  label="Patient R/S"
-                />
-                <TextField
-                  className="mt-10 "
-                  fullWidth
-                  InputProps={{ style: { fontSize: 20 } }}
-                  InputLabelProps={{ style: { fontSize: 20 } }}
-                  id="outlined-multiline-static"
+              <div className="flex flex-row justify-center">
 
-                  disabled={disabledState}
-                  multiline
-                  rows={1}
-                  value={form?.patientRS}
-                  onChange={handleChange}
-                  name={'patientRS'}
+                <div className="flex flex-row justify-around">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={form?.patientRS}
+                        onChange={handleChange}
+                        disabled={disabledState}
+                        name="Patient R/S"
+                      />
+                    }
+                    label="Patient R/S"
+                  />
+                  <TextField
+                    className="mt-10 "
+                    fullWidth
+                    InputProps={{ style: { fontSize: 20 } }}
+                    InputLabelProps={{ style: { fontSize: 20 } }}
+                    id="outlined-multiline-static"
 
-                />
-                <br></br><br></br><br></br>
+                    disabled={disabledState}
+                    multiline
+                    rows={1}
+                    value={form?.patientRS}
+                    onChange={handleChange}
+                    name={'patientRS'}
+
+                  />
+                  <br></br><br></br><br></br>
+                </div>
               </div>
             </div>
           </div>
@@ -4736,7 +5925,7 @@ const AddExam = (props) => {
           <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
               <h1 className="font-700" style={{ color: '#f15a25' }}>
-              PERIPHERAL RETINA
+                PERIPHERAL RETINA
               </h1>
             </div>
 
@@ -4746,88 +5935,88 @@ const AddExam = (props) => {
             </div>
             <br></br>
             <div className="flex flex-row justify-center">
-				
 
-        
-<div className="flex-1 flex flex-row justify-center ">
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={form?.flatattach}
-                onChange={handleChange}
-                disabled={disabledState}
-                name="flatattach"
-              />
-            }
-          label="FLAT ATTACHED"
-          />
-  
-        </div>
-        <div className="flex-1 flex flex-row justify-center ">
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={form?.flatattach1}
-                onChange={handleChange}
-                disabled={disabledState}
-                name="flatattach1"
-              />
-            }
-          label="FLAT ATTACHED"
-          />
-  
-        </div>
 
-        
-      </div>
-      <br></br>
-      <div className="flex flex-row justify-center">
-        <div className="flex-1 flex flex-row justify-center ">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.rcnull}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="rcnull"
-                      />
-                    }
+
+              <div className="flex-1 flex flex-row justify-center ">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.flatattach}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="flatattach"
+                    />
+                  }
+                  label="FLAT ATTACHED"
+                />
+
+              </div>
+              <div className="flex-1 flex flex-row justify-center ">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.flatattach1}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="flatattach1"
+                    />
+                  }
+                  label="FLAT ATTACHED"
+                />
+
+              </div>
+
+
+            </div>
+            <br></br>
+            <div className="flex flex-row justify-center">
+              <div className="flex-1 flex flex-row justify-center ">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.rcnull}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="rcnull"
+                    />
+                  }
                   label="RC Images N / A"
-                  />
-          
-                </div>
-                <div className="flex-1 flex flex-row justify-center ">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form?.rcreviewed}
-                        onChange={handleChange}
-                        disabled={disabledState}
-                        name="rcreviewed"
-                      />
-                    }
+                />
+
+              </div>
+              <div className="flex-1 flex flex-row justify-center ">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={form?.rcreviewed}
+                      onChange={handleChange}
+                      disabled={disabledState}
+                      name="rcreviewed"
+                    />
+                  }
                   label="RC Images Reviewed
                   "
-                  />
-          <br></br><br></br>
-                </div>
-        
-                <br></br>
+                />
+                <br></br><br></br>
               </div>
+
+              <br></br>
+            </div>
 
           </div>
         </div>
         <div className="flex flex-col h-260 py-6">
-          <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+          <div className="justify-aroud flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
               <h1 className="font-700" style={{ color: '#f15a25' }}>
-              ASSESSMENT
+                ASSESSMENT
               </h1>
             </div>
             <br></br>
 
             <div className="flex flex-row justify-center">
-              <div className="flex-1 flex flex-row ">
+              <div className="flex-1 flex flex-row justify-around">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -4885,7 +6074,7 @@ const AddExam = (props) => {
             </div>
 
             <div className="flex flex-row justify-center">
-              <div className="flex-1 flex flex-row ">
+              <div className="flex-1 flex flex-row justify-around">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -4941,7 +6130,7 @@ const AddExam = (props) => {
             </div>
 
             <div className="flex flex-row justify-center">
-              <div className="flex-1 flex flex-row ">
+              <div className="flex-1 flex flex-row justify-around">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -4997,7 +6186,7 @@ const AddExam = (props) => {
             </div>
 
             <div className="flex flex-row justify-center">
-              <div className="flex-1 flex flex-row ">
+              <div className="flex-1 flex flex-row justify-around">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -5052,7 +6241,7 @@ const AddExam = (props) => {
               </div>
             </div>
             <div className="flex flex-row justify-center">
-              <div className="flex-1 flex flex-row ">
+              <div className="flex-1 flex flex-row justify-around">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -5101,15 +6290,16 @@ const AddExam = (props) => {
 
           </div>
         </div>
-        <div className="flex flex-col h-460  py-6">
+        <div className="flex flex-col h-460 p-16 sm:p-24 w-full py-6">
           <div className="flex flex-col h-full py-5 border-1 border-black border-solid rounded-6">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
               <h1 className="font-700" style={{ color: '#f15a25' }}>
                 DOCTOR SIGNATURE
               </h1>
             </div>
-            <br></br> <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
-
+            <div className="flex flex-row p-16 sm:p-24 w-full justify-center min-w-800">
+              <DoctorSignature form={form} setForm={setForm} handleChange={handleChange} />
+            </div>
           </div>
         </div>
         {/* <div className="flex flex-row px-16  sm:px-24 w-full">
@@ -5336,7 +6526,7 @@ const AddExam = (props) => {
           </div>
         </div> */}
       </div>
-     </div >
+    </div >
   );
 };
 
