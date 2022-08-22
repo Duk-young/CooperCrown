@@ -115,6 +115,7 @@ function NewShowRoom(props) {
     <FusePageCarded
       header={
         form && (
+          
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
@@ -190,11 +191,19 @@ function NewShowRoom(props) {
       }
       content={
         form && (
-          <div className="p-16 sm:p-24 max-w-2xl">
+          <div className="flex flex-col h-260  px-16 py-6">
+        <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+            <h1 className="font-700" style={{ color: '#f15a25' }}>
+            LOCATION INFO
+            </h1>
+          </div> 
+          <div className="p-16 sm:p-24 max-w-2xl ">
             {tabValue === 0 && (
               <div>
                 <TextField
                   className="mt-8 "
+                 
                   error={form.locationName === ''}
                   required
                   label="Location Name"
@@ -209,6 +218,7 @@ function NewShowRoom(props) {
 
                 <TextField
                   className="mt-8 "
+                 
                   id="locationAddress"
                   name="locationAddress"
                   onChange={handleChange}
@@ -222,6 +232,7 @@ function NewShowRoom(props) {
                 />
                 <TextField
                   className="mt-8 "
+                 
                   required
                   label="City"
                   type="text"
@@ -234,6 +245,7 @@ function NewShowRoom(props) {
                 />
                 <TextField
                   className="mt-8 "
+                 
                   required
                   label="State"
                   id="State"
@@ -247,6 +259,7 @@ function NewShowRoom(props) {
                 <div className="flex flex-row justify-between w-full">
                   <TextField
                     className="mt-8  pr-4"
+                   
                     required
                     label="Phone No."
                     id="phoneNo"
@@ -258,6 +271,7 @@ function NewShowRoom(props) {
                   />
                   <TextField
                     className="mt-8 "
+                   
                     required
                     label="Fax No."
                     id="faxNo"
@@ -270,6 +284,7 @@ function NewShowRoom(props) {
                 </div>
                 <TextField
                   className="mt-8 "
+                 
                   required
                   label="Email"
                   id="email"
@@ -281,6 +296,7 @@ function NewShowRoom(props) {
                 />
                 <TextField
                   className="mt-8 "
+                 
                   required
                   label="Zip Code"
                   id="zipCode"
@@ -293,6 +309,7 @@ function NewShowRoom(props) {
                 />
                 <TextField
                   className="mt-8 "
+                 
                   required
                   label="Other 1"
                   id="other1"
@@ -304,6 +321,7 @@ function NewShowRoom(props) {
                 />
                 <TextField
                   className="mt-8 "
+                 
                   required
                   label="Other 2"
                   id="other2"
@@ -316,6 +334,11 @@ function NewShowRoom(props) {
               </div>
             )}
           </div>
+            <br></br> 
+          </div>
+          </div>
+
+         
         )
       }
       innerScroll
