@@ -1,11 +1,14 @@
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
+import { firestore, storage } from 'firebase';
 import { useForm, useDeepCompareEffect } from '@fuse/hooks';
 import Button from '@material-ui/core/Button';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Icon from '@material-ui/core/Icon';
 import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
+import {makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -50,8 +53,21 @@ import reducer from '../store/reducers';
 //     }
 //   }
 // }));
-
+const useStyles = makeStyles({
+  table: {
+    minWidth: 450
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 function NewShowRoom(props) {
+  const classes = useStyles();
   const dispatch = useDispatch();
   const product = useSelector(({ eCommerceApp }) => eCommerceApp.product);
   const theme = useTheme();
@@ -91,7 +107,29 @@ function NewShowRoom(props) {
   function handleChangeTab(event, value) {
     setTabValue(value);
   }
+  const handleDelete = async () => {
+    try {
+      const queryshowRoom = await firestore()
+        .collection('showRooms')
+        .where('showRoomId', '==', Number(form.showRoomId))
+        .limit(1)
+        .get();
 
+      let result = queryshowRoom.docs[0].data();
+      result.id = queryshowRoom.docs[0].id;
+      await firestore().collection('showRooms').doc(result.id).delete();
+      dispatch(
+        MessageActions.showMessage({
+          message: 'showRoom deleted successfully'
+        })
+      );
+      props.history.push(
+        props.history.push(`/apps/e-commerce/showRooms`)
+        );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   function canBeSubmitted() {
     return (
       form.locationName.length > 0 &&
@@ -152,7 +190,7 @@ function NewShowRoom(props) {
                 </div>
               </div>
             </div>
-            <FuseAnimate animation="transition.slideRightIn" delay={300}>
+            {/* <FuseAnimate animation="transition.slideRightIn" delay={300}>
               <Button
                 className="whitespace-no-wrap normal-case"
                 variant="contained"
@@ -173,7 +211,7 @@ function NewShowRoom(props) {
                 }}>
                 Save
               </Button>
-            </FuseAnimate>
+            </FuseAnimate> */}
           </div>
         )
       }
@@ -195,7 +233,7 @@ function NewShowRoom(props) {
         <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
             <h1 className="font-700" style={{ color: '#f15a25' }}>
-            LOCATION INFO
+            LOCATION INFO {form.showRoomId}
             </h1>
           </div> 
           <div className="p-16 sm:p-24 max-w-2xl ">
@@ -256,12 +294,12 @@ function NewShowRoom(props) {
                   variant="outlined"
                   fullWidth
                 />
-                <div className="flex flex-row justify-between w-full">
+                {/* <div className="flex flex-row justify-between w-full"> */}
                   <TextField
                     className="mt-8  pr-4"
                    
                     required
-                    label="Phone No."
+                    label="Phone No.1"
                     id="phoneNo"
                     name="phoneNo"
                     value={form.phoneNo}
@@ -269,7 +307,19 @@ function NewShowRoom(props) {
                     variant="outlined"
                     fullWidth
                   />
-                  <TextField
+                    <TextField
+                    className="mt-8  pr-4"
+                   
+                    required
+                    label="Phone No.2"
+                    id="phoneNo1"
+                    name="phoneNo2"
+                    value={form.phoneNo2}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  {/* <TextField
                     className="mt-8 "
                    
                     required
@@ -280,8 +330,8 @@ function NewShowRoom(props) {
                     onChange={handleChange}
                     variant="outlined"
                     fullWidth
-                  />
-                </div>
+                  /> */}
+                {/* </div> */}
                 <TextField
                   className="mt-8 "
                  
@@ -309,9 +359,7 @@ function NewShowRoom(props) {
                 />
                 <TextField
                   className="mt-8 "
-                 
-                  required
-                  label="Other 1"
+                  label="Other "
                   id="other1"
                   name="other1"
                   value={form.other1}
@@ -319,23 +367,49 @@ function NewShowRoom(props) {
                   variant="outlined"
                   fullWidth
                 />
-                <TextField
-                  className="mt-8 "
-                 
-                  required
-                  label="Other 2"
-                  id="other2"
-                  name="other2"
-                  value={form.other2}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
+              
               </div>
             )}
           </div>
             <br></br> 
           </div>
+          <div className="flex flex-col p-12 " >              
+              <Button 
+              className={classes.button}
+              variant="contained"
+              color="secondary"
+              onClick={async () => {
+                if (routeParams.showRoomtId === 'new') {
+                  setisLoading(false);
+                  await dispatch(await Actions.saveShowRoom(form));
+                  setisLoading(true);
+                  props.history.push(`/apps/e-commerce/showRooms`);
+                } else {
+                  setisLoading(false);
+                  await dispatch(await Actions.updateShowRoom(form));
+                  setisLoading(true);
+                  props.history.push(`/apps/e-commerce/showRooms`);
+                }
+              }}>
+                 
+                Save
+              </Button>
+           </div>
+       
+                  <div className="flex flex-col p-12">
+                    <Button
+                      style={{
+                        maxHeight: '70px',
+                        minHeight: '70px',
+                        color: 'red'
+                      }}
+                      variant="outlined"
+                      onClick={handleDelete}>
+                      <Icon>delete</Icon>
+                      DELETE 
+                    </Button>
+                  </div>
+                
           </div>
 
          
