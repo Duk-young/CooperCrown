@@ -54,7 +54,7 @@ function LensPrice() {
                   </Typography>
                 </FuseAnimate>
               </div>
-              <div className="flex flex-1 justify-around">
+              {/* <div className="flex flex-1 justify-around">
                 <div className="flex flex-col px-10 w-1/2 ">
                   <CustomAutocomplete
                     list={lensTypes}
@@ -67,13 +67,27 @@ function LensPrice() {
                     customFunction={customFunction}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
       }
       content={
         <div className="p-16 sm:p-24 ">
+            
+                  <CustomAutocomplete
+                    list={lensTypes}
+                    form={form}
+                    size="small"
+                    setForm={setForm}
+                    handleChange={handleChange}
+                    id="a"
+                    freeSolo={false}
+                    label="Select Lens Type"
+                    customFunction={customFunction}
+                  />
+             
+              <br></br>
           <TableGrid form={form} rows={rows} setRows={setRows} />
         </div>
       }

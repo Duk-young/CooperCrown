@@ -24,9 +24,37 @@ export const getService = (params) => async (dispatch) => {
 export const saveService = (data) => async (dispatch) => {
   delete data.uid;
   try {
-    await firebaseService.firestoreDb.collection('services').add(data);
+    const dbConfig = (
+      await firebaseService.firestoreDb
+        .collection('dbConfig')
+        .doc('dbConfig')
+        .get()
+    ).data();
+    await firebaseService.firestoreDb
+      .collection('services')
+      .add({ ...data, serviceId: dbConfig?.serviceId + 1 });
+    await firebaseService.firestoreDb
+      .collection('dbCo nfig')
+      .doc('dbConfig')
+      .update({
+        serviceId: dbConfig?.serviceId + 1
+      });
+    // await firebaseService.firestoreDb.collection('services').add(data);
     dispatch(Actions.getServices());
     dispatch(showMessage({ message: 'Service Saved' }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const deleteService = (data) => async (dispatch) => {
+  delete data.uid;
+  delete data.name;
+  delete data.description;
+  delete data.price;
+  try {
+    await firebaseService.firestoreDb.collection('services').delete(data);
+    dispatch(Actions.getServices());
+    dispatch(showMessage({ message: 'Service deleted' }));
   } catch (error) {
     console.log(error);
   }
@@ -49,6 +77,7 @@ export function newService() {
   const data = {
     uid: FuseUtils.generateGUID(),
     name: '',
+    description:'',
     price: ''
   };
   return {

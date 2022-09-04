@@ -17,67 +17,40 @@ import React, { useState } from 'react';
 
 const rows = [
   {
-    id: 'Location-Name',
+    id: 'doctor-date',
     align: 'left',
     disablePadding: false,
-    label: 'Location  Name',
+    label: 'DATE',
     sort: true
   },
   {
-    id: 'Location Address',
+    id: 'doctor-name',
     align: 'left',
     disablePadding: false,
-    label: 'Location Address',
+    label: 'DOCTOR NAME',
     sort: true
   },
   {
-    id: 'City',
+    id: 'Location-Address1',
     align: 'left',
     disablePadding: false,
-    label: 'City',
+    label: 'Location 1',
     sort: true
   },
   {
-    id: 'State',
+    id: 'Location-Address2',
     align: 'left',
     disablePadding: false,
-    label: 'State',
-    sort: true
-  },
-  // {
-  //   id: 'email',
-  //   align: 'left',
-  //   disablePadding: false,
-  //   label: 'Email',
-  //   sort: true
-  // },
-  {
-    id: 'phoneNo',
-    align: 'left',
-    disablePadding: false,
-    label: 'Phone No',
-    sort: true
-  },
-  // {
-  //   id: 'faxNo',
-  //   align: 'left',
-  //   disablePadding: false,
-  //   label: 'Fax No',
-  //   sort: true
-  // },
-  {
-    id: 'Zip-Code',
-    align: 'left',
-    disablePadding: false,
-    label: 'Zip Code',
+    label: 'Location 2',
     sort: true
   },
   {
-    id: 'Actions',
+    id: 'Location-Address3',
     align: 'left',
     disablePadding: false,
+    label: 'Location 3',
     sort: true
-  }
+  },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -96,20 +69,20 @@ const StyledTableCell = withStyles((theme) => ({
     padding: 10
   }
 }))(TableCell);
-function ProductsTableHead(props) {
+function DoctorsTableHead(props) {
   const classes = useStyles(props);
-  const [selectedProductsMenu, setSelectedProductsMenu] = useState(null);
+  const [selectedDoctorsMenu, setselectedDoctorsMenu] = useState(null);
 
   const createSortHandler = (property) => (event) => {
     props.onRequestSort(event, property);
   };
 
-  function openSelectedProductsMenu(event) {
-    setSelectedProductsMenu(event.currentTarget);
+  function openselectedDoctorsMenu(event) {
+    setselectedDoctorsMenu(event.currentTarget);
   }
 
-  function closeSelectedProductsMenu() {
-    setSelectedProductsMenu(null);
+  function closeselectedDoctorsMenu() {
+    setselectedDoctorsMenu(null);
   }
 
   return (
@@ -130,20 +103,20 @@ function ProductsTableHead(props) {
                 classes.actionsButtonWrapper
               )}>
               <IconButton
-                aria-owns={selectedProductsMenu ? 'selectedProductsMenu' : null}
+                aria-owns={selectedDoctorsMenu ? 'selectedDoctorsMenu' : null}
                 aria-haspopup="true"
-                onClick={openSelectedProductsMenu}>
+                onClick={openselectedDoctorsMenu}>
                 <Icon>more_horiz</Icon>
               </IconButton>
               <Menu
-                id="selectedProductsMenu"
-                anchorEl={selectedProductsMenu}
-                open={Boolean(selectedProductsMenu)}
-                onClose={closeSelectedProductsMenu}>
+                id="selectedDoctorsMenu"
+                anchorEl={selectedDoctorsMenu}
+                open={Boolean(selectedDoctorsMenu)}
+                onClose={closeselectedDoctorsMenu}>
                 <MenuList>
                   <MenuItem
                     onClick={() => {
-                      closeSelectedProductsMenu();
+                      closeselectedDoctorsMenu();
                     }}>
                     <ListItemIcon className="min-w-40">
                       <Icon>delete</Icon>
@@ -187,4 +160,4 @@ function ProductsTableHead(props) {
   );
 }
 
-export default ProductsTableHead;
+export default DoctorsTableHead;

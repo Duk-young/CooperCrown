@@ -23,7 +23,22 @@ export const getContact = (params) => async (dispatch) => {
 export const saveContact = (data) => async (dispatch) => {
   delete data.uid;
   try {
-    await firebaseService.firestoreDb.collection('contacts').add(data);
+    const dbConfig = (
+      await firebaseService.firestoreDb
+        .collection('dbConfig')
+        .doc('dbConfig')
+        .get()
+    ).data();
+    await firebaseService.firestoreDb
+      .collection('contacts')
+      .add({ ...data, contactId: dbConfig?.contactId + 1 });
+    await firebaseService.firestoreDb
+      .collection('dbCo nfig')
+      .doc('dbConfig')
+      .update({
+        contactId: dbConfig?.contactId + 1
+      });
+    // await firebaseService.firestoreDb.collection('contacts').add(data);
     dispatch(Actions.getContacts());
     dispatch(showMessage({ message: 'Contact Saved' }));
   } catch (error) {
@@ -50,7 +65,12 @@ export function newContact() {
   const data = {
     uid: FuseUtils.generateGUID(),
     type: '',
+    style:'',
+    brand:'',
+    model:'',
+    basecurve:'',
     price: ''
+    
   };
 
   return {

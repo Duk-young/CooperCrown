@@ -4,6 +4,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
 import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
+import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
@@ -172,15 +173,7 @@ function ProductsTable(props) {
                     </TableCell>
 
                     <TableCell component="th" scope="row">
-                      {n.email}
-                    </TableCell>
-
-                    <TableCell component="th" scope="row">
                       {n.phoneNo}
-                    </TableCell>
-
-                    <TableCell component="th" scope="row">
-                      {n.faxNo}
                     </TableCell>
 
                     <TableCell component="th" scope="row">
@@ -191,12 +184,12 @@ function ProductsTable(props) {
                         className="whitespace-no-wrap normal-case"
                         variant="contained"
                         color="secondary"
-                        onClick={() => {
+                         onClick={() => {
                           props.history.push(
                             `/apps/e-commerce/showRoom/${n.id}`
                           );
                         }}>
-                        Edit
+                        <DeleteOutlined/>
                       </Button>
                     </TableCell>
                   </TableRow>

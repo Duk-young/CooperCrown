@@ -3,13 +3,7 @@ import { withRouter } from 'react-router';
 import CanvasDraw from 'react-canvas-draw';
 import DocSig from './DocSig.PNG';
 import Fab from '@material-ui/core/Fab';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import MenuItem from '@material-ui/core/MenuItem';
 import React, { useState } from 'react';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   fab: {

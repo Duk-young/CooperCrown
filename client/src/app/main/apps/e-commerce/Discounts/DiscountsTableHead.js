@@ -2,11 +2,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import ListItemText from '@material-ui/core/ListItemText';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import { makeStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -20,21 +20,27 @@ const rows = [
     id: 'discount-code',
     align: 'left',
     disablePadding: false,
-    label: 'Discount Code',
+    label: 'NAME',
+    sort: true
+  },
+  {
+    id: 'discount-description',
+    align: 'left',
+    disablePadding: false,
+    label: 'DESCRIPTION',
     sort: true
   },
   {
     id: 'discount-amount',
     align: 'left',
     disablePadding: false,
-    label: 'Discount Amount',
+    label: 'PRICE',
     sort: true
   },
   {
     id: 'Actions',
     align: 'left',
     disablePadding: false,
-    label: 'Actions',
     sort: true
   }
 ];
@@ -44,7 +50,17 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.background.paper
   }
 }));
-
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+    textAlign: 'left'
+  },
+  body: {
+    fontSize: 14,
+    padding: 10
+  }
+}))(TableCell);
 function DiscountsTableHead(props) {
   const classes = useStyles(props);
   const [selectedProductsMenu, setSelectedProductsMenu] = useState(null);
@@ -64,8 +80,8 @@ function DiscountsTableHead(props) {
   return (
     <TableHead>
       <TableRow className="h-64">
-        <TableCell padding="none" className="relative w-64 text-center">
-          <Checkbox
+        <StyledTableCell padding="none" className="relative w-64 text-center">
+          {/* <Checkbox
             indeterminate={
               props.numSelected > 0 && props.numSelected < props.rowCount
             }
@@ -102,11 +118,11 @@ function DiscountsTableHead(props) {
                 </MenuList>
               </Menu>
             </div>
-          )}
-        </TableCell>
+          )} */}
+        </StyledTableCell>
         {rows.map((row) => {
           return (
-            <TableCell
+            <StyledTableCell
               key={row.id}
               align={row.align}
               padding={row.disablePadding ? 'none' : 'default'}
@@ -128,7 +144,7 @@ function DiscountsTableHead(props) {
                   </TableSortLabel>
                 </Tooltip>
               )}
-            </TableCell>
+            </StyledTableCell>
           );
         }, this)}
       </TableRow>

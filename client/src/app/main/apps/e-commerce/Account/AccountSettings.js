@@ -176,9 +176,20 @@ function AccountSettings(props) {
       }
       content={
         form && (
-          <div className="p-16 sm:p-24 max-w-2xl">
+          <div className="p-16 sm:p-24 ">
+ <div className="flex flex-col h-260  px-16 py-6">
+
             {tabValue === 0 && (
+
               <div>
+                <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+                      <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                        <h1 className="font-700" style={{ color: '#f15a25' }}>
+                          ACCOUNT INFO
+                        </h1>
+                      </div>
+                      <div className="flex flex-col justify-center p-16 sm:p-24 ">
+
                 <TextField
                   className="mt-8 mb-16"
                   error={form.email === ''}
@@ -244,7 +255,10 @@ function AccountSettings(props) {
                   fullWidth
                 />
               </div>
+              </div>
+              </div>
             )}
+          </div>
           </div>
         )
       }

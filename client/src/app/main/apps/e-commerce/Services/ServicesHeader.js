@@ -3,14 +3,29 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Input from '@material-ui/core/Input';
 import Paper from '@material-ui/core/Paper';
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
+import { makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as Actions from '../store/actions';
-
+const useStyles = makeStyles({
+  table: {
+    minWidth: 450
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 function ServicesHeader(props) {
+  const classes = useStyles();
   const dispatch = useDispatch();
   const searchText = useSelector(
     ({ eCommerceApp }) => eCommerceApp.services.searchText
@@ -57,9 +72,11 @@ function ServicesHeader(props) {
         <Button
           component={Link}
           to="/apps/e-commerce/service/new"
-          className="whitespace-no-wrap normal-case"
+          className={classes.button}
           variant="contained"
           color="secondary">
+                        <AddCircleOutlineOutlinedIcon />
+
           <span className="hidden sm:flex">Add New Service</span>
           <span className="flex sm:hidden">New</span>
         </Button>

@@ -4,6 +4,7 @@ import { useForm } from '@fuse/hooks';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
 import emailjs from 'emailjs-com';
+import {makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FusePageCarded from '@fuse/core/FusePageCarded';
@@ -13,12 +14,25 @@ import reducer from '../store/reducers';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-
+const useStyles = makeStyles({
+  table: {
+    minWidth: 450
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 function EmailTemplates() {
   const { form, handleChange, setForm } = useForm(null);
   const [disabledState, setDisabledState] = useState(true);
   const [customers, setCustomers] = useState([]);
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   const sendEventEmail = async () => {
     customers.map((row) => {
@@ -94,60 +108,70 @@ function EmailTemplates() {
                 Email Templates
               </Typography>
             </FuseAnimate>
+            
           </div>
+          {/* <FuseAnimate animation="transition.slideRightIn" delay={300}>
+              
+                {disabledState && (
+                  <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary"
+                    onClick={() => {
+                      setDisabledState(false);
+                    }}
+                    >
+                    Edit
+                  </Button>
+                )} 
+                </FuseAnimate> */}
         </div>
+              //   disabled={!canBeSubmitted()}
+              //   onClick={async () => {
+              //     if (routeParams.discountId === 'new') {
+              //       setisLoading(false);
+              //       await dispatch(await Actions.saveDiscount(form));
+              //       setisLoading(true);
+              //     } else {
+              //       setisLoading(false);
+              //       await dispatch(await Actions.updateDiscount(form));
+              //       setisLoading(true);
+              //     }
+              //   }}>
+              //   Save
+              // </Button>
+           
       }
       content={
         form && (
           <div className="flex flex-col w-full p-12">
-            <TextField
-              className="pb-12"
-              disabled={disabledState}
-              id="birthday"
-              label="Birthday Message"
-              type="text"
-              name="birthday"
-              value={form?.birthday}
-              onChange={handleChange}
-              multiline
-              rows={8}
-              variant="outlined"
-              fullWidth
-            />
+            
+            {/* <div className="flex flex-row pr-40 justify-end">
+                {disabledState && (
+                  <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary"
+                    onClick={() => {
+                      setDisabledState(false);
+                    }}
+                    >
+                    Edit
+                  </Button>
+                )}
+                <br></br>
+              </div> */}
+     <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+            <h1 className="font-700" style={{ color: '#f15a25' }}>
+            Welcome Message
+            </h1>
 
-            <TextField
-              className="pb-12"
-              disabled={disabledState}
-              id="specialMessage"
-              label="Special Sale/Event Message"
-              type="text"
-              name="specialMessage"
-              value={form?.specialMessage}
-              onChange={handleChange}
-              multiline
-              rows={8}
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              className="pb-12 "
-              disabled={disabledState}
-              id="examExpiry"
-              label="Exam Expiration Reminder"
-              type="text"
-              name="examExpiry"
-              value={form?.examExpiry}
-              onChange={handleChange}
-              multiline
-              rows={8}
-              variant="outlined"
-              fullWidth
-            />
+            </div>
             <TextField
               className="pb-12"
               disabled={disabledState}
               id="newCustomer"
-              label="New Customer Welcome Email"
               type="text"
               name="newCustomer"
               value={form?.newCustomer}
@@ -157,11 +181,57 @@ function EmailTemplates() {
               variant="outlined"
               fullWidth
             />
+            </div>
+            <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+            <h1 className="font-700" style={{ color: '#f15a25' }}>
+            Exam Expiration Reminder
+            </h1>
+            </div>
+            <TextField
+              className="pb-12 "
+              disabled={disabledState}
+              id="examExpiry"
+              type="text"
+              name="examExpiry"
+              value={form?.examExpiry}
+              onChange={handleChange}
+              multiline
+              rows={8}
+              fullWidth
+            />
+            </div>
+
+            <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+            <h1 className="font-700" style={{ color: '#f15a25' }}>
+            Birthday Message
+            </h1>
+            </div>
+            <TextField
+              className="pb-12"
+              disabled={disabledState}
+              id="birthday"
+              type="text"
+              name="birthday"
+              value={form?.birthday}
+              onChange={handleChange}
+              multiline
+              rows={8}             
+              fullWidth
+            />
+            </div>
+            <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+            <h1 className="font-700" style={{ color: '#f15a25' }}>
+            Terms & Conditions
+            </h1>
+            </div>
             <TextField
               className="pb-12"
               disabled={disabledState}
               id="terms"
-              label="Terms & Conditions"
+             
               type="text"
               name="terms"
               value={form?.terms}
@@ -171,7 +241,27 @@ function EmailTemplates() {
               variant="outlined"
               fullWidth
             />
-
+</div>
+<div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+            <h1 className="font-700" style={{ color: '#f15a25' }}>
+            Sale/Event Message
+            </h1>
+            </div>
+            <TextField
+              className="pb-12"
+              disabled={disabledState}
+              id="specialMessage"
+             
+              type="text"
+              name="specialMessage"
+              value={form?.specialMessage}
+              onChange={handleChange}
+              multiline
+              rows={8}
+              fullWidth
+            />
+            </div>
             <div className="flex flex-row w-full ">
               <div className="flex flex-row w-2/3 justify-around"></div>
               <div className="flex flex-row w-1/3 justify-around">

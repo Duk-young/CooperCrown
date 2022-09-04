@@ -2,16 +2,31 @@ import FuseAnimate from '@fuse/core/FuseAnimate';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Input from '@material-ui/core/Input';
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as Actions from '../store/actions';
-
+const useStyles = makeStyles({
+  table: {
+    minWidth: 450
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 function DiscountsHeader(props) {
   const dispatch = useDispatch();
+  const classes = useStyles();
   const searchText = useSelector(
     ({ eCommerceApp }) => eCommerceApp.discounts.searchText
   );
@@ -57,12 +72,15 @@ function DiscountsHeader(props) {
         <Button
           component={Link}
           to="/apps/e-commerce/discount/new"
-          className="whitespace-no-wrap normal-case"
+          className={classes.button}
           variant="contained"
           color="secondary">
-          <span className="hidden sm:flex">Add New Discount</span>
+            <AddCircleOutlineOutlinedIcon />
+            <span className="hidden sm:flex">Add New</span>
           <span className="flex sm:hidden">New</span>
         </Button>
+        
+        
       </FuseAnimate>
     </div>
   );

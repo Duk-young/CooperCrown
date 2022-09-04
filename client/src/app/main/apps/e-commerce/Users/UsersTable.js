@@ -6,8 +6,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import FuseLoading from '@fuse/core/FuseLoading';
+import { useHistory } from 'react-router-dom';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
+import FuseLoading from '@fuse/core/FuseLoading';
+import { firestore } from 'firebase';
+import FormControl from '@material-ui/core/FormControl';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -38,6 +42,26 @@ function UsersTable(props) {
       setisLoading(true);
     };
     getRooms();
+    // const fetchlocation = async () => {
+    //   let showroomdata = [];
+    //     const queryShowrooms = await firestore()
+    //     .collection('showRooms')
+    //     .get();
+  
+    //     queryShowrooms.forEach((doc) => {
+    //       showroomdata.push(doc.data());
+    //     });
+    //     setShowRooms(showroomdata);
+  
+    //     if (history?.location?.state?.start !== undefined) {
+    //       setForm({
+    //         start: history.location.state.start,
+    //         showRoomId: history.location.state.showRoomId,
+    //       });
+    //     }
+    //     setisLoading(false);
+    //   };
+    //   fetchlocation();
   }, [dispatch]);
 
   useEffect(() => {
@@ -68,6 +92,9 @@ function UsersTable(props) {
       return;
     }
     setSelected([]);
+  }
+  function handleClick(item) {
+    props.history.push(`/apps/e-commerce/user/${item.id}`);
   }
 
   // function handleClick(item) {
@@ -142,7 +169,7 @@ function UsersTable(props) {
                     tabIndex={-1}
                     key={n.id}
                     selected={isSelected}
-                    // onClick={(event) => handleClick(n)}
+                    onClick={(event) => handleClick(n)}
                   >
                     <TableCell className="w-64 text-center" padding="none">
                       <Checkbox
@@ -152,13 +179,20 @@ function UsersTable(props) {
                       />
                     </TableCell>
                     <TableCell component="th" scope="row">
+                      {n.madedate}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {n.location}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
                       {n.email}
+                    </TableCell>
+                    
+                    <TableCell component="th" scope="row">
+                      {n.username ? n.username : '-----'}
                     </TableCell>
                     <TableCell component="th" scope="row">
                       {n.Role}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {n.username ? n.username : '-----'}
                     </TableCell>
                   </TableRow>
                 );
