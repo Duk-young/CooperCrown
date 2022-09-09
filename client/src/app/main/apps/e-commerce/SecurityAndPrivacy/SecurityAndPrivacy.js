@@ -176,7 +176,7 @@ function SecurityAndPrivacy(props) {
       content={
         form && (
 
-          <div className="p-16 sm:p-24 max-w-2xl">
+          <div className="p-16 sm:p-24 ">
             {tabValue === 0 && (
               <div className="flex flex-col h-260  px-16 py-6">
                 <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
@@ -185,7 +185,7 @@ function SecurityAndPrivacy(props) {
                       CHANGE EMAIL {currentEmail}
                     </h1>
                   </div>
-                  <div className="justify-center p-16 sm:p-24 max-w-2xl">
+                  <div className="justify-center p-16 sm:p-24 ">
                   <TextField
                     className="mt-8 mb-16"
                     id="email"
@@ -236,7 +236,7 @@ function SecurityAndPrivacy(props) {
                       CHANGE PASSWORD {currentEmail}
                     </h1>
                   </div >
-                  <div className="justify-center p-16 sm:p-24 max-w-2xl">
+                  <div className="justify-center p-16 sm:p-24 ">
                   <TextField
                     className="mt-8 mb-16"
                     required

@@ -3,6 +3,7 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import { useForm, useDeepCompareEffect } from '@fuse/hooks';
 import Button from '@material-ui/core/Button';
+import ConfirmContactDelete from './ConfirmContactDelete';
 import Icon from '@material-ui/core/Icon';
 import { useTheme } from '@material-ui/core/styles';
 import { firestore, storage } from 'firebase';
@@ -71,6 +72,7 @@ function NewShowRoom(props) {
   const product = useSelector(({ eCommerceApp }) => eCommerceApp.contact);
   const theme = useTheme();
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
 
   const [tabValue, setTabValue] = useState(0);
    const [showModal, setShowModal] = useState(false);
@@ -128,6 +130,9 @@ function NewShowRoom(props) {
     } catch (error) {
       console.log(error);
     }
+  };
+  const handleClose = () => {
+    setOpen(false);
   };
   function canBeSubmitted() {
     return form.type.length > 0 && form.style.length > 0 && form.brand.length > 0 && form.model.length > 0 && form.basecurve.length > 0 && form.price.length > 0;
@@ -233,15 +238,15 @@ function NewShowRoom(props) {
                 Detail
               </h1>
             </div>
-            <div className="justify-center p-16 sm:p-24 max-w-2xl">
+            <div className="justify-center p-16 sm:p-24 ">
               {tabValue === 0 && (
                 <div>
                   <TextField
                     className="mt-8 mb-16"
-                    error={form.type === ''}
+                    ////error={form.type === ''}
                     required
                     label="Contact Lens Type"
-                    autoFocus
+                    
                     id="contact-type"
                     name="type"
                     value={form.type}
@@ -251,7 +256,7 @@ function NewShowRoom(props) {
                   />
                   <TextField
                     className="mt-8 mb-16"
-                    error={form.style === ''}
+                    // error={form.style === ''}
                     id="contact-style"
                     name="style"
                     onChange={handleChange}
@@ -263,7 +268,7 @@ function NewShowRoom(props) {
                   />
                   <TextField
                     className="mt-8 mb-16"
-                    error={form.brand === ''}
+                    //error={form.brand === ''}
                     id="contact-brand"
                     name="brand"
                     onChange={handleChange}
@@ -275,7 +280,7 @@ function NewShowRoom(props) {
                   />
                   <TextField
                     className="mt-8 mb-16"
-                    error={form.model === ''}
+                   //error={form.model === ''}
                     id="contact-model"
                     name="model"
                     onChange={handleChange}
@@ -287,7 +292,7 @@ function NewShowRoom(props) {
                   />
                   <TextField
                     className="mt-8 mb-16"
-                    error={form.basecurve === ''}
+                   //error={form.basecurve === ''}
                     id="contact-basecurve"
                     name="basecurve"
                     onChange={handleChange}
@@ -341,57 +346,28 @@ function NewShowRoom(props) {
             </Button>
           </div>
           <div className="flex flex-col p-12">
-            <Button
-              style={{
-                color: 'red'
-              }}
-              variant="outlined"
-              onClick={() => setShowModal(true)}>
-              <Icon>delete</Icon>
-              DELETE
-            </Button>
-            {showModal ? (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">               
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                 
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
-                </div>
-               
-                <div className="relative p-6 flex-auto">
-                <h3 className="text-3xl font-semibold">
-                   Are you sure you want to delete?
-                  </h3>
-                </div>
-               
-                <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
-               
-                  <Button
-                   className={classes.button}
-                   variant="contained"
-                   color="secondary"
-                    onClick={handleDelete}
-                  >
-                    Confirm
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
+          <ConfirmContactDelete open={open} handleClose={handleClose} form={form} propssent={props} />
+
+<Button
+  style={{
+    color: 'red'
+  }}
+  variant="outlined"
+  // onClick={() => setShowModal(true)}
+  onClick={() => {
+    if (routeParams.contactId === 'new') {
+      alert('No Data to delete')
+    }
+    else {
+      setOpen(true);
+    }
+
+  }}
+>
+  <Icon>delete</Icon>
+  DELETE
+</Button>
+
           </div>
         </div>
         )

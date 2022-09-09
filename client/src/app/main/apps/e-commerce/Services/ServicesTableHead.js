@@ -82,8 +82,8 @@ function ServicesTableHead(props) {
     
     <TableHead>
       <TableRow className="h-64">
-        <StyledTableCell padding="none" className="relative w-64 text-center">
-          {/* <Checkbox
+       {/*  <StyledTableCell padding="none" className="relative w-64 text-center">
+          <Checkbox
             indeterminate={
               props.numSelected > 0 && props.numSelected < props.rowCount
             }
@@ -120,8 +120,8 @@ function ServicesTableHead(props) {
                 </MenuList>
               </Menu>
             </div>
-          )} */}
-        </StyledTableCell>
+          )} 
+        </StyledTableCell>*/}
         {rows.map((row) => {
           return (
             <StyledTableCell

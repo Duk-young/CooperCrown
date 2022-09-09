@@ -7,6 +7,7 @@ import emailjs from 'emailjs-com';
 import {makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import FuseAnimate from '@fuse/core/FuseAnimate';
+import EmailFilters from './EmailFilters';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
 import React, { useState, useEffect } from 'react';
@@ -14,6 +15,7 @@ import reducer from '../store/reducers';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+
 const useStyles = makeStyles({
   table: {
     minWidth: 450
@@ -27,10 +29,12 @@ const useStyles = makeStyles({
     }
   }
 });
-function EmailTemplates() {
+function EmailTemplates(props) {
   const { form, handleChange, setForm } = useForm(null);
   const [disabledState, setDisabledState] = useState(true);
   const [customers, setCustomers] = useState([]);
+  const [open, setOpen] = useState(false);
+
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -81,7 +85,9 @@ function EmailTemplates() {
     fetchTemplates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  const handleClose = () => {
+    setOpen(false);
+  };
   const onSubmit = async () => {
     await firestore()
       .collection('emailTemplates')
@@ -244,6 +250,21 @@ function EmailTemplates() {
 </div>
 <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+            <div className='justify-left'>
+            {/* <EmailFilters open={open} handleClose={handleClose} /> */}
+
+            
+          <Fab
+            onClick={() => {
+             props.history.push('/apps/e-commerce/emailtemplates/filter')
+            }}
+            variant="extended"
+            color="primary"
+            aria-label="add">
+            check
+          </Fab>
+        
+            </div>
             <h1 className="font-700" style={{ color: '#f15a25' }}>
             Sale/Event Message
             </h1>

@@ -26,58 +26,35 @@ const useStyles = makeStyles({
     }
   }
 });
-export default function ConfirmShowroomDelete(props) {
+export default function ConfirmContactDelete(props) {
   const { open, handleClose,form,propssent } = props;
   const classes = useStyles();
   // const { form, handleChange } = useForm(null);
   const dispatch = useDispatch();
+ 
   const handleDelete = async () => {
     try {
-
-      const queryshowRoom = await firestore()
-        .collection('showRooms')
-        .where('showRoomId', '==', Number(form.showRoomId))
+      const querycontacts = await firestore()
+        .collection('contacts')
+        .where('contactId', '==', Number(form.contactId))
         .limit(1)
         .get();
 
-      let result = queryshowRoom.docs[0].data();
-      result.id = queryshowRoom.docs[0].id;
-      await firestore().collection('showRooms').doc(result.id).delete();
-      handleClose();
+      let result = querycontacts.docs[0].data();
+      result.id = querycontacts.docs[0].id;
+      await firestore().collection('contacts').doc(result.id).delete();
       dispatch(
         MessageActions.showMessage({
-          message: 'showRoom deleted successfully'
-
+          message: 'Contact deleted successfully'
         })
-      
       );
       propssent.history.push(
-        propssent.history.push(`/apps/e-commerce/showRooms`)
+        propssent.history.push(`/apps/e-commerce/contacts`)
       );
     } catch (error) {
       console.log(error);
     }
   };
-
-//   const onSubmit = async () => {
-//     try {
-//       await firestore()
-//         .collection('lensPrice')
-//         .doc('lensPrice')
-//         .update({ [form?.lensType]: newTable });
-
-//       handleClose();
-
-//       dispatch(
-//         MessageActions.showMessage({
-//           message: 'New Lens Type Saved Successfully!'
-//         })
-//       );
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
   return (
     <Dialog
       maxWidth="xs"
@@ -110,6 +87,6 @@ export default function ConfirmShowroomDelete(props) {
   );
 }
 
-ConfirmShowroomDelete.propTypes = {
+ConfirmContactDelete.propTypes = {
     open: PropTypes.bool.isRequired
   };

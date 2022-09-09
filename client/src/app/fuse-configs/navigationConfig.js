@@ -161,7 +161,7 @@ const navigationConfig = [
             url: '/apps/e-commerce/emailtemplates',
             exact: true
           },
-        
+          
           {
             id: 'priceSetting',
             title: 'Price Setting',

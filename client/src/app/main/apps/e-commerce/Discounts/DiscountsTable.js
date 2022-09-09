@@ -175,13 +175,13 @@ function DiscountsTable(props) {
                         `/apps/e-commerce/discount/${n.id}`
                       );
                     }}>
-                    <TableCell className="w-64 text-center" padding="none">
-                      {/* <Checkbox
+                    {/* <TableCell className="w-64 text-center" padding="none">
+                       <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
-                      /> */}
-                    </TableCell>
+                      /> 
+                    </TableCell> */}
                     <TableCell component="th" scope="row">
                       {n.code}
                     </TableCell>

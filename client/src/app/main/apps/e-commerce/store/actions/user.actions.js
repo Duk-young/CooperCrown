@@ -13,7 +13,7 @@ export const getUser = (params) => async (dispatch) => {
       .collection('users')
       .doc(params)
       .get();
-    const showRoom = { id: response.id, ...response.data() };
+    const showRoom = { id: response.id,myloc: response.location, ...response.data() };
     dispatch({
       type: GET_USER,
       payload: showRoom
@@ -49,12 +49,14 @@ export const getUser = (params) => async (dispatch) => {
 export const saveUser = (data) => async (dispatch) => {
   delete data.uid;
   try {
+    let today = new Date().toLocaleDateString()
     const dbConfig = (
       await firebaseService.firestoreDb
         .collection('dbConfig')
         .doc('dbConfig')
         .get()
     ).data();
+   
     await firebaseService.firestoreDb
       .collection('users')
       // .set({
@@ -64,7 +66,8 @@ export const saveUser = (data) => async (dispatch) => {
       //           username: user.email.split('@')[0],
       //           CompanyId: newUser.data.user.uid
       //         });
-      .add({ ...data,  Role: 'Staff', userId: dbConfig?.userId + 1 });
+    
+      .add({ ...data, date:today, Role: 'Staff',location: data.showRoomId, userId: dbConfig?.userId + 1 });
 
     await firebaseService.firestoreDb
       .collection('dbConfig')

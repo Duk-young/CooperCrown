@@ -251,6 +251,7 @@ function NewShowRoom(props) {
           scrollButtons="auto"
           classes={{ root: 'w-full h-64' }}>
           <Tab className="h-64 normal-case" label="Register User" />
+          {console.log({tabValue})}
         </Tabs>
       }
       content={
@@ -291,7 +292,7 @@ function NewShowRoom(props) {
                             </FormControl>
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.fname === ''}
+                             //error={form.fname === ''}
                               required
                               label="First Name"
                               autoFocus
@@ -305,7 +306,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.lname === ''}
+                             //error={form.lname === ''}
                               required
                               label="Last Name"
                               autoFocus
@@ -343,7 +344,7 @@ function NewShowRoom(props) {
                             </MuiPickersUtilsProvider>
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.Gender === ''}
+                             //error={form.Gender === ''}
                               required
                               label="Gender"
                               autoFocus
@@ -356,7 +357,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.phone1 === ''}
+                             //error={form.phone1 === ''}
                               required
                               label="Phone 1"
                               autoFocus
@@ -369,7 +370,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.phone2 === ''}
+                             //error={form.phone2 === ''}
                               label="Phone 2"
                               autoFocus
                               id="user-phone2"
@@ -394,7 +395,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.city === ''}
+                             //error={form.city === ''}
                               required
                               label="City"
                               autoFocus
@@ -408,7 +409,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.State === ''}
+                             //error={form.State === ''}
                               label="State"
                               autoFocus
                               id="user-State"
@@ -420,7 +421,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.zipcode === ''}
+                             //error={form.zipcode === ''}
                               label="Zip Code"
                               autoFocus
                               id="user-zipcode"
@@ -432,7 +433,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.useremail === ''}
+                             //error={form.useremail === ''}
                               required
                               label="Email"
                               autoFocus
@@ -445,7 +446,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                              error={form.other === ''}
+                             //error={form.other === ''}
                               label="Other"
                               autoFocus
                               id="user-other"
@@ -468,7 +469,7 @@ function NewShowRoom(props) {
                       <div className="flex flex-col justify-center p-16 sm:p-24 ">
                         <TextField
                           className="mt-8 mb-16"
-                          error={form.email === ''}
+                         //error={form.email === ''}
                           required
                           label="Email"
                           autoFocus
@@ -526,8 +527,9 @@ function NewShowRoom(props) {
                       } else {
                         setisLoading(false);
                         await dispatch(await Actions.updateUser(form));
-                        setisLoading(true);
+                        
                         props.history.push(`/apps/e-commerce/users`);
+                        setisLoading(true);
                       }
                     }}>
                     Save
@@ -536,62 +538,62 @@ function NewShowRoom(props) {
                 </div>
               </div>
               <div className="flex flex-col p-12">
-                    <Button
-                      style={{
-                        color: 'red'
-                      }}
-                      variant="outlined"
-                      onClick={() => setShowModal(true)}
-                        >
-                      <Icon>delete</Icon>
-                      DELETE 
-                    </Button>
-{showModal ? (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">               
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                 
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
-                </div>
-               
-                <div className="relative p-6 flex-auto">
-                <h3 className="text-3xl font-semibold">
-                   Are you sure you want to delete?
-                  </h3>
-                </div>
-               
-                <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
-               
-                  <Button
-                   className={classes.button}
-                   variant="contained"
-                   color="secondary"
-                    onClick={handleDelete}
-                  >
-                    Confirm
-                  </Button>
-                </div>
+                <Button
+                  style={{
+                    color: 'red'
+                  }}
+                  variant="outlined"
+                  onClick={() => setShowModal(true)}
+                >
+                  <Icon>delete</Icon>
+                  DELETE
+                </Button>
+                {showModal ? (
+                  <>
+                    <div
+                      className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                    >
+                      <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                          <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+
+                            <button
+                              className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                              onClick={() => setShowModal(false)}
+                            >
+                              <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                                ×
+                              </span>
+                            </button>
+                          </div>
+
+                          <div className="relative p-6 flex-auto">
+                            <h3 className="text-3xl font-semibold">
+                              Are you sure you want to delete?
+                            </h3>
+                          </div>
+
+                          <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
+
+                            <Button
+                              className={classes.button}
+                              variant="contained"
+                              color="secondary"
+                              onClick={handleDelete}
+                            >
+                              Confirm
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+                  </>
+                ) : null}
+
+
+
               </div>
-            </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
-   
- 
-                  
-                  </div>
             </div>
           </>
         )

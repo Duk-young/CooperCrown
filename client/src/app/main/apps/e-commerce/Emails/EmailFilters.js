@@ -37,23 +37,13 @@ const useStyles = makeStyles({
 });
 export default function CheckboxLabels() {
   const [isLoading, setisLoading] = useState(true);
-  const [checkedshowrroom, setCheckedshowroom] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
   const classes = useStyles();
   const dispatch = useDispatch();
   const routeParams = useParams();
   const [disabledState, setDisabledState] = useState(false);
 
-  const showroomcheckchanged = (state) => {
-    const value = state.target.value;
-    console.log(value)
-    if(value==="all"){
-      setCheckedshowroom(!checkedshowrroom);
-    }else if(value==="clear"){
-      setCheckedshowroom(false);
-    }
-    
-  };
+
 
   return (
     <div className="flex flex-col h-260  px-16 py-6">
@@ -65,29 +55,24 @@ export default function CheckboxLabels() {
             </h1>
           </div>
           <br></br>
-          
           <div className="flex flex-row ">
             <div className="flex-1 flex flex-col ml-20">
               <b><u>SHOWROOM LOCATION</u></b>
             <FormControlLabel
                 control={
                   <Checkbox
-                    checked={checkedshowrroom}
-                    onChange={showroomcheckchanged}
+                    checked={form?.showroomall}
+                    onChange={handleChange}
                     disabled={disabledState}
                     name="showroomall"
-                    value="all"
                   />
                 }
                 label="All"
-                {...console.log(form?.showroomall)}
-                {...console.log({handleChange})}
-               
               />
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={checkedshowrroom}
+                    checked={form?.bayside}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="bayside"
@@ -98,7 +83,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={checkedshowrroom}
+                    checked={form?.brooklyndubo}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="brooklyndubo"
@@ -109,7 +94,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={checkedshowrroom}
+                    checked={form?.BrooklynBedfordSt}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="BrooklynBedfordSt"
@@ -120,7 +105,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={checkedshowrroom}
+                    checked={form?.Closter}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="Closter"
@@ -131,7 +116,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                  checked={checkedshowrroom}
+                    checked={form?.Flushing}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="Flushing"
@@ -142,7 +127,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                  checked={checkedshowrroom}
+                    checked={form?.GreenwichVillage}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="GreenwichVillage "
@@ -153,7 +138,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                  checked={checkedshowrroom}
+                    checked={form?.bayside}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="LongIslandCity"
@@ -164,7 +149,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                  checked={checkedshowrroom}
+                    checked={form?.LongIslandRoslyn}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="LongIslandRoslyn"
@@ -175,7 +160,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                  checked={checkedshowrroom}
+                    checked={form?.Manhattan72ndSt}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="Manhattan72ndSt"
@@ -186,7 +171,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                  checked={checkedshowrroom}
+                    checked={form?.ManhattanMottSt}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="ManhattanMottSt"
@@ -197,7 +182,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                  checked={checkedshowrroom}
+                    checked={form?.manhattanwallstreet}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="manhattanwallstreet"
@@ -208,7 +193,7 @@ export default function CheckboxLabels() {
               <FormControlLabel
                 control={
                   <Checkbox
-                  checked={checkedshowrroom}
+                    checked={form?.sunnyside}
                     onChange={handleChange}
                     disabled={disabledState}
                     name="sunnyside"
@@ -631,11 +616,10 @@ export default function CheckboxLabels() {
               
                 className={classes.button}
                 variant="contained"
-                value="clear"
-
                 // color='#f15a25'
-                onChange={showroomcheckchanged} 
-                >
+                onClick={async () => {
+                
+                }}>
 
                 Clear All
               </Button>

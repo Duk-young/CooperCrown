@@ -94,6 +94,7 @@ function UsersTable(props) {
     setSelected([]);
   }
   function handleClick(item) {
+    // console.log({data.id})
     props.history.push(`/apps/e-commerce/user/${item.id}`);
   }
 
@@ -169,24 +170,38 @@ function UsersTable(props) {
                     tabIndex={-1}
                     key={n.id}
                     selected={isSelected}
-                    onClick={(event) => handleClick(n)}
+                    onClick={(event) => {handleClick(n)
+                      {console.log(n.id)}}}
+                    // onClick={() => {
+                    //   props.history.push(
+                       
+                    //     `/apps/e-commerce/user/${n.id}`
+                    //   );
+                    // }}
                   >
-                    <TableCell className="w-64 text-center" padding="none">
+                    {/* <TableCell className="w-64 text-center" padding="none">
                       <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
                       />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell component="th" scope="row">
-                      {n.madedate}
+                      {n.date}
                     </TableCell>
                     <TableCell component="th" scope="row">
                       {n.location}
                     </TableCell>
                     <TableCell component="th" scope="row">
+                    
                       {n.email}
                     </TableCell>
+                    {/* <TableCell component="th" scope="row">
+                      {n.phone1}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {n.dob}
+                    </TableCell> */}
                     
                     <TableCell component="th" scope="row">
                       {n.username ? n.username : '-----'}

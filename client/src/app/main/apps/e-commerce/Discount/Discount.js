@@ -4,8 +4,9 @@ import { firestore, storage } from 'firebase';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import { useForm, useDeepCompareEffect } from '@fuse/hooks';
-import {makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import ConfirmDiscountDelete from './ConfirmDiscountDelete';
 import Icon from '@material-ui/core/Icon';
 import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
@@ -69,6 +70,7 @@ const useStyles = makeStyles({
 function Discount(props) {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
   const product = useSelector(({ eCommerceApp }) => eCommerceApp.discount);
   const theme = useTheme();
 
@@ -108,7 +110,7 @@ function Discount(props) {
 
   function handleChangeTab(event, value) {
     setTabValue(value);
-   
+
   }
   const handleDelete = async () => {
     try {
@@ -124,9 +126,9 @@ function Discount(props) {
           message: 'Discount deleted successfully'
         })
       );
-   
-        props.history.push('/apps/e-commerce/discounts');
-      
+
+      props.history.push('/apps/e-commerce/discounts');
+
     } catch (error) {
       console.log(error);
     }
@@ -134,7 +136,9 @@ function Discount(props) {
   function canBeSubmitted() {
     return form.code.length > 0 && form.description.length > 0 && form.amount.length > 0;
   }
-
+  const handleClose = () => {
+    setOpen(false);
+  };
   if (
     (!product.data ||
       (product.data && routeParams.discountId !== product.data.id)) &&
@@ -225,15 +229,15 @@ function Discount(props) {
             <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                 <h1 className="font-700" style={{ color: '#f15a25' }}>
-                  Detail  
+                  Detail
                 </h1>
               </div>
-              <div className="p-16 sm:p-24 max-w-2xl">
+              <div className="p-16 sm:p-24 ">
                 {tabValue === 0 && (
                   <div>
                     <TextField
                       className="mt-8 mb-16"
-                      error={form.code === ''}
+                     //error={form.code === ''}
                       required
                       label="Name"
                       autoFocus
@@ -270,19 +274,19 @@ function Discount(props) {
                 )}
               </div>
               <br></br>
-              
+
             </div>
-            <div className="flex flex-col p-12" >              
-              <Button 
-              className={classes.button}
-              variant="contained"
-              color="secondary"
-               style={{
-                        maxHeight: '60px',
-                        minHeight: '60px'
-                      }}
-                              onClick={async () => {
-                  
+            <div className="flex flex-col p-12" >
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="secondary"
+                style={{
+                  maxHeight: '60px',
+                  minHeight: '60px'
+                }}
+                onClick={async () => {
+
                   if (routeParams.discountId === 'new') {
                     setisLoading(false);
                     await dispatch(await Actions.saveDiscount(form));
@@ -295,68 +299,36 @@ function Discount(props) {
                     setisLoading(true);
                   }
                 }}>
-                 
+
                 Save
               </Button>
-          
-                </div>
-                <div className="flex flex-col p-12">
-                    <Button
-                      style={{
-                        // maxHeight: '70px',
-                        // minHeight: '70px',
-                        color: 'red'
-                      }}
-                      variant="outlined"
-                      onClick={() => setShowModal(true)}>
-                      <Icon>delete</Icon>
-                      DELETE 
-                    </Button>
-                    {showModal ? (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">               
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                 
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
-                </div>
-               
-                <div className="relative p-6 flex-auto">
-                <h3 className="text-3xl font-semibold">
-                   Are you sure you want to delete?
-                  </h3>
-                </div>
-               
-                <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
-               
-                  <Button
-                   className={classes.button}
-                   variant="contained"
-                   color="secondary"
-                    onClick={handleDelete}
-                  >
-                    Confirm
-                  </Button>
-                </div>
-              </div>
+
+            </div>
+            <div className="flex flex-col p-12">
+              <ConfirmDiscountDelete open={open} handleClose={handleClose} form={form} propssent={props} />
+
+              <Button
+                style={{
+                  color: 'red'
+                }}
+                variant="outlined"
+                // onClick={() => setShowModal(true)}
+                onClick={() => {
+                  if (routeParams.discountId === 'new') {
+                    alert('No Data to delete')
+                  }
+                  else {
+                    setOpen(true);
+                  }
+
+                }}
+              >
+                <Icon>delete</Icon>
+                DELETE
+              </Button>
             </div>
           </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
-                  </div>
-          </div>
-          
+
         )
       }
       innerScroll

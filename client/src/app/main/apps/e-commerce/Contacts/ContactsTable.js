@@ -151,33 +151,33 @@ function ContactsTable(props) {
                         `/apps/e-commerce/contact/${n.id}`
                       );
                     }}>
-                    <TableCell className="w-64 text-center" padding="none">
-                      {/* <Checkbox
+                    {/*  <TableCell className="w-64  padding="none">
+                     <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
-                      /> */}
-                    </TableCell>
+                      /> 
+                    </TableCell>*/}
 
-                    <TableCell className=" text-center" component="th" scope="row">
+                    <TableCell  component="th" scope="row">
                       {n.type}
                     </TableCell>
-                    <TableCell className=" text-center" component="th" scope="row">
+                    <TableCell  component="th" scope="row">
                       {n.style}
                     </TableCell>
-                    <TableCell className=" text-center"  component="th" scope="row">
+                    <TableCell   component="th" scope="row">
                       {n.brand}
                     </TableCell>
-                    <TableCell className=" text-center"  component="th" scope="row">
+                    <TableCell   component="th" scope="row">
                       {n.model}
                     </TableCell>
-                    <TableCell className=" text-center"  component="th" scope="row">
+                    <TableCell   component="th" scope="row">
                       {n.basecurve}
                     </TableCell>
-                    <TableCell className=" text-center"  component="th" scope="row">
+                    <TableCell   component="th" scope="row">
                       {n.price}
                     </TableCell>
-                    <TableCell className=" text-center"  component="th" scope="row">
+                    <TableCell   component="th" scope="row">
                       <Button
                         className="whitespace-no-wrap normal-case"
                         variant="contained"
