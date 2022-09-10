@@ -2,31 +2,30 @@ import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
 import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
+import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
+import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import { useHistory } from 'react-router-dom';
-import FormHelperText from '@material-ui/core/FormHelperText';
-
 import FuseLoading from '@fuse/core/FuseLoading';
-import { firestore } from 'firebase';
-import FormControl from '@material-ui/core/FormControl';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as Actions from '../store/actions';
-import UsersTableHead from './UsersTableHead';
+import DoctorsTableHead from './DoctorsTableHead';
 
-function UsersTable(props) {
+function DoctorsTable(props) {
   const dispatch = useDispatch();
-  const products = useSelector(({ eCommerceApp }) => eCommerceApp.users.data);
+  const doctors = useSelector(
+    ({ eCommerceApp }) => eCommerceApp.doctors.data
+  );
   const searchText = useSelector(
-    ({ eCommerceApp }) => eCommerceApp.users.searchText
+    ({ eCommerceApp }) => eCommerceApp.doctors.searchText
   );
 
   const [selected, setSelected] = useState([]);
-  const [data, setData] = useState(products);
+  const [data, setData] = useState(doctors);
   const [isLoading, setisLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -38,40 +37,20 @@ function UsersTable(props) {
   useEffect(() => {
     const getRooms = async () => {
       setisLoading(false);
-      await dispatch(await Actions.getUsers());
+      await dispatch(await Actions.getShowRooms());
       setisLoading(true);
     };
     getRooms();
-    // const fetchlocation = async () => {
-    //   let showroomdata = [];
-    //     const queryShowrooms = await firestore()
-    //     .collection('showRooms')
-    //     .get();
-  
-    //     queryShowrooms.forEach((doc) => {
-    //       showroomdata.push(doc.data());
-    //     });
-    //     setShowRooms(showroomdata);
-  
-    //     if (history?.location?.state?.start !== undefined) {
-    //       setForm({
-    //         start: history.location.state.start,
-    //         showRoomId: history.location.state.showRoomId,
-    //       });
-    //     }
-    //     setisLoading(false);
-    //   };
-    //   fetchlocation();
   }, [dispatch]);
 
   useEffect(() => {
     // if (searchText.length !== 0) {
-    // 	setData(_.filter(products, item => item.name.toLowerCase().includes(searchText.toLowerCase())));
+    // 	setData(_.filter(doctors, item => item.name.toLowerCase().includes(searchText.toLowerCase())));
     // 	setPage(0);
     // } else {
-    setData(products);
+    setData(doctors);
     // }
-  }, [products, searchText]);
+  }, [doctors, searchText]);
 
   function handleRequestSort(event, property) {
     const id = property;
@@ -80,6 +59,7 @@ function UsersTable(props) {
     if (order.id === property && order.direction === 'desc') {
       direction = 'asc';
     }
+
     setOrder({
       direction,
       id
@@ -93,14 +73,11 @@ function UsersTable(props) {
     }
     setSelected([]);
   }
+
   function handleClick(item) {
-    // console.log({data.id})
-    props.history.push(`/apps/e-commerce/user/${item.id}`);
+    props.history.push(`/apps/e-commerce/showRoom/${item.id}`);
   }
 
-  // function handleClick(item) {
-  //   props.history.push(`/apps/e-commerce/discount/${item.id}`);
-  // }
   function handleCheck(event, id) {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
@@ -133,7 +110,7 @@ function UsersTable(props) {
     <div className="w-full flex flex-col">
       <FuseScrollbars className="flex-grow overflow-x-auto">
         <Table className="min-w-xl" aria-labelledby="tableTitle">
-          <UsersTableHead
+          <DoctorsTableHead
             numSelected={selected.length}
             order={order}
             onSelectAllClick={handleSelectAllClick}
@@ -170,44 +147,48 @@ function UsersTable(props) {
                     tabIndex={-1}
                     key={n.id}
                     selected={isSelected}
-                    onClick={(event) => {handleClick(n)
-                      {console.log(n.id)}}}
-                    // onClick={() => {
-                    //   props.history.push(
-                       
-                    //     `/apps/e-commerce/user/${n.id}`
-                    //   );
-                    // }}
-                  >
-                    {/* <TableCell className="w-64 text-center" padding="none">
+                    onClick={(event) => handleClick(n)}>
+                    <TableCell className="w-64 text-center" padding="none">
                       <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
                       />
-                    </TableCell> */}
-                    <TableCell component="th" scope="row">
-                      {n.date}
                     </TableCell>
+
                     <TableCell component="th" scope="row">
-                      {n.location}
+                      {n.doctordate}
                     </TableCell>
+
                     <TableCell component="th" scope="row">
-                    
-                      {n.email}
+                      {n.doctorname}
                     </TableCell>
-                    {/* <TableCell component="th" scope="row">
-                      {n.phone1}
+
+                    <TableCell component="th" scope="row">
+                      {n.locationaddress1}
                     </TableCell>
+
                     <TableCell component="th" scope="row">
-                      {n.dob}
-                    </TableCell> */}
-                    
-                    <TableCell component="th" scope="row">
-                      {n.username ? n.username : '-----'}
+                      {n.locationaddress2}
                     </TableCell>
+
                     <TableCell component="th" scope="row">
-                      {n.Role}
+                      {n.locationaddress3}
+                    </TableCell>
+
+                
+                    <TableCell component="th" scope="row">
+                      <Button
+                        className="whitespace-no-wrap normal-case"
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => {
+                          props.history.push(
+                            `/apps/e-commerce/showRoom/${n.id}`
+                          );
+                        }}>
+                        <DeleteOutlined/>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 );
@@ -235,4 +216,4 @@ function UsersTable(props) {
   );
 }
 
-export default withRouter(UsersTable);
+export default withRouter(DoctorsTable);

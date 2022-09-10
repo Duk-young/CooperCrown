@@ -6,14 +6,29 @@ import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-
+const useStyles = makeStyles({
+  table: {
+    minWidth: 450
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 export default function ReceiveInsurancePayment(props) {
   const { open, handleClose } = props;
+  const classes = useStyles();
   const { form, handleChange } = useForm(null);
   const dispatch = useDispatch();
 
@@ -189,14 +204,15 @@ export default function ReceiveInsurancePayment(props) {
           variant="outlined"
           fullWidth
         />
-        <Fab
+        <Button
           onClick={onSubmit}
+          className={classes.button}
           variant="extended"
           color="primary"
           aria-label="add">
           <AddIcon />
           Save Details
-        </Fab>
+        </Button>
       </div>
     </Dialog>
   );

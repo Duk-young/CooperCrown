@@ -2,6 +2,7 @@ import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
 import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
+import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -145,24 +146,38 @@ function ContactsTable(props) {
                     tabIndex={-1}
                     key={n.id}
                     selected={isSelected}
-                    // onClick={(event) => handleClick(n)}
-                  >
-                    <TableCell className="w-64 text-center" padding="none">
-                      <Checkbox
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/contact/${n.id}`
+                      );
+                    }}>
+                    {/*  <TableCell className="w-64  padding="none">
+                     <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
-                      />
-                    </TableCell>
+                      /> 
+                    </TableCell>*/}
 
-                    <TableCell component="th" scope="row">
+                    <TableCell  component="th" scope="row">
                       {n.type}
                     </TableCell>
-
-                    <TableCell component="th" scope="row">
+                    <TableCell  component="th" scope="row">
+                      {n.style}
+                    </TableCell>
+                    <TableCell   component="th" scope="row">
+                      {n.brand}
+                    </TableCell>
+                    <TableCell   component="th" scope="row">
+                      {n.model}
+                    </TableCell>
+                    <TableCell   component="th" scope="row">
+                      {n.basecurve}
+                    </TableCell>
+                    <TableCell   component="th" scope="row">
                       {n.price}
                     </TableCell>
-                    <TableCell component="th" scope="row">
+                    <TableCell   component="th" scope="row">
                       <Button
                         className="whitespace-no-wrap normal-case"
                         variant="contained"
@@ -172,7 +187,7 @@ function ContactsTable(props) {
                             `/apps/e-commerce/contact/${n.id}`
                           );
                         }}>
-                        Edit
+                        <DeleteOutlined/>
                       </Button>
                     </TableCell>
                   </TableRow>

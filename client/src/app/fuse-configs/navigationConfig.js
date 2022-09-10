@@ -129,6 +129,14 @@ const navigationConfig = [
             exact: true
           },
           {
+            id: 'Doctor-Management',
+            title: 'Doctor Management',
+            type: 'item',
+            auth: authRoles.staff,
+            url: '/apps/e-commerce/doctors',
+            exact: true
+          },
+          {
             id: 'user-creation',
             title: 'User Creation',
             type: 'item',
@@ -136,6 +144,7 @@ const navigationConfig = [
             url: '/apps/e-commerce/users',
             exact: true
           },
+          
           {
             id: 'user-management',
             title: 'User Management',
@@ -152,6 +161,7 @@ const navigationConfig = [
             url: '/apps/e-commerce/emailtemplates',
             exact: true
           },
+          
           {
             id: 'priceSetting',
             title: 'Price Setting',

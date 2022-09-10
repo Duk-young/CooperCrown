@@ -24,7 +24,21 @@ export const getDiscount = (params) => async (dispatch) => {
 export const saveDiscount = (data) => async (dispatch) => {
   delete data.uid;
   try {
-    await firebaseService.firestoreDb.collection('discounts').add(data);
+    const dbConfig = (
+      await firebaseService.firestoreDb
+        .collection('dbConfig')
+        .doc('dbConfig')
+        .get()
+    ).data();
+    await firebaseService.firestoreDb
+    .collection('discounts')
+    .add({ ...data, discountId: dbConfig?.discountId + 1 });
+    await firebaseService.firestoreDb
+      .collection('dbConfig')
+      .doc('dbConfig')
+      .update({
+        discountId: dbConfig?.discountId + 1
+      });
     dispatch(Actions.getDiscounts());
     dispatch(showMessage({ message: 'Discount Saved' }));
   } catch (error) {
@@ -51,7 +65,8 @@ export function newDiscount() {
   const data = {
     uid: FuseUtils.generateGUID(),
     code: '',
-    amount: ''
+    amount: '',
+    description:''
   };
   return {
     type: GET_DISCOUNT,

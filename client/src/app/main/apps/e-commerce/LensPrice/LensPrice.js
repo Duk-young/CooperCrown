@@ -1,19 +1,40 @@
 import { useForm } from '@fuse/hooks';
 import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 import FuseAnimate from '@fuse/core/FuseAnimate';
+import AddLensTypeDialog from './AddLensTypeDialog';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
+import { makeStyles } from '@material-ui/core/styles';
 import TableGrid from './TableGrid';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import { firestore } from 'firebase';
-
+const useStyles = makeStyles({
+  table: {
+    minWidth: 450
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 function LensPrice() {
   const [lensTypes, setLensTypes] = useState([]);
   const { form, handleChange, setForm } = useForm({});
   const [rows, setRows] = useState([]);
+  const classes = useStyles();
+  const [disabledState, setDisabledState] = useState(false);
+  const [open, setOpen] = useState(false);
 
+  const handleClose = () => {
+    setOpen(false);
+  };
   useEffect(() => {
     const fetchDetails = async () => {
       const lensPrice = (
@@ -54,7 +75,7 @@ function LensPrice() {
                   </Typography>
                 </FuseAnimate>
               </div>
-              <div className="flex flex-1 justify-around">
+              {/* <div className="flex flex-1 justify-around">
                 <div className="flex flex-col px-10 w-1/2 ">
                   <CustomAutocomplete
                     list={lensTypes}
@@ -67,13 +88,45 @@ function LensPrice() {
                     customFunction={customFunction}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
       }
       content={
         <div className="p-16 sm:p-24 ">
+            <div className='justify-right'>
+            <AddLensTypeDialog open={open} handleClose={handleClose} />
+
+            {!disabledState && (
+          <> <Button
+
+            className={classes.button}
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              setOpen(true);
+            }}
+            aria-label="add">
+
+            Add New Lens Type
+          </Button></>
+          
+        )}
+            </div>
+                  <CustomAutocomplete
+                    list={lensTypes}
+                    form={form}
+                    size="small"
+                    setForm={setForm}
+                    handleChange={handleChange}
+                    id="a"
+                    freeSolo={false}
+                    label="Select Lens Type"
+                    customFunction={customFunction}
+                  />
+             
+              <br></br>
           <TableGrid form={form} rows={rows} setRows={setRows} />
         </div>
       }

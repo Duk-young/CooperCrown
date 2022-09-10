@@ -15,6 +15,10 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Emails/EmailTemplates'))
     },
     {
+      path: '/apps/e-commerce/emailtemplates/filter',
+      component: React.lazy(() => import('./Emails/EmailFilters'))
+    },
+    {
       path: '/apps/e-commerce/insurances/viewclaim/:insuranceClaimId',
       component: React.lazy(() => import('./Insurance/InsuranceClaim'))
     },
@@ -33,6 +37,10 @@ const ECommerceAppConfig = {
     {
       path: '/apps/e-commerce/reports',
       component: React.lazy(() => import('./Reports/Reports'))
+    },
+    {
+      path: '/apps/e-commerce/pricesetting',
+      component: React.lazy(() => import('./PriceSetting/PriceSetting'))
     },
     {
       path: '/apps/e-commerce/lensPrice',
@@ -106,15 +114,26 @@ const ECommerceAppConfig = {
       path: '/apps/e-commerce/user/:userId',
       component: React.lazy(() => import('./User/User'))
     },
+
+    {
+      path: '/apps/e-commerce/doctors',
+      component: React.lazy(() => import('./Doctors/Doctors'))
+    },
+    {
+      path: '/apps/e-commerce/doctors/:doctorID/:doctorHandle?',
+      component: React.lazy(() => import('./Doctor/Doctor'))
+    },
     {
       path: '/apps/e-commerce/users',
-      component: React.lazy(() => import('./Users/Users'))
+      component: React.lazy(() => import('./Users/Users1'))
     },
+    
     {
       path: '/apps/e-commerce/users-management',
       component: React.lazy(() =>
-        import('./Users/users-management/UsersManagement')
-      )
+        import('./Users/users-management/UsersManagement'))
+        // import('./Users/Users1'))
+      
     },
     {
       path: '/apps/e-commerce/discount/:discountId',

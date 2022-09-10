@@ -6,7 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -44,13 +44,13 @@ const rows = [
     label: 'State',
     sort: true
   },
-  {
-    id: 'email',
-    align: 'left',
-    disablePadding: false,
-    label: 'Email',
-    sort: true
-  },
+  // {
+  //   id: 'email',
+  //   align: 'left',
+  //   disablePadding: false,
+  //   label: 'Email',
+  //   sort: true
+  // },
   {
     id: 'phoneNo',
     align: 'left',
@@ -58,13 +58,13 @@ const rows = [
     label: 'Phone No',
     sort: true
   },
-  {
-    id: 'faxNo',
-    align: 'left',
-    disablePadding: false,
-    label: 'Fax No',
-    sort: true
-  },
+  // {
+  //   id: 'faxNo',
+  //   align: 'left',
+  //   disablePadding: false,
+  //   label: 'Fax No',
+  //   sort: true
+  // },
   {
     id: 'Zip-Code',
     align: 'left',
@@ -76,7 +76,6 @@ const rows = [
     id: 'Actions',
     align: 'left',
     disablePadding: false,
-    label: 'Actions',
     sort: true
   }
 ];
@@ -86,7 +85,17 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.background.paper
   }
 }));
-
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+    textAlign: 'left'
+  },
+  body: {
+    fontSize: 14,
+    padding: 10
+  }
+}))(TableCell);
 function ProductsTableHead(props) {
   const classes = useStyles(props);
   const [selectedProductsMenu, setSelectedProductsMenu] = useState(null);
@@ -106,7 +115,7 @@ function ProductsTableHead(props) {
   return (
     <TableHead>
       <TableRow className="h-64">
-        <TableCell padding="none" className="relative w-64 text-center">
+        {/* <StyledTableCell padding="none" className="relative w-64 text-center">
           <Checkbox
             indeterminate={
               props.numSelected > 0 && props.numSelected < props.rowCount
@@ -145,10 +154,10 @@ function ProductsTableHead(props) {
               </Menu>
             </div>
           )}
-        </TableCell>
+        </StyledTableCell> */}
         {rows.map((row) => {
           return (
-            <TableCell
+            <StyledTableCell
               key={row.id}
               align={row.align}
               padding={row.disablePadding ? 'none' : 'default'}
@@ -170,7 +179,7 @@ function ProductsTableHead(props) {
                   </TableSortLabel>
                 </Tooltip>
               )}
-            </TableCell>
+            </StyledTableCell>
           );
         }, this)}
       </TableRow>

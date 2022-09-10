@@ -8,6 +8,8 @@ import contact from './contact.reducer';
 import contacts from './contacts.reducer';
 import discount from './discount.reducer';
 import discounts from './discounts.reducer';
+// import doctor from './doctor.reducer';
+// import doctors from './doctors.reducer';
 import user from './user.reducer';
 import users from './users.reducer';
 
@@ -21,6 +23,8 @@ const reducer = combineReducers({
   contacts,
   discount,
   discounts,
+  // doctor,
+  // doctors,
   user,
   users
 });

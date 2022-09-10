@@ -994,7 +994,7 @@ function AddOrder(props) {
                                 size="small"
                                 fullWidth
                                 id="standard-basic"
-                                value={selectedFrame?.eyeglassesSphereOd}
+                                value={selectedFrame?.eyeglassesSphereOd?selectedFrame?.eyeglassesSphereOd: ""}
                                 onChange={handleSelectedFrameChange}
                                 disabled={disabledState}
                                 name={'eyeglassesSphereOd'}

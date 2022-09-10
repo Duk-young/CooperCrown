@@ -2,6 +2,7 @@ import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
 import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
+import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,6 +11,8 @@ import TableRow from '@material-ui/core/TableRow';
 import FuseLoading from '@fuse/core/FuseLoading';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+// import ConfirmServiceDelete from './Service/ConfirmServiceDelete';
+
 import { withRouter } from 'react-router-dom';
 import * as Actions from '../store/actions';
 import ServicesTableHead from './ServicesTableHead';
@@ -22,8 +25,9 @@ function ServicesTable(props) {
   const searchText = useSelector(
     ({ eCommerceApp }) => eCommerceApp.services.searchText
   );
-
+  // const { form } = props;
   const [selected, setSelected] = useState([]);
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState(products);
   const [isLoading, setisLoading] = useState(false);
   const [page, setPage] = useState(0);
@@ -50,7 +54,9 @@ function ServicesTable(props) {
     setData(products);
     // }
   }, [products, searchText]);
-
+  const handleClose = () => {
+    setOpen(false);
+  };
   function handleRequestSort(event, property) {
     const id = property;
     let direction = 'desc';
@@ -106,7 +112,7 @@ function ServicesTable(props) {
   }
   if (!isLoading) return <FuseLoading />;
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col ">
       <FuseScrollbars className="flex-grow overflow-x-auto">
         <Table className="min-w-xl" aria-labelledby="tableTitle">
           <ServicesTableHead
@@ -147,33 +153,45 @@ function ServicesTable(props) {
                     key={n.id}
                     selected={isSelected}
                     // onClick={(event) => handleClick(n)}
-                  >
-                    <TableCell className="w-64 text-center" padding="none">
-                      <Checkbox
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/service/${n.id}`
+                      );
+                    }}>
+                   {/* <TableCell className="w-64 text-center" padding="none">
+                       <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
-                      />
-                    </TableCell>
+                      /> 
+                    </TableCell>*/}
 
                     <TableCell component="th" scope="row">
                       {n.name}
                     </TableCell>
-
+                    <TableCell component="th" scope="row">
+                      {n.description}
+                    </TableCell>
                     <TableCell component="th" scope="row">
                       {n.price}
                     </TableCell>
                     <TableCell component="th" scope="row">
+                      <div>
+                      {/* <ConfirmServiceDelete open={open} handleClose={handleClose} form={form} propssent={props} /> */}
+
+                      </div>
                       <Button
                         className="whitespace-no-wrap normal-case"
                         variant="contained"
                         color="secondary"
+                                          
                         onClick={() => {
+                          setOpen(true);
                           props.history.push(
                             `/apps/e-commerce/service/${n.id}`
                           );
                         }}>
-                        Edit
+                        <DeleteOutlined/>
                       </Button>
                     </TableCell>
                   </TableRow>

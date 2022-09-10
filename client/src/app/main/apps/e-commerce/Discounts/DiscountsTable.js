@@ -1,10 +1,13 @@
 import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
+import { firestore, storage } from 'firebase';
 import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
 import Button from '@material-ui/core/Button';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import FuseLoading from '@fuse/core/FuseLoading';
@@ -102,6 +105,29 @@ function DiscountsTable(props) {
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(event.target.value);
   }
+  const handleDelete = async () => {
+    try {
+      const queryDiscount = await firestore()
+        .collection('discounts')
+        .where('discountId', '==', Number(data.discountId))
+        .limit(1)
+        .get();
+
+      let result = queryDiscount.docs[0].data();
+      result.id = queryDiscount.docs[0].id;
+      await firestore().collection('discounts').doc(result.id).delete();
+      dispatch(
+        MessageActions.showMessage({
+          message: 'Discount deleted successfully'
+        })
+      );
+      props.history.push(
+        `/apps/e-commerce/discount/${data.id}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   if (!isLoading) return <FuseLoading />;
   return (
     <div className="w-full flex flex-col">
@@ -144,17 +170,23 @@ function DiscountsTable(props) {
                     tabIndex={-1}
                     key={n.id}
                     selected={isSelected}
-                    // onClick={(event) => handleClick(n)}
-                  >
-                    <TableCell className="w-64 text-center" padding="none">
-                      <Checkbox
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/discount/${n.id}`
+                      );
+                    }}>
+                    {/* <TableCell className="w-64 text-center" padding="none">
+                       <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
-                      />
-                    </TableCell>
+                      /> 
+                    </TableCell> */}
                     <TableCell component="th" scope="row">
                       {n.code}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {n.description}
                     </TableCell>
                     <TableCell component="th" scope="row">
                       {n.amount}
@@ -164,12 +196,20 @@ function DiscountsTable(props) {
                         className="whitespace-no-wrap normal-case"
                         variant="contained"
                         color="secondary"
-                        onClick={() => {
-                          props.history.push(
-                            `/apps/e-commerce/discount/${n.id}`
-                          );
-                        }}>
-                        Edit
+                        onClick={handleDelete}
+                        // onClick={() => {
+                          
+                        //   // await ref.set(data);
+                        //   // dispatch(
+                        //   //   MessageActions.showMessage({
+                        //   //     message: 'Customer updated successfully'
+                        //   //   })
+                        //   // props.history.push(
+                        //   //   `/apps/e-commerce/discount/${n.id}`
+                        //   // );
+                        // }}
+                        >
+                        <DeleteOutlined/>
                       </Button>
                     </TableCell>
                   </TableRow>

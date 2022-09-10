@@ -2,22 +2,42 @@ import { DataGrid } from '@material-ui/data-grid';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import AddLensTypeDialog from './AddLensTypeDialog';
 import EditIcon from '@material-ui/icons/Edit';
 import React, { useState } from 'react';
 import { firestore } from 'firebase';
+import { Button } from '@material-ui/core';
 import Fab from '@material-ui/core/Fab';
-
+const useStyles = makeStyles((theme) =>
+    createStyles({
+      root: {
+        '& .MuiDataGrid-renderingZone': {
+          '& .MuiDataGrid-row': {
+            '&:nth-child(2n)': {
+              backgroundColor: 'rgba(16, 232, 212, 0.08)'
+            }
+          }
+        }
+      },
+      table: {
+        minWidth: 450
+      },
+      button: {
+        backgroundColor: '#f15a25',
+        color: '#fff',
+        '&:hover': {
+          backgroundColor: '#f47b51',
+          color: '#fff'
+        }
+      }
+    })
+  );
 export default function TableGrid(props) {
   const { form, rows, setRows } = props;
   const [disabledState, setDisabledState] = useState(false);
-  const [open, setOpen] = useState(false);
+  const classes = useStyles();
 
   const dispatch = useDispatch();
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const onSubmit = async () => {
     await firestore()
@@ -47,19 +67,7 @@ export default function TableGrid(props) {
     setRows(array);
   };
 
-  const useStyles = makeStyles((theme) =>
-    createStyles({
-      root: {
-        '& .MuiDataGrid-renderingZone': {
-          '& .MuiDataGrid-row': {
-            '&:nth-child(2n)': {
-              backgroundColor: 'rgba(16, 232, 212, 0.08)'
-            }
-          }
-        }
-      }
-    })
-  );
+  
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 75, sortable: false },
@@ -392,9 +400,10 @@ export default function TableGrid(props) {
       sortable: false
     }
   ];
-  const classes = useStyles();
+
   return (
     <div style={{ height: 600, width: '100%' }}>
+     
       <DataGrid
         onCellEditCommit={handleCommit}
         className={classes.root}
@@ -407,38 +416,29 @@ export default function TableGrid(props) {
         hideFooterPagination={true}
       />
       <div className="flex flex-row p-6 justify-around w-full">
-        <AddLensTypeDialog open={open} handleClose={handleClose} />
-        <Fab
+        <Button
           onClick={() => {
             setDisabledState(true);
           }}
-          variant="extended"
+          className={classes.button}
+          variant="contained"
+          color="secondary"
           disabled={rows?.length ? disabledState : true}
-          color="primary"
+          
           aria-label="add">
           <EditIcon fontSize="small" />
           Edit Prices
-        </Fab>
+        </Button>
         {disabledState && (
-          <Fab
+          <Button
             onClick={onSubmit}
-            variant="extended"
-            color="primary"
-            aria-label="add">
+            className={classes.button}
+                  variant="contained"
+                  color="secondary">
             Save Changes!
-          </Fab>
+          </Button>
         )}
-        {!disabledState && (
-          <Fab
-            onClick={() => {
-              setOpen(true);
-            }}
-            variant="extended"
-            color="primary"
-            aria-label="add">
-            Add New Lens Type
-          </Fab>
-        )}
+       
       </div>
     </div>
   );

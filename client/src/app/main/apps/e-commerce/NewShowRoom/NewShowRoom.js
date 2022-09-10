@@ -1,11 +1,15 @@
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
+import { firestore, storage } from 'firebase';
 import { useForm, useDeepCompareEffect } from '@fuse/hooks';
 import Button from '@material-ui/core/Button';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import ConfirmShowroomDelete from './ConfirmShowroomDelete';
 import Icon from '@material-ui/core/Icon';
 import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
+import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -15,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import * as Actions from '../store/actions';
 import reducer from '../store/reducers';
+import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 
 // const useStyles = makeStyles((theme) => ({
 //   productImageFeaturedStar: {
@@ -50,12 +55,25 @@ import reducer from '../store/reducers';
 //     }
 //   }
 // }));
-
+const useStyles = makeStyles({
+  table: {
+    minWidth: 450
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 function NewShowRoom(props) {
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const product = useSelector(({ eCommerceApp }) => eCommerceApp.product);
   const theme = useTheme();
-
   const [tabValue, setTabValue] = useState(0);
   const [isLoading, setisLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
@@ -91,6 +109,50 @@ function NewShowRoom(props) {
   function handleChangeTab(event, value) {
     setTabValue(value);
   }
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleDelete = async () => {
+    try {
+
+      const queryshowRoom = await firestore()
+        .collection('showRooms')
+        .where('showRoomId', '==', Number(form.showRoomId))
+        .limit(1)
+        .get();
+
+      let result = queryshowRoom.docs[0].data();
+      result.id = queryshowRoom.docs[0].id;
+      await firestore().collection('showRooms').doc(result.id).delete();
+      dispatch(
+        MessageActions.showMessage({
+          message: 'showRoom deleted successfully'
+        })
+      );
+      props.history.push(
+        props.history.push(`/apps/e-commerce/showRooms`)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // const submit = () => {
+
+  //   confirmAlert({
+  //     title: 'Confirm to submit',
+  //     message: 'Are you sure to do this.',
+  //     buttons: [
+  //       {
+  //         label: 'Yes',
+  //         onClick: () => handleDelete()
+  //       },
+  //       {
+  //         label: 'No',
+  //         //onClick: () => alert('Click No')
+  //       }
+  //     ]
+  //   });
+  // }
 
   function canBeSubmitted() {
     return (
@@ -115,7 +177,7 @@ function NewShowRoom(props) {
     <FusePageCarded
       header={
         form && (
-          
+
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
@@ -152,28 +214,7 @@ function NewShowRoom(props) {
                 </div>
               </div>
             </div>
-            <FuseAnimate animation="transition.slideRightIn" delay={300}>
-              <Button
-                className="whitespace-no-wrap normal-case"
-                variant="contained"
-                color="secondary"
-                disabled={!canBeSubmitted()}
-                onClick={async () => {
-                  if (routeParams.showRoomtId === 'new') {
-                    setisLoading(false);
-                    await dispatch(await Actions.saveShowRoom(form));
-                    setisLoading(true);
-                    props.history.push(`/apps/e-commerce/showRooms`);
-                  } else {
-                    setisLoading(false);
-                    await dispatch(await Actions.updateShowRoom(form));
-                    setisLoading(true);
-                    props.history.push(`/apps/e-commerce/showRooms`);
-                  }
-                }}>
-                Save
-              </Button>
-            </FuseAnimate>
+
           </div>
         )
       }
@@ -192,84 +233,96 @@ function NewShowRoom(props) {
       content={
         form && (
           <div className="flex flex-col h-260  px-16 py-6">
-        <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
-          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-            <h1 className="font-700" style={{ color: '#f15a25' }}>
-            LOCATION INFO
-            </h1>
-          </div> 
-          <div className="p-16 sm:p-24 max-w-2xl ">
-            {tabValue === 0 && (
-              <div>
-                <TextField
-                  className="mt-8 "
-                 
-                  error={form.locationName === ''}
-                  required
-                  label="Location Name"
-                  autoFocus
-                  id="locationName"
-                  name="locationName"
-                  value={form.locationName}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
+            <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+              <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  LOCATION INFO
+                </h1>
+              </div>
+              <div className="p-16 sm:p-24  ">
+                {tabValue === 0 && (
+                  <div>
+                    <TextField
+                      className="mt-8 "
 
-                <TextField
-                  className="mt-8 "
-                 
-                  id="locationAddress"
-                  name="locationAddress"
-                  onChange={handleChange}
-                  label="Location Address"
-                  type="text"
-                  value={form.locationAddress}
-                  multiline
-                  rows={5}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8 "
-                 
-                  required
-                  label="City"
-                  type="text"
-                  id="City"
-                  name="City"
-                  value={form.City}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8 "
-                 
-                  required
-                  label="State"
-                  id="State"
-                  type="text"
-                  name="State"
-                  value={form.State}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <div className="flex flex-row justify-between w-full">
-                  <TextField
-                    className="mt-8  pr-4"
-                   
-                    required
-                    label="Phone No."
-                    id="phoneNo"
-                    name="phoneNo"
-                    value={form.phoneNo}
-                    onChange={handleChange}
-                    variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
+                      error={form.locationName === ''}
+                      required
+                      label="Location Name"
+                      autoFocus
+                      id="locationName"
+                      name="locationName"
+                      value={form.locationName}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+
+                    <TextField
+                      className="mt-8 "
+
+                      id="locationAddress"
+                      name="locationAddress"
+                      onChange={handleChange}
+                      label="Location Address"
+                      type="text"
+                      value={form.locationAddress}
+                      multiline
+                      rows={5}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 "
+
+                      required
+                      label="City"
+                      type="text"
+                      id="City"
+                      name="City"
+                      value={form.City}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 "
+
+                      required
+                      label="State"
+                      id="State"
+                      type="text"
+                      name="State"
+                      value={form.State}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    {/* <div className="flex flex-row justify-between w-full"> */}
+                    <TextField
+                      className="mt-8  pr-4"
+
+                      required
+                      label="Phone No.1"
+                      id="phoneNo"
+                      name="phoneNo"
+                      value={form.phoneNo}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8  pr-4"
+
+                      required
+                      label="Phone No.2"
+                      id="phoneNo1"
+                      name="phoneNo2"
+                      value={form.phoneNo2}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    {/* <TextField
                     className="mt-8 "
                    
                     required
@@ -280,67 +333,103 @@ function NewShowRoom(props) {
                     onChange={handleChange}
                     variant="outlined"
                     fullWidth
-                  />
-                </div>
-                <TextField
-                  className="mt-8 "
-                 
-                  required
-                  label="Email"
-                  id="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8 "
-                 
-                  required
-                  label="Zip Code"
-                  id="zipCode"
-                  type="number"
-                  name="zipCode"
-                  value={form.zipCode}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8 "
-                 
-                  required
-                  label="Other 1"
-                  id="other1"
-                  name="other1"
-                  value={form.other1}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8 "
-                 
-                  required
-                  label="Other 2"
-                  id="other2"
-                  name="other2"
-                  value={form.other2}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-              </div>
-            )}
-          </div>
-            <br></br> 
-          </div>
-          </div>
+                  /> */}
+                    {/* </div> */}
+                    <TextField
+                      className="mt-8 "
 
-         
+                      required
+                      label="Email"
+                      id="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 "
+
+                      required
+                      label="Zip Code"
+                      id="zipCode"
+                      type="number"
+                      name="zipCode"
+                      value={form.zipCode}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 "
+                      label="Other "
+                      id="other1"
+                      name="other1"
+                      value={form.other1}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+
+                  </div>
+                )}
+              </div>
+              <br></br>
+            </div>
+            <div className="flex flex-col p-12 " >
+              <Button
+                style={{
+                  maxHeight: '70px',
+                  minHeight: '70px',
+                }}
+                className={classes.button}
+                variant="contained"
+                color="secondary"
+                onClick={async () => {
+                  if (routeParams.showRoomtId === 'new') {
+                    setisLoading(false);
+                    await dispatch(await Actions.saveShowRoom(form));
+                    setisLoading(true);
+                    props.history.push(`/apps/e-commerce/showRooms`);
+                  } else {
+                    setisLoading(false);
+                    await dispatch(await Actions.updateShowRoom(form));
+                    setisLoading(true);
+                    props.history.push(`/apps/e-commerce/showRooms`);
+                  }
+                }}>
+
+                Save
+              </Button>
+            </div>
+
+            <div className="flex flex-col p-12">
+              <ConfirmShowroomDelete open={open} handleClose={handleClose} form={form} propssent={props} />
+
+              <Button
+                style={{
+                  color: 'red'
+                }}
+                variant="outlined"
+                // onClick={() => setShowModal(true)}
+                onClick={() => {
+                  if (routeParams.showRoomtId === 'new') {
+                    alert('No Data to delete')
+                  }
+                  else {
+                    setOpen(true);
+                  }
+
+                }}
+              >
+                <Icon>delete</Icon>
+                DELETE
+              </Button>
+            </div>
+          </div>
         )
       }
+
       innerScroll
     />
   );

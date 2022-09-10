@@ -2,11 +2,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
 import ListItemText from '@material-ui/core/ListItemText';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -17,53 +17,40 @@ import React, { useState } from 'react';
 
 const rows = [
   {
-    id: 'contact-type',
+    id: 'doctor-date',
     align: 'left',
     disablePadding: false,
-    label: 'Type',
+    label: 'DATE',
     sort: true
   },
   {
-    id: 'contact-style',
+    id: 'doctor-name',
     align: 'left',
     disablePadding: false,
-    label: 'Style',
+    label: 'DOCTOR NAME',
     sort: true
   },
   {
-    id: 'contact-brand',
+    id: 'Location-Address1',
     align: 'left',
     disablePadding: false,
-    label: ' Brand',
+    label: 'Location 1',
     sort: true
   },
   {
-    id: 'contact-model',
+    id: 'Location-Address2',
     align: 'left',
     disablePadding: false,
-    label: 'Model',
+    label: 'Location 2',
     sort: true
   },
   {
-    id: 'contact-basecurve',
+    id: 'Location-Address3',
     align: 'left',
     disablePadding: false,
-    label: 'Base Curve',
+    label: 'Location 3',
     sort: true
   },
-  {
-    id: 'contact-price',
-    align: 'left',
-    disablePadding: false,
-    label: ' Price',
-    sort: true
-  },
-  {
-    id: 'Actions',
-    align: 'left',
-    disablePadding: false,
-    sort: true
-  }
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -82,27 +69,27 @@ const StyledTableCell = withStyles((theme) => ({
     padding: 10
   }
 }))(TableCell);
-function ContactsTableHead(props) {
+function DoctorsTableHead(props) {
   const classes = useStyles(props);
-  const [selectedProductsMenu, setSelectedProductsMenu] = useState(null);
+  const [selectedDoctorsMenu, setselectedDoctorsMenu] = useState(null);
 
   const createSortHandler = (property) => (event) => {
     props.onRequestSort(event, property);
   };
 
-  function openSelectedProductsMenu(event) {
-    setSelectedProductsMenu(event.currentTarget);
+  function openselectedDoctorsMenu(event) {
+    setselectedDoctorsMenu(event.currentTarget);
   }
 
-  function closeSelectedProductsMenu() {
-    setSelectedProductsMenu(null);
+  function closeselectedDoctorsMenu() {
+    setselectedDoctorsMenu(null);
   }
 
   return (
     <TableHead>
       <TableRow className="h-64">
-        {/*<StyledTableCell padding="none" className="relative w-64 text-center">
-           <Checkbox
+        <StyledTableCell padding="none" className="relative w-64 text-center">
+          <Checkbox
             indeterminate={
               props.numSelected > 0 && props.numSelected < props.rowCount
             }
@@ -116,20 +103,20 @@ function ContactsTableHead(props) {
                 classes.actionsButtonWrapper
               )}>
               <IconButton
-                aria-owns={selectedProductsMenu ? 'selectedProductsMenu' : null}
+                aria-owns={selectedDoctorsMenu ? 'selectedDoctorsMenu' : null}
                 aria-haspopup="true"
-                onClick={openSelectedProductsMenu}>
+                onClick={openselectedDoctorsMenu}>
                 <Icon>more_horiz</Icon>
               </IconButton>
               <Menu
-                id="selectedProductsMenu"
-                anchorEl={selectedProductsMenu}
-                open={Boolean(selectedProductsMenu)}
-                onClose={closeSelectedProductsMenu}>
+                id="selectedDoctorsMenu"
+                anchorEl={selectedDoctorsMenu}
+                open={Boolean(selectedDoctorsMenu)}
+                onClose={closeselectedDoctorsMenu}>
                 <MenuList>
                   <MenuItem
                     onClick={() => {
-                      closeSelectedProductsMenu();
+                      closeselectedDoctorsMenu();
                     }}>
                     <ListItemIcon className="min-w-40">
                       <Icon>delete</Icon>
@@ -139,8 +126,8 @@ function ContactsTableHead(props) {
                 </MenuList>
               </Menu>
             </div>
-          )} 
-        </StyledTableCell>*/}
+          )}
+        </StyledTableCell>
         {rows.map((row) => {
           return (
             <StyledTableCell
@@ -173,4 +160,4 @@ function ContactsTableHead(props) {
   );
 }
 
-export default ContactsTableHead;
+export default DoctorsTableHead;

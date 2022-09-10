@@ -1,12 +1,27 @@
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import Button from '@material-ui/core/Button';
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
+import { makeStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 // import {  useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
+const useStyles = makeStyles({
+  table: {
+    minWidth: 450
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 function UsersHeader(props) {
+  const classes = useStyles();
   // const dispatch = useDispatch();
   // const searchText = useSelector(
   //   ({ eCommerceApp }) => eCommerceApp.users.searchText
@@ -53,9 +68,10 @@ function UsersHeader(props) {
         <Button
           component={Link}
           to="/apps/e-commerce/user/new"
-          className="whitespace-no-wrap normal-case"
+          className={classes.button}
           variant="contained"
           color="secondary">
+            <AddCircleOutlineOutlinedIcon />
           <span className="hidden sm:flex">Add New User</span>
           <span className="flex sm:hidden">New</span>
         </Button>
