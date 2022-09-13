@@ -8,6 +8,7 @@ import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
+import IconButton from '@material-ui/core/IconButton';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import FuseLoading from '@fuse/core/FuseLoading';
@@ -192,25 +193,16 @@ function DiscountsTable(props) {
                       {n.amount}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      <Button
-                        className="whitespace-no-wrap normal-case"
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleDelete}
-                        // onClick={() => {
-                          
-                        //   // await ref.set(data);
-                        //   // dispatch(
-                        //   //   MessageActions.showMessage({
-                        //   //     message: 'Customer updated successfully'
-                        //   //   })
-                        //   // props.history.push(
-                        //   //   `/apps/e-commerce/discount/${n.id}`
-                        //   // );
-                        // }}
-                        >
-                        <DeleteOutlined/>
-                      </Button>
+                    <IconButton color="primary"  variant="contained"
+                       
+                       onClick={() => {
+                         props.history.push(
+                           `/apps/e-commerce/discount/${n.id}`
+                         );
+                       }}>
+ <DeleteOutlined fontSize="medium" />
+</IconButton>
+                     
                     </TableCell>
                   </TableRow>
                 );

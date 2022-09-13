@@ -51,6 +51,13 @@ const rows = [
     label: 'Location 3',
     sort: true
   },
+  
+  {
+    
+    align: 'left',
+    disablePadding: false,
+    sort: true
+  }
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -88,46 +95,7 @@ function DoctorsTableHead(props) {
   return (
     <TableHead>
       <TableRow className="h-64">
-        <StyledTableCell padding="none" className="relative w-64 text-center">
-          <Checkbox
-            indeterminate={
-              props.numSelected > 0 && props.numSelected < props.rowCount
-            }
-            checked={props.numSelected === props.rowCount}
-            onChange={props.onSelectAllClick}
-          />
-          {props.numSelected > 0 && (
-            <div
-              className={clsx(
-                'flex items-center justify-center absolute w-64 top-0 ltr:left-0 rtl:right-0 mx-56 h-64 z-10',
-                classes.actionsButtonWrapper
-              )}>
-              <IconButton
-                aria-owns={selectedDoctorsMenu ? 'selectedDoctorsMenu' : null}
-                aria-haspopup="true"
-                onClick={openselectedDoctorsMenu}>
-                <Icon>more_horiz</Icon>
-              </IconButton>
-              <Menu
-                id="selectedDoctorsMenu"
-                anchorEl={selectedDoctorsMenu}
-                open={Boolean(selectedDoctorsMenu)}
-                onClose={closeselectedDoctorsMenu}>
-                <MenuList>
-                  <MenuItem
-                    onClick={() => {
-                      closeselectedDoctorsMenu();
-                    }}>
-                    <ListItemIcon className="min-w-40">
-                      <Icon>delete</Icon>
-                    </ListItemIcon>
-                    <ListItemText primary="Remove" />
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </div>
-          )}
-        </StyledTableCell>
+        
         {rows.map((row) => {
           return (
             <StyledTableCell

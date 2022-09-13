@@ -1,10 +1,15 @@
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import Input from '@material-ui/core/Input';
+import Paper from '@material-ui/core/Paper';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-import Icon from '@material-ui/core/Icon';
+import { ThemeProvider } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Actions from '../store/actions';
 // import {  useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 const useStyles = makeStyles({
@@ -22,35 +27,33 @@ const useStyles = makeStyles({
 });
 function UsersHeader(props) {
   const classes = useStyles();
-  // const dispatch = useDispatch();
-  // const searchText = useSelector(
-  //   ({ eCommerceApp }) => eCommerceApp.users.searchText
-  // );
-  // const mainTheme = useSelector(({ fuse }) => fuse.settings.mainTheme);
+  const dispatch = useDispatch();
+  const searchText = useSelector(
+    ({ eCommerceApp }) => eCommerceApp.users.searchText
+  );
+  const mainTheme = useSelector(({ fuse }) => fuse.settings.mainTheme);
 
   return (
-    <div className="flex flex-1 w-full items-center justify-between">
+    <>
+    <div className="flex flex-col w-full items-center justify-center">
       <div className="flex items-center">
-        <FuseAnimate animation="transition.expandIn" delay={300}>
-          <Icon className="text-32">people</Icon>
-        </FuseAnimate>
+       
         <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-          <Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h6">
-            Users
+          <Typography className="hidden sm:flex mx-0 sm:mx-12 font-900 " variant="h4">
+            Users Management 
           </Typography>
         </FuseAnimate>
       </div>
 
-      {/* <div className="flex flex-1 items-center justify-center px-12">
+     <div className="flex flex-1 items-center justify-center px-12">
         <ThemeProvider theme={mainTheme}>
           <FuseAnimate animation="transition.slideDownIn" delay={300}>
             <Paper
               className="flex items-center w-full max-w-512 px-8 py-4 rounded-8"
               elevation={1}>
               <Icon color="action">search</Icon>
-
               <Input
-                placeholder="Search"
+               
                 className="flex flex-1 mx-8"
                 disableUnderline
                 fullWidth
@@ -63,7 +66,9 @@ function UsersHeader(props) {
             </Paper>
           </FuseAnimate>
         </ThemeProvider>
-      </div> */}
+      </div> 
+      </div>
+<div classname="flex flex-1 items-center">
       <FuseAnimate animation="transition.slideRightIn" delay={300}>
         <Button
           component={Link}
@@ -75,8 +80,8 @@ function UsersHeader(props) {
           <span className="hidden sm:flex">Add New User</span>
           <span className="flex sm:hidden">New</span>
         </Button>
-      </FuseAnimate>
-    </div>
+      </FuseAnimate></div>
+   </>
   );
 }
 

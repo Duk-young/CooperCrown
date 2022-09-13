@@ -21,21 +21,24 @@ const rows = [
     align: 'left',
     disablePadding: false,
     label: 'Date',
-    sort: true
+    sort: true,
+    width:160
   },
   {
     id: 'user-location',
     align: 'left',
     disablePadding: false,
     label: 'Location',
-    sort: true
+    sort: true,
+    width:100
   },
   {
     id: 'user-email',
     align: 'left',
     disablePadding: false,
     label: 'Email',
-    sort: true
+    sort: true,
+    width:100
   },
  
   {
@@ -43,14 +46,16 @@ const rows = [
     align: 'left',
     disablePadding: false,
     label: 'Username',
-    sort: true
+    sort: true,
+    width:100
   },
   {
     id: 'user-role',
     align: 'left',
     disablePadding: false,
     label: 'Access Level',
-    sort: true
+    sort: true,
+    width:100
   }
 ];
 
@@ -63,7 +68,9 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'left'
+    textAlign: 'left',
+    padding: 10,
+    width:50
   },
   body: {
     fontSize: 14,

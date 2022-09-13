@@ -120,7 +120,11 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Doctors/Doctors'))
     },
     {
-      path: '/apps/e-commerce/doctors/:doctorID/:doctorHandle?',
+      path: '/apps/e-commerce/doctor/:doctorId',
+      component: React.lazy(() => import('./Doctor/Doctor'))
+    },
+    {
+      path: '/apps/e-commerce/doctor/:doctorId/:doctorHandle?',
       component: React.lazy(() => import('./Doctor/Doctor'))
     },
     {

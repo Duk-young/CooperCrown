@@ -1,7 +1,7 @@
 import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
-import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
+import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
@@ -180,17 +180,16 @@ function ProductsTable(props) {
                       {n.zipCode}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      <Button
-                        className="whitespace-no-wrap normal-case"
-                        variant="contained"
-                        color="secondary"
-                         onClick={() => {
+                      <IconButton color="primary" variant="contained"
+
+                        onClick={() => {
                           props.history.push(
                             `/apps/e-commerce/showRoom/${n.id}`
                           );
                         }}>
-                        <DeleteOutlined/>
-                      </Button>
+                        <DeleteOutlined fontSize="medium" />
+                      </IconButton>
+
                     </TableCell>
                   </TableRow>
                 );

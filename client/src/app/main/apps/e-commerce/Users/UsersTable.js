@@ -8,7 +8,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import { useHistory } from 'react-router-dom';
 import FormHelperText from '@material-ui/core/FormHelperText';
-
+import { withStyles } from '@material-ui/core/styles';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import FormControl from '@material-ui/core/FormControl';
@@ -17,7 +17,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as Actions from '../store/actions';
 import UsersTableHead from './UsersTableHead';
-
+const StyledTableCell = withStyles((theme) => ({
+  // head: {
+  //   backgroundColor: theme.palette.common.black,
+  //   color: theme.palette.common.white,
+  //   textAlign: 'center'
+  // },
+  body: {
+    fontSize: 14,
+    padding: 0,
+    textAlign: 'left'
+  }
+}))(TableCell);
 function UsersTable(props) {
   const dispatch = useDispatch();
   const products = useSelector(({ eCommerceApp }) => eCommerceApp.users.data);
@@ -47,12 +58,12 @@ function UsersTable(props) {
     //     const queryShowrooms = await firestore()
     //     .collection('showRooms')
     //     .get();
-  
+
     //     queryShowrooms.forEach((doc) => {
     //       showroomdata.push(doc.data());
     //     });
     //     setShowRooms(showroomdata);
-  
+
     //     if (history?.location?.state?.start !== undefined) {
     //       setForm({
     //         start: history.location.state.start,
@@ -170,14 +181,16 @@ function UsersTable(props) {
                     tabIndex={-1}
                     key={n.id}
                     selected={isSelected}
-                    onClick={(event) => {handleClick(n)
-                      {console.log(n.id)}}}
-                    // onClick={() => {
-                    //   props.history.push(
-                       
-                    //     `/apps/e-commerce/user/${n.id}`
-                    //   );
-                    // }}
+                    onClick={(event) => {
+                      handleClick(n)
+                      { console.log(n.id) }
+                    }}
+                  // onClick={() => {
+                  //   props.history.push(
+
+                  //     `/apps/e-commerce/user/${n.id}`
+                  //   );
+                  // }}
                   >
                     {/* <TableCell className="w-64 text-center" padding="none">
                       <Checkbox
@@ -186,51 +199,54 @@ function UsersTable(props) {
                         onChange={(event) => handleCheck(event, n.id)}
                       />
                     </TableCell> */}
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.date}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.location}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                    
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+
                       {n.email}
-                    </TableCell>
-                    {/* <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    {/* <StyledTableCell component="th" scope="row">
                       {n.phone1}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.dob}
-                    </TableCell> */}
-                    
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell> */}
+
+                    <StyledTableCell component="th" scope="row">
                       {n.username ? n.username : '-----'}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.Role}
-                    </TableCell>
+                    </StyledTableCell>
                   </TableRow>
                 );
               })}
           </TableBody>
         </Table>
       </FuseScrollbars>
+     
+        <TablePagination
+          className=" flex overflow-hidden justify-center"
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
 
-      <TablePagination
-        className="overflow-hidden"
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        backIconButtonProps={{
-          'aria-label': 'Previous Page'
-        }}
-        nextIconButtonProps={{
-          'aria-label': 'Next Page'
-        }}
-        onChangePage={handleChangePage}
+          backIconButtonProps={{
+            'aria-label': 'Previous Page'
+          }}
+          page={page}
+
+          nextIconButtonProps={{
+            'aria-label': 'Next Page'
+          }}
+          onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
+        />
+    
     </div>
   );
 }

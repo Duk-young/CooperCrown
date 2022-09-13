@@ -5,6 +5,7 @@ import Table from '@material-ui/core/Table';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
+import IconButton from '@material-ui/core/IconButton';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
@@ -159,36 +160,35 @@ function ContactsTable(props) {
                       /> 
                     </TableCell>*/}
 
-                    <TableCell  component="th" scope="row">
+                    <TableCell component="th" scope="row">
                       {n.type}
                     </TableCell>
-                    <TableCell  component="th" scope="row">
+                    <TableCell component="th" scope="row">
                       {n.style}
                     </TableCell>
-                    <TableCell   component="th" scope="row">
+                    <TableCell component="th" scope="row">
                       {n.brand}
                     </TableCell>
-                    <TableCell   component="th" scope="row">
+                    <TableCell component="th" scope="row">
                       {n.model}
                     </TableCell>
-                    <TableCell   component="th" scope="row">
+                    <TableCell component="th" scope="row">
                       {n.basecurve}
                     </TableCell>
-                    <TableCell   component="th" scope="row">
+                    <TableCell component="th" scope="row">
                       {n.price}
                     </TableCell>
-                    <TableCell   component="th" scope="row">
-                      <Button
-                        className="whitespace-no-wrap normal-case"
-                        variant="contained"
-                        color="secondary"
+                    <TableCell component="th" scope="row">
+                      <IconButton color="primary" variant="contained"
+
                         onClick={() => {
                           props.history.push(
                             `/apps/e-commerce/contact/${n.id}`
                           );
                         }}>
-                        <DeleteOutlined/>
-                      </Button>
+                        <DeleteOutlined fontSize="medium" />
+                      </IconButton>
+
                     </TableCell>
                   </TableRow>
                 );

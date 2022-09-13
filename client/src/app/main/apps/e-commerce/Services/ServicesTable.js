@@ -5,6 +5,7 @@ import Table from '@material-ui/core/Table';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
+import IconButton from '@material-ui/core/IconButton';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
@@ -158,7 +159,7 @@ function ServicesTable(props) {
                         `/apps/e-commerce/service/${n.id}`
                       );
                     }}>
-                   {/* <TableCell className="w-64 text-center" padding="none">
+                    {/* <TableCell className="w-64 text-center" padding="none">
                        <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
@@ -177,22 +178,19 @@ function ServicesTable(props) {
                     </TableCell>
                     <TableCell component="th" scope="row">
                       <div>
-                      {/* <ConfirmServiceDelete open={open} handleClose={handleClose} form={form} propssent={props} /> */}
+                        {/* <ConfirmServiceDelete open={open} handleClose={handleClose} form={form} propssent={props} /> */}
 
                       </div>
-                      <Button
-                        className="whitespace-no-wrap normal-case"
-                        variant="contained"
-                        color="secondary"
-                                          
+                      <IconButton color="primary" variant="contained"
+
                         onClick={() => {
-                          setOpen(true);
                           props.history.push(
                             `/apps/e-commerce/service/${n.id}`
                           );
                         }}>
-                        <DeleteOutlined/>
-                      </Button>
+                        <DeleteOutlined fontSize="medium" />
+                      </IconButton>
+
                     </TableCell>
                   </TableRow>
                 );

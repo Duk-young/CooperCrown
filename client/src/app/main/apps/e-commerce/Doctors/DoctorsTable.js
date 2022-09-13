@@ -2,9 +2,10 @@ import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
 import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
-import Button from '@material-ui/core/Button';
-import TableBody from '@material-ui/core/TableBody';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
@@ -37,12 +38,11 @@ function DoctorsTable(props) {
   useEffect(() => {
     const getRooms = async () => {
       setisLoading(false);
-      await dispatch(await Actions.getShowRooms());
+      await dispatch(await Actions.getDoctors());
       setisLoading(true);
     };
     getRooms();
   }, [dispatch]);
-
   useEffect(() => {
     // if (searchText.length !== 0) {
     // 	setData(_.filter(doctors, item => item.name.toLowerCase().includes(searchText.toLowerCase())));
@@ -74,9 +74,9 @@ function DoctorsTable(props) {
     setSelected([]);
   }
 
-  function handleClick(item) {
-    props.history.push(`/apps/e-commerce/showRoom/${item.id}`);
-  }
+  // function handleClick(item) {
+  //   props.history.push(`/apps/e-commerce/contact/${item.id}`);
+  // }
 
   function handleCheck(event, id) {
     const selectedIndex = selected.indexOf(id);
@@ -147,48 +147,47 @@ function DoctorsTable(props) {
                     tabIndex={-1}
                     key={n.id}
                     selected={isSelected}
-                    onClick={(event) => handleClick(n)}>
-                    <TableCell className="w-64 text-center" padding="none">
-                      <Checkbox
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/doctor/${n.id}`
+                      );
+                    }}>
+                    {/*  <TableCell className="w-64  padding="none">
+                     <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
-                      />
-                    </TableCell>
+                      /> 
+                    </TableCell>*/}
 
                     <TableCell component="th" scope="row">
-                      {n.doctordate}
+                      {n.date}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {n.fname} {n.lname}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {n.showRoomId1}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {n.showRoomId2}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {n.showRoomId3}
                     </TableCell>
 
-                    <TableCell component="th" scope="row">
-                      {n.doctorname}
-                    </TableCell>
 
                     <TableCell component="th" scope="row">
-                      {n.locationaddress1}
-                    </TableCell>
+                      <IconButton color="primary" variant="contained"
 
-                    <TableCell component="th" scope="row">
-                      {n.locationaddress2}
-                    </TableCell>
-
-                    <TableCell component="th" scope="row">
-                      {n.locationaddress3}
-                    </TableCell>
-
-                
-                    <TableCell component="th" scope="row">
-                      <Button
-                        className="whitespace-no-wrap normal-case"
-                        variant="contained"
-                        color="secondary"
                         onClick={() => {
                           props.history.push(
-                            `/apps/e-commerce/showRoom/${n.id}`
+                            `/apps/e-commerce/doctor/${n.id}`
                           );
                         }}>
-                        <DeleteOutlined/>
-                      </Button>
+                        <DeleteOutlined fontSize="medium" />
+                      </IconButton>
+                     
                     </TableCell>
                   </TableRow>
                 );

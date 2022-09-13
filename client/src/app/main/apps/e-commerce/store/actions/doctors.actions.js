@@ -2,7 +2,7 @@ import firebaseService from 'app/services/firebaseService';
 
 export const GET_DOCTORS = '[E-COMMERCE APP] GET DOCTORS';
 export const SET_DOCTORS_SEARCH_TEXT =
-  '[E-COMMERCE APP] SET SERVICES SEARCH TEXT';
+  '[E-COMMERCE APP] SET DOCTORS SEARCH TEXT';
 
 export const getDoctors = () => async (dispatch) => {
   try {
