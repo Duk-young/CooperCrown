@@ -18,63 +18,63 @@ import React, { useState } from 'react';
 const rows = [
   {
     id: 'Location-Name',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Location  Name',
     sort: true
   },
   {
     id: 'Location Address',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Location Address',
     sort: true
   },
   {
     id: 'City',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'City',
     sort: true
   },
   {
     id: 'State',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'State',
     sort: true
   },
   // {
   //   id: 'email',
-  //   align: 'left',
+  //   align: 'center',
   //   disablePadding: false,
   //   label: 'Email',
   //   sort: true
   // },
   {
     id: 'phoneNo',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Phone No',
     sort: true
   },
   // {
   //   id: 'faxNo',
-  //   align: 'left',
+  //   align: 'center',
   //   disablePadding: false,
   //   label: 'Fax No',
   //   sort: true
   // },
   {
     id: 'Zip-Code',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Zip Code',
     sort: true
   },
   {
     id: 'Actions',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     sort: true
   }
@@ -89,7 +89,7 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'left'
+    textAlign: 'center'
   },
   body: {
     fontSize: 14,
@@ -126,7 +126,7 @@ function ProductsTableHead(props) {
           {props.numSelected > 0 && (
             <div
               className={clsx(
-                'flex items-center justify-center absolute w-64 top-0 ltr:left-0 rtl:right-0 mx-56 h-64 z-10',
+                'flex items-center justify-center absolute w-64 top-0 ltr:center-0 rtl:right-0 mx-56 h-64 z-10',
                 classes.actionsButtonWrapper
               )}>
               <IconButton

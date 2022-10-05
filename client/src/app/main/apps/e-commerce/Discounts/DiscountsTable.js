@@ -2,12 +2,14 @@ import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
 import { firestore, storage } from 'firebase';
 import Checkbox from '@material-ui/core/Checkbox';
+import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import Button from '@material-ui/core/Button';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
+import IconButton from '@material-ui/core/IconButton';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import FuseLoading from '@fuse/core/FuseLoading';
@@ -66,7 +68,28 @@ function DiscountsTable(props) {
       id
     });
   }
-
+  const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+      fontSize: 14,
+      padding: 5,
+      textAlign: 'center'
+    },
+    body: {
+      fontSize: 14,
+      padding: 0,
+      textAlign: 'center'
+    }
+  }))(TableCell);
+  
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover
+      }
+    }
+  }))(TableRow);
   function handleSelectAllClick(event) {
     if (event.target.checked) {
       setSelected(data.map((n) => n.id));
@@ -162,7 +185,7 @@ function DiscountsTable(props) {
               .map((n) => {
                 const isSelected = selected.indexOf(n.id) !== -1;
                 return (
-                  <TableRow
+                  <StyledTableRow
                     className="h-64 cursor-pointer"
                     hover
                     role="checkbox"
@@ -182,37 +205,28 @@ function DiscountsTable(props) {
                         onChange={(event) => handleCheck(event, n.id)}
                       /> 
                     </TableCell> */}
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.code}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.description}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.amount}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      <Button
-                        className="whitespace-no-wrap normal-case"
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleDelete}
-                        // onClick={() => {
-                          
-                        //   // await ref.set(data);
-                        //   // dispatch(
-                        //   //   MessageActions.showMessage({
-                        //   //     message: 'Customer updated successfully'
-                        //   //   })
-                        //   // props.history.push(
-                        //   //   `/apps/e-commerce/discount/${n.id}`
-                        //   // );
-                        // }}
-                        >
-                        <DeleteOutlined/>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+                    <IconButton color="primary"  variant="contained"
+                       
+                       onClick={() => {
+                         props.history.push(
+                           `/apps/e-commerce/discount/${n.id}`
+                         );
+                       }}>
+ <DeleteOutlined fontSize="medium" />
+</IconButton>
+                     
+                    </StyledTableCell>
+                  </StyledTableRow>
                 );
               })}
           </TableBody>

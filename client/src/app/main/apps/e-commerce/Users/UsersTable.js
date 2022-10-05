@@ -8,7 +8,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import { useHistory } from 'react-router-dom';
 import FormHelperText from '@material-ui/core/FormHelperText';
-
+import { withStyles } from '@material-ui/core/styles';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { firestore } from 'firebase';
 import FormControl from '@material-ui/core/FormControl';
@@ -16,8 +16,20 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as Actions from '../store/actions';
+import moment from 'moment';
 import UsersTableHead from './UsersTableHead';
-
+const StyledTableCell = withStyles((theme) => ({
+  // head: {
+  //   backgroundColor: theme.palette.common.black,
+  //   color: theme.palette.common.white,
+  //   textAlign: 'center'
+  // },
+  body: {
+    fontSize: 14,
+    padding: 0,
+    textAlign: 'left'
+  }
+}))(TableCell);
 function UsersTable(props) {
   const dispatch = useDispatch();
   const products = useSelector(({ eCommerceApp }) => eCommerceApp.users.data);
@@ -47,12 +59,12 @@ function UsersTable(props) {
     //     const queryShowrooms = await firestore()
     //     .collection('showRooms')
     //     .get();
-  
+
     //     queryShowrooms.forEach((doc) => {
     //       showroomdata.push(doc.data());
     //     });
     //     setShowRooms(showroomdata);
-  
+
     //     if (history?.location?.state?.start !== undefined) {
     //       setForm({
     //         start: history.location.state.start,
@@ -94,11 +106,11 @@ function UsersTable(props) {
     setSelected([]);
   }
   function handleClick(item) {
-    // console.log({data.id})
+    console.log(item.id)
     props.history.push(`/apps/e-commerce/user/${item.id}`);
   }
 
-  // function handleClick(item) {
+  // function handleClick(ite m) {
   //   props.history.push(`/apps/e-commerce/discount/${item.id}`);
   // }
   function handleCheck(event, id) {
@@ -120,7 +132,28 @@ function UsersTable(props) {
 
     setSelected(newSelected);
   }
-
+  const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+      fontSize: 14,
+      padding: 5,
+      textAlign: 'center'
+    },
+    body: {
+      fontSize: 14,
+      padding: 0,
+      textAlign: 'center'
+    }
+  }))(TableCell);
+  
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover
+      }
+    }
+  }))(TableRow);
   function handleChangePage(event, value) {
     setPage(value);
   }
@@ -170,67 +203,62 @@ function UsersTable(props) {
                     tabIndex={-1}
                     key={n.id}
                     selected={isSelected}
-                    onClick={(event) => {handleClick(n)
-                      {console.log(n.id)}}}
-                    // onClick={() => {
-                    //   props.history.push(
-                       
-                    //     `/apps/e-commerce/user/${n.id}`
-                    //   );
-                    // }}
+                    onClick={(event) => {
+                      handleClick(n)
+                      { console.log(n.id) }
+                    }}
+                 
                   >
-                    {/* <TableCell className="w-64 text-center" padding="none">
-                      <Checkbox
-                        checked={isSelected}
-                        onClick={(event) => event.stopPropagation()}
-                        onChange={(event) => handleCheck(event, n.id)}
-                      />
-                    </TableCell> */}
-                    <TableCell component="th" scope="row">
-                      {n.date}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                   
+                    <StyledTableCell component="th" scope="row">
+                    {/* {moment(n?.dobString).format('MM/DD/YYYY')} */}
+                   { n.date}
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.location}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                    
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+
                       {n.email}
-                    </TableCell>
-                    {/* <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    {/* <StyledTableCell component="th" scope="row">
                       {n.phone1}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.dob}
-                    </TableCell> */}
-                    
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell> */}
+
+                    <StyledTableCell component="th" scope="row">
                       {n.username ? n.username : '-----'}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.Role}
-                    </TableCell>
+                    </StyledTableCell>
                   </TableRow>
                 );
               })}
           </TableBody>
         </Table>
       </FuseScrollbars>
+     
+        <TablePagination
+          className=" flex overflow-hidden justify-center"
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
 
-      <TablePagination
-        className="overflow-hidden"
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        backIconButtonProps={{
-          'aria-label': 'Previous Page'
-        }}
-        nextIconButtonProps={{
-          'aria-label': 'Next Page'
-        }}
-        onChangePage={handleChangePage}
+          backIconButtonProps={{
+            'aria-label': 'Previous Page'
+          }}
+          page={page}
+
+          nextIconButtonProps={{
+            'aria-label': 'Next Page'
+          }}
+          onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
+        />
+    
     </div>
   );
 }

@@ -18,49 +18,49 @@ import React, { useState } from 'react';
 const rows = [
   {
     id: 'contact-type',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Type',
     sort: true
   },
   {
     id: 'contact-style',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Style',
     sort: true
   },
   {
     id: 'contact-brand',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: ' Brand',
     sort: true
   },
   {
     id: 'contact-model',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Model',
     sort: true
   },
   {
     id: 'contact-basecurve',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Base Curve',
     sort: true
   },
   {
     id: 'contact-price',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: ' Price',
     sort: true
   },
   {
     id: 'Actions',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     sort: true
   }
@@ -75,7 +75,7 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'left'
+    textAlign: 'center'
   },
   body: {
     fontSize: 14,

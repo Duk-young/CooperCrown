@@ -47,6 +47,10 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./LensPrice/LensPrice'))
     },
     {
+      path: '/apps/e-commerce/lensPrice/new',
+      component: React.lazy(() => import('./LensPrice/Lens'))
+    },
+    {
       path: '/apps/e-commerce/create-customer',
       component: React.lazy(() =>
         import('./Customers/update-customer/UpdateCustomer')
@@ -120,7 +124,11 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Doctors/Doctors'))
     },
     {
-      path: '/apps/e-commerce/doctors/:doctorID/:doctorHandle?',
+      path: '/apps/e-commerce/doctor/:doctorId',
+      component: React.lazy(() => import('./Doctor/Doctor'))
+    },
+    {
+      path: '/apps/e-commerce/doctor/:doctorId/:doctorHandle?',
       component: React.lazy(() => import('./Doctor/Doctor'))
     },
     {

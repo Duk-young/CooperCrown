@@ -1,6 +1,8 @@
 import FuseUtils from '@fuse/utils';
 import { showMessage } from 'app/store/actions/fuse';
 import * as Actions from './index';
+import { firestore } from 'firebase';
+import moment from 'moment';
 import firebaseService from 'app/services/firebaseService';
 import * as admin from 'firebase-admin';
 admin.initializeApp();
@@ -56,18 +58,20 @@ export const saveUser = (data) => async (dispatch) => {
         .doc('dbConfig')
         .get()
     ).data();
-   
+    const queryuser = await firestore()
+        .collection('showRooms')
+        .where('showRoomId', '==', Number(data.showRoomId))
+        .limit(1)
+        .get();
+        let result = queryuser.docs[0].data();
+    
     await firebaseService.firestoreDb
       .collection('users')
-      // .set({
-      //           Role: 'Staff',
-      //           email: user.email,
-      //           location: user.showRoomId,
-      //           username: user.email.split('@')[0],
-      //           CompanyId: newUser.data.user.uid
-      //         });
-    
-      .add({ ...data, date:today, Role: 'Staff',location: data.showRoomId, userId: dbConfig?.userId + 1 });
+      .add({ ...data, date:today, 
+        // dob: firestore.Timestamp.fromDate(data?.dob),
+      dob:  moment(data?.dob).format('MM/DD/YYYY'),
+        dobString: firestore.Timestamp.fromDate(data?.dob),
+         Role: 'Staff',location: result.locationName, userId: dbConfig?.userId + 1 });
 
     await firebaseService.firestoreDb
       .collection('dbConfig')
@@ -75,6 +79,7 @@ export const saveUser = (data) => async (dispatch) => {
       .update({
         userId: dbConfig?.userId + 1
       });
+      // console.log({userId})
     dispatch(Actions.getUsers());
     dispatch(showMessage({ message: 'User Saved' }));
   } catch (error) {
@@ -98,9 +103,22 @@ export const updateUser = (data) => async (dispatch) => {
 export function newUser() {
   const data = {
     uid: FuseUtils.generateGUID(),
-    email: '',
+    username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    dob:'',
+    fname:'',
+    lname:'',
+    Gender:'',
+    phone1:'',
+    phone2:'',
+    address:'',
+    city:'',
+    State:'',
+    email:'',
+    other:'',
+
+
   };
   return {
     type: GET_USER,

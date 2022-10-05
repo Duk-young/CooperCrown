@@ -97,11 +97,13 @@ function NewShowRoom(props) {
     const updateProductState = async () => {
       setisLoading(false);
       const { userId } = routeParams;
+      console.log(userId)
       if (userId === 'new') {
         dispatch(Actions.newUser());
         setisLoading(true);
       } else {
-        await dispatch(await Actions.getContact(userId));
+
+        await dispatch(await Actions.getUser(userId));
         setisLoading(true);
       }
     };
@@ -116,6 +118,8 @@ function NewShowRoom(props) {
       setForm(product.data);
     }
     const fetchlocation = async () => {
+      const d1 = new Date().toDateString();
+      console.log(d1);
       let showroomdata = [];
       const queryShowrooms = await firestore()
         .collection('showRooms')
@@ -166,7 +170,7 @@ function NewShowRoom(props) {
 
   function canBeSubmitted() {
     return (
-      form.email.length > 0 &&
+      form.username.length > 0 &&
       form.password.length > 0 &&
       form.confirmPassword.length > 0 &&
       form.password === form.confirmPassword
@@ -206,13 +210,13 @@ function NewShowRoom(props) {
                   <img
                     className="w-32 sm:w-48 rounded"
                     src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={form.email}
+                    alt={form.username}
                   />
                 </FuseAnimate>
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                     <Typography className="text-16 sm:text-20 truncate">
-                      {form.email ? form.email : 'New User'}
+                      {form.username ? form.username : 'New User'}
                     </Typography>
                   </FuseAnimate>
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
@@ -251,7 +255,7 @@ function NewShowRoom(props) {
           scrollButtons="auto"
           classes={{ root: 'w-full h-64' }}>
           <Tab className="h-64 normal-case" label="Register User" />
-          {console.log({tabValue})}
+          {console.log({ tabValue })}
         </Tabs>
       }
       content={
@@ -292,7 +296,7 @@ function NewShowRoom(props) {
                             </FormControl>
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.fname === ''}
+                              //error={form.fname === ''}
                               required
                               label="First Name"
                               autoFocus
@@ -306,7 +310,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.lname === ''}
+                              //error={form.lname === ''}
                               required
                               label="Last Name"
                               autoFocus
@@ -318,33 +322,42 @@ function NewShowRoom(props) {
                               variant="outlined"
                               fullwidth
                             />
-                            <Typography
-                              className="username text-16 whitespace-no-wrap self-center"
-                              color="inherit">
-                              Date of Birth
-                            </Typography>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                              <Grid container justifyContent="start">
-                                <KeyboardDatePicker
-                                  className="ml-24"
-                                  margin="normal"
-                                  id="date-picker-dialog"
-                                  format="MM/dd/yyyy"
-                                  value={form?.dob}
-                                  onChange={(date) => {
-                                    handleChange({
-                                      target: { name: 'dob', value: date }
-                                    });
-                                  }}
-                                  KeyboardButtonProps={{
-                                    'aria-label': 'change date'
-                                  }}
-                                />
-                              </Grid>
-                            </MuiPickersUtilsProvider>
+                           <div className="flex flex-row flex-wrap">
+                            <div classname="flex">
+                             
+                              <Typography
+                                className="username text-16 whitespace-no-wrap self-center mb-20"
+                                color="inherit">
+                                Date if Birth
+                              </Typography>
+                              
+                             </div>
+                             <div classname="flex">
+                              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <Grid container justifyContent="start">
+                                  <KeyboardDatePicker
+                                    className="ml-0 0 mt-0"
+                                    margin="normal"
+                                    id="date-picker-dialog"
+                                    format="MM/dd/yyyy"
+                                    value={form?.dob}
+                                    onChange={(date) => {
+                                      handleChange({
+                                        target: { name: 'dob', value: date }
+                                      });
+                                    }}
+                                    KeyboardButtonProps={{
+                                      'aria-label': 'change date'
+                                    }}
+                                  />
+                                </Grid>
+                              </MuiPickersUtilsProvider>
+                              
+                            </div>
+                            </div>
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.Gender === ''}
+                              //error={form.Gender === ''}
                               required
                               label="Gender"
                               autoFocus
@@ -357,7 +370,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.phone1 === ''}
+                              //error={form.phone1 === ''}
                               required
                               label="Phone 1"
                               autoFocus
@@ -370,7 +383,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.phone2 === ''}
+                              //error={form.phone2 === ''}
                               label="Phone 2"
                               autoFocus
                               id="user-phone2"
@@ -382,8 +395,11 @@ function NewShowRoom(props) {
                             />
                           </div>
                           <div className="flex flex-col w-1/2 p-6">
+                          <div className="flex-1 pl-30">
+              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
+            </div>
                             <TextField
-                              className="mt-8 mb-16"
+                              className="mt-20 mb-16"
                               id="user-address"
                               name="address"
                               onChange={handleChange}
@@ -395,7 +411,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.city === ''}
+                              //error={form.city === ''}
                               required
                               label="City"
                               autoFocus
@@ -409,7 +425,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.State === ''}
+                              //error={form.State === ''}
                               label="State"
                               autoFocus
                               id="user-State"
@@ -421,7 +437,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.zipcode === ''}
+                              //error={form.zipcode === ''}
                               label="Zip Code"
                               autoFocus
                               id="user-zipcode"
@@ -433,20 +449,20 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.useremail === ''}
+                              //error={form.useremail === ''}
                               required
                               label="Email"
                               autoFocus
-                              id="user-useremail"
-                              name="useremail"
+                              id="email"
+                              name="email"
                               type="email"
-                              value={form.useremail}
+                              value={form.email}
                               onChange={handleChange}
                               variant="outlined"
                             />
                             <TextField
                               className="mt-8 mb-16"
-                             //error={form.other === ''}
+                              //error={form.other === ''}
                               label="Other"
                               autoFocus
                               id="user-other"
@@ -469,13 +485,13 @@ function NewShowRoom(props) {
                       <div className="flex flex-col justify-center p-16 sm:p-24 ">
                         <TextField
                           className="mt-8 mb-16"
-                         //error={form.email === ''}
+                          //error={form.email === ''}
                           required
-                          label="Email"
+                          label="Username"
                           autoFocus
-                          id="user-email"
-                          name="email"
-                          value={form.email}
+                          id="user-username"
+                          name="username"
+                          value={form.username}
                           onChange={handleChange}
                           variant="outlined"
                           fullWidth
@@ -525,9 +541,10 @@ function NewShowRoom(props) {
                         props.history.push('/apps/e-commerce/users');
                         setisLoading(true);
                       } else {
+                        console.log(form)
                         setisLoading(false);
                         await dispatch(await Actions.updateUser(form));
-                        
+
                         props.history.push(`/apps/e-commerce/users`);
                         setisLoading(true);
                       }

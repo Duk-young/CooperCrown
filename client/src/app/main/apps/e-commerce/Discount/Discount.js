@@ -90,7 +90,7 @@ function Discount(props) {
         dispatch(Actions.newDiscount());
         setisLoading(true);
       } else {
-        console.log(discountId)
+       
         await dispatch(await Actions.getDiscount(discountId));
         setisLoading(true);
       }
