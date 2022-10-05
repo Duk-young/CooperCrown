@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
 import IconButton from '@material-ui/core/IconButton';
 import TableCell from '@material-ui/core/TableCell';
+import { withStyles } from '@material-ui/core/styles';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import FuseLoading from '@fuse/core/FuseLoading';
@@ -73,7 +74,28 @@ function ContactsTable(props) {
     }
     setSelected([]);
   }
-
+  const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+      fontSize: 14,
+      padding: 5,
+      textAlign: 'center'
+    },
+    body: {
+      fontSize: 14,
+      padding: 0,
+      textAlign: 'center'
+    }
+  }))(TableCell);
+  
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover
+      }
+    }
+  }))(TableRow);
   // function handleClick(item) {
   //   props.history.push(`/apps/e-commerce/contact/${item.id}`);
   // }
@@ -139,7 +161,7 @@ function ContactsTable(props) {
               .map((n) => {
                 const isSelected = selected.indexOf(n.id) !== -1;
                 return (
-                  <TableRow
+                  <StyledTableRow
                     className="h-64 cursor-pointer"
                     hover
                     role="checkbox"
@@ -160,25 +182,25 @@ function ContactsTable(props) {
                       /> 
                     </TableCell>*/}
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.type}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.style}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.brand}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.model}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.basecurve}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.price}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       <IconButton color="primary" variant="contained"
 
                         onClick={() => {
@@ -189,8 +211,8 @@ function ContactsTable(props) {
                         <DeleteOutlined fontSize="medium" />
                       </IconButton>
 
-                    </TableCell>
-                  </TableRow>
+                    </StyledTableCell>
+                  </StyledTableRow>
                 );
               })}
           </TableBody>

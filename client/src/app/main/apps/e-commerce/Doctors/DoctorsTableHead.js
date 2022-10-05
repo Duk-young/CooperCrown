@@ -18,35 +18,35 @@ import React, { useState } from 'react';
 const rows = [
   {
     id: 'doctor-date',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'DATE',
     sort: true
   },
   {
     id: 'doctor-name',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'DOCTOR NAME',
     sort: true
   },
   {
     id: 'Location-Address1',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Location 1',
     sort: true
   },
   {
     id: 'Location-Address2',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Location 2',
     sort: true
   },
   {
     id: 'Location-Address3',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Location 3',
     sort: true
@@ -54,7 +54,7 @@ const rows = [
   
   {
     
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     sort: true
   }
@@ -69,7 +69,7 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'left'
+    textAlign: 'center'
   },
   body: {
     fontSize: 14,

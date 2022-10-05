@@ -3,6 +3,7 @@ import _ from '@lodash';
 import Table from '@material-ui/core/Table';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import TableCell from '@material-ui/core/TableCell';
@@ -73,7 +74,28 @@ function ProductsTable(props) {
     }
     setSelected([]);
   }
-
+  const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+      fontSize: 14,
+      padding: 5,
+      textAlign: 'center'
+    },
+    body: {
+      fontSize: 14,
+      padding: 0,
+      textAlign: 'center'
+    }
+  }))(TableCell);
+  
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover
+      }
+    }
+  }))(TableRow);
   function handleClick(item) {
     props.history.push(`/apps/e-commerce/showRoom/${item.id}`);
   }
@@ -139,7 +161,7 @@ function ProductsTable(props) {
               .map((n) => {
                 const isSelected = selected.indexOf(n.id) !== -1;
                 return (
-                  <TableRow
+                  <StyledTableRow
                     className="h-64 cursor-pointer"
                     hover
                     role="checkbox"
@@ -148,38 +170,38 @@ function ProductsTable(props) {
                     key={n.id}
                     selected={isSelected}
                     onClick={(event) => handleClick(n)}>
-                    {/* <TableCell className="w-64 text-center" padding="none">
+                    {/* <StyledTableCell className="w-64 text-center" padding="none">
                       <Checkbox
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
                       />
-                    </TableCell> */}
+                    </StyledTableCell> */}
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.locationName}
-                    </TableCell>
+                    </StyledTableCell>
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.locationAddress}
-                    </TableCell>
+                    </StyledTableCell>
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.City}
-                    </TableCell>
+                    </StyledTableCell>
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.State}
-                    </TableCell>
+                    </StyledTableCell>
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.phoneNo}
-                    </TableCell>
+                    </StyledTableCell>
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.zipCode}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       <IconButton color="primary" variant="contained"
 
                         onClick={() => {
@@ -190,8 +212,8 @@ function ProductsTable(props) {
                         <DeleteOutlined fontSize="medium" />
                       </IconButton>
 
-                    </TableCell>
-                  </TableRow>
+                    </StyledTableCell>
+                  </StyledTableRow>
                 );
               })}
           </TableBody>

@@ -18,28 +18,28 @@ import React, { useState } from 'react';
 const rows = [
   {
     id: 'discount-code',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'NAME',
     sort: true
   },
   {
     id: 'discount-description',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'DESCRIPTION',
     sort: true
   },
   {
     id: 'discount-amount',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'PRICE',
     sort: true
   },
   {
     id: 'Actions',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     sort: true
   }
@@ -54,7 +54,7 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'left'
+    textAlign: 'center'
   },
   body: {
     fontSize: 14,
@@ -91,7 +91,7 @@ function DiscountsTableHead(props) {
           {props.numSelected > 0 && (
             <div
               className={clsx(
-                'flex items-center justify-center absolute w-64 top-0 ltr:left-0 rtl:right-0 mx-56 h-64 z-10',
+                'flex items-center justify-center absolute w-64 top-0 ltr:center-0 rtl:right-0 mx-56 h-64 z-10',
                 classes.actionsButtonWrapper
               )}>
               <IconButton

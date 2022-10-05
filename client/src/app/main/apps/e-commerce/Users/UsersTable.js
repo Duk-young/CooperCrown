@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as Actions from '../store/actions';
+import moment from 'moment';
 import UsersTableHead from './UsersTableHead';
 const StyledTableCell = withStyles((theme) => ({
   // head: {
@@ -105,11 +106,11 @@ function UsersTable(props) {
     setSelected([]);
   }
   function handleClick(item) {
-    // console.log({data.id})
+    console.log(item.id)
     props.history.push(`/apps/e-commerce/user/${item.id}`);
   }
 
-  // function handleClick(item) {
+  // function handleClick(ite m) {
   //   props.history.push(`/apps/e-commerce/discount/${item.id}`);
   // }
   function handleCheck(event, id) {
@@ -131,7 +132,28 @@ function UsersTable(props) {
 
     setSelected(newSelected);
   }
-
+  const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+      fontSize: 14,
+      padding: 5,
+      textAlign: 'center'
+    },
+    body: {
+      fontSize: 14,
+      padding: 0,
+      textAlign: 'center'
+    }
+  }))(TableCell);
+  
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover
+      }
+    }
+  }))(TableRow);
   function handleChangePage(event, value) {
     setPage(value);
   }
@@ -185,22 +207,12 @@ function UsersTable(props) {
                       handleClick(n)
                       { console.log(n.id) }
                     }}
-                  // onClick={() => {
-                  //   props.history.push(
-
-                  //     `/apps/e-commerce/user/${n.id}`
-                  //   );
-                  // }}
+                 
                   >
-                    {/* <TableCell className="w-64 text-center" padding="none">
-                      <Checkbox
-                        checked={isSelected}
-                        onClick={(event) => event.stopPropagation()}
-                        onChange={(event) => handleCheck(event, n.id)}
-                      />
-                    </TableCell> */}
+                   
                     <StyledTableCell component="th" scope="row">
-                      {n.date}
+                    {/* {moment(n?.dobString).format('MM/DD/YYYY')} */}
+                   { n.date}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {n.location}

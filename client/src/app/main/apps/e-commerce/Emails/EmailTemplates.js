@@ -104,48 +104,23 @@ function EmailTemplates(props) {
   return (
     <FusePageCarded
       header={
-        <div className="flex flex-1 w-full items-center justify-between">
-          <div className="flex items-center">
-            <FuseAnimate animation="transition.expandIn" delay={300}>
-              <Icon className="text-32">people</Icon>
-            </FuseAnimate>
-            <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-              <Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h6">
-                Email Templates
-              </Typography>
-            </FuseAnimate>
-            
-          </div>
-          {/* <FuseAnimate animation="transition.slideRightIn" delay={300}>
-              
-                {disabledState && (
-                  <Button
-                  className={classes.button}
-                  variant="contained"
-                  color="secondary"
-                    onClick={() => {
-                      setDisabledState(false);
-                    }}
-                    >
-                    Edit
-                  </Button>
-                )} 
-                </FuseAnimate> */}
+        <div className="flex flex-col w-full items-center justify-center">
+        <div className="flex items-center">
+          <FuseAnimate animation="transition.slideLeftIn" delay={300}>
+            <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500" variant="h4">
+              EMAIL TEMPLATE
+            </Typography>
+          </FuseAnimate>
+
+
         </div>
-              //   disabled={!canBeSubmitted()}
-              //   onClick={async () => {
-              //     if (routeParams.discountId === 'new') {
-              //       setisLoading(false);
-              //       await dispatch(await Actions.saveDiscount(form));
-              //       setisLoading(true);
-              //     } else {
-              //       setisLoading(false);
-              //       await dispatch(await Actions.updateDiscount(form));
-              //       setisLoading(true);
-              //     }
-              //   }}>
-              //   Save
-              // </Button>
+        <div className="flex flex-1 items-center justify-center ">
+
+        </div>
+        <div className="flex-1 items-center">
+          <h3 className=" hidden font-700 ">H</h3>
+        </div>
+      </div>
            
       }
       content={

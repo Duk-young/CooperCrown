@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 const rows = [
   {
     id: 'user-date',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Date',
     sort: true,
@@ -26,7 +26,7 @@ const rows = [
   },
   {
     id: 'user-location',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Location',
     sort: true,
@@ -34,7 +34,7 @@ const rows = [
   },
   {
     id: 'user-email',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Email',
     sort: true,
@@ -43,7 +43,7 @@ const rows = [
  
   {
     id: 'user-username',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Username',
     sort: true,
@@ -51,7 +51,7 @@ const rows = [
   },
   {
     id: 'user-role',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: 'Access Level',
     sort: true,
@@ -68,7 +68,7 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'left',
+    textAlign: 'center',
     padding: 10,
     width:50
   },
@@ -107,7 +107,7 @@ function UsersTableHead(props) {
           {props.numSelected > 0 && (
             <div
               className={clsx(
-                'flex items-center justify-center absolute w-64 top-0 ltr:left-0 rtl:right-0 mx-56 h-64 z-10',
+                'flex items-center justify-center absolute w-64 top-0 ltr:center-0 rtl:right-0 mx-56 h-64 z-10',
                 classes.actionsButtonWrapper
               )}>
               <IconButton

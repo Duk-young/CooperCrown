@@ -16,7 +16,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid';
 import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
-import {makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { firestore } from 'firebase';
-    
+
 import * as Actions from '../store/actions';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -64,7 +64,7 @@ function Doctor(props) {
     const updateProductState = async () => {
       setisLoading(false);
       const { doctorId } = routeParams;
-console.log(doctorId)
+      console.log(doctorId)
       if (doctorId === 'new') {
         dispatch(Actions.newDoctor());
         setisLoading(true);
@@ -88,26 +88,35 @@ console.log(doctorId)
     ) {
       setForm(product.data);
     }
+
+    // const fetchCustomer = async () => {
+    //   const query = await firestore()
+    //     .collection('doctors')
+    //     .where('doctorId', '==', Number(id))
+    //     .limit(1)
+    //     .get(); }
+
     const fetchlocation = async () => {
-        let showroomdata = [];
-        const queryShowrooms = await firestore()
-          .collection('showRooms')
-          .get();
-  
-        queryShowrooms.forEach((doc) => {
-          showroomdata.push(doc.data());
+      let showroomdata = [];
+      const queryShowrooms = await firestore()
+        .collection('showRooms')
+        .get();
+
+      queryShowrooms.forEach((doc) => {
+        showroomdata.push(doc.data());
+      });
+      setShowRooms(showroomdata);
+
+      if (history?.location?.state?.start !== undefined) {
+        setForm({
+          start: history.location.state.start,
+          showRoomId: history.location.state.showRoomId,
         });
-        setShowRooms(showroomdata);
-  
-        if (history?.location?.state?.start !== undefined) {
-          setForm({
-            start: history.location.state.start,
-            showRoomId: history.location.state.showRoomId,
-          });
-        }
-        setisLoading(false);
-      };
-      fetchlocation();
+      }
+
+      setisLoading(false);
+    };
+    fetchlocation();
   }, [form, product.data, setForm]);
 
   function handleChangeTab(event, value) {
@@ -137,7 +146,7 @@ console.log(doctorId)
     <FusePageCarded
       header={
         form && (
-          
+
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
@@ -174,7 +183,7 @@ console.log(doctorId)
                 </div>
               </div>
             </div>
-            
+
             {/* <FuseAnimate animation="transition.slideRightIn" delay={300}>
               <Button
                 className="whitespace-no-wrap normal-case"
@@ -201,9 +210,9 @@ console.log(doctorId)
         )
       }
       contentToolbar={
-        
+
         <Tabs
-      
+
           value={tabValue}
           onChange={handleChangeTab}
           indicatorColor="primary"
@@ -212,265 +221,273 @@ console.log(doctorId)
           scrollButtons="auto"
           classes={{ root: 'w-full h-64' }}>
           <Tab className="h-64 normal-case" label="New Doctor" />
+          {console.log(tabValue)}
         </Tabs>
-        
+
       }
       content={
         form && (
-            <div className="p-16 sm:p-24">
+          <div className="p-16 sm:p-24">
             <div className="flex flex-col h-260  px-16 py-6">
-            {tabValue === 0 && (
-              <>
-              <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
-                      <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                        <h1 className="font-700" style={{ color: '#f15a25' }}>
-                          USER INFO
-                        </h1>
-                      </div>
+              {tabValue === 0 && (
+                <>
+                  <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+                    <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                      <h1 className="font-700" style={{ color: '#f15a25' }}>
+                        USER INFO
+                      </h1>
+                    </div>
 
 
-                      <div>
-                        <div className="flex flex-row justify-center p-16 sm:p-24 ">
-                          <div className="flex flex-col w-1/2 p-6">
-                           
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.fname === ''}
-                              required
-                              label="First Name"
-                              autoFocus
-                              id="doctor-fname"
-                              name="fname"
-                              type="text"
-                              value={form.fname}
-                              onChange={handleChange}
-                              variant="outlined"
-                              fullwidth
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.lname === ''}
-                              required
-                              label="Last Name"
-                              autoFocus
-                              id="doctor-lname"
-                              name="lname"
-                              type="text"
-                              value={form.lname}
-                              onChange={handleChange}
-                              variant="outlined"
-                              fullwidth
-                            />
-                            <Typography
-                              className="username text-16 whitespace-no-wrap self-center"
-                              color="inherit">
-                              Date of Birth
-                            </Typography>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                              <Grid container justifyContent="start">
-                                <KeyboardDatePicker
-                                  className="ml-24"
-                                  margin="normal"
-                                  id="date-picker-dialog"
-                                  format="MM/dd/yyyy"
-                                  value={form?.dob}
-                                  onChange={(date) => {
-                                    handleChange({
-                                      target: { name: 'dob', value: date }
-                                    });
-                                  }}
-                                  KeyboardButtonProps={{
-                                    'aria-label': 'change date'
-                                  }}
-                                />
-                              </Grid>
-                            </MuiPickersUtilsProvider>
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.Gender === ''}
-                              required
-                              label="Gender"
-                              autoFocus
-                              id="user-Gender"
-                              name="Gender"
-                              type="text"
-                              value={form.Gender}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.phone1 === ''}
-                              required
-                              label="Phone 1"
-                              autoFocus
-                              id="user-phone1"
-                              name="phone1"
-                              type="phone"
-                              value={form.phone1}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.phone2 === ''}
-                              label="Phone 2"
-                              autoFocus
-                              id="user-phone2"
-                              name="phone2"
-                              type="phone"
-                              value={form.phone2}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
+                    <div>
+                      <div className="flex flex-row justify-center p-16 sm:p-24 ">
+                        <div className="flex flex-col w-1/2 p-6">
+
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.fname === ''}
+                            required
+                            label="First Name"
+                            autoFocus
+                            id="doctor-fname"
+                            name="fname"
+                            type="text"
+                            value={form.fname}
+                            onChange={handleChange}
+                            variant="outlined"
+                            fullwidth
+                          />
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.lname === ''}
+                            required
+                            label="Last Name"
+                            autoFocus
+                            id="doctor-lname"
+                            name="lname"
+                            type="text"
+                            value={form.lname}
+                            onChange={handleChange}
+                            variant="outlined"
+                            fullwidth
+                          />
+                          <div className="flex flex-row flex-wrap">
+                            <div classname="flex">
+
+                              <Typography
+                                className="username text-16 whitespace-no-wrap self-center mb-20"
+                                color="inherit">
+                                Date of Birth
+                              </Typography>
+                            </div>
+                            <div classname="flex">
+                              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <Grid container justifyContent="start">
+                                  <KeyboardDatePicker
+                                    className="ml-0 0 mt-0"
+                                    margin="normal"
+                                    id="date-picker-dialog"
+                                    format="MM/dd/yyyy"
+                                    value={form?.dob}
+                                    onChange={(date) => {
+                                      handleChange({
+                                        target: { name: 'dob', value: date }
+                                      });
+                                    }}
+                                    KeyboardButtonProps={{
+                                      'aria-label': 'change date'
+                                    }}
+                                  />
+                                </Grid>
+                              </MuiPickersUtilsProvider>
+                            </div>
                           </div>
-                          <div className="flex flex-col w-1/2 p-6">
-                            <TextField
-                              className="mt-8 mb-16"
-                              id="doctor-address"
-                              name="address"
-                              onChange={handleChange}
-                              label="Address"
-                              type="address"
-                              value={form.address}
-                              variant="outlined"
-                              fullwidth
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.city === ''}
-                              required
-                              label="City"
-                              autoFocus
-                              id="doctor-city"
-                              name="city"
-                              type="text"
-                              value={form.city}
-                              onChange={handleChange}
-                              variant="outlined"
-                              fullwidth
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.State === ''}
-                              label="State"
-                              autoFocus
-                              id="doctor-State"
-                              name="State"
-                              type="text"
-                              value={form.State}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.zipcode === ''}
-                              label="Zip Code"
-                              autoFocus
-                              id="doctor-zipcode"
-                              name="zipcode"
-                              type="Number"
-                              value={form.zipcode}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.doctoremail === ''}
-                              required
-                              label="Email"
-                              autoFocus
-                              id="doctor-doctoremail"
-                              name="doctoremail"
-                              type="email"
-                              value={form.doctoremail}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                             //error={form.other === ''}
-                              label="Other"
-                              autoFocus
-                              id="doctor-other"
-                              name="other"
-                              type="text"
-                              value={form.other}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
-                          </div>
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.Gender === ''}
+                            required
+                            label="Gender"
+                            autoFocus
+                            id="user-Gender"
+                            name="Gender"
+                            type="text"
+                            value={form.Gender}
+                            onChange={handleChange}
+                            variant="outlined"
+                          />
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.phone1 === ''}
+                            required
+                            label="Phone 1"
+                            autoFocus
+                            id="user-phone1"
+                            name="phone1"
+                            type="phone"
+                            value={form.phone1}
+                            onChange={handleChange}
+                            variant="outlined"
+                          />
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.phone2 === ''}
+                            label="Phone 2"
+                            autoFocus
+                            id="user-phone2"
+                            name="phone2"
+                            type="phone"
+                            value={form.phone2}
+                            onChange={handleChange}
+                            variant="outlined"
+                          />
+                        </div>
+                        <div className="flex flex-col w-1/2 p-6">
+                          <TextField
+                            className="mt-8 mb-16"
+                            id="doctor-address"
+                            name="address"
+                            onChange={handleChange}
+                            label="Address"
+                            type="address"
+                            value={form.address}
+                            variant="outlined"
+                            fullwidth
+                          />
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.city === ''}
+                            required
+                            label="City"
+                            autoFocus
+                            id="doctor-city"
+                            name="city"
+                            type="text"
+                            value={form.city}
+                            onChange={handleChange}
+                            variant="outlined"
+                            fullwidth
+                          />
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.State === ''}
+                            label="State"
+                            autoFocus
+                            id="doctor-State"
+                            name="State"
+                            type="text"
+                            value={form.State}
+                            onChange={handleChange}
+                            variant="outlined"
+                          />
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.zipcode === ''}
+                            label="Zip Code"
+                            autoFocus
+                            id="doctor-zipcode"
+                            name="zipcode"
+                            type="Number"
+                            value={form.zipcode}
+                            onChange={handleChange}
+                            variant="outlined"
+                          />
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.doctoremail === ''}
+                            required
+                            label="Email"
+                            autoFocus
+                            id="doctor-doctoremail"
+                            name="doctoremail"
+                            type="email"
+                            value={form.doctoremail}
+                            onChange={handleChange}
+                            variant="outlined"
+                          />
+                          <TextField
+                            className="mt-8 mb-16"
+                            //error={form.other === ''}
+                            label="Other"
+                            autoFocus
+                            id="doctor-other"
+                            name="other"
+                            type="text"
+                            value={form.other}
+                            onChange={handleChange}
+                            variant="outlined"
+                          />
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
-                      <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                        <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  </div>
+                  <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+                    <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                      <h1 className="font-700" style={{ color: '#f15a25' }}>
                         SERVICE LOCATION
-                        </h1>
-                      </div>
-                      <div className="flex flex-col justify-center p-16 sm:p-24 ">
-                      <FormControl>
-                              <Select
-                                labelId="demo-simple-select-autowidth-label"
-
-                                id="showRoomId1"
-                                defaultValue={form?.showRoomId}
-                                value={form?.showRoomId1}
-                                name="showRoomId1"
-                                onChange={handleChange}
-                                autoWidth>
-                                {showRooms.map((row) => (
-                                  <MenuItem value={row?.showRoomId}>
-                                    {row?.locationName}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                              <FormHelperText>Location 1</FormHelperText>
-                            </FormControl>
-                            <FormControl>
-                              <Select
-                                labelId="demo-simple-select-autowidth-label"
-                                id="showRoomId2"
-                                defaultValue={form?.showRoomId}
-                                value={form?.showRoomId2}
-                                name="showRoomId2"
-                                onChange={handleChange}
-                                autoWidth>
-                                {showRooms.map((row) => (
-                                  <MenuItem value={row?.showRoomId}>
-                                    {row?.locationName}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                              <FormHelperText>Location 2</FormHelperText>
-                            </FormControl>
-                            <FormControl>
-                              <Select
-                                labelId="demo-simple-select-autowidth-label"
-
-                                id="showRoomId3"
-                                defaultValue={form?.showRoomId}
-                                value={form?.showRoomId3}
-                                name="showRoomId3"
-                                onChange={handleChange}
-                                autoWidth>
-                                {showRooms.map((row) => (
-                                  <MenuItem value={row?.showRoomId}>
-                                    {row?.locationName}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                              <FormHelperText>Location 3</FormHelperText>
-                            </FormControl>
-                      </div>
+                      </h1>
                     </div>
-              </>
-            )}
-          
-            <br></br> 
-          </div>
-          <div className="flex flex-col p-12 " >              
+                    <div className="flex flex-col justify-center p-16 sm:p-24 ">
+                      <FormControl>
+                        <Select
+                          labelId="demo-simple-select-autowidth-label"
+
+                          id="showRoomId1"
+                          defaultValue={form?.showRoomId}
+                          value={form?.showRoomId1}
+                          name="showRoomId1"
+                          onChange={handleChange}
+                          autoWidth>
+                          {showRooms.map((row) => (
+                            <MenuItem value={row?.showRoomId}>
+                              {row?.locationName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>Location 1</FormHelperText>
+                      </FormControl>
+                      <FormControl>
+                        <Select
+                          labelId="demo-simple-select-autowidth-label"
+                          id="showRoomId2"
+                          defaultValue={form?.showRoomId}
+                          value={form?.showRoomId2}
+                          name="showRoomId2"
+                          onChange={handleChange}
+                          autoWidth>
+                          {showRooms.map((row) => (
+                            <MenuItem value={row?.showRoomId}>
+                              {row?.locationName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>Location 2</FormHelperText>
+                      </FormControl>
+                      <FormControl>
+                        <Select
+                          labelId="demo-simple-select-autowidth-label"
+
+                          id="showRoomId3"
+                          defaultValue={form?.showRoomId}
+                          value={form?.showRoomId3}
+                          name="showRoomId3"
+                          onChange={handleChange}
+                          autoWidth>
+                          {showRooms.map((row) => (
+                            <MenuItem value={row?.showRoomId}>
+                              {row?.locationName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>Location 3</FormHelperText>
+                      </FormControl>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <br></br>
+            </div>
+            <div className="flex flex-col p-12 " >
               {/* <Button 
               className={classes.button}
               variant="contained"
@@ -491,8 +508,8 @@ console.log(doctorId)
                  
                 Save
               </Button> */}
-           </div>
-           <div className="flex flex-col p-12 " >
+            </div>
+            <div className="flex flex-col p-12 " >
               <Button
                 style={{
                   maxHeight: '70px',
@@ -544,7 +561,7 @@ console.log(doctorId)
             </div>
           </div>
 
-         
+
         )
       }
       innerScroll

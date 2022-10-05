@@ -11,6 +11,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import FuseLoading from '@fuse/core/FuseLoading';
 import React, { useEffect, useState } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as Actions from '../store/actions';
@@ -77,6 +78,28 @@ function DoctorsTable(props) {
   // function handleClick(item) {
   //   props.history.push(`/apps/e-commerce/contact/${item.id}`);
   // }
+  const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+      fontSize: 14,
+      padding: 5,
+      textAlign: 'center'
+    },
+    body: {
+      fontSize: 14,
+      padding: 0,
+      textAlign: 'center'
+    }
+  }))(TableCell);
+  
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover
+      }
+    }
+  }))(TableRow);
 
   function handleCheck(event, id) {
     const selectedIndex = selected.indexOf(id);
@@ -139,9 +162,10 @@ function DoctorsTable(props) {
               .map((n) => {
                 const isSelected = selected.indexOf(n.id) !== -1;
                 return (
-                  <TableRow
+                  <StyledTableRow
                     className="h-64 cursor-pointer"
                     hover
+                    style={{ height: 10 }}
                     role="checkbox"
                     aria-checked={isSelected}
                     tabIndex={-1}
@@ -158,26 +182,26 @@ function DoctorsTable(props) {
                         onClick={(event) => event.stopPropagation()}
                         onChange={(event) => handleCheck(event, n.id)}
                       /> 
-                    </TableCell>*/}
+                    </StyledTableCell>*/}
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.date}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.fname} {n.lname}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {n.showRoomId1}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {n.showRoomId2}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {n.showRoomId3}
-                    </TableCell>
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+                      {n.location1}
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+                      {n.location2}
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+                      {n.location3}
+                    </StyledTableCell>
 
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       <IconButton color="primary" variant="contained"
 
                         onClick={() => {
@@ -188,12 +212,13 @@ function DoctorsTable(props) {
                         <DeleteOutlined fontSize="medium" />
                       </IconButton>
                      
-                    </TableCell>
-                  </TableRow>
+                    </StyledTableCell>
+                  </StyledTableRow>
                 );
               })}
           </TableBody>
         </Table>
+        
       </FuseScrollbars>
 
       <TablePagination

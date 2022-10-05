@@ -2,6 +2,8 @@ import FuseUtils from '@fuse/utils';
 import { showMessage } from 'app/store/actions/fuse';
 import * as Actions from './index';
 import firebaseService from 'app/services/firebaseService';
+import { firestore } from 'firebase';
+import moment from 'moment';
 
 // import * as Actions from './index';
 
@@ -34,9 +36,34 @@ export const saveDoctor = (data) => async (dispatch) => {
         .doc('dbConfig')
         .get()
     ).data();
+    const queryloc1 = await firestore()
+    .collection('showRooms')
+    .where('showRoomId', '==', Number(data.showRoomId1))
+    .limit(1)
+    .get();
+    let result1 = queryloc1.docs[0].data();
+
+    const queryloc2 = await firestore()
+    .collection('showRooms')
+    .where('showRoomId', '==', Number(data.showRoomId2))
+    .limit(1)
+    .get();
+    let result2 = queryloc2.docs[0].data();
+
+    const queryloc3 = await firestore()
+    .collection('showRooms')
+    .where('showRoomId', '==', Number(data.showRoomId3))
+    .limit(1)
+    .get();
+    let result3 = queryloc3.docs[0].data();
+
+    console.log(result1.locationName)
+    console.log(result2.locationName)
+    console.log(result3.locationName)
     await firebaseService.firestoreDb
       .collection('doctors')
-      .add({ ...data, date:today, doctorId: dbConfig?.doctorId + 1 });
+      .add({ ...data, date:today,location1:result1.locationName,location3:result3.locationName,location2:result2.locationName,   dob:  moment(data?.dob).format('MM/DD/YYYY'),
+      dobString: firestore.Timestamp.fromDate(data?.dob), doctorId: dbConfig?.doctorId + 1 });
     await firebaseService.firestoreDb
       .collection('dbCo nfig')
       .doc('dbConfig')
@@ -74,6 +101,20 @@ export function newDoctor() {
     location1: '',
     location2: '',
     location3: '', 
+    dob:'',
+    dobstring:'',
+    fname:'',
+    lname:'',
+    Gender:'',
+    phone1:'',
+    phone2:'',
+    address:'',
+    city:'',
+    State:'',
+    zipcode:'',
+    doctoremail:'',
+    other:'',
+    
   };
   return {
     type: GET_DOCTOR,

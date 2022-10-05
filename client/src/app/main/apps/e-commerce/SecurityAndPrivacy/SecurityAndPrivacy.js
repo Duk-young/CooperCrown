@@ -128,35 +128,22 @@ function SecurityAndPrivacy(props) {
     <FusePageCarded
       header={
         form && (
-          <div className="flex flex-1 w-full items-center justify-between">
-            <div className="flex flex-col items-start max-w-full">
-              <div className="flex items-center max-w-full">
-                <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
-                  <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                    <Typography className="text-16 sm:text-20 truncate">
-                      Security and Privacy
-                    </Typography>
-                  </FuseAnimate>
-                </div>
-              </div>
+          <div className="flex flex-col w-full items-center justify-center">
+            <div className="flex items-center">
+              <FuseAnimate animation="transition.slideLeftIn" delay={300}>
+                <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500" variant="h4">
+                  SECURITY AND PRIVACY
+                </Typography>
+              </FuseAnimate>
+
+
             </div>
-            {/* <FuseAnimate animation="transition.slideRightIn" delay={300}>
-              <Button
-                className="whitespace-no-wrap normal-case"
-                variant="contained"
-                color="secondary"
-                disabled={!canBeSubmitted()}
-                onClick={async () => {
-                  await dispatch(
-                    await Actions.changeEmail({
-                      email: form.newEmail,
-                      id: mainId
-                    })
-                  );
-                }}>
-                Save
-              </Button>
-            </FuseAnimate> */}
+            <div className="flex flex-1 items-center justify-center ">
+
+            </div>
+            <div className="flex-1 items-center">
+              <h3 className=" hidden font-700 ">H</h3>
+            </div>
           </div>
         )
       }
@@ -186,42 +173,42 @@ function SecurityAndPrivacy(props) {
                     </h1>
                   </div>
                   <div className="justify-center p-16 sm:p-24 ">
-                  <TextField
-                    className="mt-8 mb-16"
-                    id="email"
-                    name="email"
-                    onChange={handleChange}
-                    label="Email"
-                    type="text"
-                    disabled={true}
-                    value={currentEmail}
-                    variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
-                    className="mt-8 mb-16"
-                    required
-                    label="New Email"
-                    type="text"
-                    id="newEmail"
-                    name="newEmail"
-                    value={form.newEmail}
-                    onChange={handleChange}
-                    variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
-                    className="mt-8 mb-16"
-                    required
-                    label="Confrim Email"
-                    id="confrimEmail"
-                    type="text"
-                    name="confrimEmail"
-                    value={form.confrimEmail}
-                    onChange={handleChange}
-                    variant="outlined"
-                    fullWidth
-                  />
+                    <TextField
+                      className="mt-8 mb-16"
+                      id="email"
+                      name="email"
+                      onChange={handleChange}
+                      label="Email"
+                      type="text"
+                      disabled={true}
+                      value={currentEmail}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      label="New Email"
+                      type="text"
+                      id="newEmail"
+                      name="newEmail"
+                      value={form.newEmail}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      label="Confrim Email"
+                      id="confrimEmail"
+                      type="text"
+                      name="confrimEmail"
+                      value={form.confrimEmail}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
                   </div>
                 </div>
               </div>
@@ -237,42 +224,42 @@ function SecurityAndPrivacy(props) {
                     </h1>
                   </div >
                   <div className="justify-center p-16 sm:p-24 ">
-                  <TextField
-                    className="mt-8 mb-16"
-                    required
-                    id="password"
-                    name="password"
-                    onChange={handleChange}
-                    label="Old Password"
-                    type="text"
-                    value={form.password}
-                    variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
-                    className="mt-8 mb-16"
-                    required
-                    label="New Password"
-                    type="text"
-                    id="newPassword"
-                    name="newPassword"
-                    value={form.newPassword}
-                    onChange={handleChange}
-                    variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
-                    className="mt-8 mb-16"
-                    required
-                    label="Confrim Password"
-                    id="confrimPassword"
-                    type="text"
-                    name="confrimPassword"
-                    value={form.confrimPassword}
-                    onChange={handleChange}
-                    variant="outlined"
-                    fullWidth
-                  />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      id="password"
+                      name="password"
+                      onChange={handleChange}
+                      label="Old Password"
+                      type="text"
+                      value={form.password}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      label="New Password"
+                      type="text"
+                      id="newPassword"
+                      name="newPassword"
+                      value={form.newPassword}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      label="Confrim Password"
+                      id="confrimPassword"
+                      type="text"
+                      name="confrimPassword"
+                      value={form.confrimPassword}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
                   </div>
                 </div>
               </div>
