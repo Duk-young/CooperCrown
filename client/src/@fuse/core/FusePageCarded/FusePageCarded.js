@@ -48,11 +48,12 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   header: {
-    height: headerContentHeight,
+    // height: headerContentHeight,
     minHeight: headerContentHeight,
-    maxHeight: headerContentHeight,
+    // maxHeight: headerContentHeight,
     display: 'flex',
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.contrastText,
+    padding: '1rem 0'
   },
   headerSidebarToggleButton: {
     color: theme.palette.primary.contrastText

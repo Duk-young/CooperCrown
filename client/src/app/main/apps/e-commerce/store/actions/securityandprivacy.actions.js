@@ -18,7 +18,21 @@ export const changeEmail = (form) => async (dispatch) => {
     dispatch(showMessage({ message: 'Email Successfully Changes' }));
     dispatch(authActions.logoutUser());
   } catch (error) {
-    console.log(error);
+    console.log({ error });
+  }
+};
+
+export const changePassword = (form) => async (dispatch) => {
+  try {
+    await firebaseService.auth.currentUser.updatePassword(form.password);
+    await firebaseService.firestoreDb
+      .collection('users')
+      .doc(form.id)
+      .update({ password: form.password });
+    dispatch(showMessage({ message: 'Password Successfully Changes' }));
+    dispatch(authActions.logoutUser());
+  } catch (error) {
+    console.log({ error });
   }
 };
 export const updateAccount = (data) => async (dispatch) => {
@@ -44,6 +58,7 @@ export const changeEmailForm = () => async (dispatch) => {
   };
   dispatch({ type: SET_CHANGE_EMAIL, payload: data });
 };
+
 export const changePasswordForm = () => async (dispatch) => {
   const data = {
     uid: FuseUtils.generateGUID(),
@@ -53,3 +68,4 @@ export const changePasswordForm = () => async (dispatch) => {
   };
   dispatch({ type: SET_CHANGE_PASSWORD, payload: data });
 };
+

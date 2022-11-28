@@ -11,9 +11,7 @@ import {
   KeyboardDatePicker
 } from '@material-ui/pickers';
 import FormControl from '@material-ui/core/FormControl';
-
 import FormHelperText from '@material-ui/core/FormHelperText';
-import Grid from '@material-ui/core/Grid';
 import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
@@ -57,6 +55,7 @@ function Doctor(props) {
   const [isLoading, setisLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
   const [open, setOpen] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const routeParams = useParams();
 
@@ -64,12 +63,10 @@ function Doctor(props) {
     const updateProductState = async () => {
       setisLoading(false);
       const { doctorId } = routeParams;
-      console.log(doctorId)
       if (doctorId === 'new') {
         dispatch(Actions.newDoctor());
         setisLoading(true);
       } else {
-        console.log(doctorId)
         await dispatch(await Actions.getDoctor(doctorId));
         setisLoading(true);
       }
@@ -133,6 +130,67 @@ function Doctor(props) {
     );
   }
 
+  const isFormValid = () => {
+    const errs = {};
+
+    if (!form.fname) {
+      errs.fname = 'Please enter first name'
+    }
+
+    if (!form.lname) {
+      errs.lname = 'Please enter last name'
+    }
+
+    if (!form.Gender) {
+      errs.gender = 'Please enter gender'
+    }
+
+    if (!form.phone1) {
+      errs.phone1 = 'Please enter phone number'
+    }
+
+    if (!form.city) {
+      errs.city = 'Please enter city'
+    }
+
+    if (!form.doctoremail) {
+      errs.doctoremail = 'Please enter email address'
+    }
+
+    return errs;
+  }
+
+  const submitForm = async () => {
+    if (routeParams.doctorId === 'new') {
+      setisLoading(false);
+      await dispatch(await Actions.saveDoctor(form));
+      props.history.push('/apps/e-commerce/doctors');
+      setisLoading(true);
+    } else {
+      setisLoading(false);
+      await dispatch(await Actions.updateDoctor(form));
+      props.history.push('/apps/e-commerce/doctors');
+      setisLoading(true);
+    }
+  }
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const errs = isFormValid();
+    setErrors(errs);
+
+    if (Object.entries(errs).some((err) => err !== '')) {
+      return
+    }
+
+    submitForm();
+  }
+
+
+
+
   if (
     (!product.data ||
       (product.data && routeParams.doctorId !== product.data.id)) &&
@@ -168,13 +226,13 @@ function Doctor(props) {
                   <img
                     className="w-32 sm:w-48 rounded"
                     src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={form.docname}
+                    alt={`${form.fname} ${form.lname}`}
                   />
                 </FuseAnimate>
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                     <Typography className="text-16 sm:text-20 truncate">
-                      {form.docname ? form.docname : 'New Doctor'}
+                      {(form.fname || form.lname) ? `${form.fname} ${form.lname}` : 'New Doctor'}
                     </Typography>
                   </FuseAnimate>
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
@@ -212,7 +270,6 @@ function Doctor(props) {
       contentToolbar={
 
         <Tabs
-
           value={tabValue}
           onChange={handleChangeTab}
           indicatorColor="primary"
@@ -220,15 +277,14 @@ function Doctor(props) {
           variant="scrollable"
           scrollButtons="auto"
           classes={{ root: 'w-full h-64' }}>
-          <Tab className="h-64 normal-case" label="New Doctor" />
-          {console.log(tabValue)}
+          <Tab className="h-64 normal-case" label={routeParams.doctorId !== 'new' ? 'Edit Doctor Details' : "New Doctor"} />
         </Tabs>
 
       }
       content={
         form && (
           <div className="p-16 sm:p-24">
-            <div className="flex flex-col h-260  px-16 py-6">
+            <div className="flex flex-col h-260  px-16 py-6 gap-20">
               {tabValue === 0 && (
                 <>
                   <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
@@ -240,12 +296,10 @@ function Doctor(props) {
 
 
                     <div>
-                      <div className="flex flex-row justify-center p-16 sm:p-24 ">
-                        <div className="flex flex-col w-1/2 p-6">
-
+                      <div className="flex flex-col justify-center p-16 sm:p-24 ">
+                        <div className="flex flex-row p-6 mb-16 gap-10">
                           <TextField
-                            className="mt-8 mb-16"
-                            //error={form.fname === ''}
+                            className="w-1/2"
                             required
                             label="First Name"
                             autoFocus
@@ -255,95 +309,12 @@ function Doctor(props) {
                             value={form.fname}
                             onChange={handleChange}
                             variant="outlined"
+                            error={errors.fname}
+                            helperText={errors.fname}
                             fullwidth
                           />
                           <TextField
-                            className="mt-8 mb-16"
-                            //error={form.lname === ''}
-                            required
-                            label="Last Name"
-                            autoFocus
-                            id="doctor-lname"
-                            name="lname"
-                            type="text"
-                            value={form.lname}
-                            onChange={handleChange}
-                            variant="outlined"
-                            fullwidth
-                          />
-                          <div className="flex flex-row flex-wrap">
-                            <div classname="flex">
-
-                              <Typography
-                                className="username text-16 whitespace-no-wrap self-center mb-20"
-                                color="inherit">
-                                Date of Birth
-                              </Typography>
-                            </div>
-                            <div classname="flex">
-                              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid container justifyContent="start">
-                                  <KeyboardDatePicker
-                                    className="ml-0 0 mt-0"
-                                    margin="normal"
-                                    id="date-picker-dialog"
-                                    format="MM/dd/yyyy"
-                                    value={form?.dob}
-                                    onChange={(date) => {
-                                      handleChange({
-                                        target: { name: 'dob', value: date }
-                                      });
-                                    }}
-                                    KeyboardButtonProps={{
-                                      'aria-label': 'change date'
-                                    }}
-                                  />
-                                </Grid>
-                              </MuiPickersUtilsProvider>
-                            </div>
-                          </div>
-                          <TextField
-                            className="mt-8 mb-16"
-                            //error={form.Gender === ''}
-                            required
-                            label="Gender"
-                            autoFocus
-                            id="user-Gender"
-                            name="Gender"
-                            type="text"
-                            value={form.Gender}
-                            onChange={handleChange}
-                            variant="outlined"
-                          />
-                          <TextField
-                            className="mt-8 mb-16"
-                            //error={form.phone1 === ''}
-                            required
-                            label="Phone 1"
-                            autoFocus
-                            id="user-phone1"
-                            name="phone1"
-                            type="phone"
-                            value={form.phone1}
-                            onChange={handleChange}
-                            variant="outlined"
-                          />
-                          <TextField
-                            className="mt-8 mb-16"
-                            //error={form.phone2 === ''}
-                            label="Phone 2"
-                            autoFocus
-                            id="user-phone2"
-                            name="phone2"
-                            type="phone"
-                            value={form.phone2}
-                            onChange={handleChange}
-                            variant="outlined"
-                          />
-                        </div>
-                        <div className="flex flex-col w-1/2 p-6">
-                          <TextField
-                            className="mt-8 mb-16"
+                            className="w-1/2"
                             id="doctor-address"
                             name="address"
                             onChange={handleChange}
@@ -353,9 +324,25 @@ function Doctor(props) {
                             variant="outlined"
                             fullwidth
                           />
+                        </div>
+                        <div className="flex flex-row p-6 mb-16 gap-10">
                           <TextField
-                            className="mt-8 mb-16"
-                            //error={form.city === ''}
+                            className="w-1/2"
+                            required
+                            label="Last Name"
+                            autoFocus
+                            id="doctor-lname"
+                            name="lname"
+                            type="text"
+                            value={form.lname}
+                            onChange={handleChange}
+                            variant="outlined"
+                            error={errors.lname}
+                            helperText={errors.lname}
+                            fullwidth
+                          />
+                          <TextField
+                            className="w-1/2"
                             required
                             label="City"
                             autoFocus
@@ -365,11 +352,35 @@ function Doctor(props) {
                             value={form.city}
                             onChange={handleChange}
                             variant="outlined"
+                            error={errors.city}
+                            helperText={errors.city}
                             fullwidth
                           />
+                        </div>
+                        <div className="flex flex-row p-6 mb-16 gap-10">
+                          <div className="flex flex-row flex-wrap gap-4 w-1/2">
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <KeyboardDatePicker
+                                className="ml-0 0 mt-0 w-full"
+                                margin="normal"
+                                id="date-picker-dialog"
+                                format="MM/dd/yyyy"
+                                label="Date of Birth"
+                                fullwidth
+                                value={form?.dob}
+                                onChange={(date) => {
+                                  handleChange({
+                                    target: { name: 'dob', value: date }
+                                  });
+                                }}
+                                KeyboardButtonProps={{
+                                  'aria-label': 'change date'
+                                }}
+                              />
+                            </MuiPickersUtilsProvider>
+                          </div>
                           <TextField
-                            className="mt-8 mb-16"
-                            //error={form.State === ''}
+                            className="w-1/2"
                             label="State"
                             autoFocus
                             id="doctor-State"
@@ -379,9 +390,24 @@ function Doctor(props) {
                             onChange={handleChange}
                             variant="outlined"
                           />
+                        </div>
+                        <div className="flex flex-row p-6 mb-16 gap-10">
                           <TextField
-                            className="mt-8 mb-16"
-                            //error={form.zipcode === ''}
+                            className="w-1/2"
+                            required
+                            label="Gender"
+                            autoFocus
+                            id="user-Gender"
+                            name="Gender"
+                            type="text"
+                            value={form.Gender}
+                            onChange={handleChange}
+                            variant="outlined"
+                            error={errors.gender}
+                            helperText={errors.gender}
+                          />
+                          <TextField
+                            className="w-1/2"
                             label="Zip Code"
                             autoFocus
                             id="doctor-zipcode"
@@ -391,9 +417,24 @@ function Doctor(props) {
                             onChange={handleChange}
                             variant="outlined"
                           />
+                        </div>
+                        <div className="flex flex-row p-6 mb-16 gap-10">
                           <TextField
-                            className="mt-8 mb-16"
-                            //error={form.doctoremail === ''}
+                            className="w-1/2"
+                            required
+                            label="Phone 1"
+                            autoFocus
+                            id="user-phone1"
+                            name="phone1"
+                            type="phone"
+                            value={form.phone1}
+                            onChange={handleChange}
+                            variant="outlined"
+                            error={errors.phone1}
+                            helperText={errors.phone1}
+                          />
+                          <TextField
+                            className="w-1/2"
                             required
                             label="Email"
                             autoFocus
@@ -402,11 +443,25 @@ function Doctor(props) {
                             type="email"
                             value={form.doctoremail}
                             onChange={handleChange}
+                            error={errors.doctoremail}
+                            helperText={errors.doctoremail}
+                            variant="outlined"
+                          />
+                        </div>
+                        <div className="flex flex-row p-6 mb-16 gap-10">
+                          <TextField
+                            className="w-1/2"
+                            label="Phone 2"
+                            autoFocus
+                            id="user-phone2"
+                            name="phone2"
+                            type="phone"
+                            value={form.phone2}
+                            onChange={handleChange}
                             variant="outlined"
                           />
                           <TextField
-                            className="mt-8 mb-16"
-                            //error={form.other === ''}
+                            className="w-1/2"
                             label="Other"
                             autoFocus
                             id="doctor-other"
@@ -430,7 +485,6 @@ function Doctor(props) {
                       <FormControl>
                         <Select
                           labelId="demo-simple-select-autowidth-label"
-
                           id="showRoomId1"
                           defaultValue={form?.showRoomId}
                           value={form?.showRoomId1}
@@ -485,10 +539,9 @@ function Doctor(props) {
                 </>
               )}
 
-              <br></br>
-            </div>
-            <div className="flex flex-col p-12 " >
-              {/* <Button 
+              {/* <br></br> */}
+              {/* <div className="flex flex-col p-12 " >
+              <Button 
               className={classes.button}
               variant="contained"
               color="secondary"
@@ -507,61 +560,51 @@ function Doctor(props) {
               }}>
                  
                 Save
-              </Button> */}
-            </div>
-            <div className="flex flex-col p-12 " >
-              <Button
-                style={{
-                  maxHeight: '70px',
-                  minHeight: '70px'
-                }}
-                className={classes.button}
-                variant="contained"
-                color="secondary"
-                onClick={async () => {
-                  if (routeParams.doctorId === 'new') {
-                    setisLoading(false);
-                    await dispatch(await Actions.saveDoctor(form));
-                    props.history.push('/apps/e-commerce/doctors');
-                    setisLoading(true);
-                  } else {
-                    setisLoading(false);
-                    await dispatch(await Actions.updateDoctor(form));
-                    props.history.push('/apps/e-commerce/doctors');
-                    setisLoading(true);
-                  }
-                }}>
-
-                Save
               </Button>
-            </div>
-            <div className="flex flex-col p-12">
-              <ConfirmDoctorDelete open={open} handleClose={handleClose} form={form} propssent={props} />
+            </div> */}
+              <div className="flex flex-col" >
+                <Button
+                  style={{
+                    padding: '10px 32px'
+                  }}
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleSubmit}>
+                  Save
+                </Button>
+              </div>
+              {
+                routeParams.doctorId !== 'new' && (
+                  <div className="flex flex-col">
+                    <ConfirmDoctorDelete open={open} handleClose={handleClose} form={form} propssent={props} />
 
-              <Button
-                style={{
-                  color: 'red'
-                }}
-                variant="outlined"
-                // onClick={() => setShowModal(true)}
-                onClick={() => {
-                  if (routeParams.doctorId === 'new') {
-                    alert('No Data to delete')
-                  }
-                  else {
-                    setOpen(true);
-                  }
+                    <Button
+                      style={{
+                        color: 'red',
+                        padding: '10px 32px'
+                      }}
+                      variant="outlined"
+                      // onClick={() => setShowModal(true)}
+                      onClick={() => {
+                        if (routeParams.doctorId === 'new') {
+                          alert('No Data to delete')
+                        }
+                        else {
+                          setOpen(true);
+                        }
 
-                }}
-              >
-                <Icon>delete</Icon>
-                DELETE
-              </Button>
+                      }}
+                    >
+                      <Icon>delete</Icon>
+                      DELETE
+                    </Button>
 
+                  </div>
+                )
+              }
             </div>
           </div>
-
-
         )
       }
       innerScroll

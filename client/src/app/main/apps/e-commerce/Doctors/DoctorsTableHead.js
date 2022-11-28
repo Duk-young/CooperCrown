@@ -50,13 +50,6 @@ const rows = [
     disablePadding: false,
     label: 'Location 3',
     sort: true
-  },
-  
-  {
-    
-    align: 'center',
-    disablePadding: false,
-    sort: true
   }
 ];
 
@@ -69,7 +62,8 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'center'
+    textAlign: 'center',
+    width: 'min-content'
   },
   body: {
     fontSize: 14,
@@ -95,7 +89,7 @@ function DoctorsTableHead(props) {
   return (
     <TableHead>
       <TableRow className="h-64">
-        
+
         {rows.map((row) => {
           return (
             <StyledTableCell
@@ -105,7 +99,8 @@ function DoctorsTableHead(props) {
               sortDirection={
                 props.order.id === row.id ? props.order.direction : false
               }>
-              {row.sort && (
+              {row.label}
+              {/* {row.sort && (
                 <Tooltip
                   title="Sort"
                   placement={
@@ -119,7 +114,7 @@ function DoctorsTableHead(props) {
                     {row.label}
                   </TableSortLabel>
                 </Tooltip>
-              )}
+              )} */}
             </StyledTableCell>
           );
         }, this)}

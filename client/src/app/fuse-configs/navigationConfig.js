@@ -54,7 +54,7 @@ const navigationConfig = [
         id: 'orders',
         title: 'Orders',
         translate: 'Orders',
-        auth: authRoles.admin,
+        auth: authRoles.staff,
         type: 'item',
         icon: 'description',
         url: '/apps/e-commerce/orders'
@@ -136,21 +136,21 @@ const navigationConfig = [
             url: '/apps/e-commerce/doctors',
             exact: true
           },
-          {
-            id: 'user-creation',
-            title: 'User Creation',
-            type: 'item',
-            auth: authRoles.staff,
-            url: '/apps/e-commerce/users',
-            exact: true
-          },
+          // {
+          //   id: 'user-creation',
+          //   title: 'User Creation',
+          //   type: 'item',
+          //   auth: authRoles.staff,
+          //   url: '/apps/e-commerce/user/new',
+          //   exact: true
+          // },
           
           {
             id: 'user-management',
             title: 'User Management',
             type: 'item',
             auth: authRoles.staff,
-            url: '/apps/e-commerce/users-management',
+            url: '/apps/e-commerce/users', // update to user management
             exact: true
           },
           {

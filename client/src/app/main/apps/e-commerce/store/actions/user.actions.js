@@ -15,10 +15,10 @@ export const getUser = (params) => async (dispatch) => {
       .collection('users')
       .doc(params)
       .get();
-    const showRoom = { id: response.id,myloc: response.location, ...response.data() };
+    const user = { id: response.id, myloc: response.location, ...response.data() };
     dispatch({
       type: GET_USER,
-      payload: showRoom
+      payload: user
     });
   } catch (error) {
     console.log(error);
@@ -59,19 +59,21 @@ export const saveUser = (data) => async (dispatch) => {
         .get()
     ).data();
     const queryuser = await firestore()
-        .collection('showRooms')
-        .where('showRoomId', '==', Number(data.showRoomId))
-        .limit(1)
-        .get();
-        let result = queryuser.docs[0].data();
-    
+      .collection('showRooms')
+      .where('showRoomId', '==', Number(data.showRoomId))
+      .limit(1)
+      .get();
+    let result = queryuser.docs[0].data();
+
     await firebaseService.firestoreDb
       .collection('users')
-      .add({ ...data, date:today, 
+      .add({
+        ...data, date: today,
         // dob: firestore.Timestamp.fromDate(data?.dob),
-      dob:  moment(data?.dob).format('MM/DD/YYYY'),
+        dob: moment(data?.dob).format('MM/DD/YYYY'),
         dobString: firestore.Timestamp.fromDate(data?.dob),
-         Role: 'Staff',location: result.locationName, userId: dbConfig?.userId + 1 });
+        Role: 'Staff', location: result.locationName, userId: dbConfig?.userId + 1
+      });
 
     await firebaseService.firestoreDb
       .collection('dbConfig')
@@ -79,7 +81,7 @@ export const saveUser = (data) => async (dispatch) => {
       .update({
         userId: dbConfig?.userId + 1
       });
-      // console.log({userId})
+    // console.log({userId})
     dispatch(Actions.getUsers());
     dispatch(showMessage({ message: 'User Saved' }));
   } catch (error) {
@@ -106,19 +108,17 @@ export function newUser() {
     username: '',
     password: '',
     confirmPassword: '',
-    dob:'',
-    fname:'',
-    lname:'',
-    Gender:'',
-    phone1:'',
-    phone2:'',
-    address:'',
-    city:'',
-    State:'',
-    email:'',
-    other:'',
-
-
+    dob: '',
+    fname: '',
+    lname: '',
+    Gender: '',
+    phone1: '',
+    phone2: '',
+    address: '',
+    city: '',
+    State: '',
+    email: '',
+    other: '',
   };
   return {
     type: GET_USER,

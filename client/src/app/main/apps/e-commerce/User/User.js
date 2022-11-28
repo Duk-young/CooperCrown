@@ -11,19 +11,21 @@ import {
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import { firestore } from 'firebase';
 import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
 import Icon from '@material-ui/core/Icon';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { useHistory } from 'react-router-dom';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
@@ -79,12 +81,13 @@ const useStyles = makeStyles({
   }
 });
 function NewShowRoom(props) {
-  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const classes = useStyles();
+  const dispatch = useDispatch();
   const product = useSelector(({ eCommerceApp }) => eCommerceApp.user);
   const theme = useTheme();
   const [showRooms, setShowRooms] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const history = useHistory();
   const [tabValue, setTabValue] = useState(0);
@@ -97,16 +100,16 @@ function NewShowRoom(props) {
     const updateProductState = async () => {
       setisLoading(false);
       const { userId } = routeParams;
-      console.log(userId)
+
       if (userId === 'new') {
         dispatch(Actions.newUser());
         setisLoading(true);
       } else {
-
         await dispatch(await Actions.getUser(userId));
         setisLoading(true);
       }
     };
+
     updateProductState();
   }, [dispatch, routeParams]);
 
@@ -117,6 +120,7 @@ function NewShowRoom(props) {
     ) {
       setForm(product.data);
     }
+
     const fetchlocation = async () => {
       const d1 = new Date().toDateString();
       console.log(d1);
@@ -140,6 +144,7 @@ function NewShowRoom(props) {
     };
     fetchlocation();
   }, [form, product.data, setForm]);
+
   const handleDelete = async () => {
     try {
 
@@ -175,6 +180,79 @@ function NewShowRoom(props) {
       form.confirmPassword.length > 0 &&
       form.password === form.confirmPassword
     );
+  }
+
+
+  const isFormValid = () => {
+    const errs = {};
+
+    if (!form.fname) {
+      errs.fname = 'Please enter first name'
+    }
+
+    if (!form.lname) {
+      errs.lname = 'Please enter last name'
+    }
+
+    if (!form.Gender) {
+      errs.gender = 'Please enter gender'
+    }
+
+    if (!form.phone1) {
+      errs.phone1 = 'Please enter phone number'
+    }
+
+    if (!form.city) {
+      errs.city = 'Please enter city'
+    }
+
+    if (!form.email) {
+      errs.email = 'Please enter email address'
+    }
+
+    if (!form.username) {
+      errs.username = 'Please enter username'
+    }
+
+    if (!form.password) {
+      errs.password = 'Please enter password'
+    }
+
+    if (form.password && form.confirmPassword !== form.password) {
+      errs.confirmPassword = "password does not match new password";
+    }
+
+    return errs
+  }
+
+  const submitForm = async () => {
+    if (routeParams.userId === 'new') {
+      setisLoading(false);
+      await dispatch(await Actions.saveUser(form));
+      props.history.push('/apps/e-commerce/users');
+      setisLoading(true);
+    } else {
+      console.log(form)
+      setisLoading(false);
+      await dispatch(await Actions.updateUser(form));
+
+      props.history.push(`/apps/e-commerce/users`);
+      setisLoading(true);
+    }
+  }
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const errs = isFormValid();
+    setErrors(errs)
+
+    if (Object.entries(errs).some((err) => err !== '')) {
+      return;
+    }
+
+    submitForm();
   }
 
   if (
@@ -254,8 +332,7 @@ function NewShowRoom(props) {
           variant="scrollable"
           scrollButtons="auto"
           classes={{ root: 'w-full h-64' }}>
-          <Tab className="h-64 normal-case" label="Register User" />
-          {console.log({ tabValue })}
+          <Tab className="h-64 normal-case" label={`${routeParams.userId !== 'new' ? "Edit" : "Register New"} User`} />
         </Tabs>
       }
       content={
@@ -264,7 +341,7 @@ function NewShowRoom(props) {
             <div className="p-16 sm:p-24">
               <div className="flex flex-col h-260  px-16 py-6">
                 {tabValue === 0 && (
-                  <div>
+                  <div className="flex flex-col gap-20">
                     <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                       <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                         <h1 className="font-700" style={{ color: '#f15a25' }}>
@@ -274,29 +351,31 @@ function NewShowRoom(props) {
 
 
                       <div>
-                        <div className="flex flex-row justify-center p-16 sm:p-24 ">
-                          <div className="flex flex-col w-1/2 p-6">
-                            <FormControl>
+                        <div className="flex flex-col justify-center p-16 sm:p-24 ">
+                          <div className="w-1/2 mb-16 px-6">
+                            <FormControl variant='outlined' className='w-full'>
+                              <InputLabel id="demo-simple-select-outlined-label">Showroom</InputLabel>
                               <Select
-                                labelId="demo-simple-select-autowidth-label"
-
+                                labelId="demo-simple-select-outlined-label"
                                 id="showRoomId"
+                                label="Showroom"
                                 defaultValue={form?.showRoomId}
                                 value={form?.showRoomId}
                                 name="showRoomId"
                                 onChange={handleChange}
-                                autoWidth>
+                              >
                                 {showRooms.map((row) => (
-                                  <MenuItem value={row?.showRoomId}>
+                                  <MenuItem key={row?.showRoomId} value={row?.showRoomId}>
                                     {row?.locationName}
                                   </MenuItem>
                                 ))}
                               </Select>
-                              <FormHelperText>Select Showroom from the list</FormHelperText>
+                              {/* <FormHelperText>Select Showroom from the list</FormHelperText> */}
                             </FormControl>
+                          </div>
+                          <div className="flex flex-row p-6 mb-16 gap-10">
                             <TextField
-                              className="mt-8 mb-16"
-                              //error={form.fname === ''}
+                              className="w-1/2"
                               required
                               label="First Name"
                               autoFocus
@@ -306,100 +385,12 @@ function NewShowRoom(props) {
                               value={form.fname}
                               onChange={handleChange}
                               variant="outlined"
+                              error={errors.fname}
+                              helperText={errors.fname}
                               fullwidth
                             />
                             <TextField
-                              className="mt-8 mb-16"
-                              //error={form.lname === ''}
-                              required
-                              label="Last Name"
-                              autoFocus
-                              id="user-lname"
-                              name="lname"
-                              type="text"
-                              value={form.lname}
-                              onChange={handleChange}
-                              variant="outlined"
-                              fullwidth
-                            />
-                           <div className="flex flex-row flex-wrap">
-                            <div classname="flex">
-                             
-                              <Typography
-                                className="username text-16 whitespace-no-wrap self-center mb-20"
-                                color="inherit">
-                                Date if Birth
-                              </Typography>
-                              
-                             </div>
-                             <div classname="flex">
-                              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid container justifyContent="start">
-                                  <KeyboardDatePicker
-                                    className="ml-0 0 mt-0"
-                                    margin="normal"
-                                    id="date-picker-dialog"
-                                    format="MM/dd/yyyy"
-                                    value={form?.dob}
-                                    onChange={(date) => {
-                                      handleChange({
-                                        target: { name: 'dob', value: date }
-                                      });
-                                    }}
-                                    KeyboardButtonProps={{
-                                      'aria-label': 'change date'
-                                    }}
-                                  />
-                                </Grid>
-                              </MuiPickersUtilsProvider>
-                              
-                            </div>
-                            </div>
-                            <TextField
-                              className="mt-8 mb-16"
-                              //error={form.Gender === ''}
-                              required
-                              label="Gender"
-                              autoFocus
-                              id="user-Gender"
-                              name="Gender"
-                              type="text"
-                              value={form.Gender}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                              //error={form.phone1 === ''}
-                              required
-                              label="Phone 1"
-                              autoFocus
-                              id="user-phone1"
-                              name="phone1"
-                              type="phone"
-                              value={form.phone1}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
-                            <TextField
-                              className="mt-8 mb-16"
-                              //error={form.phone2 === ''}
-                              label="Phone 2"
-                              autoFocus
-                              id="user-phone2"
-                              name="phone2"
-                              type="phone"
-                              value={form.phone2}
-                              onChange={handleChange}
-                              variant="outlined"
-                            />
-                          </div>
-                          <div className="flex flex-col w-1/2 p-6">
-                          <div className="flex-1 pl-30">
-              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-            </div>
-                            <TextField
-                              className="mt-20 mb-16"
+                              className="w-1/2"
                               id="user-address"
                               name="address"
                               onChange={handleChange}
@@ -409,9 +400,25 @@ function NewShowRoom(props) {
                               variant="outlined"
                               fullwidth
                             />
+                          </div>
+                          <div className="flex flex-row p-6 mb-16 gap-10">
                             <TextField
-                              className="mt-8 mb-16"
-                              //error={form.city === ''}
+                              className="w-1/2"
+                              required
+                              label="Last Name"
+                              autoFocus
+                              id="user-lname"
+                              name="lname"
+                              type="text"
+                              value={form.lname}
+                              onChange={handleChange}
+                              variant="outlined"
+                              error={errors.lname}
+                              helperText={errors.lname}
+                              fullwidth
+                            />
+                            <TextField
+                              className="w-1/2"
                               required
                               label="City"
                               autoFocus
@@ -421,11 +428,34 @@ function NewShowRoom(props) {
                               value={form.city}
                               onChange={handleChange}
                               variant="outlined"
+                              error={errors.city}
+                              helperText={errors.city}
                               fullwidth
                             />
+                          </div>
+                          <div className="flex flex-row p-6 mb-16 gap-10">
+                            <div className="flex flex-row flex-wrap w-1/2">
+                              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDatePicker
+                                  className="ml-0 0 mt-0 w-full"
+                                  margin="normal"
+                                  id="date-picker-dialog"
+                                  format="MM/dd/yyyy"
+                                  label="Date Of Birth"
+                                  value={form?.dob}
+                                  onChange={(date) => {
+                                    handleChange({
+                                      target: { name: 'dob', value: date }
+                                    });
+                                  }}
+                                  KeyboardButtonProps={{
+                                    'aria-label': 'change date'
+                                  }}
+                                />
+                              </MuiPickersUtilsProvider>
+                            </div>
                             <TextField
-                              className="mt-8 mb-16"
-                              //error={form.State === ''}
+                              className="w-1/2"
                               label="State"
                               autoFocus
                               id="user-State"
@@ -435,9 +465,24 @@ function NewShowRoom(props) {
                               onChange={handleChange}
                               variant="outlined"
                             />
+                          </div>
+                          <div className="flex flex-row p-6 mb-16 gap-10">
                             <TextField
-                              className="mt-8 mb-16"
-                              //error={form.zipcode === ''}
+                              className="w-1/2"
+                              required
+                              label="Gender"
+                              autoFocus
+                              id="user-Gender"
+                              name="Gender"
+                              type="text"
+                              value={form.Gender}
+                              onChange={handleChange}
+                              variant="outlined"
+                              error={errors.gender}
+                              helperText={errors.gender}
+                            />
+                            <TextField
+                              className="w-1/2"
                               label="Zip Code"
                               autoFocus
                               id="user-zipcode"
@@ -447,9 +492,24 @@ function NewShowRoom(props) {
                               onChange={handleChange}
                               variant="outlined"
                             />
+                          </div>
+                          <div className="flex flex-row p-6 mb-16 gap-10">
                             <TextField
-                              className="mt-8 mb-16"
-                              //error={form.useremail === ''}
+                              className="w-1/2"
+                              required
+                              label="Phone 1"
+                              autoFocus
+                              id="user-phone1"
+                              name="phone1"
+                              type="phone"
+                              value={form.phone1}
+                              onChange={handleChange}
+                              variant="outlined"
+                              error={errors.phone1}
+                              helperText={errors.phone1}
+                            />
+                            <TextField
+                              className="w-1/2"
                               required
                               label="Email"
                               autoFocus
@@ -459,10 +519,24 @@ function NewShowRoom(props) {
                               value={form.email}
                               onChange={handleChange}
                               variant="outlined"
+                              error={errors.email}
+                              helperText={errors.email}
+                            />
+                          </div>
+                          <div className="flex flex-row p-6 mb-16 gap-10">
+                            <TextField
+                              className="w-1/2"
+                              label="Phone 2"
+                              autoFocus
+                              id="user-phone2"
+                              name="phone2"
+                              type="phone"
+                              value={form.phone2}
+                              onChange={handleChange}
+                              variant="outlined"
                             />
                             <TextField
-                              className="mt-8 mb-16"
-                              //error={form.other === ''}
+                              className="w-1/2"
                               label="Other"
                               autoFocus
                               id="user-other"
@@ -473,6 +547,26 @@ function NewShowRoom(props) {
                               variant="outlined"
                             />
                           </div>
+
+                          {/* <div className="flex flex-col w-1/2 p-6">
+                              <FormControl>
+                                <Select
+                                  labelId="demo-simple-select-autowidth-label"
+                                  id="showRoomId"
+                                  defaultValue={form?.showRoomId}
+                                  value={form?.showRoomId}
+                                  name="showRoomId"
+                                  onChange={handleChange}
+                                  autoWidth>
+                                  {showRooms.map((row) => (
+                                    <MenuItem value={row?.showRoomId}>
+                                      {row?.locationName}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                                <FormHelperText>Select Showroom from the list</FormHelperText>
+                              </FormControl>
+                            </div> */}
                         </div>
                       </div>
                     </div>
@@ -485,7 +579,6 @@ function NewShowRoom(props) {
                       <div className="flex flex-col justify-center p-16 sm:p-24 ">
                         <TextField
                           className="mt-8 mb-16"
-                          //error={form.email === ''}
                           required
                           label="Username"
                           autoFocus
@@ -494,6 +587,8 @@ function NewShowRoom(props) {
                           value={form.username}
                           onChange={handleChange}
                           variant="outlined"
+                          error={errors.username}
+                          helperText={errors.username}
                           fullWidth
                         />
                         <TextField
@@ -505,6 +600,8 @@ function NewShowRoom(props) {
                           type="password"
                           value={form.password}
                           variant="outlined"
+                          error={errors.password}
+                          helperText={errors.password}
                           fullWidth
                         />
                         <TextField
@@ -516,6 +613,8 @@ function NewShowRoom(props) {
                           type="password"
                           value={form.confirmPassword}
                           variant="outlined"
+                          error={errors.confirmPassword}
+                          helperText={errors.confirmPassword}
                           fullWidth
                         />
                       </div>
@@ -525,90 +624,81 @@ function NewShowRoom(props) {
 
                 <br></br>
 
-                <div className="flex flex-col p-12 " >
+                <div className="flex flex-col py-12" >
                   <Button
                     style={{
-                      maxHeight: '70px',
-                      minHeight: '70px'
+                      padding: '10px 32px'
                     }}
                     className={classes.button}
                     variant="contained"
                     color="secondary"
-                    onClick={async () => {
-                      if (routeParams.userId === 'new') {
-                        setisLoading(false);
-                        await dispatch(await Actions.saveUser(form));
-                        props.history.push('/apps/e-commerce/users');
-                        setisLoading(true);
-                      } else {
-                        console.log(form)
-                        setisLoading(false);
-                        await dispatch(await Actions.updateUser(form));
-
-                        props.history.push(`/apps/e-commerce/users`);
-                        setisLoading(true);
-                      }
-                    }}>
+                    onClick={handleSubmit}>
                     Save
                   </Button>
-
                 </div>
-              </div>
-              <div className="flex flex-col p-12">
-                <Button
-                  style={{
-                    color: 'red'
-                  }}
-                  variant="outlined"
-                  onClick={() => setShowModal(true)}
-                >
-                  <Icon>delete</Icon>
-                  DELETE
-                </Button>
-                {showModal ? (
-                  <>
-                    <div
-                      className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-                    >
-                      <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                          <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                {
+                  routeParams.userId !== "new" ? (
+                    <div className="flex flex-col">
+                      <Button
+                        style={{
+                          color: 'red',
+                          padding: '10px 32px'
+                        }}
+                        variant="outlined"
+                        onClick={() => setShowModal(true)}
+                      >
+                        <Icon>delete</Icon>
+                        DELETE
+                      </Button>
+                      {showModal ? (
+                        <>
+                          <Dialog
+                            maxWidth="xs"
+                            fullWidth
+                            onClose={() => setShowModal(false)}
+                            aria-labelledby="simple-dialog-title"
+                            open={showModal}>
 
-                            <button
-                              className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                              onClick={() => setShowModal(false)}
-                            >
-                              <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                                ×
-                              </span>
-                            </button>
-                          </div>
 
-                          <div className="relative p-6 flex-auto">
-                            <h3 className="text-3xl font-semibold">
-                              Are you sure you want to delete?
-                            </h3>
-                          </div>
+                            <div className="flex flex-col p-20 w-full item-center">
+                              <IconButton aria-label="close" onClick={() => setShowModal(false)} style={{ alignSelf: 'end', padding: 0 }}>
+                                <CloseIcon />
+                              </IconButton>
+                              <div className="flex flex-col h-full py-4 mb-20">
+                                <div className="flex flex-row justify-center">
+                                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                                    Are you sure you want to delete?
+                                  </h1>
+                                </div>
+                              </div>
+                              <Button
+                                style={{
+                                  backgroundColor: '#f15a25',
+                                  alignSelf: 'center',
+                                  marginBottom: '1rem',
+                                  color: '#fff',
+                                  '&:hover': {
+                                    backgroundColor: '#f47b51',
+                                    color: '#fff'
+                                  }
+                                }}
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleDelete}
+                              >
+                                Confirm
+                              </Button>
+                            </div>
+                          </Dialog>
+                          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+                        </>
+                      ) : null}
 
-                          <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
 
-                            <Button
-                              className={classes.button}
-                              variant="contained"
-                              color="secondary"
-                              onClick={handleDelete}
-                            >
-                              Confirm
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
+
                     </div>
-                    <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-                  </>
-                ) : null}
-
-
+                  ) : null
+                }
 
               </div>
             </div>

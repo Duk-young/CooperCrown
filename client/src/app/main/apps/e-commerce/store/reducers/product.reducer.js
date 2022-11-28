@@ -6,6 +6,12 @@ const initialState = {
 
 const productReducer = (state = initialState, action) => {
 	switch (action.type) {
+		case Actions.ADD_PRODUCT: {
+			return {
+				...state,
+				data: action.payload
+			};
+		}
 		case Actions.GET_PRODUCT: {
 			return {
 				...state,

@@ -13,12 +13,16 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 const useStyles = makeStyles({
   table: {
     minWidth: 450
   },
   button: {
     backgroundColor: '#f15a25',
+    alignSelf: 'center',
+    marginBottom: '1rem',
     color: '#fff',
     '&:hover': {
       backgroundColor: '#f47b51',
@@ -27,7 +31,7 @@ const useStyles = makeStyles({
   }
 });
 export default function ConfirmShowroomDelete(props) {
-  const { open, handleClose,form,propssent } = props;
+  const { open, handleClose, form, propssent } = props;
   const classes = useStyles();
   // const { form, handleChange } = useForm(null);
   const dispatch = useDispatch();
@@ -49,7 +53,7 @@ export default function ConfirmShowroomDelete(props) {
           message: 'showRoom deleted successfully'
 
         })
-      
+
       );
       propssent.history.push(
         propssent.history.push(`/apps/e-commerce/showRooms`)
@@ -59,24 +63,24 @@ export default function ConfirmShowroomDelete(props) {
     }
   };
 
-//   const onSubmit = async () => {
-//     try {
-//       await firestore()
-//         .collection('lensPrice')
-//         .doc('lensPrice')
-//         .update({ [form?.lensType]: newTable });
+  //   const onSubmit = async () => {
+  //     try {
+  //       await firestore()
+  //         .collection('lensPrice')
+  //         .doc('lensPrice')
+  //         .update({ [form?.lensType]: newTable });
 
-//       handleClose();
+  //       handleClose();
 
-//       dispatch(
-//         MessageActions.showMessage({
-//           message: 'New Lens Type Saved Successfully!'
-//         })
-//       );
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
+  //       dispatch(
+  //         MessageActions.showMessage({
+  //           message: 'New Lens Type Saved Successfully!'
+  //         })
+  //       );
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
   return (
     <Dialog
@@ -85,31 +89,32 @@ export default function ConfirmShowroomDelete(props) {
       onClose={handleClose}
       aria-labelledby="simple-dialog-title"
       open={open}>
-     
 
-      <div className="flex flex-col p-10 w-full ">
-      <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
-          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+
+      <div className="flex flex-col p-20 w-full item-center">
+        <IconButton aria-label="close" onClick={handleClose} style={{ alignSelf: 'end', padding: 0 }}>
+          <CloseIcon />
+        </IconButton>
+        <div className="flex flex-col h-full py-4 mb-20">
+          <div className="flex flex-row justify-center">
             <h1 className="font-700" style={{ color: '#f15a25' }}>
-            Are you sure you want to delete?
+              Are you sure you want to delete?
             </h1>
-
-            </div>
-        
+          </div>
         </div>
         <Button
-                            className={classes.button}
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleDelete}
-                          >
-                            Confirm
-                          </Button>
+          className={classes.button}
+          variant="contained"
+          color="secondary"
+          onClick={handleDelete}
+        >
+          Confirm
+        </Button>
       </div>
     </Dialog>
   );
 }
 
 ConfirmShowroomDelete.propTypes = {
-    open: PropTypes.bool.isRequired
-  };
+  open: PropTypes.bool.isRequired
+};

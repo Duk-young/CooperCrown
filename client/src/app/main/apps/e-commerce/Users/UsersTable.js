@@ -27,7 +27,8 @@ const StyledTableCell = withStyles((theme) => ({
   body: {
     fontSize: 14,
     padding: 0,
-    textAlign: 'left'
+    textAlign: 'left',
+    width: '20%'
   }
 }))(TableCell);
 function UsersTable(props) {
@@ -146,7 +147,7 @@ function UsersTable(props) {
       textAlign: 'center'
     }
   }))(TableCell);
-  
+
   const StyledTableRow = withStyles((theme) => ({
     root: {
       '&:nth-of-type(odd)': {
@@ -207,19 +208,19 @@ function UsersTable(props) {
                       handleClick(n)
                       { console.log(n.id) }
                     }}
-                 
+
                   >
-                   
+
                     <StyledTableCell component="th" scope="row">
-                    {/* {moment(n?.dobString).format('MM/DD/YYYY')} */}
-                   { n.date}
+                      {/* {moment(n?.dobString).format('MM/DD/YYYY')} */}
+                      {n.date ? n.date : '-----'}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.location}
+                      {n.location ? n.location : '-----'}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
 
-                      {n.email}
+                      {n.email ? n.email : '-----'}
                     </StyledTableCell>
                     {/* <StyledTableCell component="th" scope="row">
                       {n.phone1}
@@ -232,7 +233,7 @@ function UsersTable(props) {
                       {n.username ? n.username : '-----'}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.Role}
+                      {n.Role ? n.Role : '-----'}
                     </StyledTableCell>
                   </TableRow>
                 );
@@ -240,25 +241,25 @@ function UsersTable(props) {
           </TableBody>
         </Table>
       </FuseScrollbars>
-     
-        <TablePagination
-          className=" flex overflow-hidden justify-center"
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
 
-          backIconButtonProps={{
-            'aria-label': 'Previous Page'
-          }}
-          page={page}
+      <TablePagination
+        className=" flex overflow-hidden justify-center"
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
 
-          nextIconButtonProps={{
-            'aria-label': 'Next Page'
-          }}
-          onChangePage={handleChangePage}
+        backIconButtonProps={{
+          'aria-label': 'Previous Page'
+        }}
+        page={page}
+
+        nextIconButtonProps={{
+          'aria-label': 'Next Page'
+        }}
+        onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-    
+      />
+
     </div>
   );
 }

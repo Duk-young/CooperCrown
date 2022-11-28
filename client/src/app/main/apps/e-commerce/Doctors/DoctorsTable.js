@@ -89,10 +89,11 @@ function DoctorsTable(props) {
     body: {
       fontSize: 14,
       padding: 0,
-      textAlign: 'center'
+      textAlign: 'center',
+      width: 'min-content'
     }
   }))(TableCell);
-  
+
   const StyledTableRow = withStyles((theme) => ({
     root: {
       '&:nth-of-type(odd)': {
@@ -165,7 +166,6 @@ function DoctorsTable(props) {
                   <StyledTableRow
                     className="h-64 cursor-pointer"
                     hover
-                    style={{ height: 10 }}
                     role="checkbox"
                     aria-checked={isSelected}
                     tabIndex={-1}
@@ -185,23 +185,23 @@ function DoctorsTable(props) {
                     </StyledTableCell>*/}
 
                     <StyledTableCell component="th" scope="row">
-                      {n.date}
+                      {n.date ? n.date : '-----'}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {n.fname} {n.lname}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.location1}
+                      {n.location1 ? n.location1 : '-----'}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.location2}
+                      {n.location2 ? n.location2 : '-----'}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.location3}
+                      {n.location3 ? n.location3 : '-----'}
                     </StyledTableCell>
 
 
-                    <StyledTableCell component="th" scope="row">
+                    {/* <StyledTableCell component="th" scope="row">
                       <IconButton color="primary" variant="contained"
 
                         onClick={() => {
@@ -212,13 +212,13 @@ function DoctorsTable(props) {
                         <DeleteOutlined fontSize="medium" />
                       </IconButton>
                      
-                    </StyledTableCell>
+                    </StyledTableCell> */}
                   </StyledTableRow>
                 );
               })}
           </TableBody>
         </Table>
-        
+
       </FuseScrollbars>
 
       <TablePagination
