@@ -76,6 +76,7 @@ function NewShowRoom(props) {
   const theme = useTheme();
   const [tabValue, setTabValue] = useState(0);
   const [isLoading, setisLoading] = useState(false);
+  const [errors, setErrors] = useState({})
   const { form, handleChange, setForm } = useForm(null);
 
   const routeParams = useParams();
@@ -136,6 +137,66 @@ function NewShowRoom(props) {
       console.log(error);
     }
   };
+
+  const isFormValid = () => {
+    const errs = {};
+
+    if (!form.locationName) {
+      errs.locationName = 'Please enter location name'
+    }
+
+    if (!form.City) {
+      errs.city = 'Please enter city'
+    }
+
+    if (!form.State) {
+      errs.state = 'Please enter state'
+    }
+
+    if (!form.phoneNo) {
+      errs.phoneNo = 'Please enter phone number'
+    }
+
+    if (!form.email) {
+      errs.email = 'Please enter email address'
+    }
+
+    if (!form.zipCode) {
+      errs.zipCode = 'Please enter valid zip code'
+    }
+
+    return errs;
+  }
+
+  const submitForm = async () => {
+    if (routeParams.showRoomtId === 'new') {
+      setisLoading(false);
+      await dispatch(await Actions.saveShowRoom(form));
+      setisLoading(true);
+      props.history.push(`/apps/e-commerce/showRooms`);
+    } else {
+      setisLoading(false);
+      await dispatch(await Actions.updateShowRoom(form));
+      setisLoading(true);
+      props.history.push(`/apps/e-commerce/showRooms`);
+    }
+  }
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const errs = isFormValid();
+    setErrors(errs);
+
+    if (Object.values(errs).some((err) => err !== "")) {
+      return;
+    }
+
+    submitForm();
+  }
+
+
   // const submit = () => {
 
   //   confirmAlert({
@@ -177,7 +238,6 @@ function NewShowRoom(props) {
     <FusePageCarded
       header={
         form && (
-
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
@@ -227,102 +287,104 @@ function NewShowRoom(props) {
           variant="scrollable"
           scrollButtons="auto"
           classes={{ root: 'w-full h-64' }}>
-          <Tab className="h-64 normal-case" label="New Show Room" />
+          <Tab className="h-64 normal-case" label={`${routeParams.showRoomtId !== 'new' ? 'Edit' : 'New'} Show Room`} />
         </Tabs>
       }
       content={
         form && (
-          <div className="flex flex-col h-260  px-16 py-6">
-            <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
-              <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                <h1 className="font-700" style={{ color: '#f15a25' }}>
-                  LOCATION INFO
-                </h1>
-              </div>
-              <div className="p-16 sm:p-24  ">
-                {tabValue === 0 && (
-                  <div>
-                    <TextField
-                      className="mt-8 "
+          <div className="p-16 sm:p-24">
+            <div className="flex flex-col h-260  px-16 py-6">
+              <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+                <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                    LOCATION INFO
+                  </h1>
+                </div>
+                <div className="p-16 sm:p-24  ">
+                  {tabValue === 0 && (
+                    <div>
+                      <TextField
+                        className="mt-8 "
+                        required
+                        label="Location Name"
+                        autoFocus
+                        id="locationName"
+                        name="locationName"
+                        value={form.locationName}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={errors.locationName}
+                        helperText={errors.locationName}
+                        fullWidth
+                      />
 
-                      error={form.locationName === ''}
-                      required
-                      label="Location Name"
-                      autoFocus
-                      id="locationName"
-                      name="locationName"
-                      value={form.locationName}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-
-                    <TextField
-                      className="mt-8 "
-
-                      id="locationAddress"
-                      name="locationAddress"
-                      onChange={handleChange}
-                      label="Location Address"
-                      type="text"
-                      value={form.locationAddress}
-                      multiline
-                      rows={5}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 "
-
-                      required
-                      label="City"
-                      type="text"
-                      id="City"
-                      name="City"
-                      value={form.City}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 "
-
-                      required
-                      label="State"
-                      id="State"
-                      type="text"
-                      name="State"
-                      value={form.State}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    {/* <div className="flex flex-row justify-between w-full"> */}
-                    <TextField
-                      className="mt-8  pr-4"
-
-                      required
-                      label="Phone No.1"
-                      id="phoneNo"
-                      name="phoneNo"
-                      value={form.phoneNo}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8  pr-4"
-
-                      required
-                      label="Phone No.2"
-                      id="phoneNo1"
-                      name="phoneNo2"
-                      value={form.phoneNo2}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    {/* <TextField
+                      <TextField
+                        className="mt-8 "
+                        id="locationAddress"
+                        name="locationAddress"
+                        onChange={handleChange}
+                        label="Location Address"
+                        type="text"
+                        value={form.locationAddress}
+                        multiline
+                        rows={5}
+                        variant="outlined"
+                        fullWidth
+                      />
+                      <TextField
+                        className="mt-8 "
+                        required
+                        label="City"
+                        type="text"
+                        id="City"
+                        name="City"
+                        value={form.City}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={errors.city}
+                        helperText={errors.city}
+                        fullWidth
+                      />
+                      <TextField
+                        className="mt-8 "
+                        required
+                        label="State"
+                        id="State"
+                        type="text"
+                        name="State"
+                        value={form.State}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={errors.state}
+                        helperText={errors.state}
+                        fullWidth
+                      />
+                      {/* <div className="flex flex-row justify-between w-full"> */}
+                      <TextField
+                        className="mt-8  pr-4"
+                        required
+                        label="Phone No.1"
+                        id="phoneNo"
+                        name="phoneNo"
+                        value={form.phoneNo}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={errors.phoneNo}
+                        helperText={errors.phoneNo}
+                        fullWidth
+                      />
+                      <TextField
+                        className="mt-8  pr-4"
+                        // required
+                        label="Phone No.2"
+                        id="phoneNo1"
+                        name="phoneNo2"
+                        value={form.phoneNo2}
+                        onChange={handleChange}
+                        variant="outlined"
+                        fullWidth
+                      />
+                      {/* <TextField
                     className="mt-8 "
                    
                     required
@@ -334,97 +396,91 @@ function NewShowRoom(props) {
                     variant="outlined"
                     fullWidth
                   /> */}
-                    {/* </div> */}
-                    <TextField
-                      className="mt-8 "
+                      {/* </div> */}
+                      <TextField
+                        className="mt-8 "
+                        required
+                        label="Email"
+                        id="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={errors.email}
+                        helperText={errors.email}
+                        fullWidth
+                      />
+                      <TextField
+                        className="mt-8 "
+                        required
+                        label="Zip Code"
+                        id="zipCode"
+                        type="number"
+                        name="zipCode"
+                        value={form.zipCode}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={errors.zipCode}
+                        helperText={errors.zipCode}
+                        fullWidth
+                      />
+                      <TextField
+                        className="mt-8 "
+                        label="Other "
+                        id="other1"
+                        name="other1"
+                        value={form.other1}
+                        onChange={handleChange}
+                        variant="outlined"
+                        fullWidth
+                      />
 
-                      required
-                      label="Email"
-                      id="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 "
-
-                      required
-                      label="Zip Code"
-                      id="zipCode"
-                      type="number"
-                      name="zipCode"
-                      value={form.zipCode}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 "
-                      label="Other "
-                      id="other1"
-                      name="other1"
-                      value={form.other1}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
+                <br></br>
               </div>
-              <br></br>
-            </div>
-            <div className="flex flex-col p-12 " >
-              <Button
-                style={{
-                  maxHeight: '70px',
-                  minHeight: '70px',
-                }}
-                className={classes.button}
-                variant="contained"
-                color="secondary"
-                onClick={async () => {
-                  if (routeParams.showRoomtId === 'new') {
-                    setisLoading(false);
-                    await dispatch(await Actions.saveShowRoom(form));
-                    setisLoading(true);
-                    props.history.push(`/apps/e-commerce/showRooms`);
-                  } else {
-                    setisLoading(false);
-                    await dispatch(await Actions.updateShowRoom(form));
-                    setisLoading(true);
-                    props.history.push(`/apps/e-commerce/showRooms`);
-                  }
-                }}>
+              <div className="flex flex-col py-12 " >
+                <Button
+                  style={{
+                    padding: '10px 32px'
+                  }}
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleSubmit}>
+                  Save
+                </Button>
+              </div>
+              {
+                routeParams.showRoomtId !== 'new' && (
+                  <div className="flex flex-col pb-12">
+                    <ConfirmShowroomDelete open={open} handleClose={handleClose} form={form} propssent={props} />
 
-                Save
-              </Button>
-            </div>
+                    <Button
+                      style={{
+                        color: 'red',
+                        padding: '10px 32px'
+                      }}
+                      variant="outlined"
+                      // onClick={() => setShowModal(true)}
+                      onClick={() => {
+                        if (routeParams.showRoomtId === 'new') {
+                          alert('No Data to delete')
+                        }
+                        else {
+                          setOpen(true);
+                        }
 
-            <div className="flex flex-col p-12">
-              <ConfirmShowroomDelete open={open} handleClose={handleClose} form={form} propssent={props} />
+                      }}
+                    >
+                      <Icon>delete</Icon>
+                      DELETE
+                    </Button>
+                  </div>
 
-              <Button
-                style={{
-                  color: 'red'
-                }}
-                variant="outlined"
-                // onClick={() => setShowModal(true)}
-                onClick={() => {
-                  if (routeParams.showRoomtId === 'new') {
-                    alert('No Data to delete')
-                  }
-                  else {
-                    setOpen(true);
-                  }
-
-                }}
-              >
-                <Icon>delete</Icon>
-                DELETE
-              </Button>
+                )
+              }
             </div>
           </div>
         )

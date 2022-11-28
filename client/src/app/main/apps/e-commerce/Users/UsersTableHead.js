@@ -22,7 +22,7 @@ const rows = [
     disablePadding: false,
     label: 'Date',
     sort: true,
-    width:160
+    width: 160
   },
   {
     id: 'user-location',
@@ -30,7 +30,7 @@ const rows = [
     disablePadding: false,
     label: 'Location',
     sort: true,
-    width:100
+    width: 100
   },
   {
     id: 'user-email',
@@ -38,16 +38,16 @@ const rows = [
     disablePadding: false,
     label: 'Email',
     sort: true,
-    width:100
+    width: 100
   },
- 
+
   {
     id: 'user-username',
     align: 'center',
     disablePadding: false,
     label: 'Username',
     sort: true,
-    width:100
+    width: 100
   },
   {
     id: 'user-role',
@@ -55,7 +55,7 @@ const rows = [
     disablePadding: false,
     label: 'Access Level',
     sort: true,
-    width:100
+    width: 100
   }
 ];
 
@@ -70,7 +70,7 @@ const StyledTableCell = withStyles((theme) => ({
     color: theme.palette.common.white,
     textAlign: 'center',
     padding: 10,
-    width:50
+    width: '20%'
   },
   body: {
     fontSize: 14,
@@ -145,7 +145,8 @@ function UsersTableHead(props) {
               sortDirection={
                 props.order.id === row.id ? props.order.direction : false
               }>
-              {row.sort && (
+              {row.label}
+              {/* {row.sort && (
                 <Tooltip
                   title="Sort"
                   placement={
@@ -159,7 +160,7 @@ function UsersTableHead(props) {
                     {row.label}
                   </TableSortLabel>
                 </Tooltip>
-              )}
+              )} */}
             </StyledTableCell>
           );
         }, this)}

@@ -21,28 +21,28 @@ const rows = [
     align: 'center',
     disablePadding: false,
     label: 'Location  Name',
-    sort: true
+    // sort: true
   },
   {
     id: 'Location Address',
     align: 'center',
     disablePadding: false,
     label: 'Location Address',
-    sort: true
+    // sort: true
   },
   {
     id: 'City',
     align: 'center',
     disablePadding: false,
     label: 'City',
-    sort: true
+    // sort: true
   },
   {
     id: 'State',
     align: 'center',
     disablePadding: false,
     label: 'State',
-    sort: true
+    // sort: true
   },
   // {
   //   id: 'email',
@@ -56,7 +56,7 @@ const rows = [
     align: 'center',
     disablePadding: false,
     label: 'Phone No',
-    sort: true
+    // sort: true
   },
   // {
   //   id: 'faxNo',
@@ -70,14 +70,14 @@ const rows = [
     align: 'center',
     disablePadding: false,
     label: 'Zip Code',
-    sort: true
+    // sort: true
   },
-  {
-    id: 'Actions',
-    align: 'center',
-    disablePadding: false,
-    sort: true
-  }
+  // {
+  //   id: 'Actions',
+  //   align: 'center',
+  //   disablePadding: false,
+  //   sort: true
+  // }
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -89,7 +89,8 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'center'
+    textAlign: 'center',
+    width: 'min-content'
   },
   body: {
     fontSize: 14,
@@ -164,7 +165,8 @@ function ProductsTableHead(props) {
               sortDirection={
                 props.order.id === row.id ? props.order.direction : false
               }>
-              {row.sort && (
+              {row.label}
+              {/* {row.sort && (
                 <Tooltip
                   title="Sort"
                   placement={
@@ -178,7 +180,7 @@ function ProductsTableHead(props) {
                     {row.label}
                   </TableSortLabel>
                 </Tooltip>
-              )}
+              )} */}
             </StyledTableCell>
           );
         }, this)}

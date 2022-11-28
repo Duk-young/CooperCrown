@@ -46,7 +46,7 @@ function UsersHeader(props) {
         </div>
       </div>
       <div className="flex flex-col w-full items-center justify-center">
-        <div className="flex items-center">
+        <div className="flex items-center pb-10">
 
           <FuseAnimate animation="transition.slideLeftIn" delay={300}>
           <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500" variant="h4">
@@ -55,7 +55,7 @@ function UsersHeader(props) {
           </FuseAnimate>
         </div>
 
-        <div className="flex flex-1 items-center  sm:px-18 justify-center px-12">
+        <div className="flex flex-1 items-center  sm:px-18 justify-center px-12 mb-10">
           <ThemeProvider theme={mainTheme}>
             <FuseAnimate animation="transition.slideDownIn" delay={300}>
               <Paper

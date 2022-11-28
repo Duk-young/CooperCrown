@@ -3,6 +3,7 @@ import { showMessage } from 'app/store/actions/fuse';
 import * as Actions from './index';
 
 import firebaseService from 'app/services/firebaseService';
+export const ADD_PRODUCT = '[E-COMMERCE APP] ADD PRODUCT';
 export const GET_PRODUCT = '[E-COMMERCE APP] GET PRODUCT';
 export const SAVE_PRODUCT = '[E-COMMERCE APP] SAVE PRODUCT';
 
@@ -73,7 +74,7 @@ export function newShowRoom() {
   };
 
   return {
-    type: GET_PRODUCT,
+    type: ADD_PRODUCT,
     payload: data
   };
 }

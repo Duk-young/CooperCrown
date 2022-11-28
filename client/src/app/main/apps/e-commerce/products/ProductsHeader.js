@@ -44,19 +44,19 @@ function ProductsHeader(props) {
       </div>
     </div>
       <div className="flex flex-col w-full items-center justify-center ">
-        <div className="flex items-center ">
+        <div className="flex items-center pb-10">
 
           {/* <FuseAnimate animation="transition.expandIn" delay={300}>
           <Icon className="text-32">shopping_basket</Icon>
         </FuseAnimate> */}
           <FuseAnimate animation="transition.slideLeftIn" delay={300}>
             <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500" variant="h4">
-              SHOWROOMS
+              Showrooms
             </Typography>
           </FuseAnimate>
         </div>
 
-        <div className="flex flex-1 items-center justify-center ">
+        <div className="flex flex-1 items-center justify-center mb-10">
           <ThemeProvider theme={mainTheme}>
             <FuseAnimate animation="transition.slideDownIn" delay={300}>
               <Paper

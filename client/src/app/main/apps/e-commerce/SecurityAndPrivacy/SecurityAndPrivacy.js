@@ -56,6 +56,7 @@ const useStyles = makeStyles({
   },
   button: {
     backgroundColor: '#f15a25',
+    padding: '10px 16px',
     color: '#fff',
     '&:hover': {
       backgroundColor: '#f47b51',
@@ -77,6 +78,9 @@ function SecurityAndPrivacy(props) {
   // const classes = useStyles(props);
   const [tabValue, setTabValue] = useState(0);
   const [isLoading, setisLoading] = useState(false);
+  const [emailErrors, setEmailErrors] = useState({});
+  const [passwordErrors, setPasswordErrors] = useState({});
+
   const { form, handleChange, setForm } = useForm(null);
 
   const routeParams = useParams();
@@ -92,6 +96,7 @@ function SecurityAndPrivacy(props) {
 
     updateProductState();
   }, [dispatch, routeParams]);
+
   useEffect(() => {
     if (
       (account.email && !form) ||
@@ -106,6 +111,92 @@ function SecurityAndPrivacy(props) {
   }, [form, account.password, account.email, setForm, tabValue]);
   function handleChangeTab(event, value) {
     setTabValue(value);
+  }
+
+  const updateEmail = async () => {
+    await dispatch(
+      await Actions.changeEmail({
+        email: form.newEmail,
+        id: mainId
+      })
+    );
+  }
+
+  const updatePassword = async () => {
+    await dispatch(
+      await Actions.changePassword({
+        password: form.newPassword,
+        id: mainId
+      })
+    );
+  }
+
+
+  function isFormValid() {
+    if (tabValue === 0) {
+      const emailErrs = {};
+
+      if (!form.newEmail) {
+        emailErrs.newEmail = "Please enter new email";
+      }
+
+      if (form.confrimEmail !== form.newEmail) {
+        emailErrs.confrimEmail = "Email does not match new email address";
+      }
+
+      return emailErrs;
+    }
+
+    if (tabValue === 1) {
+      const passwordErrs = {};
+
+      if (!form.password) {
+        passwordErrs.oldPassword = "Please enter old password";
+      }
+
+      if (!form.newPassword) {
+        passwordErrs.newPassword = "Please enter new password";
+      }
+
+      if (form.newPassword && form.newPassword === form.password) {
+        passwordErrs.newPassword = "old password cannot be used as new password";
+      }
+
+      if (form.confrimPassword !== form.newPassword) {
+        passwordErrs.confirmPassword = "password does not match new password";
+      }
+
+      return passwordErrs;
+    }
+  };
+
+
+  const handleEmailUpdate = (e) => {
+    e.preventDefault();
+
+    const emailErrs = isFormValid();
+    setEmailErrors(emailErrs);
+
+    if (Object.values(emailErrs).some((err) => err !== "")) {
+      return;
+    }
+
+    updateEmail();
+
+  }
+
+
+  const handlePasswordUpdate = (e) => {
+    e.preventDefault();
+
+    const passwordErrs = isFormValid();
+    setPasswordErrors(passwordErrs);
+
+    if (Object.values(passwordErrs).some((err) => err !== "")) {
+      return;
+    }
+
+    updatePassword();
   }
 
   function canBeSubmitted() {
@@ -165,125 +256,137 @@ function SecurityAndPrivacy(props) {
 
           <div className="p-16 sm:p-24 ">
             {tabValue === 0 && (
-              <div className="flex flex-col h-260  px-16 py-6">
-                <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
-                  <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                    <h1 className="font-700" style={{ color: '#f15a25' }}>
-                      CHANGE EMAIL {currentEmail}
-                    </h1>
-                  </div>
-                  <div className="justify-center p-16 sm:p-24 ">
-                    <TextField
-                      className="mt-8 mb-16"
-                      id="email"
-                      name="email"
-                      onChange={handleChange}
-                      label="Email"
-                      type="text"
-                      disabled={true}
-                      value={currentEmail}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 mb-16"
-                      required
-                      label="New Email"
-                      type="text"
-                      id="newEmail"
-                      name="newEmail"
-                      value={form.newEmail}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 mb-16"
-                      required
-                      label="Confrim Email"
-                      id="confrimEmail"
-                      type="text"
-                      name="confrimEmail"
-                      value={form.confrimEmail}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
+              <>
+                <div className="flex flex-col h-260  px-16 py-6">
+                  <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+                    <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                      <h1 className="font-700" style={{ color: '#f15a25' }}>
+                        CHANGE EMAIL
+                      </h1>
+                    </div>
+                    <div className="justify-center p-16 sm:p-24 ">
+                      <TextField
+                        className="mt-8 mb-16"
+                        id="email"
+                        name="email"
+                        onChange={handleChange}
+                        label="Email"
+                        type="text"
+                        disabled={true}
+                        value={currentEmail}
+                        variant="outlined"
+                        fullWidth
+                      />
+                      <TextField
+                        className="mt-8 mb-16"
+                        required
+                        label="New Email"
+                        type="text"
+                        id="newEmail"
+                        name="newEmail"
+                        value={form.newEmail}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={emailErrors.newEmail}
+                        helperText={emailErrors.newEmail}
+                        fullWidth
+                      />
+                      <TextField
+                        className="mt-8 mb-16"
+                        required
+                        label="Confirm Email"
+                        id="confrimEmail"
+                        type="text"
+                        name="confrimEmail"
+                        value={form.confrimEmail}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={emailErrors.confrimEmail}
+                        helperText={emailErrors.confrimEmail}
+                        fullWidth
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+                <div className="flex flex-col p-12" >
+                  <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleEmailUpdate}>
+                    Save
+                  </Button>
+                </div>
+              </>
             )}
 
             {tabValue === 1 && (
-              <div className="flex flex-col h-260  px-16 py-6">
+              <>
+                <div className="flex flex-col h-260  px-16 py-6">
 
-                <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
-                  <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                    <h1 className="font-700" style={{ color: '#f15a25' }}>
-                      CHANGE PASSWORD {currentEmail}
-                    </h1>
-                  </div >
-                  <div className="justify-center p-16 sm:p-24 ">
-                    <TextField
-                      className="mt-8 mb-16"
-                      required
-                      id="password"
-                      name="password"
-                      onChange={handleChange}
-                      label="Old Password"
-                      type="text"
-                      value={form.password}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 mb-16"
-                      required
-                      label="New Password"
-                      type="text"
-                      id="newPassword"
-                      name="newPassword"
-                      value={form.newPassword}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 mb-16"
-                      required
-                      label="Confrim Password"
-                      id="confrimPassword"
-                      type="text"
-                      name="confrimPassword"
-                      value={form.confrimPassword}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
+                  <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+                    <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                      <h1 className="font-700" style={{ color: '#f15a25' }}>
+                        CHANGE PASSWORD
+                      </h1>
+                    </div >
+                    <div className="justify-center p-16 sm:p-24 ">
+                      <TextField
+                        className="mt-8 mb-16"
+                        required
+                        id="password"
+                        name="password"
+                        onChange={handleChange}
+                        label="Old Password"
+                        type="text"
+                        value={form.password}
+                        variant="outlined"
+                        error={passwordErrors.oldPassword}
+                        helperText={passwordErrors.oldPassword}
+                        fullWidth
+                      />
+                      <TextField
+                        className="mt-8 mb-16"
+                        required
+                        label="New Password"
+                        type="text"
+                        id="newPassword"
+                        name="newPassword"
+                        value={form.newPassword}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={passwordErrors.newPassword}
+                        helperText={passwordErrors.newPassword}
+                        fullWidth
+                      />
+                      <TextField
+                        className="mt-8 mb-16"
+                        required
+                        label="Confirm Password"
+                        id="confrimPassword"
+                        type="text"
+                        name="confrimPassword"
+                        value={form.confrimPassword}
+                        onChange={handleChange}
+                        variant="outlined"
+                        error={passwordErrors.confirmPassword}
+                        helperText={passwordErrors.confirmPassword}
+                        fullWidth
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+                <div className="flex flex-col p-12" >
+                  <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={handlePasswordUpdate}>
+                    Save
+                  </Button>
+                </div>
+              </>
             )}
-
-
-
-            <div className="flex flex-col p-12 " >
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="secondary"
-                onClick={async () => {
-                  await dispatch(
-                    await Actions.changeEmail({
-                      email: form.newEmail,
-                      id: mainId
-                    })
-                  );
-                }}>
-
-                Save
-              </Button>
-            </div>
           </div>
         )
       }

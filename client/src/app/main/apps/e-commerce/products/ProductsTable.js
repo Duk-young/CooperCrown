@@ -85,10 +85,11 @@ function ProductsTable(props) {
     body: {
       fontSize: 14,
       padding: 0,
-      textAlign: 'center'
+      textAlign: 'center',
+      width: 'min-content'
     }
   }))(TableCell);
-  
+
   const StyledTableRow = withStyles((theme) => ({
     root: {
       '&:nth-of-type(odd)': {
@@ -179,29 +180,29 @@ function ProductsTable(props) {
                     </StyledTableCell> */}
 
                     <StyledTableCell component="th" scope="row">
-                      {n.locationName}
+                      {n.locationName ? n.locationName : '-----'}
                     </StyledTableCell>
 
                     <StyledTableCell component="th" scope="row">
-                      {n.locationAddress}
+                      {n.locationAddress ? n.locationAddress : '-----'}
                     </StyledTableCell>
 
                     <StyledTableCell component="th" scope="row">
-                      {n.City}
+                      {n.City ? n.City : '-----'}
                     </StyledTableCell>
 
                     <StyledTableCell component="th" scope="row">
-                      {n.State}
+                      {n.State ? n.State : '-----'}
                     </StyledTableCell>
 
                     <StyledTableCell component="th" scope="row">
-                      {n.phoneNo}
+                      {n.phoneNo ? n.phoneNo : '-----'}
                     </StyledTableCell>
 
                     <StyledTableCell component="th" scope="row">
-                      {n.zipCode}
+                      {n.zipCode ? n.zipCode : '-----'}
                     </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
+                    {/* <StyledTableCell component="th" scope="row">
                       <IconButton color="primary" variant="contained"
 
                         onClick={() => {
@@ -212,7 +213,7 @@ function ProductsTable(props) {
                         <DeleteOutlined fontSize="medium" />
                       </IconButton>
 
-                    </StyledTableCell>
+                    </StyledTableCell> */}
                   </StyledTableRow>
                 );
               })}
