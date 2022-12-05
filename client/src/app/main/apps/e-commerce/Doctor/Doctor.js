@@ -141,6 +141,10 @@ function Doctor(props) {
       errs.lname = 'Please enter last name'
     }
 
+    if (!form.address) {
+      errs.address = 'Please enter address'
+    }
+
     if (!form.Gender) {
       errs.gender = 'Please enter gender'
     }
@@ -151,6 +155,14 @@ function Doctor(props) {
 
     if (!form.city) {
       errs.city = 'Please enter city'
+    }
+
+    if (!form.State) {
+      errs.State = 'Please enter state'
+    }
+
+    if (!form.zipcode) {
+      errs.zipcode = 'Please enter zipcode'
     }
 
     if (!form.doctoremail) {
@@ -290,7 +302,7 @@ function Doctor(props) {
                   <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                     <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                       <h1 className="font-700" style={{ color: '#f15a25' }}>
-                        USER INFO
+                        DOCTOR INFO
                       </h1>
                     </div>
 
@@ -315,6 +327,7 @@ function Doctor(props) {
                           />
                           <TextField
                             className="w-1/2"
+                            required
                             id="doctor-address"
                             name="address"
                             onChange={handleChange}
@@ -322,6 +335,8 @@ function Doctor(props) {
                             type="address"
                             value={form.address}
                             variant="outlined"
+                            error={errors.address}
+                            helperText={errors.address}
                             fullwidth
                           />
                         </div>
@@ -381,12 +396,15 @@ function Doctor(props) {
                           </div>
                           <TextField
                             className="w-1/2"
+                            required
                             label="State"
                             autoFocus
                             id="doctor-State"
                             name="State"
                             type="text"
                             value={form.State}
+                            error={errors.State}
+                            helperText={errors.State}
                             onChange={handleChange}
                             variant="outlined"
                           />
@@ -408,6 +426,7 @@ function Doctor(props) {
                           />
                           <TextField
                             className="w-1/2"
+                            required
                             label="Zip Code"
                             autoFocus
                             id="doctor-zipcode"
@@ -415,6 +434,8 @@ function Doctor(props) {
                             type="Number"
                             value={form.zipcode}
                             onChange={handleChange}
+                            error={errors.zipcode}
+                            helperText={errors.zipcode}
                             variant="outlined"
                           />
                         </div>

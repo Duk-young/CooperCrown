@@ -145,6 +145,10 @@ function NewShowRoom(props) {
       errs.locationName = 'Please enter location name'
     }
 
+    if (!form.locationAddress) {
+      errs.locationAddress = 'Please enter location address'
+    }
+
     if (!form.City) {
       errs.city = 'Please enter city'
     }
@@ -320,6 +324,7 @@ function NewShowRoom(props) {
 
                       <TextField
                         className="mt-8 "
+                        required
                         id="locationAddress"
                         name="locationAddress"
                         onChange={handleChange}
@@ -329,6 +334,8 @@ function NewShowRoom(props) {
                         multiline
                         rows={5}
                         variant="outlined"
+                        error={errors.locationAddress}
+                        helperText={errors.locationAddress}
                         fullWidth
                       />
                       <TextField

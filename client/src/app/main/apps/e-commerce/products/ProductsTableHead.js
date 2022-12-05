@@ -44,6 +44,13 @@ const rows = [
     label: 'State',
     // sort: true
   },
+  {
+    id: 'Zip-Code',
+    align: 'center',
+    disablePadding: false,
+    label: 'Zip Code',
+    // sort: true
+  },
   // {
   //   id: 'email',
   //   align: 'center',
@@ -65,13 +72,6 @@ const rows = [
   //   label: 'Fax No',
   //   sort: true
   // },
-  {
-    id: 'Zip-Code',
-    align: 'center',
-    disablePadding: false,
-    label: 'Zip Code',
-    // sort: true
-  },
   // {
   //   id: 'Actions',
   //   align: 'center',

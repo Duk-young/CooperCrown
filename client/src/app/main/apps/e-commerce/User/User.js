@@ -11,6 +11,7 @@ import {
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import { firestore } from 'firebase';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import Icon from '@material-ui/core/Icon';
 import { makeStyles } from '@material-ui/core/styles';
@@ -186,6 +187,10 @@ function NewShowRoom(props) {
   const isFormValid = () => {
     const errs = {};
 
+    if (!form.showRoomId) {
+      errs.showRoomId = 'Please select a showroom'
+    }
+
     if (!form.fname) {
       errs.fname = 'Please enter first name'
     }
@@ -198,12 +203,24 @@ function NewShowRoom(props) {
       errs.gender = 'Please enter gender'
     }
 
+    if (!form.address) {
+      errs.address = 'Please enter address'
+    }
+
     if (!form.phone1) {
       errs.phone1 = 'Please enter phone number'
     }
 
     if (!form.city) {
       errs.city = 'Please enter city'
+    }
+
+    if (!form.State) {
+      errs.State = 'Please enter state'
+    }
+
+    if (!form.zipcode) {
+      errs.zipcode = 'Please enter zipcode'
     }
 
     if (!form.email) {
@@ -353,7 +370,7 @@ function NewShowRoom(props) {
                       <div>
                         <div className="flex flex-col justify-center p-16 sm:p-24 ">
                           <div className="w-1/2 mb-16 px-6">
-                            <FormControl variant='outlined' className='w-full'>
+                            <FormControl variant='outlined' className='w-full' error={errors.showRoomId}>
                               <InputLabel id="demo-simple-select-outlined-label">Showroom</InputLabel>
                               <Select
                                 labelId="demo-simple-select-outlined-label"
@@ -361,6 +378,7 @@ function NewShowRoom(props) {
                                 label="Showroom"
                                 defaultValue={form?.showRoomId}
                                 value={form?.showRoomId}
+                                // helperText={errors.showRoomId}
                                 name="showRoomId"
                                 onChange={handleChange}
                               >
@@ -370,7 +388,9 @@ function NewShowRoom(props) {
                                   </MenuItem>
                                 ))}
                               </Select>
-                              {/* <FormHelperText>Select Showroom from the list</FormHelperText> */}
+                              {errors.showRoomId && (
+                                <FormHelperText>Select Showroom from the list</FormHelperText>
+                              )}
                             </FormControl>
                           </div>
                           <div className="flex flex-row p-6 mb-16 gap-10">
@@ -391,6 +411,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="w-1/2"
+                              required
                               id="user-address"
                               name="address"
                               onChange={handleChange}
@@ -398,6 +419,8 @@ function NewShowRoom(props) {
                               type="address"
                               value={form.address}
                               variant="outlined"
+                              error={errors.address}
+                              helperText={errors.address}
                               fullwidth
                             />
                           </div>
@@ -456,6 +479,7 @@ function NewShowRoom(props) {
                             </div>
                             <TextField
                               className="w-1/2"
+                              required
                               label="State"
                               autoFocus
                               id="user-State"
@@ -463,6 +487,8 @@ function NewShowRoom(props) {
                               type="text"
                               value={form.State}
                               onChange={handleChange}
+                              error={errors.State}
+                              helperText={errors.State}
                               variant="outlined"
                             />
                           </div>
@@ -483,6 +509,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="w-1/2"
+                              required
                               label="Zip Code"
                               autoFocus
                               id="user-zipcode"
@@ -490,6 +517,8 @@ function NewShowRoom(props) {
                               type="Number"
                               value={form.zipcode}
                               onChange={handleChange}
+                              error={errors.zipcode}
+                              helperText={errors.zipcode}
                               variant="outlined"
                             />
                           </div>

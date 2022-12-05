@@ -34,28 +34,26 @@ function DoctorsHeader(props) {
 
   return (
     <>
-    <div className="flex flex-col w-full items-center  sm:px-18 justify-start ">
+      <div className="flex flex-col w-full items-center  sm:px-18 justify-start">
         <div className="flex-1 items-center">
           <h3 className=" hidden font-700 ">H</h3>
         </div>
         <div className='flex w-full flex-1 items-center justify-start '>
-        <div className="flex-1 items-center">
-          <h3 className=" hidden font-700 ">H</h3>
-        </div>
+          <div className="flex-1 items-center">
+            <h3 className=" hidden font-700 ">H</h3>
+          </div>
         </div>
       </div>
       <div className="flex flex-col w-full items-center justify-center ">
         <div className="flex items-center ">
-        
           <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-          <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500" variant="h4">
+            <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500" variant="h4">
               DOCTORS
             </Typography>
           </FuseAnimate>
         </div>
-
-         <div className='flex flex-1 flex-row items-center justify-center pb-10'>
-         <ThemeProvider theme={mainTheme}>
+        <div className='flex flex-1 flex-row items-center justify-center pb-10'>
+          <ThemeProvider theme={mainTheme}>
             <FuseAnimate animation="transition.slideDownIn" delay={300}>
               <Paper
                 className="flex items-center w-full max-w-512 px-8 py-4 rounded-8"
@@ -76,9 +74,7 @@ function DoctorsHeader(props) {
               </Paper>
             </FuseAnimate>
           </ThemeProvider>
-     
         </div>
-
       </div>
       <div className="flex flex-col w-full items-center justify-end pr-20">
         <div className="flex-1 pl-30 items-center">
