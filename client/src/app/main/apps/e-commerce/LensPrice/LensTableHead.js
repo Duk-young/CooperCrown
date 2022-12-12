@@ -16,7 +16,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 
 const rows = [
-  
+
   {
     id: 'lens-type',
     align: 'left',
@@ -24,7 +24,7 @@ const rows = [
     label: 'LENS TYPE',
     sort: true
   },
-  
+
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -111,7 +111,8 @@ function LensTableHead(props) {
               sortDirection={
                 props.order.id === row.id ? props.order.direction : false
               }>
-              {row.sort && (
+              {row.label}
+              {/* {row.sort && (
                 <Tooltip
                   title="Sort"
                   placement={
@@ -125,7 +126,7 @@ function LensTableHead(props) {
                     {row.label}
                   </TableSortLabel>
                 </Tooltip>
-              )}
+              )} */}
             </StyledTableCell>
           );
         }, this)}

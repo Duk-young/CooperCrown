@@ -79,10 +79,11 @@ function DiscountsTable(props) {
     body: {
       fontSize: 14,
       padding: 0,
-      textAlign: 'center'
+      textAlign: 'center',
+      maxWidth: 'min-content'
     }
   }))(TableCell);
-  
+
   const StyledTableRow = withStyles((theme) => ({
     root: {
       '&:nth-of-type(odd)': {
@@ -155,7 +156,7 @@ function DiscountsTable(props) {
   return (
     <div className="w-full flex flex-col">
       <FuseScrollbars className="flex-grow overflow-x-auto">
-        <Table className="min-w-xl" aria-labelledby="tableTitle">
+        <Table aria-labelledby="tableTitle">
           <DiscountsTableHead
             numSelected={selected.length}
             order={order}
@@ -214,18 +215,18 @@ function DiscountsTable(props) {
                     <StyledTableCell component="th" scope="row">
                       {n.amount}
                     </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
-                    <IconButton color="primary"  variant="contained"
-                       
-                       onClick={() => {
-                         props.history.push(
-                           `/apps/e-commerce/discount/${n.id}`
-                         );
-                       }}>
- <DeleteOutlined fontSize="medium" />
-</IconButton>
-                     
-                    </StyledTableCell>
+                    {/* <StyledTableCell component="th" scope="row">
+                      <IconButton color="primary" variant="contained"
+
+                        onClick={() => {
+                          props.history.push(
+                            `/apps/e-commerce/discount/${n.id}`
+                          );
+                        }}>
+                        <DeleteOutlined fontSize="medium" />
+                      </IconButton>
+
+                    </StyledTableCell> */}
                   </StyledTableRow>
                 );
               })}

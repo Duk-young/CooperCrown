@@ -125,8 +125,8 @@ function EmailTemplates(props) {
           message: 'No Data Returned for Filtered Options'
         })
       );
-    } else if (!isFilterFilled) { 
-      return sendNotificationEmail(customers) 
+    } else if (!isFilterFilled) {
+      return sendNotificationEmail(customers)
     } else {
       return sendNotificationEmail(modifiedCustomers)
     }
@@ -252,7 +252,11 @@ function EmailTemplates(props) {
                 onChange={handleChange}
                 multiline
                 rows={8}
-                variant="outlined"
+                variant="standard"
+                style={{ padding: '18.5px 14px' }}
+                InputProps={{
+                  disableUnderline: true,
+                }}
                 fullWidth
               />
             </div>
@@ -272,7 +276,11 @@ function EmailTemplates(props) {
                 onChange={handleChange}
                 multiline
                 rows={8}
-                variant="outlined"
+                variant="standard"
+                style={{ padding: '18.5px 14px' }}
+                InputProps={{
+                  disableUnderline: true,
+                }}
                 fullWidth
               />
             </div>
@@ -293,7 +301,11 @@ function EmailTemplates(props) {
                 onChange={handleChange}
                 multiline
                 rows={8}
-                variant="outlined"
+                variant="standard"
+                style={{ padding: '18.5px 14px' }}
+                InputProps={{
+                  disableUnderline: true,
+                }}
                 fullWidth
               />
             </div>
@@ -307,14 +319,17 @@ function EmailTemplates(props) {
                 // className="pb-12"
                 disabled={disabledState}
                 id="terms"
-
                 type="text"
                 name="terms"
                 value={form?.terms}
                 onChange={handleChange}
                 multiline
                 rows={12}
-                variant="outlined"
+                variant="standard"
+                style={{ padding: '18.5px 14px' }}
+                InputProps={{
+                  disableUnderline: true,
+                }}
                 fullWidth
               />
             </div>
@@ -330,44 +345,42 @@ function EmailTemplates(props) {
                     <p style={{ marginLeft: '5px' }}>FILTER</p>
                   </Button>
                   <EmailFilters open={openFilters} handleClose={() => setOpenFilters(false)} />
-                  {/* <Button
-                    color="primary"
-                    style={{ color: '#f15a25' }}
-                    onClick={() => {
-                      props.history.push('/apps/e-commerce/emailtemplates/filter')
-                    }}>
-                    <FilterListIcon /> {' '}
-                    <p style={{ marginLeft: '5px' }}>FILTER</p>
-                  </Button> */}
                 </div>
-                <h1 className="font-700 flex-1 text-center" style={{ color: '#f15a25', marginLeft: '75px' }}>
+                <h1 className="font-700 flex-1 text-center" style={{ color: '#f15a25', marginRight: '75px' }}>
                   Sale/Event Message
                 </h1>
-                <div className='justify-left relative left-20'>
-                  {disabledState && (
-                    <Button
-                      color="primary"
-                      style={{ color: '#f15a25' }}
-                      onClick={sendEventEmail}>
-                      <p style={{ marginLeft: '5px' }}>Send Event Email</p>
-                    </Button>
-                  )}
-                </div>
               </div>
               <TextField
                 // className="pb-12"
                 disabled={disabledState}
                 id="specialMessage"
-
                 type="text"
                 name="specialMessage"
                 value={form?.specialMessage}
                 onChange={handleChange}
                 multiline
                 rows={8}
-                variant="outlined"
+                // variant="outlined"
                 fullWidth
+                variant="standard"
+                style={{ padding: '18.5px 14px' }}
+                InputProps={{
+                  disableUnderline: true,
+                }}
               />
+              <div className='p-10'>
+                <Button
+                  disabled={!disabledState}
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary"
+                  fullWidth
+                  style={{ padding: '2rem 1rem' }}
+                  onClick={sendEventEmail}>
+                  <p style={{ marginLeft: '5px' }}>Send Email</p>
+                </Button>
+
+              </div>
             </div>
             {/* <div className="flex flex-row w-full ">
               <div className="flex flex-row w-2/3 justify-around"></div>

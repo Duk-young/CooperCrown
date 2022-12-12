@@ -45,14 +45,14 @@ function DoctorsHeader(props) {
         </div>
       </div>
       <div className="flex flex-col w-full items-center justify-center ">
-        <div className="flex items-center ">
+        <div className="flex items-center pb-10">
           <FuseAnimate animation="transition.slideLeftIn" delay={300}>
             <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500" variant="h4">
-              DOCTORS
+              Doctors
             </Typography>
           </FuseAnimate>
         </div>
-        <div className='flex flex-1 flex-row items-center justify-center pb-10'>
+        <div className='flex flex-1 flex-row items-center justify-center mb-10'>
           <ThemeProvider theme={mainTheme}>
             <FuseAnimate animation="transition.slideDownIn" delay={300}>
               <Paper

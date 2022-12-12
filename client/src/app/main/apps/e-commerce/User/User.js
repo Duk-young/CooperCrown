@@ -123,8 +123,7 @@ function NewShowRoom(props) {
     }
 
     const fetchlocation = async () => {
-      const d1 = new Date().toDateString();
-      console.log(d1);
+      // const d1 = new Date().toDateString();
       let showroomdata = [];
       const queryShowrooms = await firestore()
         .collection('showRooms')
@@ -219,6 +218,10 @@ function NewShowRoom(props) {
       errs.State = 'Please enter state'
     }
 
+    if (!form.dob) {
+      errs.dob = 'Please enter date of birth'
+    }
+
     if (!form.zipcode) {
       errs.zipcode = 'Please enter zipcode'
     }
@@ -249,7 +252,6 @@ function NewShowRoom(props) {
       props.history.push('/apps/e-commerce/users');
       setisLoading(true);
     } else {
-      console.log(form)
       setisLoading(false);
       await dispatch(await Actions.updateUser(form));
 
@@ -398,7 +400,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="First Name"
-                              autoFocus
                               id="user-fname"
                               name="fname"
                               type="text"
@@ -429,7 +430,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="Last Name"
-                              autoFocus
                               id="user-lname"
                               name="lname"
                               type="text"
@@ -444,7 +444,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="City"
-                              autoFocus
                               id="user-city"
                               name="city"
                               type="text"
@@ -458,7 +457,27 @@ function NewShowRoom(props) {
                           </div>
                           <div className="flex flex-row p-6 mb-16 gap-10">
                             <div className="flex flex-row flex-wrap w-1/2">
-                              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <TextField
+                                id="date"
+                                required
+                                label="Date Of Birth"
+                                type="date"
+                                InputLabelProps={{ shrink: true }}
+                                defaultValue={form?.dob}
+                                variant='outlined'
+                                fullWidth
+                                error={errors.dob}
+                                helperText={errors.dob}
+                                onChange={(e) => {
+                                  handleChange({
+                                    target: {
+                                      name: 'dob',
+                                      value: firestore.Timestamp.fromDate(new Date(e.target.value))
+                                    }
+                                  });
+                                }}
+                              />
+                              {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDatePicker
                                   className="ml-0 0 mt-0 w-full"
                                   margin="normal"
@@ -475,13 +494,12 @@ function NewShowRoom(props) {
                                     'aria-label': 'change date'
                                   }}
                                 />
-                              </MuiPickersUtilsProvider>
+                              </MuiPickersUtilsProvider> */}
                             </div>
                             <TextField
                               className="w-1/2"
                               required
                               label="State"
-                              autoFocus
                               id="user-State"
                               name="State"
                               type="text"
@@ -497,7 +515,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="Gender"
-                              autoFocus
                               id="user-Gender"
                               name="Gender"
                               type="text"
@@ -511,7 +528,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="Zip Code"
-                              autoFocus
                               id="user-zipcode"
                               name="zipcode"
                               type="Number"
@@ -527,7 +543,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="Phone 1"
-                              autoFocus
                               id="user-phone1"
                               name="phone1"
                               type="phone"
@@ -541,7 +556,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="Email"
-                              autoFocus
                               id="email"
                               name="email"
                               type="email"
@@ -556,7 +570,6 @@ function NewShowRoom(props) {
                             <TextField
                               className="w-1/2"
                               label="Phone 2"
-                              autoFocus
                               id="user-phone2"
                               name="phone2"
                               type="phone"
@@ -567,7 +580,6 @@ function NewShowRoom(props) {
                             <TextField
                               className="w-1/2"
                               label="Other"
-                              autoFocus
                               id="user-other"
                               name="other"
                               type="text"
@@ -610,7 +622,6 @@ function NewShowRoom(props) {
                           className="mt-8 mb-16"
                           required
                           label="Username"
-                          autoFocus
                           id="user-username"
                           name="username"
                           value={form.username}

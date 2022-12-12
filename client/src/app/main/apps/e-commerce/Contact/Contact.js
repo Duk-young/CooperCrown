@@ -75,9 +75,10 @@ function NewShowRoom(props) {
   const [open, setOpen] = useState(false);
 
   const [tabValue, setTabValue] = useState(0);
-   const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
+  const [errors, setErrors] = useState({});
 
   const routeParams = useParams();
 
@@ -136,6 +137,65 @@ function NewShowRoom(props) {
   };
   function canBeSubmitted() {
     return form.type.length > 0 && form.style.length > 0 && form.brand.length > 0 && form.model.length > 0 && form.basecurve.length > 0 && form.price.length > 0;
+  }
+
+
+  const isFormValid = () => {
+    const errs = {};
+
+    if (!form.type) {
+      errs.type = 'Please enter contact type'
+    }
+
+    if (!form.style) {
+      errs.style = 'Please enter contact style'
+    }
+
+    if (!form.brand) {
+      errs.brand = 'Please enter contact brand'
+    }
+
+    if (!form.model) {
+      errs.model = 'Please enter contact model'
+    }
+
+    if (!form.basecurve) {
+      errs.basecurve = 'Please enter contact basecurve'
+    }
+
+    if (!form.price) {
+      errs.price = 'Please enter price'
+    }
+
+    return errs;
+  }
+
+  const submitForm = async () => {
+    if (routeParams.contactId === 'new') {
+      setisLoading(false);
+      await dispatch(await Actions.saveContact(form));
+      props.history.push('/apps/e-commerce/contacts');
+      setisLoading(true);
+    } else {
+      setisLoading(false);
+      await dispatch(await Actions.updateContact(form));
+      props.history.push('/apps/e-commerce/contacts');
+      setisLoading(true);
+    }
+  }
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const errs = isFormValid();
+    setErrors(errs);
+
+    if (Object.entries(errs).some((err) => err !== '')) {
+      return
+    }
+
+    submitForm();
   }
 
   if (
@@ -231,145 +291,146 @@ function NewShowRoom(props) {
       }
       content={
         form && (
-        <div className="flex flex-col h-260  px-16 py-6">
-          <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
-            <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-              <h1 className="font-700" style={{ color: '#f15a25' }}>
-                Detail
-              </h1>
+          <div className="flex flex-col h-260  px-16 py-6 gap-20">
+            <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
+              <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  Detail
+                </h1>
+              </div>
+              <div className="justify-center p-16 sm:p-24 ">
+                {tabValue === 0 && (
+                  <div>
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      label="Contact Lens Type"
+                      id="contact-type"
+                      name="type"
+                      value={form.type}
+                      onChange={handleChange}
+                      variant="outlined"
+                      error={errors.type}
+                      helperText={errors.type}
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      id="contact-style"
+                      name="style"
+                      onChange={handleChange}
+                      label="Style"
+                      type="style"
+                      value={form.style}
+                      variant="outlined"
+                      error={errors.style}
+                      helperText={errors.style}
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      id="contact-brand"
+                      name="brand"
+                      onChange={handleChange}
+                      label="Brand"
+                      type="brand"
+                      value={form.brand}
+                      variant="outlined"
+                      error={errors.brand}
+                      helperText={errors.brand}
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      id="contact-model"
+                      name="model"
+                      onChange={handleChange}
+                      label="Model"
+                      type="model"
+                      value={form.model}
+                      variant="outlined"
+                      error={errors.model}
+                      helperText={errors.model}
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      id="contact-basecurve"
+                      name="basecurve"
+                      onChange={handleChange}
+                      label="Base Curve"
+                      type="basecurve"
+                      value={form.basecurve}
+                      variant="outlined"
+                      error={errors.basecurve}
+                      helperText={errors.basecurve}
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 mb-16"
+                      required
+                      id="contacdt-price"
+                      name="price"
+                      onChange={handleChange}
+                      label="Price"
+                      type="price"
+                      value={form.price}
+                      variant="outlined"
+                      error={errors.price}
+                      helperText={errors.price}
+                      fullWidth
+                    />
+                  </div>
+                )}
+              </div>
+              <br></br>
+
             </div>
-            <div className="justify-center p-16 sm:p-24 ">
-              {tabValue === 0 && (
-                <div>
-                  <TextField
-                    className="mt-8 mb-16"
-                    ////error={form.type === ''}
-                    required
-                    label="Contact Lens Type"
-                    
-                    id="contact-type"
-                    name="type"
-                    value={form.type}
-                    onChange={handleChange}
+            <div className="flex flex-col" >
+              <Button
+                style={{
+                  padding: '10px 32px'
+                }}
+                className={classes.button}
+                variant="contained"
+                color="secondary"
+                onClick={handleSubmit}>
+                Save
+              </Button>
+            </div>
+            {
+              routeParams.contactId !== 'new' && (
+                <div className="flex flex-col">
+                  <ConfirmContactDelete open={open} handleClose={handleClose} form={form} propssent={props} />
+
+                  <Button
+                    style={{
+                      color: 'red'
+                    }}
                     variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
-                    className="mt-8 mb-16"
-                    // error={form.style === ''}
-                    id="contact-style"
-                    name="style"
-                    onChange={handleChange}
-                    label="Style"
-                    type="style"
-                    value={form.style}
-                    variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
-                    className="mt-8 mb-16"
-                    //error={form.brand === ''}
-                    id="contact-brand"
-                    name="brand"
-                    onChange={handleChange}
-                    label="Brand"
-                    type="brand"
-                    value={form.brand}
-                    variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
-                    className="mt-8 mb-16"
-                   //error={form.model === ''}
-                    id="contact-model"
-                    name="model"
-                    onChange={handleChange}
-                    label="Model"
-                    type="model"
-                    value={form.model}
-                    variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
-                    className="mt-8 mb-16"
-                   //error={form.basecurve === ''}
-                    id="contact-basecurve"
-                    name="basecurve"
-                    onChange={handleChange}
-                    label="Base Curve"
-                    type="basecurve"
-                    value={form.basecurve}
-                    variant="outlined"
-                    fullWidth
-                  />
-                  <TextField
-                    className="mt-8 mb-16"
-                    id="contacdt-price"
-                    name="price"
-                    onChange={handleChange}
-                    label="Price"
-                    type="price"
-                    value={form.price}
-                    variant="outlined"
-                    fullWidth
-                  />
+                    // onClick={() => setShowModal(true)}
+                    onClick={() => {
+                      if (routeParams.contactId === 'new') {
+                        alert('No Data to delete')
+                      }
+                      else {
+                        setOpen(true);
+                      }
+
+                    }}
+                  >
+                    <Icon>delete</Icon>
+                    DELETE
+                  </Button>
+
                 </div>
-              )}
-            </div>
-            <br></br>
-
+              )
+            }
           </div>
-          <div className="flex flex-col p-12 " >
-            <Button
-             style={{
-              maxHeight: '70px',
-              minHeight: '70px'
-            }}
-              className={classes.button}
-              variant="contained"
-              color="secondary"
-              onClick={async () => {
-                if (routeParams.contactId === 'new') {
-                  setisLoading(false);
-                  await dispatch(await Actions.saveContact(form));
-                  props.history.push('/apps/e-commerce/contacts');
-                  setisLoading(true);
-                } else {
-                  setisLoading(false);
-                  await dispatch(await Actions.updateContact(form));
-                  props.history.push('/apps/e-commerce/contacts');
-                  setisLoading(true);
-                }
-              }}>
-
-              Save
-            </Button>
-          </div>
-          <div className="flex flex-col p-12">
-          <ConfirmContactDelete open={open} handleClose={handleClose} form={form} propssent={props} />
-
-<Button
-  style={{
-    color: 'red'
-  }}
-  variant="outlined"
-  // onClick={() => setShowModal(true)}
-  onClick={() => {
-    if (routeParams.contactId === 'new') {
-      alert('No Data to delete')
-    }
-    else {
-      setOpen(true);
-    }
-
-  }}
->
-  <Icon>delete</Icon>
-  DELETE
-</Button>
-
-          </div>
-        </div>
         )
       }
       innerScroll

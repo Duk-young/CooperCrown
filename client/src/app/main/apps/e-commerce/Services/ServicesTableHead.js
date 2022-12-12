@@ -37,12 +37,6 @@ const rows = [
     label: 'PRICE',
     sort: true
   },
-  {
-    id: 'Actions',
-    align: 'left',
-    disablePadding: false,
-    sort: true
-  }
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -54,7 +48,8 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'left'
+    textAlign: 'center',
+    maxWidth: 'min-content'
   },
   body: {
     fontSize: 14,
@@ -79,10 +74,10 @@ function ServicesTableHead(props) {
   }
 
   return (
-    
+
     <TableHead>
       <TableRow className="h-64">
-       {/*  <StyledTableCell padding="none" className="relative w-64 text-center">
+        {/*  <StyledTableCell padding="none" className="relative w-64 text-center">
           <Checkbox
             indeterminate={
               props.numSelected > 0 && props.numSelected < props.rowCount
@@ -131,7 +126,8 @@ function ServicesTableHead(props) {
               sortDirection={
                 props.order.id === row.id ? props.order.direction : false
               }>
-              {row.sort && (
+              {row.label}
+              {/* {row.sort && (
                 <Tooltip
                   title="Sort"
                   placement={
@@ -145,7 +141,7 @@ function ServicesTableHead(props) {
                     {row.label}
                   </TableSortLabel>
                 </Tooltip>
-              )}
+              )} */}
             </StyledTableCell>
           );
         }, this)}

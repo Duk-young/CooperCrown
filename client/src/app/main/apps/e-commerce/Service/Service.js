@@ -68,8 +68,8 @@ const useStyles = makeStyles({
   }
 });
 function Service(props) {
-  const dispatch = useDispatch();
   const classes = useStyles();
+  const dispatch = useDispatch();
   const product = useSelector(({ eCommerceApp }) => eCommerceApp.service);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -77,6 +77,8 @@ function Service(props) {
   const [tabValue, setTabValue] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
   const { form, handleChange, setForm } = useForm(null);
 
   const routeParams = useParams();
@@ -96,6 +98,10 @@ function Service(props) {
     updateProductState();
   }, [dispatch, routeParams]);
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (
       (product.data && !form) ||
@@ -108,9 +114,6 @@ function Service(props) {
   function handleChangeTab(event, value) {
     setTabValue(value);
   }
-  const handleClose = () => {
-    setOpen(false);
-  };
   const handleDelete = async () => {
     try {
       const queryservices = await firestore()
@@ -137,6 +140,48 @@ function Service(props) {
   function canBeSubmitted() {
     return form.name.length > 0 && form.price.length > 0;
   }
+
+  const isFormValid = () => {
+    const errs = {};
+
+    if (!form.name) {
+      errs.name = 'Please enter exam / service name'
+    }
+
+    if (!form.price) {
+      errs.price = 'Please enter service price'
+    }
+
+    return errs;
+  }
+
+  const submitForm = async () => {
+    if (routeParams.serviceId === 'new') {
+      setisLoading(false);
+      await dispatch(await Actions.saveService(form));
+      setisLoading(true);
+      props.history.push('/apps/e-commerce/services');
+    } else {
+      setisLoading(false);
+      await dispatch(await Actions.updateService(form));
+      setisLoading(true);
+      props.history.push('/apps/e-commerce/services');
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const errs = isFormValid();
+    setErrors(errs);
+
+    if (Object.entries(errs).some((err) => err !== '')) {
+      return
+    }
+
+    submitForm();
+  }
+
 
   if (
     (!product.data ||
@@ -229,7 +274,7 @@ function Service(props) {
       content={
         form && (
           <>
-            <div className="flex flex-col h-260  px-16 py-6">
+            <div className="flex flex-col h-260  px-16 py-6 gap-20">
               <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                   <h1 className="font-700" style={{ color: '#f15a25' }}>
@@ -237,12 +282,11 @@ function Service(props) {
                   </h1>
                 </div>
                 <div className="p-16 sm:p-24 ">
-
+                  {/* update */}
                   {tabValue === 0 && (
                     <div>
                       <TextField
                         className="mt-8 mb-16"
-                       //error={form.name === ''}
                         required
                         label="Exam / Service Name"
                         autoFocus
@@ -251,11 +295,12 @@ function Service(props) {
                         value={form.name}
                         onChange={handleChange}
                         variant="outlined"
+                        error={errors.name}
+                        helperText={errors.name}
                         fullWidth
                       />
                       <TextField
                         className="mt-8 mb-16"
-                       //error={form.description === ''}
                         label="Description"
                         id="service-description"
                         name="description"
@@ -266,6 +311,7 @@ function Service(props) {
                       />
                       <TextField
                         className="mt-8 mb-16"
+                        required
                         id="service-price"
                         name="price"
                         onChange={handleChange}
@@ -273,6 +319,8 @@ function Service(props) {
                         type="Number"
                         value={form.price}
                         variant="outlined"
+                        error={errors.price}
+                        helperText={errors.price}
                         fullWidth
                       />
                     </div>
@@ -280,57 +328,45 @@ function Service(props) {
                 </div>
                 <br></br>
               </div>
-              <div className="flex flex-col p-12 " >
+              <div className="flex flex-col" >
                 <Button
                   style={{
-                    maxHeight: '70px',
-                    minHeight: '70px'
+                    padding: '10px 32px'
                   }}
                   className={classes.button}
                   variant="contained"
                   color="secondary"
-                  onClick={async () => {
-                    if (routeParams.serviceId === 'new') {
-                      setisLoading(false);
-                      await dispatch(await Actions.saveService(form));
-                      setisLoading(true);
-                      props.history.push('/apps/e-commerce/services');
-                    } else {
-                      setisLoading(false);
-                      await dispatch(await Actions.updateService(form));
-                      setisLoading(true);
-                      props.history.push('/apps/e-commerce/services');
-                    }
-                  }}>
-
+                  onClick={handleSubmit}>
                   Save
                 </Button>
-
               </div>
-              <div className="flex flex-col p-12">
-                <ConfirmServiceDelete open={open} handleClose={handleClose} form={form} propssent={props} />
+              {routeParams.serviceId !== 'new' && (
+                <div className="flex flex-col">
+                  <ConfirmServiceDelete open={open} handleClose={handleClose} form={form} propssent={props} />
 
-                <Button
-                  style={{
-                    color: 'red'
-                  }}
-                  variant="outlined"
-                  // onClick={() => setShowModal(true)}
-                  onClick={() => {
-                    if (routeParams.serviceId === 'new') {
-                      alert('No Data to delete')
-                    }
-                    else {
-                      setOpen(true);
-                    }
+                  <Button
+                    style={{
+                      color: 'red',
+                      padding: '10px 32px'
+                    }}
+                    variant="outlined"
+                    // onClick={() => setShowModal(true)}
+                    onClick={() => {
+                      if (routeParams.serviceId === 'new') {
+                        alert('No Data to delete')
+                      }
+                      else {
+                        setOpen(true);
+                      }
 
-                  }}
-                >
-                  <Icon>delete</Icon>
-                  DELETE
-                </Button>
+                    }}
+                  >
+                    <Icon>delete</Icon>
+                    DELETE
+                  </Button>
 
-              </div>
+                </div>
+              )}
 
             </div>
           </>

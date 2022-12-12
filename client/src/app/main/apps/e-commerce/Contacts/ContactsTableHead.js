@@ -58,12 +58,12 @@ const rows = [
     label: ' Price',
     sort: true
   },
-  {
-    id: 'Actions',
-    align: 'center',
-    disablePadding: false,
-    sort: true
-  }
+  // {
+  //   id: 'Actions',
+  //   align: 'center',
+  //   disablePadding: false,
+  //   sort: true
+  // }
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -75,7 +75,8 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'center'
+    textAlign: 'center',
+    width: 'min-content'
   },
   body: {
     fontSize: 14,
@@ -150,7 +151,8 @@ function ContactsTableHead(props) {
               sortDirection={
                 props.order.id === row.id ? props.order.direction : false
               }>
-              {row.sort && (
+              {row.label}
+              {/* {row.sort && (
                 <Tooltip
                   title="Sort"
                   placement={
@@ -164,7 +166,7 @@ function ContactsTableHead(props) {
                     {row.label}
                   </TableSortLabel>
                 </Tooltip>
-              )}
+              )} */}
             </StyledTableCell>
           );
         }, this)}

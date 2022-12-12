@@ -254,7 +254,7 @@ function NewShowRoom(props) {
                   <Icon className="text-20">
                     {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
                   </Icon>
-                  <span className="mx-4">Show Rooms</span>
+                  <span className="mx-4">Showrooms</span>
                 </Typography>
               </FuseAnimate>
 
@@ -269,11 +269,11 @@ function NewShowRoom(props) {
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                     <Typography className="text-16 sm:text-20 truncate">
-                      {form.locationName ? form.locationName : 'New Show Room'}
+                      {form.locationName ? form.locationName : 'New Showroom'}
                     </Typography>
                   </FuseAnimate>
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                    <Typography variant="caption">Show-Room Detail</Typography>
+                    <Typography variant="caption">Showroom Detail</Typography>
                   </FuseAnimate>
                 </div>
               </div>
@@ -291,7 +291,7 @@ function NewShowRoom(props) {
           variant="scrollable"
           scrollButtons="auto"
           classes={{ root: 'w-full h-64' }}>
-          <Tab className="h-64 normal-case" label={`${routeParams.showRoomtId !== 'new' ? 'Edit' : 'New'} Show Room`} />
+          <Tab className="h-64 normal-case" label={`${routeParams.showRoomtId !== 'new' ? 'Edit' : 'New'} Showroom`} />
         </Tabs>
       }
       content={

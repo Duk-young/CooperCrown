@@ -85,7 +85,8 @@ function ContactsTable(props) {
     body: {
       fontSize: 14,
       padding: 0,
-      textAlign: 'center'
+      textAlign: 'center',
+      maxWidth: 'min-content'
     }
   }))(TableCell);
   
@@ -131,7 +132,7 @@ function ContactsTable(props) {
   return (
     <div className="w-full flex flex-col">
       <FuseScrollbars className="flex-grow overflow-x-auto">
-        <Table className="min-w-xl" aria-labelledby="tableTitle">
+        <Table aria-labelledby="tableTitle">
           <ContactsTableHead
             numSelected={selected.length}
             order={order}
@@ -200,7 +201,7 @@ function ContactsTable(props) {
                     <StyledTableCell component="th" scope="row">
                       {n.price}
                     </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
+                    {/* <StyledTableCell component="th" scope="row">
                       <IconButton color="primary" variant="contained"
 
                         onClick={() => {
@@ -211,7 +212,7 @@ function ContactsTable(props) {
                         <DeleteOutlined fontSize="medium" />
                       </IconButton>
 
-                    </StyledTableCell>
+                    </StyledTableCell> */}
                   </StyledTableRow>
                 );
               })}

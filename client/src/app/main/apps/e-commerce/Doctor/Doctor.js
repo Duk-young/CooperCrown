@@ -145,6 +145,10 @@ function Doctor(props) {
       errs.address = 'Please enter address'
     }
 
+    if (!form.dob) {
+      errs.dob = 'Please enter date of birth'
+    }
+
     if (!form.Gender) {
       errs.gender = 'Please enter gender'
     }
@@ -199,7 +203,6 @@ function Doctor(props) {
 
     submitForm();
   }
-
 
 
 
@@ -374,7 +377,28 @@ function Doctor(props) {
                         </div>
                         <div className="flex flex-row p-6 mb-16 gap-10">
                           <div className="flex flex-row flex-wrap gap-4 w-1/2">
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <TextField
+                              id="date"
+                              required
+                              label="Date Of Birth"
+                              type="date"
+                              InputLabelProps={{ shrink: true }}
+                              defaultValue={form?.dob}
+                              variant='outlined'
+                              fullWidth
+                              error={errors.dob}
+                              helperText={errors.dob}
+                              onChange={(e) => {
+                                handleChange({
+                                  target: { 
+                                    name: 'dob', 
+                                    value: firestore.Timestamp.fromDate(new Date(e.target.value)) 
+                                  }
+                                });
+                              }}
+                            />
+
+                            {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 className="ml-0 0 mt-0 w-full"
                                 margin="normal"
@@ -392,7 +416,7 @@ function Doctor(props) {
                                   'aria-label': 'change date'
                                 }}
                               />
-                            </MuiPickersUtilsProvider>
+                            </MuiPickersUtilsProvider> */}
                           </div>
                           <TextField
                             className="w-1/2"
@@ -559,30 +583,6 @@ function Doctor(props) {
                   </div>
                 </>
               )}
-
-              {/* <br></br> */}
-              {/* <div className="flex flex-col p-12 " >
-              <Button 
-              className={classes.button}
-              variant="contained"
-              color="secondary"
-              onClick={async () => {
-                if (routeParams.doctorId === 'new') {
-                  setisLoading(false);
-                  await dispatch(await Actions.saveShowRoom(form));
-                  setisLoading(true);
-                  props.history.push(`/apps/e-commerce/showRooms`);
-                } else {
-                  setisLoading(false);
-                  await dispatch(await Actions.updateShowRoom(form));
-                  setisLoading(true);
-                  props.history.push(`/apps/e-commerce/showRooms`);
-                }
-              }}>
-                 
-                Save
-              </Button>
-            </div> */}
               <div className="flex flex-col" >
                 <Button
                   style={{

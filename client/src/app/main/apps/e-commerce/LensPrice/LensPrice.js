@@ -1,4 +1,4 @@
-  // import './App.mobile.css';
+// import './App.mobile.css';
 // import './Search.css';
 // import './Themes.css';
 import { useForm } from '@fuse/hooks';
@@ -100,7 +100,7 @@ const CustomHits = connectHits(({ hits, props }) => {
       <TableHead>
         <TableRow>
           <StyledTableCell> LENS TYPE</StyledTableCell>
-         
+
         </TableRow>
       </TableHead>
       <TableBody>
@@ -109,15 +109,15 @@ const CustomHits = connectHits(({ hits, props }) => {
             key={hit.id}
             hover
             className="cursor-pointer"
-            // onClick={() => {
-            //   props.history.push(
-            //     `/apps/e-commerce/LensPrice/profile/${hit.customerId}`
-            //   );
-            // }} 
-            >
-     {    console.log(hit.lensType)}
+          // onClick={() => {
+          //   props.history.push(
+          //     `/apps/e-commerce/LensPrice/profile/${hit.customerId}`
+          //   );
+          // }} 
+          >
+            {console.log(hit.lensType)}
             <StyledTableCell component="th" scope="row">{hit.lensType}</StyledTableCell>
-            </StyledTableRow>
+          </StyledTableRow>
         ))}
       </TableBody>
     </Table>
@@ -151,7 +151,7 @@ const StyledTableRow = withStyles((theme) => ({
 function LensPrice(props) {
   const classes = useStyles(props);
   const { form, handleChange } = useForm(null);
-  
+
 
   return (
     <FusePageSimple
@@ -161,37 +161,37 @@ function LensPrice(props) {
             searchClient={searchClient}
             indexName="LensPrice"
             refresh>
-              
+
             <div className="flex flex-col w-full">
               <div className={clsx(classes.header)}>
                 <div className="flex flex-col w-1/3 mt-0 px-12">
                   <div className="flex flex-row p-4 justify-around">
-                  <div className="flex-1 pl-30">
-              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-            </div> <div className="flex-1 pl-30">
-              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-            </div>
-            <div className="flex-1 pl-30">
-              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-            </div> <div className="flex-1 pl-30">
-              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-            </div>  
+                    <div className="flex-1 pl-30">
+                      <h3 className="ml-40 hidden font-700 ">Hidden</h3>
+                    </div> <div className="flex-1 pl-30">
+                      <h3 className="ml-40 hidden font-700 ">Hidden</h3>
+                    </div>
+                    <div className="flex-1 pl-30">
+                      <h3 className="ml-40 hidden font-700 ">Hidden</h3>
+                    </div> <div className="flex-1 pl-30">
+                      <h3 className="ml-40 hidden font-700 ">Hidden</h3>
+                    </div>
                     <Icon className="text-32">people</Icon>
                     <Typography
                       className="hidden sm:flex mx-0 sm:mx-12"
                       variant="h6">
                       LensPrice
                     </Typography>
-                   
+
                   </div>
                   <div className="flex flex-row justify-around ">
-                  <div className="flex-1 pl-30">
-              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-            </div>
-            <div className="flex-1 pl-30">
-              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-            </div>
-                    
+                    <div className="flex-1 pl-30">
+                      <h3 className="ml-40 hidden font-700 ">Hidden</h3>
+                    </div>
+                    <div className="flex-1 pl-30">
+                      <h3 className="ml-40 hidden font-700 ">Hidden</h3>
+                    </div>
+
                   </div>
                 </div>
                 <div className="flex flex-col w-1/3 pt-32 border-1 headerSearch">
@@ -223,9 +223,9 @@ function LensPrice(props) {
                 </div>
                 <div className="flex flex-row w-1/3 pt-32 justify-around">
                   <div className="flex flex-col w-1/3 ">
-                  <div className="flex-1 pl-30">
-              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-            </div>
+                    <div className="flex-1 pl-30">
+                      <h3 className="ml-40 hidden font-700 ">Hidden</h3>
+                    </div>
                   </div>
                   <div className="pt-10">
                     <Button
@@ -253,7 +253,7 @@ function LensPrice(props) {
                 <div className="flex flex-1 justify-center mt-8">
                   <Pagination />
                 </div>
-                
+
               </div>
             </div>
           </InstantSearch>
