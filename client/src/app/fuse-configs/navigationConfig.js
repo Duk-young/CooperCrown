@@ -95,7 +95,6 @@ const navigationConfig = [
         icon: 'today',
         url: '/apps/calendar'
       },
-
       {
         id: 'Setting',
         title: 'Setting',
@@ -161,46 +160,45 @@ const navigationConfig = [
             url: '/apps/e-commerce/emailtemplates',
             exact: true
           },
-          
           {
             id: 'priceSetting',
             title: 'Price Setting',
-            type: 'item',
+            type: 'collapse',
             auth: authRoles.staff,
-            url: '/apps/e-commerce/pricesetting',
-            exact: true
-            // translate: 'Price Setting',
-            // icon: '',
-            // children: [
-            //   {
-            //     id: 'lens-price',
-            //     title: 'Lens Price',
-            //     auth: authRoles.staff,
-            //     type: 'item',
-            //     url: '/apps/e-commerce/lensPrice'
-            //   },
-            //   {
-            //     id: 'contact-price',
-            //     title: 'Contact Price',
-            //     auth: authRoles.staff,
-            //     type: 'item',
-            //     url: '/apps/e-commerce/contacts'
-            //   },
-            //   {
-            //     id: 'service-price',
-            //     title: 'Service Price',
-            //     auth: authRoles.staff,
-            //     type: 'item',
-            //     url: '/apps/e-commerce/services'
-            //   },
-            //   {
-            //     id: 'dicount-price',
-            //     title: 'Discount Price',
-            //     auth: authRoles.staff,
-            //     type: 'item',
-            //     url: '/apps/e-commerce/discounts'
-            //   }
-            // ]
+            // url: '/apps/e-commerce/pricesettings',
+            // exact: true
+            translate: 'Price Setting',
+            icon: '',
+            children: [
+              {
+                id: 'lens-price',
+                title: 'Lens Price',
+                auth: authRoles.staff,
+                type: 'item',
+                url: '/apps/e-commerce/lensPrice'
+              },
+              {
+                id: 'contact-price',
+                title: 'Contact Price',
+                auth: authRoles.staff,
+                type: 'item',
+                url: '/apps/e-commerce/contacts'
+              },
+              {
+                id: 'service-price',
+                title: 'Service Price',
+                auth: authRoles.staff,
+                type: 'item',
+                url: '/apps/e-commerce/services'
+              },
+              {
+                id: 'dicount-price',
+                title: 'Discount Price',
+                auth: authRoles.staff,
+                type: 'item',
+                url: '/apps/e-commerce/discounts'
+              }
+            ]
           }
         ]
       }
