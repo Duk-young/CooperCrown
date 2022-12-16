@@ -40,7 +40,9 @@ const ECommerceAppConfig = {
     },
     {
       path: '/apps/e-commerce/pricesetting',
-      component: React.lazy(() => import('./PriceSetting/PriceSetting'))
+      // component: React.lazy(() => import('./PriceSetting/PriceSetting')),
+      component: () => <Redirect to="/apps/e-commerce/pricesetting" />
+
     },
     {
       path: '/apps/e-commerce/lensPrice',
@@ -135,13 +137,13 @@ const ECommerceAppConfig = {
       path: '/apps/e-commerce/users',
       component: React.lazy(() => import('./Users/Users1'))
     },
-    
+
     {
       path: '/apps/e-commerce/users-management',
       component: React.lazy(() =>
         import('./Users/users-management/UsersManagement'))
-        // import('./Users/Users1'))
-      
+      // import('./Users/Users1'))
+
     },
     {
       path: '/apps/e-commerce/discount/:discountId',

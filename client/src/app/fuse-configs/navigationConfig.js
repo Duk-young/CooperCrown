@@ -165,40 +165,42 @@ const navigationConfig = [
           {
             id: 'priceSetting',
             title: 'Price Setting',
-            translate: 'Price Setting',
+            type: 'item',
             auth: authRoles.staff,
-            type: 'collapse',
-            icon: '',
-            children: [
-              {
-                id: 'lens-price',
-                title: 'Lens Price',
-                auth: authRoles.staff,
-                type: 'item',
-                url: '/apps/e-commerce/lensPrice'
-              },
-              {
-                id: 'contact-price',
-                title: 'Contact Price',
-                auth: authRoles.staff,
-                type: 'item',
-                url: '/apps/e-commerce/contacts'
-              },
-              {
-                id: 'service-price',
-                title: 'Service Price',
-                auth: authRoles.staff,
-                type: 'item',
-                url: '/apps/e-commerce/services'
-              },
-              {
-                id: 'dicount-price',
-                title: 'Discount Price',
-                auth: authRoles.staff,
-                type: 'item',
-                url: '/apps/e-commerce/discounts'
-              }
-            ]
+            url: '/apps/e-commerce/pricesetting',
+            exact: true
+            // translate: 'Price Setting',
+            // icon: '',
+            // children: [
+            //   {
+            //     id: 'lens-price',
+            //     title: 'Lens Price',
+            //     auth: authRoles.staff,
+            //     type: 'item',
+            //     url: '/apps/e-commerce/lensPrice'
+            //   },
+            //   {
+            //     id: 'contact-price',
+            //     title: 'Contact Price',
+            //     auth: authRoles.staff,
+            //     type: 'item',
+            //     url: '/apps/e-commerce/contacts'
+            //   },
+            //   {
+            //     id: 'service-price',
+            //     title: 'Service Price',
+            //     auth: authRoles.staff,
+            //     type: 'item',
+            //     url: '/apps/e-commerce/services'
+            //   },
+            //   {
+            //     id: 'dicount-price',
+            //     title: 'Discount Price',
+            //     auth: authRoles.staff,
+            //     type: 'item',
+            //     url: '/apps/e-commerce/discounts'
+            //   }
+            // ]
           }
         ]
       }

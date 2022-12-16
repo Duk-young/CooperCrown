@@ -77,7 +77,7 @@ function Lens() {
               <div className="flex flex-col mx-8 sm:mc-16">
                 <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                   <Typography className="text-16 ml-10 sm:text-20 truncate">
-                    Lens Pricej
+                    Lens Price
                   </Typography>
                 </FuseAnimate>
               </div>

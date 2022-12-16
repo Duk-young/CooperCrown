@@ -2,18 +2,32 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import { useForm } from '@fuse/hooks';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as Actions from '../store/actions';
+import { states } from './helper'
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    marginRight: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 240,
+  },
   table: {
     minWidth: 450
   },
@@ -25,11 +39,25 @@ const useStyles = makeStyles({
       color: '#fff'
     }
   }
-});
+}));
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 'max-content',
+    },
+  },
+};
+
 export default function EmailFilters({ open, handleClose }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { form, handleChange, setForm, resetForm } = useForm(null);
+  const theme = useTheme();
 
   const [showroom, setShowroom] = useState([]);
   const [stateAddress, setStateAddress] = useState([]);
@@ -62,14 +90,8 @@ export default function EmailFilters({ open, handleClose }) {
     'Manhattan Wallstreet',
     'Sunny Side',
   ];
-  const stateList = [
-    '( CA ) California',
-    '( NJ ) New Jersey',
-    '( NY ) New York',
-    '( VA ) Virginia',
-    '( MD ) Maryland',
-    '( PA ) Pennsylvania'
-  ];
+  const stateList = states.map(state => `(${state.abbreviation}) ${state.name}`)
+
   const genderList = [
     'Male',
     'Female',
@@ -107,7 +129,7 @@ export default function EmailFilters({ open, handleClose }) {
     'Age between 30 - 34',
     'Age between 25 - 29',
     'Age between 20 - 24',
-    'Age between 15 -19',
+    'Age between 15 - 19',
     'Age between 10 - 14',
     'Age between 5 - 9',
     'Age between 0 - 4'
@@ -200,7 +222,7 @@ export default function EmailFilters({ open, handleClose }) {
     const index = stateAddress.indexOf(event.target.value)
 
     if (index === -1) {
-      setStateAddress([...stateAddress, event.target.value])
+      setStateAddress(event.target.value)
 
     } else {
       setStateAddress(stateAddress.filter(item => item !== event.target.value));
@@ -209,6 +231,7 @@ export default function EmailFilters({ open, handleClose }) {
         setAllStates(false);
       }
     }
+
   };
 
   const handleGenderChange = (event) => {
@@ -403,19 +426,47 @@ export default function EmailFilters({ open, handleClose }) {
                                 />
                               }
                             />
-                            {stateList.map((item, index) => (
-                              <FormControlLabel
-                                key={index}
-                                label={item}
-                                value={item}
-                                control={
-                                  <Checkbox
-                                    checked={stateAddress.includes(item)}
-                                    onChange={handleStateAddressChange}
-                                  />
-                                }
-                              />
-                            ))}
+                            {/* <FormControl variant='outlined' className={classes.formControl}>
+                              <InputLabel id="demo-simple-select-outlined-label">Showroom</InputLabel>
+                              <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="showRoomId"
+                                label="Showroom"
+                                defaultValue={form?.showRoomId}
+                                value={form?.showRoomId}
+                                // helperText={errors.showRoomId}
+                                name="showRoomId"
+                                onChange={handleChange}
+                              >
+                                {showRooms.map((row) => (
+                                  <MenuItem key={row?.showRoomId} value={row?.showRoomId}>
+                                    {row?.locationName}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                              {errors.showRoomId && (
+                                <FormHelperText>Select Showroom from the list</FormHelperText>
+                              )}
+                            </FormControl> */}
+
+                            <FormControl variant='outlined' className={classes.formControl}>
+                              <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-mutiple-name"
+                                multiple
+                                defaultValue={stateAddress}
+                                value={stateAddress}
+                                onChange={handleStateAddressChange}
+                                input={<Input />}
+                                MenuProps={MenuProps}
+                              >
+                                {stateList.map((item, index) => (
+                                  <MenuItem key={index} value={item}>
+                                    {item}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
                           </FormGroup>
                         </div>
                         <TextField

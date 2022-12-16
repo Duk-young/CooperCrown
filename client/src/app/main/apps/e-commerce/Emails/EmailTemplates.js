@@ -4,11 +4,9 @@ import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
 import emailjs from 'emailjs-com';
 import { makeStyles } from '@material-ui/core/styles';
-// import Fab from '@material-ui/core/Fab';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import EmailFilters from './EmailFilters';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-// import Icon from '@material-ui/core/Icon';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
@@ -16,6 +14,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { validateAgeRange, uniqueElements } from './helper'
 
 
 const useStyles = makeStyles({
@@ -31,6 +30,7 @@ const useStyles = makeStyles({
     }
   }
 });
+
 function EmailTemplates(props) {
   const { form, handleChange, setForm } = useForm(null);
   const [disabledState, setDisabledState] = useState(true);
@@ -51,14 +51,21 @@ function EmailTemplates(props) {
 
     {/*
       * Update Filter to include filter by Order & Showroom
-      * Add logic to Filter by age range - Discuss with Ali
     */}
 
+
+    if (selectedFilters.ageRange && selectedFilters.ageRange.length !== 0) {
+      isFilterFilled = true
+
+      const data = validateAgeRange(selectedFilters, customers);
+
+      modifiedCustomers = [...modifiedCustomers, ...data]
+    }
 
     if (selectedFilters.stateAddress && selectedFilters.stateAddress.length !== 0) {
       isFilterFilled = true
       selectedFilters.stateAddress.forEach(filter => {
-        let filteredCustomers = customers.filter(customer => customer?.state == filter)
+        let filteredCustomers = customers.filter(customer => filter.includes(customer?.state))
         modifiedCustomers = [...modifiedCustomers, ...filteredCustomers]
       });
     }
@@ -118,6 +125,7 @@ function EmailTemplates(props) {
 
   const sendEventEmail = async () => {
     const { modifiedCustomers, isFilterFilled } = handleFilter();
+    const uniqueCustomers = uniqueElements(modifiedCustomers);
 
     if (isFilterFilled) {
       return dispatch(
@@ -128,7 +136,7 @@ function EmailTemplates(props) {
     } else if (!isFilterFilled) {
       return sendNotificationEmail(customers)
     } else {
-      return sendNotificationEmail(modifiedCustomers)
+      return sendNotificationEmail(uniqueCustomers)
     }
   };
 

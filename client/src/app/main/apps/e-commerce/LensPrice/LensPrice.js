@@ -72,19 +72,17 @@ const CustomHits = connectHits(({ hits, props }) => {
       var keys = Object.keys(lensPrice);
       let lensTypes = [];
       keys.forEach((row) => {
-        lensTypes.push({ a: row.replace(/"/g, '') });
+        lensTypes.push(row.replace(/"/g, ''));
       });
       setLensTypes(lensTypes);
-      // console.log(lensTypes)
-      // console.log(lensTypes.length)
-      // console.log(lensTypes[3]);
-      for (let i = 0; i < lensTypes.length; i++) {
-        console.log(lensTypes[i]);
-      }
+      console.log(lensPrice)
     };
-
+    
+    
     fetchDetails();
   }, []);
+
+
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
     var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
@@ -99,14 +97,13 @@ const CustomHits = connectHits(({ hits, props }) => {
     <Table stickyHeader aria-label="customized table">
       <TableHead>
         <TableRow>
-          <StyledTableCell> LENS TYPE</StyledTableCell>
-
+          <StyledTableCell>LENS TYPE</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {lensTypes.map((hit) => (
+        {lensTypes.map((hit, index) => (
           <StyledTableRow
-            key={hit.id}
+            key={index}
             hover
             className="cursor-pointer"
           // onClick={() => {
@@ -115,8 +112,7 @@ const CustomHits = connectHits(({ hits, props }) => {
           //   );
           // }} 
           >
-            {console.log(hit.lensType)}
-            <StyledTableCell component="th" scope="row">{hit.lensType}</StyledTableCell>
+            <StyledTableCell component="th" scope="row">{hit}</StyledTableCell>
           </StyledTableRow>
         ))}
       </TableBody>
@@ -134,6 +130,7 @@ const StyledTableCell = withStyles((theme) => ({
     fontSize: 14,
     padding: 10,
     color: theme.palette.common.black,
+    textAlign: 'center'
   }
 }))(TableCell);
 
@@ -180,7 +177,7 @@ function LensPrice(props) {
                     <Typography
                       className="hidden sm:flex mx-0 sm:mx-12"
                       variant="h6">
-                      LensPrice
+                      Lens Price
                     </Typography>
 
                   </div>
