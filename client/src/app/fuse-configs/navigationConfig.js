@@ -95,7 +95,6 @@ const navigationConfig = [
         icon: 'today',
         url: '/apps/calendar'
       },
-
       {
         id: 'Setting',
         title: 'Setting',
@@ -161,13 +160,14 @@ const navigationConfig = [
             url: '/apps/e-commerce/emailtemplates',
             exact: true
           },
-          
           {
             id: 'priceSetting',
             title: 'Price Setting',
-            translate: 'Price Setting',
-            auth: authRoles.staff,
             type: 'collapse',
+            auth: authRoles.staff,
+            // url: '/apps/e-commerce/pricesettings',
+            // exact: true
+            translate: 'Price Setting',
             icon: '',
             children: [
               {

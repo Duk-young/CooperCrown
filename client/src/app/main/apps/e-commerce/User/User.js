@@ -11,6 +11,7 @@ import {
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import { firestore } from 'firebase';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import Icon from '@material-ui/core/Icon';
 import { makeStyles } from '@material-ui/core/styles';
@@ -122,8 +123,7 @@ function NewShowRoom(props) {
     }
 
     const fetchlocation = async () => {
-      const d1 = new Date().toDateString();
-      console.log(d1);
+      // const d1 = new Date().toDateString();
       let showroomdata = [];
       const queryShowrooms = await firestore()
         .collection('showRooms')
@@ -186,6 +186,10 @@ function NewShowRoom(props) {
   const isFormValid = () => {
     const errs = {};
 
+    if (!form.showRoomId) {
+      errs.showRoomId = 'Please select a showroom'
+    }
+
     if (!form.fname) {
       errs.fname = 'Please enter first name'
     }
@@ -198,12 +202,28 @@ function NewShowRoom(props) {
       errs.gender = 'Please enter gender'
     }
 
+    if (!form.address) {
+      errs.address = 'Please enter address'
+    }
+
     if (!form.phone1) {
       errs.phone1 = 'Please enter phone number'
     }
 
     if (!form.city) {
       errs.city = 'Please enter city'
+    }
+
+    if (!form.State) {
+      errs.State = 'Please enter state'
+    }
+
+    if (!form.dob) {
+      errs.dob = 'Please enter date of birth'
+    }
+
+    if (!form.zipcode) {
+      errs.zipcode = 'Please enter zipcode'
     }
 
     if (!form.email) {
@@ -232,7 +252,6 @@ function NewShowRoom(props) {
       props.history.push('/apps/e-commerce/users');
       setisLoading(true);
     } else {
-      console.log(form)
       setisLoading(false);
       await dispatch(await Actions.updateUser(form));
 
@@ -353,7 +372,7 @@ function NewShowRoom(props) {
                       <div>
                         <div className="flex flex-col justify-center p-16 sm:p-24 ">
                           <div className="w-1/2 mb-16 px-6">
-                            <FormControl variant='outlined' className='w-full'>
+                            <FormControl variant='outlined' className='w-full' error={errors.showRoomId}>
                               <InputLabel id="demo-simple-select-outlined-label">Showroom</InputLabel>
                               <Select
                                 labelId="demo-simple-select-outlined-label"
@@ -361,6 +380,7 @@ function NewShowRoom(props) {
                                 label="Showroom"
                                 defaultValue={form?.showRoomId}
                                 value={form?.showRoomId}
+                                // helperText={errors.showRoomId}
                                 name="showRoomId"
                                 onChange={handleChange}
                               >
@@ -370,7 +390,9 @@ function NewShowRoom(props) {
                                   </MenuItem>
                                 ))}
                               </Select>
-                              {/* <FormHelperText>Select Showroom from the list</FormHelperText> */}
+                              {errors.showRoomId && (
+                                <FormHelperText>Select Showroom from the list</FormHelperText>
+                              )}
                             </FormControl>
                           </div>
                           <div className="flex flex-row p-6 mb-16 gap-10">
@@ -378,7 +400,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="First Name"
-                              autoFocus
                               id="user-fname"
                               name="fname"
                               type="text"
@@ -391,6 +412,7 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="w-1/2"
+                              required
                               id="user-address"
                               name="address"
                               onChange={handleChange}
@@ -398,6 +420,8 @@ function NewShowRoom(props) {
                               type="address"
                               value={form.address}
                               variant="outlined"
+                              error={errors.address}
+                              helperText={errors.address}
                               fullwidth
                             />
                           </div>
@@ -406,7 +430,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="Last Name"
-                              autoFocus
                               id="user-lname"
                               name="lname"
                               type="text"
@@ -421,7 +444,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="City"
-                              autoFocus
                               id="user-city"
                               name="city"
                               type="text"
@@ -435,7 +457,27 @@ function NewShowRoom(props) {
                           </div>
                           <div className="flex flex-row p-6 mb-16 gap-10">
                             <div className="flex flex-row flex-wrap w-1/2">
-                              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                              <TextField
+                                id="date"
+                                required
+                                label="Date Of Birth"
+                                type="date"
+                                InputLabelProps={{ shrink: true }}
+                                defaultValue={form?.dob}
+                                variant='outlined'
+                                fullWidth
+                                error={errors.dob}
+                                helperText={errors.dob}
+                                onChange={(e) => {
+                                  handleChange({
+                                    target: {
+                                      name: 'dob',
+                                      value: firestore.Timestamp.fromDate(new Date(e.target.value))
+                                    }
+                                  });
+                                }}
+                              />
+                              {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDatePicker
                                   className="ml-0 0 mt-0 w-full"
                                   margin="normal"
@@ -452,17 +494,19 @@ function NewShowRoom(props) {
                                     'aria-label': 'change date'
                                   }}
                                 />
-                              </MuiPickersUtilsProvider>
+                              </MuiPickersUtilsProvider> */}
                             </div>
                             <TextField
                               className="w-1/2"
+                              required
                               label="State"
-                              autoFocus
                               id="user-State"
                               name="State"
                               type="text"
                               value={form.State}
                               onChange={handleChange}
+                              error={errors.State}
+                              helperText={errors.State}
                               variant="outlined"
                             />
                           </div>
@@ -471,7 +515,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="Gender"
-                              autoFocus
                               id="user-Gender"
                               name="Gender"
                               type="text"
@@ -483,13 +526,15 @@ function NewShowRoom(props) {
                             />
                             <TextField
                               className="w-1/2"
+                              required
                               label="Zip Code"
-                              autoFocus
                               id="user-zipcode"
                               name="zipcode"
                               type="Number"
                               value={form.zipcode}
                               onChange={handleChange}
+                              error={errors.zipcode}
+                              helperText={errors.zipcode}
                               variant="outlined"
                             />
                           </div>
@@ -498,7 +543,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="Phone 1"
-                              autoFocus
                               id="user-phone1"
                               name="phone1"
                               type="phone"
@@ -512,7 +556,6 @@ function NewShowRoom(props) {
                               className="w-1/2"
                               required
                               label="Email"
-                              autoFocus
                               id="email"
                               name="email"
                               type="email"
@@ -527,7 +570,6 @@ function NewShowRoom(props) {
                             <TextField
                               className="w-1/2"
                               label="Phone 2"
-                              autoFocus
                               id="user-phone2"
                               name="phone2"
                               type="phone"
@@ -538,7 +580,6 @@ function NewShowRoom(props) {
                             <TextField
                               className="w-1/2"
                               label="Other"
-                              autoFocus
                               id="user-other"
                               name="other"
                               type="text"
@@ -581,7 +622,6 @@ function NewShowRoom(props) {
                           className="mt-8 mb-16"
                           required
                           label="Username"
-                          autoFocus
                           id="user-username"
                           name="username"
                           value={form.username}

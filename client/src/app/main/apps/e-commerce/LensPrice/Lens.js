@@ -101,38 +101,38 @@ function Lens() {
       }
       content={
         <div className="p-16 sm:p-24 ">
-            <div className='justify-right'>
+          <div className='justify-right'>
             <AddLensTypeDialog open={open} handleClose={handleClose} />
 
             {!disabledState && (
-          <> <Button
+              <> <Button
 
-            className={classes.button}
-            variant="contained"
-            color="secondary"
-            onClick={() => {
-              setOpen(true);
-            }}
-            aria-label="add">
+                className={classes.button}
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  setOpen(true);
+                }}
+                aria-label="add">
 
-            Add New Lens Type
-          </Button></>
-          
-        )}
-            </div>
-                  <CustomAutocomplete
-                    list={lensTypes}
-                    form={form}
-                    size="small"
-                    setForm={setForm}
-                    handleChange={handleChange}
-                    id="a"
-                    freeSolo={false}
-                    label="Select Lens Type"
-                    customFunction={customFunction}
-                  />
-             
-              <br></br>
+                Add New Lens Type
+              </Button></>
+
+            )}
+          </div>
+          <CustomAutocomplete
+            list={lensTypes}
+            form={form}
+            size="small"
+            setForm={setForm}
+            handleChange={handleChange}
+            id="a"
+            freeSolo={false}
+            label="Select Lens Type"
+            customFunction={customFunction}
+          />
+
+          <br></br>
           <TableGrid form={form} rows={rows} setRows={setRows} />
         </div>
       }

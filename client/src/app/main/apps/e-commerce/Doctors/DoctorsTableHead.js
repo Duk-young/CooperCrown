@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.background.paper
   }
 }));
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -70,6 +71,7 @@ const StyledTableCell = withStyles((theme) => ({
     padding: 10
   }
 }))(TableCell);
+
 function DoctorsTableHead(props) {
   const classes = useStyles(props);
   const [selectedDoctorsMenu, setselectedDoctorsMenu] = useState(null);

@@ -39,7 +39,7 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Reports/Reports'))
     },
     {
-      path: '/apps/e-commerce/pricesetting',
+      path: '/apps/e-commerce/pricesettings',
       component: React.lazy(() => import('./PriceSetting/PriceSetting'))
     },
     {
@@ -135,13 +135,13 @@ const ECommerceAppConfig = {
       path: '/apps/e-commerce/users',
       component: React.lazy(() => import('./Users/Users1'))
     },
-    
+
     {
       path: '/apps/e-commerce/users-management',
       component: React.lazy(() =>
         import('./Users/users-management/UsersManagement'))
-        // import('./Users/Users1'))
-      
+      // import('./Users/Users1'))
+
     },
     {
       path: '/apps/e-commerce/discount/:discountId',
@@ -169,10 +169,10 @@ const ECommerceAppConfig = {
         import('./SecurityAndPrivacy/SecurityAndPrivacy')
       )
     },
-    {
-      path: '/apps/e-commerce',
-      component: () => <Redirect to="/apps/e-commerce/showRooms" />
-    },
+    // {
+    //   path: '/apps/e-commerce',
+    //   component: () => <Redirect to="/apps/e-commerce/showRooms" />
+    // },
     {
       path: '/apps/inventory/addframes/:frameId',
       component: React.lazy(() => import('./Inventory/Frames/AddFrames'))

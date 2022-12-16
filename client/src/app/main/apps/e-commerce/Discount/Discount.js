@@ -78,6 +78,7 @@ function Discount(props) {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
+  const [errors, setErrors] = useState({});
 
   const routeParams = useParams();
 
@@ -90,7 +91,7 @@ function Discount(props) {
         dispatch(Actions.newDiscount());
         setisLoading(true);
       } else {
-       
+
         await dispatch(await Actions.getDiscount(discountId));
         setisLoading(true);
       }
@@ -139,6 +140,51 @@ function Discount(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const isFormValid = () => {
+    const errs = {};
+
+    if (!form.code) {
+      errs.code = 'Please enter discount code'
+    }
+
+    if (!form.amount) {
+      errs.amount = 'Please enter discount amount'
+    }
+
+    return errs;
+  }
+
+  const submitForm = async () => {
+    if (routeParams.discountId === 'new') {
+      setisLoading(false);
+      await dispatch(await Actions.saveDiscount(form));
+      props.history.push('/apps/e-commerce/discounts');
+      setisLoading(true);
+    } else {
+      setisLoading(false);
+      await dispatch(await Actions.updateDiscount(form));
+      props.history.push('/apps/e-commerce/discounts');
+      setisLoading(true);
+    }
+  }
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const errs = isFormValid();
+    setErrors(errs);
+
+    if (Object.entries(errs).some((err) => err !== '')) {
+      return
+    }
+
+    submitForm();
+  }
+
+
+
   if (
     (!product.data ||
       (product.data && routeParams.discountId !== product.data.id)) &&
@@ -225,7 +271,7 @@ function Discount(props) {
       }
       content={
         form && (
-          <div className="flex flex-col h-260  px-16 py-6">
+          <div className="flex flex-col h-260  px-16 py-6 gap-20">
             <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                 <h1 className="font-700" style={{ color: '#f15a25' }}>
@@ -237,15 +283,15 @@ function Discount(props) {
                   <div>
                     <TextField
                       className="mt-8 mb-16"
-                     //error={form.code === ''}
                       required
                       label="Name"
-                      autoFocus
                       id="discount-code"
                       name="code"
                       value={form.code}
                       onChange={handleChange}
                       variant="outlined"
+                      error={errors.code}
+                      helperText={errors.code}
                       fullWidth
                     />
                     <TextField
@@ -261,6 +307,7 @@ function Discount(props) {
                     />
                     <TextField
                       className="mt-8 mb-16"
+                      required
                       id="discount-amount"
                       name="amount"
                       onChange={handleChange}
@@ -268,6 +315,8 @@ function Discount(props) {
                       type="Number"
                       value={form.amount}
                       variant="outlined"
+                      error={errors.amount}
+                      helperText={errors.amount}
                       fullWidth
                     />
                   </div>
@@ -276,57 +325,44 @@ function Discount(props) {
               <br></br>
 
             </div>
-            <div className="flex flex-col p-12" >
+            <div className="flex flex-col" >
               <Button
+                style={{
+                  padding: '10px 32px'
+                }}
                 className={classes.button}
                 variant="contained"
                 color="secondary"
-                style={{
-                  maxHeight: '60px',
-                  minHeight: '60px'
-                }}
-                onClick={async () => {
-
-                  if (routeParams.discountId === 'new') {
-                    setisLoading(false);
-                    await dispatch(await Actions.saveDiscount(form));
-                    props.history.push('/apps/e-commerce/discounts');
-                    setisLoading(true);
-                  } else {
-                    setisLoading(false);
-                    await dispatch(await Actions.updateDiscount(form));
-                    props.history.push('/apps/e-commerce/discounts');
-                    setisLoading(true);
-                  }
-                }}>
-
+                onClick={handleSubmit}>
                 Save
               </Button>
-
             </div>
-            <div className="flex flex-col p-12">
-              <ConfirmDiscountDelete open={open} handleClose={handleClose} form={form} propssent={props} />
+            {routeParams.discountId !== 'new' && (
+              <div className="flex flex-col">
+                <ConfirmDiscountDelete open={open} handleClose={handleClose} form={form} propssent={props} />
 
-              <Button
-                style={{
-                  color: 'red'
-                }}
-                variant="outlined"
-                // onClick={() => setShowModal(true)}
-                onClick={() => {
-                  if (routeParams.discountId === 'new') {
-                    alert('No Data to delete')
-                  }
-                  else {
-                    setOpen(true);
-                  }
+                <Button
+                  style={{
+                    color: 'red',
+                    padding: '10px 32px'
+                  }}
+                  variant="outlined"
+                  // onClick={() => setShowModal(true)}
+                  onClick={() => {
+                    if (routeParams.doctorId === 'new') {
+                      alert('No Data to delete')
+                    }
+                    else {
+                      setOpen(true);
+                    }
 
-                }}
-              >
-                <Icon>delete</Icon>
-                DELETE
-              </Button>
-            </div>
+                  }}
+                >
+                  <Icon>delete</Icon>
+                  DELETE
+                </Button>
+              </div>
+            )}
           </div>
 
         )

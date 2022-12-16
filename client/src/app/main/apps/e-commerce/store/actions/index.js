@@ -12,3 +12,4 @@ export * from './user.actions';
 export * from './users.actions';
 export * from './doctors.actions';
 export * from './doctor.actions';
+export * from './email.actions';

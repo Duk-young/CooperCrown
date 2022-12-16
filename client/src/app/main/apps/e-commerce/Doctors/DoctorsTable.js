@@ -185,19 +185,19 @@ function DoctorsTable(props) {
                     </StyledTableCell>*/}
 
                     <StyledTableCell component="th" scope="row">
-                      {n.date ? n.date : '-----'}
+                      {n.date}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {n.fname} {n.lname}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.location1 ? n.location1 : '-----'}
+                      {n.location1}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.location2 ? n.location2 : '-----'}
+                      {n.location2}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.location3 ? n.location3 : '-----'}
+                      {n.location3}
                     </StyledTableCell>
 
 

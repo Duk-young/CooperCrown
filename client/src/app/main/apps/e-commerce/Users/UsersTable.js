@@ -213,14 +213,14 @@ function UsersTable(props) {
 
                     <StyledTableCell component="th" scope="row">
                       {/* {moment(n?.dobString).format('MM/DD/YYYY')} */}
-                      {n.date ? n.date : '-----'}
+                      {n.date}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.location ? n.location : '-----'}
+                      {n.location}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
 
-                      {n.email ? n.email : '-----'}
+                      {n.email}
                     </StyledTableCell>
                     {/* <StyledTableCell component="th" scope="row">
                       {n.phone1}
@@ -230,10 +230,10 @@ function UsersTable(props) {
                     </StyledTableCell> */}
 
                     <StyledTableCell component="th" scope="row">
-                      {n.username ? n.username : '-----'}
+                      {n.username}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
-                      {n.Role ? n.Role : '-----'}
+                      {n.Role}
                     </StyledTableCell>
                   </TableRow>
                 );

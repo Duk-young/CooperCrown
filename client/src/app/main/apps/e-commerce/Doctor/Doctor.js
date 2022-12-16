@@ -141,6 +141,14 @@ function Doctor(props) {
       errs.lname = 'Please enter last name'
     }
 
+    if (!form.address) {
+      errs.address = 'Please enter address'
+    }
+
+    if (!form.dob) {
+      errs.dob = 'Please enter date of birth'
+    }
+
     if (!form.Gender) {
       errs.gender = 'Please enter gender'
     }
@@ -151,6 +159,14 @@ function Doctor(props) {
 
     if (!form.city) {
       errs.city = 'Please enter city'
+    }
+
+    if (!form.State) {
+      errs.State = 'Please enter state'
+    }
+
+    if (!form.zipcode) {
+      errs.zipcode = 'Please enter zipcode'
     }
 
     if (!form.doctoremail) {
@@ -187,7 +203,6 @@ function Doctor(props) {
 
     submitForm();
   }
-
 
 
 
@@ -290,7 +305,7 @@ function Doctor(props) {
                   <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                     <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                       <h1 className="font-700" style={{ color: '#f15a25' }}>
-                        USER INFO
+                        DOCTOR INFO
                       </h1>
                     </div>
 
@@ -315,6 +330,7 @@ function Doctor(props) {
                           />
                           <TextField
                             className="w-1/2"
+                            required
                             id="doctor-address"
                             name="address"
                             onChange={handleChange}
@@ -322,6 +338,8 @@ function Doctor(props) {
                             type="address"
                             value={form.address}
                             variant="outlined"
+                            error={errors.address}
+                            helperText={errors.address}
                             fullwidth
                           />
                         </div>
@@ -359,7 +377,28 @@ function Doctor(props) {
                         </div>
                         <div className="flex flex-row p-6 mb-16 gap-10">
                           <div className="flex flex-row flex-wrap gap-4 w-1/2">
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <TextField
+                              id="date"
+                              required
+                              label="Date Of Birth"
+                              type="date"
+                              InputLabelProps={{ shrink: true }}
+                              defaultValue={form?.dob}
+                              variant='outlined'
+                              fullWidth
+                              error={errors.dob}
+                              helperText={errors.dob}
+                              onChange={(e) => {
+                                handleChange({
+                                  target: { 
+                                    name: 'dob', 
+                                    value: firestore.Timestamp.fromDate(new Date(e.target.value)) 
+                                  }
+                                });
+                              }}
+                            />
+
+                            {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
                                 className="ml-0 0 mt-0 w-full"
                                 margin="normal"
@@ -377,16 +416,19 @@ function Doctor(props) {
                                   'aria-label': 'change date'
                                 }}
                               />
-                            </MuiPickersUtilsProvider>
+                            </MuiPickersUtilsProvider> */}
                           </div>
                           <TextField
                             className="w-1/2"
+                            required
                             label="State"
                             autoFocus
                             id="doctor-State"
                             name="State"
                             type="text"
                             value={form.State}
+                            error={errors.State}
+                            helperText={errors.State}
                             onChange={handleChange}
                             variant="outlined"
                           />
@@ -408,6 +450,7 @@ function Doctor(props) {
                           />
                           <TextField
                             className="w-1/2"
+                            required
                             label="Zip Code"
                             autoFocus
                             id="doctor-zipcode"
@@ -415,6 +458,8 @@ function Doctor(props) {
                             type="Number"
                             value={form.zipcode}
                             onChange={handleChange}
+                            error={errors.zipcode}
+                            helperText={errors.zipcode}
                             variant="outlined"
                           />
                         </div>
@@ -538,30 +583,6 @@ function Doctor(props) {
                   </div>
                 </>
               )}
-
-              {/* <br></br> */}
-              {/* <div className="flex flex-col p-12 " >
-              <Button 
-              className={classes.button}
-              variant="contained"
-              color="secondary"
-              onClick={async () => {
-                if (routeParams.doctorId === 'new') {
-                  setisLoading(false);
-                  await dispatch(await Actions.saveShowRoom(form));
-                  setisLoading(true);
-                  props.history.push(`/apps/e-commerce/showRooms`);
-                } else {
-                  setisLoading(false);
-                  await dispatch(await Actions.updateShowRoom(form));
-                  setisLoading(true);
-                  props.history.push(`/apps/e-commerce/showRooms`);
-                }
-              }}>
-                 
-                Save
-              </Button>
-            </div> */}
               <div className="flex flex-col" >
                 <Button
                   style={{

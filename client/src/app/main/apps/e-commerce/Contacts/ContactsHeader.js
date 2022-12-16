@@ -48,7 +48,7 @@ function ContactsHeader(props) {
       <div className="flex flex-col w-full items-center justify-center ">
 
 
-        <div className="flex items-center ">
+        <div className="flex items-center pb-10">
 
 
           <FuseAnimate animation="transition.slideLeftIn" delay={300}>
@@ -58,7 +58,7 @@ function ContactsHeader(props) {
           </FuseAnimate>
         </div>
 
-        <div className='flex flex-1 flex-row items-center justify-center pb-10'>
+        <div className='flex flex-1 flex-row items-center justify-center mb-10'>
 
         <ThemeProvider theme={mainTheme}>
             <FuseAnimate animation="transition.slideDownIn" delay={300}>

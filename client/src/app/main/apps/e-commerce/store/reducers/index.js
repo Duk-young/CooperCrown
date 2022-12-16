@@ -12,6 +12,7 @@ import doctor from './doctor.reducer';
 import doctors from './doctors.reducer';
 import user from './user.reducer';
 import users from './users.reducer';
+import emails from './email.reducer'
 
 const reducer = combineReducers({
   products,
@@ -26,7 +27,8 @@ const reducer = combineReducers({
   doctor,
   doctors,
   user,
-  users
+  users,
+  emails
 });
 
 export default reducer;

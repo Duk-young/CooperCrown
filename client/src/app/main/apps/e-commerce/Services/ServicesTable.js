@@ -11,6 +11,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import FuseLoading from '@fuse/core/FuseLoading';
 import React, { useEffect, useState } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 // import ConfirmServiceDelete from './Service/ConfirmServiceDelete';
 
@@ -72,6 +73,7 @@ function ServicesTable(props) {
     });
   }
 
+
   function handleSelectAllClick(event) {
     if (event.target.checked) {
       setSelected(data.map((n) => n.id));
@@ -79,6 +81,30 @@ function ServicesTable(props) {
     }
     setSelected([]);
   }
+
+  const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+      fontSize: 14,
+      padding: 5,
+      textAlign: 'center'
+    },
+    body: {
+      fontSize: 14,
+      padding: 0,
+      textAlign: 'center',
+      maxWidth: 'min-content'
+    }
+  }))(TableCell);
+
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover
+      }
+    }
+  }))(TableRow);
 
   // function handleClick(item) {
   //   props.history.push(`/apps/e-commerce/service/${item.id}`);
@@ -115,7 +141,7 @@ function ServicesTable(props) {
   return (
     <div className="w-full flex flex-col ">
       <FuseScrollbars className="flex-grow overflow-x-auto">
-        <Table className="min-w-xl" aria-labelledby="tableTitle">
+        <Table aria-labelledby="tableTitle">
           <ServicesTableHead
             numSelected={selected.length}
             order={order}
@@ -145,7 +171,7 @@ function ServicesTable(props) {
               .map((n) => {
                 const isSelected = selected.indexOf(n.id) !== -1;
                 return (
-                  <TableRow
+                  <StyledTableRow
                     className="h-64 cursor-pointer"
                     hover
                     role="checkbox"
@@ -167,19 +193,18 @@ function ServicesTable(props) {
                       /> 
                     </TableCell>*/}
 
-                    <TableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row">
                       {n.name}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.description}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {n.price}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
+                    </StyledTableCell>
+                    {/* <StyledTableCell component="th" scope="row">
                       <div>
-                        {/* <ConfirmServiceDelete open={open} handleClose={handleClose} form={form} propssent={props} /> */}
-
+                        <ConfirmServiceDelete open={open} handleClose={handleClose} form={form} propssent={props} />
                       </div>
                       <IconButton color="primary" variant="contained"
 
@@ -191,8 +216,8 @@ function ServicesTable(props) {
                         <DeleteOutlined fontSize="medium" />
                       </IconButton>
 
-                    </TableCell>
-                  </TableRow>
+                    </StyledTableCell> */}
+                  </StyledTableRow>
                 );
               })}
           </TableBody>
