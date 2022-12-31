@@ -184,9 +184,6 @@ function ContactsTable(props) {
                     </TableCell>*/}
 
                     <StyledTableCell component="th" scope="row">
-                      {n.type}
-                    </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
                       {n.style}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
@@ -197,6 +194,9 @@ function ContactsTable(props) {
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {n.basecurve}
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+                      {n.packquantity}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {n.price}

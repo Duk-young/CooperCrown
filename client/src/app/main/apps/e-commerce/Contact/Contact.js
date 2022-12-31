@@ -143,14 +143,6 @@ function NewShowRoom(props) {
   const isFormValid = () => {
     const errs = {};
 
-    if (!form.type) {
-      errs.type = 'Please enter contact type'
-    }
-
-    if (!form.style) {
-      errs.style = 'Please enter contact style'
-    }
-
     if (!form.brand) {
       errs.brand = 'Please enter contact brand'
     }
@@ -395,14 +387,12 @@ function NewShowRoom(props) {
                         name="showRoomId"
                         onChange={handleChange}
                       >
-                        {showRooms.map((row) => (
-                          <MenuItem key={row?.showRoomId} value={row?.showRoomId}>
+                        <MenuItem value={row?.showRoomId}>
                             {row?.locationName}
                           </MenuItem>
-                        ))}
                       </Select>
                       {errors.showRoomId && (
-                        <FormHelperText>Select Showroom from the list</FormHelperText>
+                        <FormHelperText>Select a pack quantity</FormHelperText>
                       )}
                     </FormControl> */}
                     <TextField
