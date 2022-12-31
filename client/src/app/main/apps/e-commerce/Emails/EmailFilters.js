@@ -15,7 +15,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Actions from '../store/actions';
 import { states } from './helper'
 
@@ -58,6 +58,11 @@ export default function EmailFilters({ open, handleClose }) {
   const dispatch = useDispatch();
   const { form, handleChange, setForm, resetForm } = useForm(null);
   const theme = useTheme();
+  const products = useSelector(
+    ({ eCommerceApp }) => eCommerceApp.products.data
+  );
+
+  const [data, setData] = useState(products);
 
   const [showroom, setShowroom] = useState([]);
   const [stateAddress, setStateAddress] = useState([]);
@@ -74,22 +79,23 @@ export default function EmailFilters({ open, handleClose }) {
   const [allAgeRanges, setAllAgeRanges] = useState(false);
   const [allEthnicities, setAllEthnicities] = useState(false);
 
+  useEffect(() => {
+    const getRooms = async () => {
+      await dispatch(await Actions.getShowRooms());
+    };
+    getRooms();
+  }, [dispatch]);
+
+  console.log({ products, data })
+
+  useEffect(() => {
+    setData(products);
+  }, [products]);
 
 
-  const showroomList = [
-    'Bayside',
-    'Brooklyn Dubo',
-    'Brooklyn Bedford St',
-    'Closter',
-    'Flushing',
-    'Greenwich Village',
-    'Long Island City',
-    'Long Island Roslyn',
-    'Manhattan 72nd St',
-    'Manhattan Mott St',
-    'Manhattan Wallstreet',
-    'Sunny Side',
-  ];
+
+  const showroomList = products.map(item => item.locationName) 
+  
   const stateList = states.map(state => `(${state.abbreviation}) ${state.name}`)
 
   const genderList = [

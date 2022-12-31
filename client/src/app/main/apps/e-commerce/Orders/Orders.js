@@ -35,6 +35,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import withReducer from 'app/store/withReducer';
 
 // const color = '#fff';
@@ -79,6 +81,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
     backgroundSize: 'cover',
     backgroundColor: theme.palette.primary.dark
+  },
+  tabHeader: {
+    background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+    color: theme.palette.primary.contrastText,
+    backgroundSize: 'cover',
+    backgroundColor: theme.palette.primary.dark
   }
 }));
 
@@ -86,6 +94,15 @@ const searchClient = algoliasearch(
   '5AS4E06TDY',
   '42176bd827d90462ba9ccb9578eb43b2'
 );
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+};
+
+const statuses = ['DRAFT', 'LAB READY', 'IN PROGRESS', 'HOLD', 'TO SHOWROOM', 'PICK UP READY', 'COMPLETED']
 
 const CustomHits = connectHits(({ hits, props }) => {
   return (
@@ -194,32 +211,74 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <>
+          {children}
+        </>
+      )}
+    </div>
+  );
+}
+
+
 function Orders(props) {
   const classes = useStyles(props);
   const { form, handleChange } = useForm(null);
+
+  const [value, setValue] = React.useState(0);
+  const handleTabChange = (event, newValue) => {
+    setValue(newValue);
+    console.log({ value, newValue })
+  };
   return (
     <FusePageSimple
       content={
         <div className="flex w-full ">
           <TableContainer className="flex flex-col w-full">
             <InstantSearch searchClient={searchClient} indexName="orders">
+              <div className={clsx(classes.tabHeader)}>
+                <div className="p-4 flex justify-center">
+                  {/* <Configure
+                  filters={`orderDate: ${form?.start ? form?.start.getTime() : -2208988800000
+                    } TO ${form?.end ? form?.end.getTime() : new Date().getTime()
+                    }`}
+                /> */}
+                  {/* <Icon className="text-32">description</Icon> */}
+                  <Typography
+                    className="hidden sm:flex mx-0 sm:mx-12 text-center"
+                    variant="h6"
+                    style={{ fontSize: '3rem', fontWeight: 600 }}
+                  >
+                    ORDERS
+                  </Typography>
+                </div>
+              </div>
+              <div className={clsx(classes.tabHeader)}>
+                <Tabs
+                  value={value}
+                  onChange={handleTabChange}
+                  indicatorColor="rgb(241, 90, 37)"
+                  textColor="rgb(241, 90, 37)"
+                  variant="fullWidth"
+                  aria-label="simple tabs example">
+                  {statuses.map((status, index) => (
+                    <Tab key={index} label={status} style={{ minWidth: '100px', fontSize: '1.2rem' }} {...a11yProps(index)} />
+                  ))}
+                </Tabs>
+              </div>
               <div className={clsx(classes.header)}>
-                <div className="flex flex-col w-1/3  px-12">
-                  <div className="flex flex-row p-4">
-                    <Configure
-                      filters={`orderDate: ${
-                        form?.start ? form?.start.getTime() : -2208988800000
-                      } TO ${
-                        form?.end ? form?.end.getTime() : new Date().getTime()
-                      }`}
-                    />
-                    <Icon className="text-32">description</Icon>
-                    <Typography
-                      className="hidden sm:flex mx-0 sm:mx-12"
-                      variant="h6">
-                      Orders
-                    </Typography>
-                  </div>
+                <div className="flex flex-col w-1/3 px-12 pt-40">
                   <div className="flex flex-row justify-around">
                     {/* <ThemeProvider theme={customMaterialTheme}> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -258,11 +317,23 @@ function Orders(props) {
                       <Grid container justifyContent="start">
                         <KeyboardDatePicker
                           label="End Date"
-                          className=" mt-0 mb-24 bg-white"
+                          className=" mt-0 mb-24 bg-transparent"
                           margin="normal"
                           id="date-picker-dialog"
                           format="MM/dd/yyyy"
                           value={form?.end}
+                          InputLabelProps={{
+                            style: {
+                              color: 'white'
+                            }
+                          }}
+                          InputProps={{
+                            style: {
+                              color: 'white',
+                              borderColor: 'white',
+                              borderRadius: 1
+                            }
+                          }}
                           onChange={(date) => {
                             handleChange({
                               target: { name: 'end', value: date }
@@ -277,8 +348,7 @@ function Orders(props) {
                     {/* </ThemeProvider> */}
                   </div>
                 </div>
-
-                <div className="flex flex-col w-1/3 border-1 pt-32">
+                <div className="flex flex-col w-1/3 pt-40">
                   <SearchBox
                     translations={{
                       placeholder: 'Search for orders...'
@@ -311,7 +381,13 @@ function Orders(props) {
                   </FuseAnimate>
                 </div>
               </div>
-              <CustomHits props={props} />
+              <>
+              {statuses.map((status, index) => (
+                <TabPanel key={index} value={value} index={index}>
+                  <CustomHits props={props} />
+                </TabPanel>
+              ))}
+              </>
               <div className="flex flex-row justify-center">
                 <div className="flex flex-1"></div>
                 <div className="flex flex-1 justify-center mt-8">
