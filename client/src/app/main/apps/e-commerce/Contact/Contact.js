@@ -143,14 +143,6 @@ function NewShowRoom(props) {
   const isFormValid = () => {
     const errs = {};
 
-    if (!form.type) {
-      errs.type = 'Please enter contact type'
-    }
-
-    if (!form.style) {
-      errs.style = 'Please enter contact style'
-    }
-
     if (!form.brand) {
       errs.brand = 'Please enter contact brand'
     }
@@ -187,7 +179,7 @@ function NewShowRoom(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const errs = isFormValid();
     setErrors(errs);
 
@@ -301,7 +293,7 @@ function NewShowRoom(props) {
               <div className="justify-center p-16 sm:p-24 ">
                 {tabValue === 0 && (
                   <div>
-                    <TextField
+                    {/* <TextField
                       className="mt-8 mb-16"
                       required
                       label="Contact Lens Type"
@@ -313,7 +305,7 @@ function NewShowRoom(props) {
                       error={errors.type}
                       helperText={errors.type}
                       fullWidth
-                    />
+                    /> */}
                     <TextField
                       className="mt-8 mb-16"
                       required
@@ -370,6 +362,39 @@ function NewShowRoom(props) {
                       helperText={errors.basecurve}
                       fullWidth
                     />
+                    {/* <TextField
+                      className="mt-8 mb-16"
+                      required
+                      id="contact-pack-quantity"
+                      name="packqty"
+                      onChange={handleChange}
+                      label="Pack Quantity"
+                      type="packqty"
+                      value={form.basecurve}
+                      variant="outlined"
+                      error={errors.basecurve}
+                      helperText={errors.basecurve}
+                      fullWidth
+                    /> */}
+                    {/* <FormControl variant='outlined' className='w-full' error={errors.showRoomId}>
+                      <InputLabel id="demo-simple-select-outlined-label">Pack Quantity</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="showRoomId"
+                        label="Showroom"
+                        defaultValue={form?.showRoomId}
+                        value={form?.showRoomId}
+                        name="showRoomId"
+                        onChange={handleChange}
+                      >
+                        <MenuItem value={row?.showRoomId}>
+                            {row?.locationName}
+                          </MenuItem>
+                      </Select>
+                      {errors.showRoomId && (
+                        <FormHelperText>Select a pack quantity</FormHelperText>
+                      )}
+                    </FormControl> */}
                     <TextField
                       className="mt-8 mb-16"
                       required

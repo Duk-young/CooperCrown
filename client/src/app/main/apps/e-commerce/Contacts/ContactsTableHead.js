@@ -17,13 +17,6 @@ import React, { useState } from 'react';
 
 const rows = [
   {
-    id: 'contact-type',
-    align: 'center',
-    disablePadding: false,
-    label: 'Type',
-    sort: true
-  },
-  {
     id: 'contact-style',
     align: 'center',
     disablePadding: false,
@@ -49,6 +42,13 @@ const rows = [
     align: 'center',
     disablePadding: false,
     label: 'Base Curve',
+    sort: true
+  },
+  {
+    id: 'contact-packquantity',
+    align: 'center',
+    disablePadding: false,
+    label: 'Pack Quantity',
     sort: true
   },
   {
