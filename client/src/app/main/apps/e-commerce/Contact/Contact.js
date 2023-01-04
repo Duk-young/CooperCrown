@@ -19,6 +19,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import * as Actions from '../store/actions';
 import reducer from '../store/reducers';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 // const useStyles = makeStyles((theme) => ({
 //   productImageFeaturedStar: {
@@ -139,9 +144,15 @@ function NewShowRoom(props) {
     return form.type.length > 0 && form.style.length > 0 && form.brand.length > 0 && form.model.length > 0 && form.basecurve.length > 0 && form.price.length > 0;
   }
 
+  const packQty = [24, 12, 1]
+
 
   const isFormValid = () => {
     const errs = {};
+
+    if (!form.style) {
+      errs.style = 'Please enter contact style'
+    }
 
     if (!form.brand) {
       errs.brand = 'Please enter contact brand'
@@ -157,6 +168,10 @@ function NewShowRoom(props) {
 
     if (!form.price) {
       errs.price = 'Please enter price'
+    }
+
+    if (!form.packquantity) {
+      errs.packquantity = 'Please enter pack quanity'
     }
 
     return errs;
@@ -376,25 +391,28 @@ function NewShowRoom(props) {
                       helperText={errors.basecurve}
                       fullWidth
                     /> */}
-                    {/* <FormControl variant='outlined' className='w-full' error={errors.showRoomId}>
+                    <FormControl variant='outlined' className='w-full mt-8 mb-16' error={errors.packquantity}>
                       <InputLabel id="demo-simple-select-outlined-label">Pack Quantity</InputLabel>
                       <Select
                         labelId="demo-simple-select-outlined-label"
-                        id="showRoomId"
-                        label="Showroom"
-                        defaultValue={form?.showRoomId}
-                        value={form?.showRoomId}
-                        name="showRoomId"
+                        id="packquantity"
+                        required
+                        label="Pack Quantity"
+                        defaultValue={form?.packquantity}
+                        value={form?.packquantity}
+                        name="packquantity"
                         onChange={handleChange}
                       >
-                        <MenuItem value={row?.showRoomId}>
-                            {row?.locationName}
+                        {packQty.map((quantity, index) => (
+                          <MenuItem key={index} value={quantity}>
+                            {`${quantity} Pk`}
                           </MenuItem>
+                        ))}
                       </Select>
-                      {errors.showRoomId && (
+                      {errors.packquantity && (
                         <FormHelperText>Select a pack quantity</FormHelperText>
                       )}
-                    </FormControl> */}
+                    </FormControl>
                     <TextField
                       className="mt-8 mb-16"
                       required
