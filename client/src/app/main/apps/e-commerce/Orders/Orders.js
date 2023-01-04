@@ -3,6 +3,7 @@ import {
   SearchBox,
   Pagination,
   HitsPerPage,
+  // connectSearchBox,
   Configure
 } from 'react-instantsearch-dom';
 import {
@@ -16,6 +17,7 @@ import { connectHits } from 'react-instantsearch-dom';
 import { Link } from 'react-router-dom';
 import { useForm } from '@fuse/hooks';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { firestore } from 'firebase';
 import algoliasearch from 'algoliasearch/lite';
 import clsx from 'clsx';
 import DateFnsUtils from '@date-io/date-fns';
@@ -28,6 +30,7 @@ import moment from 'moment';
 import React from 'react';
 import reducer from '../store/reducers';
 import SearchDialouge from './SearchDialouge';
+import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -37,6 +40,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import TextField from '@material-ui/core/TextField';
 import withReducer from 'app/store/withReducer';
 
 // const color = '#fff';
@@ -74,19 +78,21 @@ import withReducer from 'app/store/withReducer';
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    height: 100,
-    minHeight: 100,
     display: 'flex',
+    padding: '10px',
+    alignItems: 'center',
+    gap: '1rem',
     background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
     color: theme.palette.primary.contrastText,
     backgroundSize: 'cover',
-    backgroundColor: theme.palette.primary.dark
+    backgroundColor: theme.palette.primary.dark,
   },
   tabHeader: {
     background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
     color: theme.palette.primary.contrastText,
     backgroundSize: 'cover',
-    backgroundColor: theme.palette.primary.dark
+    backgroundColor: theme.palette.primary.dark,
+    padding: '10px 0'
   }
 }));
 
@@ -95,6 +101,7 @@ const searchClient = algoliasearch(
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
+
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -102,27 +109,55 @@ function a11yProps(index) {
   };
 };
 
-const statuses = ['DRAFT', 'LAB READY', 'IN PROGRESS', 'HOLD', 'TO SHOWROOM', 'PICK UP READY', 'COMPLETED']
+const statuses = ['draft', 'lab ready', 'in progress', 'hold', 'to showroom', 'pick up ready', 'completed']
 
-const CustomHits = connectHits(({ hits, props }) => {
+const CustomHits = connectHits(({ hits, props, value }) => {
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const [data, setData] = React.useState(hits);
+
+  console.log({ hits, value })
+
+  // React.useEffect(() => {
+  //   if (value === 0) {
+  //     setData(hits)
+  //   } else if (value === 2) {
+  //     const dataArray = hits.filter(item => item.orderStatus.toLowerCase == 'in progress')
+  //     setData(dataArray)
+  //   }
+  // }, [value])
+
   return (
     <Table aria-label="customized table">
       <TableHead>
         <TableRow>
+          <TableCell padding="checkbox">
+            <Checkbox
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+              inputProps={{ 'aria-label': 'select all desserts' }}
+            />
+          </TableCell>
           <StyledTableCell>ORDER NO</StyledTableCell>
           <StyledTableCell>DATE</StyledTableCell>
           <StyledTableCell>FIRST NAME</StyledTableCell>
           <StyledTableCell>LAST NAME</StyledTableCell>
-          <StyledTableCell>CUSTOMER No</StyledTableCell>
+          <StyledTableCell>ID</StyledTableCell>
           <StyledTableCell>LOCATION</StyledTableCell>
           <StyledTableCell>STATUS</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {hits
+        {data
           .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
           .map((hit) => (
             <StyledTableRow key={hit.objectID} hover className="cursor-pointer">
+              <StyledTableCell padding="checkbox">
+                <Checkbox
+                // checked={isItemSelected}
+                // inputProps={{ 'aria-labelledby': labelId }}
+                />
+              </StyledTableCell>
               <StyledTableCell
                 component="th"
                 scope="row"
@@ -236,10 +271,12 @@ function Orders(props) {
   const classes = useStyles(props);
   const { form, handleChange } = useForm(null);
 
+
+  console.log({ props })
+
   const [value, setValue] = React.useState(0);
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
-    console.log({ value, newValue })
   };
   return (
     <FusePageSimple
@@ -249,12 +286,6 @@ function Orders(props) {
             <InstantSearch searchClient={searchClient} indexName="orders">
               <div className={clsx(classes.tabHeader)}>
                 <div className="p-4 flex justify-center">
-                  {/* <Configure
-                  filters={`orderDate: ${form?.start ? form?.start.getTime() : -2208988800000
-                    } TO ${form?.end ? form?.end.getTime() : new Date().getTime()
-                    }`}
-                /> */}
-                  {/* <Icon className="text-32">description</Icon> */}
                   <Typography
                     className="hidden sm:flex mx-0 sm:mx-12 text-center"
                     variant="h6"
@@ -273,86 +304,82 @@ function Orders(props) {
                   variant="fullWidth"
                   aria-label="simple tabs example">
                   {statuses.map((status, index) => (
-                    <Tab key={index} label={status} style={{ minWidth: '100px', fontSize: '1.2rem' }} {...a11yProps(index)} />
+                    <Tab key={index} className="p-0" label={status.toUpperCase()} style={{ minWidth: '100px', fontSize: '1.2rem' }} {...a11yProps(index)} />
                   ))}
                 </Tabs>
               </div>
               <div className={clsx(classes.header)}>
-                <div className="flex flex-col w-1/3 px-12 pt-40">
-                  <div className="flex flex-row justify-around">
-                    {/* <ThemeProvider theme={customMaterialTheme}> */}
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid container justifyContent="start">
-                        <KeyboardDatePicker
-                          label="Start Date"
-                          className=" mt-0 mb-24 bg-transparent"
-                          margin="normal"
-                          id="date-picker-dialog"
-                          format="MM/dd/yyyy"
-                          value={form?.start}
-                          InputLabelProps={{
-                            style: {
-                              color: 'white'
-                            }
-                          }}
-                          InputProps={{
-                            style: {
-                              color: 'white',
-                              borderColor: 'white',
-                              borderRadius: 1
-                            }
-                          }}
-                          onChange={(date) => {
-                            handleChange({
-                              target: { name: 'start', value: date }
-                            });
-                          }}
-                          KeyboardButtonProps={{
-                            'aria-label': 'change date'
-                          }}
-                        />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid container justifyContent="start">
-                        <KeyboardDatePicker
-                          label="End Date"
-                          className=" mt-0 mb-24 bg-transparent"
-                          margin="normal"
-                          id="date-picker-dialog"
-                          format="MM/dd/yyyy"
-                          value={form?.end}
-                          InputLabelProps={{
-                            style: {
-                              color: 'white'
-                            }
-                          }}
-                          InputProps={{
-                            style: {
-                              color: 'white',
-                              borderColor: 'white',
-                              borderRadius: 1
-                            }
-                          }}
-                          onChange={(date) => {
-                            handleChange({
-                              target: { name: 'end', value: date }
-                            });
-                          }}
-                          KeyboardButtonProps={{
-                            'aria-label': 'change date'
-                          }}
-                        />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
-                    {/* </ThemeProvider> */}
+                <div className="flex flex-col w-1/3">
+                  <div className="flex flex-row gap-10">
+                    <TextField
+                      id="date"
+                      label="Start Date"
+                      type="date"
+                      className='w-1/2'
+                      defaultValue={form?.start}
+                      InputLabelProps={{
+                        shrink: true,
+                        style: {
+                          color: 'white',
+                          marginTop: '3px',
+                          padding: '0 5px 0'
+                        }
+                      }}
+                      InputProps={{
+                        style: {
+                          color: 'white',
+                          borderColor: 'white',
+                          borderRadius: '4px'
+                        }
+                      }}
+                      onChange={(e) => {
+                        handleChange({
+                          target: {
+                            name: 'start',
+                            value: firestore.Timestamp.fromDate(new Date(e.target.value))
+                          }
+                        });
+                      }}
+                    />
+                    <TextField
+                      id="date"
+                      label="End Date"
+                      type="date"
+                      className='w-1/2'
+                      style={{ color: '#fff' }}
+                      defaultValue={form?.end}
+                      InputLabelProps={{
+                        shrink: true,
+                        style: {
+                          color: 'white',
+                          marginTop: '3px',
+                          padding: '0 5px 0'
+                        }
+                      }}
+                      InputProps={{
+                        style: {
+                          color: 'white',
+                          borderColor: 'white',
+                          borderRadius: '4px'
+                        }
+                      }}
+                      onChange={(e) => {
+                        handleChange({
+                          target: {
+                            name: 'end',
+                            value: firestore.Timestamp.fromDate(new Date(e.target.value))
+                          }
+                        });
+                      }}
+                    />
                   </div>
                 </div>
-                <div className="flex flex-col w-1/3 pt-40">
+                <div className="flex flex-col w-1/3">
                   <SearchBox
                     translations={{
                       placeholder: 'Search for orders...'
                     }}
+                    style={{ color: '#000' }}
                     submit={
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -375,25 +402,7 @@ function Orders(props) {
                     reset={false}
                   />
                 </div>
-                <div className="flex flex-row w-1/3 justify-center pt-40">
-                  <FuseAnimate animation="transition.slideRightIn" delay={300}>
-                    <SearchDialouge />
-                  </FuseAnimate>
-                </div>
-              </div>
-              <>
-              {statuses.map((status, index) => (
-                <TabPanel key={index} value={value} index={index}>
-                  <CustomHits props={props} />
-                </TabPanel>
-              ))}
-              </>
-              <div className="flex flex-row justify-center">
-                <div className="flex flex-1"></div>
-                <div className="flex flex-1 justify-center mt-8">
-                  <Pagination />
-                </div>
-                <div className="flex flex-1 justify-center mt-8">
+                <div className="flex flex-1 justify-center">
                   <HitsPerPage
                     defaultRefinement={50}
                     items={[
@@ -403,6 +412,34 @@ function Orders(props) {
                     ]}
                   />
                 </div>
+                <div className="flex flex-row">
+                  <FuseAnimate animation="transition.slideRightIn" delay={300}>
+                    <SearchDialouge />
+                  </FuseAnimate>
+                </div>
+              </div>
+              <>
+                {statuses.map((status, index) => (
+                  <TabPanel key={index} value={value} index={index}>
+                    <CustomHits props={props} value={value} />
+                  </TabPanel>
+                ))}
+              </>
+              <div className="flex flex-row justify-center">
+                <div className="flex flex-1"></div>
+                <div className="flex flex-1 justify-center mt-8">
+                  <Pagination />
+                </div>
+                {/* <div className="flex flex-1 justify-center mt-8">
+                  <HitsPerPage
+                    defaultRefinement={50}
+                    items={[
+                      { value: 50, label: 'Show 50' },
+                      { value: 100, label: 'Show 100' },
+                      { value: 200, label: 'Show 200' }
+                    ]}
+                  />
+                </div> */}
               </div>
             </InstantSearch>
           </TableContainer>

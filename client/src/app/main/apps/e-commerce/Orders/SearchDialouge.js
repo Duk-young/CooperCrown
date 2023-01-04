@@ -92,6 +92,14 @@ const useStyles = makeStyles({
   },
   table: {
     minWidth: 700
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
   }
 });
 
@@ -163,6 +171,7 @@ SimpleDialog.propTypes = {
 export default function SearchDialouge() {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(emails[1]);
+  const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -176,12 +185,13 @@ export default function SearchDialouge() {
   return (
     <div className="flex flex-col ">
       <Button
-        className="whitespace-no-wrap normal-case mt-42"
+        // className="whitespace-no-wrap normal-case mt-42"
+        className={classes.button}
         variant="contained"
         color="secondary"
         onClick={handleClickOpen}>
-        <span className="hidden sm:flex">Create Order</span>
-        <span className="flex sm:hidden">Create</span>
+        <span className="hidden sm:flex">+ Add New</span>
+        <span className="flex sm:hidden">New</span>
       </Button>
       <SimpleDialog
         PaperProps={{
