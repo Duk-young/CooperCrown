@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   InstantSearch,
   SearchBox,
@@ -27,9 +28,9 @@ import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import moment from 'moment';
-import React from 'react';
 import reducer from '../store/reducers';
 import SearchDialouge from './SearchDialouge';
+import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -42,6 +43,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TextField from '@material-ui/core/TextField';
 import withReducer from 'app/store/withReducer';
+import firebaseService from 'app/services/firebaseService';
+import { showMessage } from 'app/store/actions/fuse';
+
 
 // const color = '#fff';
 
@@ -109,35 +113,91 @@ function a11yProps(index) {
   };
 };
 
-const statuses = ['draft', 'lab ready', 'in progress', 'hold', 'to showroom', 'pick up ready', 'completed']
+const statuses = [
+  { value: 0, label: 'all' },
+  { value: 1, label: 'draft' },
+  { value: 2, label: 'lab ready' },
+  { value: 3, label: 'in progress' },
+  { value: 4, label: 'hold' },
+  { value: 5, label: 'to showroom' },
+  { value: 6, label: 'pick up ready' },
+  { value: 7, label: 'completed' },
+  { value: 8, label: 'cancelled' }
+];
 
-const CustomHits = connectHits(({ hits, props, value }) => {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const [data, setData] = React.useState(hits);
+const CustomHits = connectHits(({
+  hits,
+  props,
+  value,
+  setIsDataEmpty,
+  selected,
+  setSelected,
+  data,
+  setData,
+  selectAllData,
+  setSelectAllData
+}) => {
+  const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  console.log({ hits, value })
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = data.map((n) => n.id);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
 
-  // React.useEffect(() => {
-  //   if (value === 0) {
-  //     setData(hits)
-  //   } else if (value === 2) {
-  //     const dataArray = hits.filter(item => item.orderStatus.toLowerCase == 'in progress')
-  //     setData(dataArray)
-  //   }
-  // }, [value])
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  React.useEffect(() => {
+    if (hits) {
+      if (value === 0 || selectAllData) {
+        setData(hits)
+      } else {
+        let modifiedArray = hits.filter(order => order.orderStatus === statuses[value].label);
+        setData(modifiedArray)
+        modifiedArray.length === 0 ? setIsDataEmpty(true) : setIsDataEmpty(false)
+      }
+    }
+  }, [hits, value]);
+
+  React.useEffect(() => {
+    if (value !== 0) {
+      setSelectAllData(false)
+    }
+  }, [value]);
 
   return (
     <Table aria-label="customized table">
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox">
+          <StyledTableCell padding="checkbox">
             <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={rowCount > 0 && numSelected === rowCount}
-              onChange={onSelectAllClick}
-              inputProps={{ 'aria-label': 'select all desserts' }}
+              indeterminate={selected.length > 0 && selected.length < data.length}
+              checked={data.length > 0 && selected.length === data.length}
+              onChange={handleSelectAllClick}
+              style={{ color: '#fff' }}
             />
-          </TableCell>
+          </StyledTableCell>
           <StyledTableCell>ORDER NO</StyledTableCell>
           <StyledTableCell>DATE</StyledTableCell>
           <StyledTableCell>FIRST NAME</StyledTableCell>
@@ -150,77 +210,86 @@ const CustomHits = connectHits(({ hits, props, value }) => {
       <TableBody>
         {data
           .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
-          .map((hit) => (
-            <StyledTableRow key={hit.objectID} hover className="cursor-pointer">
-              <StyledTableCell padding="checkbox">
-                <Checkbox
-                // checked={isItemSelected}
-                // inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </StyledTableCell>
-              <StyledTableCell
-                component="th"
-                scope="row"
-                onClick={() => {
-                  props.history.push(
-                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                  );
-                }}>
-                {hit?.rushOrder ? (
-                  <LabelImportantIcon color="secondary" />
-                ) : (
-                  '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
-                )}{' '}
-                {hit?.customOrderId}
-              </StyledTableCell>
-              <StyledTableCell
-                onClick={() => {
-                  props.history.push(
-                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                  );
-                }}>
-                {moment(hit?.orderDate).format('MM/DD/YYYY')}
-              </StyledTableCell>
-              <StyledTableCell
-                onClick={() => {
-                  props.history.push(
-                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                  );
-                }}>
-                {hit?.firstName}
-              </StyledTableCell>
-              <StyledTableCell
-                onClick={() => {
-                  props.history.push(
-                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                  );
-                }}>
-                {hit?.lastName}
-              </StyledTableCell>
-              <StyledTableCell>
-                <Link
-                  to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
-                  <h3 className="text-black">{hit?.customerId}</h3>
-                </Link>
-              </StyledTableCell>
-              <StyledTableCell
-                onClick={() => {
-                  props.history.push(
-                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                  );
-                }}>
-                {hit?.locationName}
-              </StyledTableCell>
-              <StyledTableCell
-                onClick={() => {
-                  props.history.push(
-                    `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                  );
-                }}>
-                {hit?.orderStatus}
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+          .map((hit) => {
+            const isItemSelected = isSelected(hit.id);
+            return (
+              <StyledTableRow
+                key={hit.objectID}
+                hover
+                className="cursor-pointer"
+                onClick={(event) => handleClick(event, hit.id)}
+              >
+                <StyledTableCell padding="checkbox">
+                  <Checkbox
+                    checked={isItemSelected}
+                  // inputProps={{ 'aria-labelledby': labelId }}
+                  />
+                </StyledTableCell>
+                <StyledTableCell
+                  component="th"
+                  scope="row"
+                  onClick={() => {
+                    props.history.push(
+                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                    );
+                  }}>
+                  {hit?.rushOrder ? (
+                    <LabelImportantIcon color="secondary" />
+                  ) : (
+                    '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
+                  )}{' '}
+                  {hit?.customOrderId}
+                </StyledTableCell>
+                <StyledTableCell
+                  onClick={() => {
+                    props.history.push(
+                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                    );
+                  }}>
+                  {moment(hit?.orderDate).format('MM/DD/YYYY')}
+                </StyledTableCell>
+                <StyledTableCell
+                  onClick={() => {
+                    props.history.push(
+                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                    );
+                  }}>
+                  {hit?.firstName}
+                </StyledTableCell>
+                <StyledTableCell
+                  onClick={() => {
+                    props.history.push(
+                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                    );
+                  }}>
+                  {hit?.lastName}
+                </StyledTableCell>
+                <StyledTableCell>
+                  <Link
+                    to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
+                    <h3 className="text-black">{hit?.customerId}</h3>
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell
+                  onClick={() => {
+                    props.history.push(
+                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                    );
+                  }}>
+                  {hit?.locationName}
+                </StyledTableCell>
+                <StyledTableCell
+                  className='capitalize'
+                  onClick={() => {
+                    props.history.push(
+                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                    );
+                  }}>
+                  {hit?.orderStatus}
+                </StyledTableCell>
+              </StyledTableRow>
+            )
+          })}
       </TableBody>
     </Table>
   );
@@ -230,11 +299,13 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'left'
+    textAlign: 'center'
   },
   body: {
     fontSize: 14,
-    padding: 10
+    padding: 10,
+    textAlign: 'center',
+    maxWidth: 'min-content'
   }
 }))(TableCell);
 
@@ -270,14 +341,35 @@ function TabPanel(props) {
 function Orders(props) {
   const classes = useStyles(props);
   const { form, handleChange } = useForm(null);
-
-
-  console.log({ props })
-
   const [value, setValue] = React.useState(0);
-  const handleTabChange = (event, newValue) => {
+  const [isDataEmpty, setIsDataEmpty] = React.useState(null);
+  const [selected, setSelected] = React.useState([]);
+  const [data, setData] = React.useState([]);
+  const [selectAllData, setSelectAllData] = React.useState(false);
+
+
+  const updateStatus = async (order) => {
+    const uuid = order.id;
+    try {
+      await firebaseService.firestoreDb
+        .collection('orders')
+        .doc(uuid)
+        .update({ orderStatus: order.status });
+      showMessage({ message: 'status Updated' });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleStatusChange = () => {
+    console.log({ status: value === statuses[value].value && statuses[value].label })
+    // updateStatus()
+  }
+
+  const handleTabChange = (_, newValue) => {
     setValue(newValue);
   };
+
   return (
     <FusePageSimple
       content={
@@ -287,9 +379,10 @@ function Orders(props) {
               <div className={clsx(classes.tabHeader)}>
                 <div className="p-4 flex justify-center">
                   <Typography
-                    className="hidden sm:flex mx-0 sm:mx-12 text-center"
+                    className="hidden sm:flex mx-0 sm:mx-12 text-center cursor-pointer"
                     variant="h6"
                     style={{ fontSize: '3rem', fontWeight: 600 }}
+                    onClick={() => setSelectAllData(true)}
                   >
                     ORDERS
                   </Typography>
@@ -301,11 +394,22 @@ function Orders(props) {
                   onChange={handleTabChange}
                   indicatorColor="rgb(241, 90, 37)"
                   textColor="rgb(241, 90, 37)"
-                  variant="fullWidth"
+                  variant="scrollable"
+                  scrollButtons='auto'
                   aria-label="simple tabs example">
-                  {statuses.map((status, index) => (
-                    <Tab key={index} className="p-0" label={status.toUpperCase()} style={{ minWidth: '100px', fontSize: '1.2rem' }} {...a11yProps(index)} />
-                  ))}
+                  {statuses.map((status, index) => {
+                    return (
+                      <Tab
+                        key={index}
+                        className="p-0"
+                        label={status.label.toUpperCase()}
+                        style={{
+                          // minWidth: '100px',
+                          fontSize: '1.2rem'
+                        }}
+                        {...a11yProps(status.value)} />
+                    )
+                  })}
                 </Tabs>
               </div>
               <div className={clsx(classes.header)}>
@@ -419,9 +523,19 @@ function Orders(props) {
                 </div>
               </div>
               <>
-                {statuses.map((status, index) => (
-                  <TabPanel key={index} value={value} index={index}>
-                    <CustomHits props={props} value={value} />
+                {statuses.map((status) => (
+                  <TabPanel key={status.value} value={value} index={status.value}>
+                    <CustomHits
+                      props={props}
+                      value={value}
+                      data={data}
+                      setData={setData}
+                      setIsDataEmpty={setIsDataEmpty}
+                      selected={selected}
+                      setSelected={setSelected}
+                      selectAllData={selectAllData}
+                      setSelectAllData={setSelectAllData}
+                    />
                   </TabPanel>
                 ))}
               </>
@@ -430,16 +544,25 @@ function Orders(props) {
                 <div className="flex flex-1 justify-center mt-8">
                   <Pagination />
                 </div>
-                {/* <div className="flex flex-1 justify-center mt-8">
-                  <HitsPerPage
-                    defaultRefinement={50}
-                    items={[
-                      { value: 50, label: 'Show 50' },
-                      { value: 100, label: 'Show 100' },
-                      { value: 200, label: 'Show 200' }
-                    ]}
-                  />
-                </div> */}
+                {(value !== 0 && !isDataEmpty && value === statuses[value].value) && (
+                  <div className="flex flex-1 justify-end mt-8 pr-20">
+                    <Button
+                      className="whitespace-no-wrap mt-42 uppercase"
+                      style={{
+                        backgroundColor: '#222',
+                        color: '#FFF'
+                      }}
+                      // className={classes.button}
+                      variant="contained"
+                      disabled={selected.length === 0}
+                      color="secondary"
+                      onClick={handleStatusChange}>
+                      <span className="hidden sm:flex">{statuses[value + 1].label}</span>
+                    </Button>
+                    <button></button>
+                  </div>
+                )
+                }
               </div>
             </InstantSearch>
           </TableContainer>
