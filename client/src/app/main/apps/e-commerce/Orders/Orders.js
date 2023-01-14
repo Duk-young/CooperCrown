@@ -190,6 +190,7 @@ const CustomHits = connectHits(({
     <Table aria-label="customized table">
       <TableHead>
         <TableRow>
+          <StyledTableCell>{' '}</StyledTableCell>
           <StyledTableCell padding="checkbox">
             <Checkbox
               indeterminate={selected.length > 0 && selected.length < data.length}
@@ -198,7 +199,7 @@ const CustomHits = connectHits(({
               style={{ color: '#fff' }}
             />
           </StyledTableCell>
-          <StyledTableCell>ORDER NO</StyledTableCell>
+          <StyledTableCell>ORDER No.</StyledTableCell>
           <StyledTableCell>DATE</StyledTableCell>
           <StyledTableCell>FIRST NAME</StyledTableCell>
           <StyledTableCell>LAST NAME</StyledTableCell>
@@ -219,6 +220,14 @@ const CustomHits = connectHits(({
                 className="cursor-pointer"
                 onClick={(event) => handleClick(event, hit.id)}
               >
+                <StyledTableCell
+                  component="th"
+                  scope="row"
+                >
+                  {hit?.rushOrder && (
+                    <LabelImportantIcon color="secondary" />
+                  )}
+                </StyledTableCell>
                 <StyledTableCell padding="checkbox">
                   <Checkbox
                     checked={isItemSelected}
@@ -233,11 +242,6 @@ const CustomHits = connectHits(({
                       `/apps/e-commerce/orders/vieworder/${hit.orderId}`
                     );
                   }}>
-                  {hit?.rushOrder ? (
-                    <LabelImportantIcon color="secondary" />
-                  ) : (
-                    '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
-                  )}{' '}
                   {hit?.customOrderId}
                 </StyledTableCell>
                 <StyledTableCell
@@ -402,6 +406,7 @@ function Orders(props) {
                       <Tab
                         key={index}
                         className="p-0"
+                        wrapped
                         label={status.label.toUpperCase()}
                         style={{
                           // minWidth: '100px',
@@ -539,13 +544,13 @@ function Orders(props) {
                   </TabPanel>
                 ))}
               </>
-              <div className="flex flex-row justify-center">
-                <div className="flex flex-1"></div>
-                <div className="flex flex-1 justify-center mt-8">
+              <div className="flex flex-row justify-between">
+                <div className="flex"></div>
+                <div className="flex justify-center mt-8">
                   <Pagination />
                 </div>
                 {(value !== 0 && !isDataEmpty && value === statuses[value].value) && (
-                  <div className="flex flex-1 justify-end mt-8 pr-20">
+                  <div className="flex justify-end mt-8 pr-20">
                     <Button
                       className="whitespace-no-wrap mt-42 uppercase"
                       style={{
