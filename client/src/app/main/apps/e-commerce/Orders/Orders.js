@@ -7,10 +7,10 @@ import {
   // connectSearchBox,
   Configure
 } from 'react-instantsearch-dom';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from '@material-ui/pickers';
+// import {
+//   MuiPickersUtilsProvider,
+//   KeyboardDatePicker
+// } from '@material-ui/pickers';
 import '../Customers/App.mobile.css';
 import '../Customers/Search.css';
 import '../Customers/Themes.css';
@@ -21,15 +21,15 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { firestore } from 'firebase';
 import algoliasearch from 'algoliasearch/lite';
 import clsx from 'clsx';
-import DateFnsUtils from '@date-io/date-fns';
+// import DateFnsUtils from '@date-io/date-fns';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FusePageSimple from '@fuse/core/FusePageSimple';
-import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/Icon';
+// import Grid from '@material-ui/core/Grid';
+// import Icon from '@material-ui/core/Icon';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import moment from 'moment';
 import reducer from '../store/reducers';
-import SearchDialouge from './SearchDialouge';
+// import SearchDialouge from './SearchDialouge';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
@@ -45,7 +45,6 @@ import TextField from '@material-ui/core/TextField';
 import withReducer from 'app/store/withReducer';
 import firebaseService from 'app/services/firebaseService';
 import { showMessage } from 'app/store/actions/fuse';
-
 
 // const color = '#fff';
 
@@ -89,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
     color: theme.palette.primary.contrastText,
     backgroundSize: 'cover',
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.dark
   },
   tabHeader: {
     background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
@@ -97,6 +96,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 'cover',
     backgroundColor: theme.palette.primary.dark,
     padding: '10px 0'
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
   }
 }));
 
@@ -105,13 +112,12 @@ const searchClient = algoliasearch(
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
-
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`
   };
-};
+}
 
 const statuses = [
   { value: 0, label: 'all' },
@@ -125,179 +131,181 @@ const statuses = [
   { value: 8, label: 'cancelled' }
 ];
 
-const CustomHits = connectHits(({
-  hits,
-  props,
-  value,
-  setIsDataEmpty,
-  selected,
-  setSelected,
-  data,
-  setData,
-  selectAllData,
-  setSelectAllData
-}) => {
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+const CustomHits = connectHits(
+  ({
+    hits,
+    props,
+    value,
+    setIsDataEmpty,
+    selected,
+    setSelected,
+    data,
+    setData,
+    selectAllData,
+    setSelectAllData
+  }) => {
+    const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = data.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  React.useEffect(() => {
-    if (hits) {
-      if (value === 0 || selectAllData) {
-        setData(hits)
-      } else {
-        let modifiedArray = hits.filter(order => order.orderStatus === statuses[value].label);
-        setData(modifiedArray)
-        modifiedArray.length === 0 ? setIsDataEmpty(true) : setIsDataEmpty(false)
+    const handleSelectAllClick = (event) => {
+      if (event.target.checked) {
+        const newSelecteds = data.map((n) => n.id);
+        setSelected(newSelecteds);
+        return;
       }
-    }
-  }, [hits, value]);
+      setSelected([]);
+    };
 
-  React.useEffect(() => {
-    if (value !== 0) {
-      setSelectAllData(false)
-    }
-  }, [value]);
+    const handleClick = (event, id) => {
+      const selectedIndex = selected.indexOf(id);
+      let newSelected = [];
 
-  return (
-    <Table aria-label="customized table">
-      <TableHead>
-        <TableRow>
-          <StyledTableCell>{' '}</StyledTableCell>
-          <StyledTableCell padding="checkbox">
-            <Checkbox
-              indeterminate={selected.length > 0 && selected.length < data.length}
-              checked={data.length > 0 && selected.length === data.length}
-              onChange={handleSelectAllClick}
-              style={{ color: '#fff' }}
-            />
-          </StyledTableCell>
-          <StyledTableCell>ORDER No.</StyledTableCell>
-          <StyledTableCell>DATE</StyledTableCell>
-          <StyledTableCell>FIRST NAME</StyledTableCell>
-          <StyledTableCell>LAST NAME</StyledTableCell>
-          <StyledTableCell>ID</StyledTableCell>
-          <StyledTableCell>LOCATION</StyledTableCell>
-          <StyledTableCell>STATUS</StyledTableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {data
-          .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
-          .map((hit) => {
-            const isItemSelected = isSelected(hit.id);
-            return (
-              <StyledTableRow
-                key={hit.objectID}
-                hover
-                className="cursor-pointer"
-                onClick={(event) => handleClick(event, hit.id)}
-              >
-                <StyledTableCell
-                  component="th"
-                  scope="row"
-                >
-                  {hit?.rushOrder && (
-                    <LabelImportantIcon color="secondary" />
-                  )}
-                </StyledTableCell>
-                <StyledTableCell padding="checkbox">
-                  <Checkbox
-                    checked={isItemSelected}
-                  // inputProps={{ 'aria-labelledby': labelId }}
-                  />
-                </StyledTableCell>
-                <StyledTableCell
-                  component="th"
-                  scope="row"
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                    );
-                  }}>
-                  {hit?.customOrderId}
-                </StyledTableCell>
-                <StyledTableCell
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                    );
-                  }}>
-                  {moment(hit?.orderDate).format('MM/DD/YYYY')}
-                </StyledTableCell>
-                <StyledTableCell
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                    );
-                  }}>
-                  {hit?.firstName}
-                </StyledTableCell>
-                <StyledTableCell
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                    );
-                  }}>
-                  {hit?.lastName}
-                </StyledTableCell>
-                <StyledTableCell>
-                  <Link
-                    to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
-                    <h3 className="text-black">{hit?.customerId}</h3>
-                  </Link>
-                </StyledTableCell>
-                <StyledTableCell
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                    );
-                  }}>
-                  {hit?.locationName}
-                </StyledTableCell>
-                <StyledTableCell
-                  className='capitalize'
-                  onClick={() => {
-                    props.history.push(
-                      `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                    );
-                  }}>
-                  {hit?.orderStatus}
-                </StyledTableCell>
-              </StyledTableRow>
-            )
-          })}
-      </TableBody>
-    </Table>
-  );
-});
+      if (selectedIndex === -1) {
+        newSelected = newSelected.concat(selected, id);
+      } else if (selectedIndex === 0) {
+        newSelected = newSelected.concat(selected.slice(1));
+      } else if (selectedIndex === selected.length - 1) {
+        newSelected = newSelected.concat(selected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+        newSelected = newSelected.concat(
+          selected.slice(0, selectedIndex),
+          selected.slice(selectedIndex + 1)
+        );
+      }
+
+      setSelected(newSelected);
+    };
+
+    React.useEffect(() => {
+      if (hits) {
+        if (value === 0 || selectAllData) {
+          setData(hits);
+        } else {
+          let modifiedArray = hits.filter(
+            (order) => order.orderStatus === statuses[value].label
+          );
+          setData(modifiedArray);
+          modifiedArray.length === 0
+            ? setIsDataEmpty(true)
+            : setIsDataEmpty(false);
+        }
+      }
+    }, [hits, value]);
+
+    React.useEffect(() => {
+      if (value !== 0) {
+        setSelectAllData(false);
+      }
+    }, [value]);
+
+    return (
+      <Table aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell> </StyledTableCell>
+            <StyledTableCell padding="checkbox">
+              <Checkbox
+                indeterminate={
+                  selected.length > 0 && selected.length < data.length
+                }
+                checked={data.length > 0 && selected.length === data.length}
+                onChange={handleSelectAllClick}
+                style={{ color: '#fff' }}
+              />
+            </StyledTableCell>
+            <StyledTableCell>ORDER No.</StyledTableCell>
+            <StyledTableCell>DATE</StyledTableCell>
+            <StyledTableCell>FIRST NAME</StyledTableCell>
+            <StyledTableCell>LAST NAME</StyledTableCell>
+            <StyledTableCell>ID</StyledTableCell>
+            <StyledTableCell>LOCATION</StyledTableCell>
+            <StyledTableCell>STATUS</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data
+            .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
+            .map((hit) => {
+              const isItemSelected = isSelected(hit.id);
+              return (
+                <StyledTableRow
+                  key={hit.objectID}
+                  hover
+                  className="cursor-pointer"
+                  onClick={(event) => handleClick(event, hit.id)}>
+                  <StyledTableCell component="th" scope="row">
+                    {hit?.rushOrder && <LabelImportantIcon color="secondary" />}
+                  </StyledTableCell>
+                  <StyledTableCell padding="checkbox">
+                    <Checkbox
+                      checked={isItemSelected}
+                      // inputProps={{ 'aria-labelledby': labelId }}
+                    />
+                  </StyledTableCell>
+                  <StyledTableCell
+                    component="th"
+                    scope="row"
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                      );
+                    }}>
+                    {hit?.customOrderId}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                      );
+                    }}>
+                    {moment(hit?.orderDate).format('MM/DD/YYYY')}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                      );
+                    }}>
+                    {hit?.firstName}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                      );
+                    }}>
+                    {hit?.lastName}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <Link
+                      to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
+                      <h3 className="text-black">{hit?.customerId}</h3>
+                    </Link>
+                  </StyledTableCell>
+                  <StyledTableCell
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                      );
+                    }}>
+                    {hit?.locationName}
+                  </StyledTableCell>
+                  <StyledTableCell
+                    className="capitalize"
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                      );
+                    }}>
+                    {hit?.orderStatus}
+                  </StyledTableCell>
+                </StyledTableRow>
+              );
+            })}
+        </TableBody>
+      </Table>
+    );
+  }
+);
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -330,17 +338,11 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <>
-          {children}
-        </>
-      )}
+      {...other}>
+      {value === index && <>{children}</>}
     </div>
   );
 }
-
 
 function Orders(props) {
   const classes = useStyles(props);
@@ -351,24 +353,18 @@ function Orders(props) {
   const [data, setData] = React.useState([]);
   const [selectAllData, setSelectAllData] = React.useState(false);
 
-
-  const updateStatus = async (order) => {
-    const uuid = order.id;
+  const updateStatus = async (order, status) => {
+    const uuid = order[0]; // add loader then update the page with the new data
     try {
       await firebaseService.firestoreDb
         .collection('orders')
         .doc(uuid)
-        .update({ orderStatus: order.status });
+        .update({ orderStatus: status });
       showMessage({ message: 'status Updated' });
     } catch (error) {
       console.log(error);
     }
-  }
-
-  const handleStatusChange = () => {
-    console.log({ status: value === statuses[value].value && statuses[value].label })
-    // updateStatus()
-  }
+  };
 
   const handleTabChange = (_, newValue) => {
     setValue(newValue);
@@ -386,8 +382,7 @@ function Orders(props) {
                     className="hidden sm:flex mx-0 sm:mx-12 text-center cursor-pointer"
                     variant="h6"
                     style={{ fontSize: '3rem', fontWeight: 600 }}
-                    onClick={() => setSelectAllData(true)}
-                  >
+                    onClick={() => setSelectAllData(true)}>
                     ORDERS
                   </Typography>
                 </div>
@@ -399,7 +394,7 @@ function Orders(props) {
                   indicatorColor="rgb(241, 90, 37)"
                   textColor="rgb(241, 90, 37)"
                   variant="scrollable"
-                  scrollButtons='auto'
+                  scrollButtons="auto"
                   aria-label="simple tabs example">
                   {statuses.map((status, index) => {
                     return (
@@ -412,8 +407,9 @@ function Orders(props) {
                           // minWidth: '100px',
                           fontSize: '1.2rem'
                         }}
-                        {...a11yProps(status.value)} />
-                    )
+                        {...a11yProps(status.value)}
+                      />
+                    );
                   })}
                 </Tabs>
               </div>
@@ -424,7 +420,7 @@ function Orders(props) {
                       id="date"
                       label="Start Date"
                       type="date"
-                      className='w-1/2'
+                      className="w-1/2"
                       defaultValue={form?.start}
                       InputLabelProps={{
                         shrink: true,
@@ -445,7 +441,9 @@ function Orders(props) {
                         handleChange({
                           target: {
                             name: 'start',
-                            value: firestore.Timestamp.fromDate(new Date(e.target.value))
+                            value: firestore.Timestamp.fromDate(
+                              new Date(e.target.value)
+                            )
                           }
                         });
                       }}
@@ -454,7 +452,7 @@ function Orders(props) {
                       id="date"
                       label="End Date"
                       type="date"
-                      className='w-1/2'
+                      className="w-1/2"
                       style={{ color: '#fff' }}
                       defaultValue={form?.end}
                       InputLabelProps={{
@@ -476,7 +474,9 @@ function Orders(props) {
                         handleChange({
                           target: {
                             name: 'end',
-                            value: firestore.Timestamp.fromDate(new Date(e.target.value))
+                            value: firestore.Timestamp.fromDate(
+                              new Date(e.target.value)
+                            )
                           }
                         });
                       }}
@@ -523,13 +523,25 @@ function Orders(props) {
                 </div>
                 <div className="flex flex-row">
                   <FuseAnimate animation="transition.slideRightIn" delay={300}>
-                    <SearchDialouge />
+                    <Link to={`/apps/e-commerce/orders/addorder/new`}>
+                      <Button
+                        // className="whitespace-no-wrap normal-case mt-42"
+                        className={classes.button}
+                        variant="contained"
+                        color="secondary">
+                        <span className="hidden sm:flex">+ Add New</span>
+                        <span className="flex sm:hidden">New</span>
+                      </Button>
+                    </Link>
                   </FuseAnimate>
                 </div>
               </div>
               <>
                 {statuses.map((status) => (
-                  <TabPanel key={status.value} value={value} index={status.value}>
+                  <TabPanel
+                    key={status.value}
+                    value={value}
+                    index={status.value}>
                     <CustomHits
                       props={props}
                       value={value}
@@ -549,25 +561,32 @@ function Orders(props) {
                 <div className="flex justify-center mt-8">
                   <Pagination />
                 </div>
-                {(value !== 0 && !isDataEmpty && value === statuses[value].value) && (
-                  <div className="flex justify-end mt-8 pr-20">
-                    <Button
-                      className="whitespace-no-wrap mt-42 uppercase"
-                      style={{
-                        backgroundColor: '#222',
-                        color: '#FFF'
-                      }}
-                      // className={classes.button}
-                      variant="contained"
-                      disabled={selected.length === 0}
-                      color="secondary"
-                      onClick={handleStatusChange}>
-                      <span className="hidden sm:flex">{statuses[value + 1].label}</span>
-                    </Button>
-                    <button></button>
-                  </div>
-                )
-                }
+                {value !== 0 &&
+                  !isDataEmpty &&
+                  value === statuses[value].value && (
+                    <div className="flex justify-end mt-8 pr-20">
+                      <Button
+                        className="whitespace-no-wrap mt-42 uppercase"
+                        style={{
+                          backgroundColor: '#222',
+                          color: '#FFF'
+                        }}
+                        // className={classes.button}
+                        variant="contained"
+                        disabled={selected.length === 0}
+                        color="secondary"
+                        onClick={() =>
+                          updateStatus(selected, statuses[value + 1].label)
+                        }>
+                        <span className="hidden sm:flex">
+                          {statuses[value].label !== 'cancelled'
+                            ? statuses[value + 1].label
+                            : null}
+                        </span>
+                      </Button>
+                      <button></button>
+                    </div>
+                  )}
               </div>
             </InstantSearch>
           </TableContainer>
