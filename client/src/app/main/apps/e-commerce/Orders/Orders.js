@@ -148,7 +148,7 @@ const CustomHits = connectHits(
 
     const handleSelectAllClick = (event) => {
       if (event.target.checked) {
-        const newSelecteds = data.map((n) => n.id);
+        const newSelecteds = data.map((n) => n.orderId);
         setSelected(newSelecteds);
         return;
       }
@@ -225,13 +225,13 @@ const CustomHits = connectHits(
           {data
             .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
             .map((hit) => {
-              const isItemSelected = isSelected(hit.id);
+              const isItemSelected = isSelected(hit.orderId);
               return (
                 <StyledTableRow
                   key={hit.objectID}
                   hover
                   className="cursor-pointer"
-                  onClick={(event) => handleClick(event, hit.id)}>
+                  onClick={(event) => handleClick(event, hit.orderId)}>
                   <StyledTableCell component="th" scope="row">
                     {hit?.rushOrder && <LabelImportantIcon color="secondary" />}
                   </StyledTableCell>
@@ -365,6 +365,8 @@ function Orders(props) {
       console.log(error);
     }
   };
+
+  console.log({ selected, data });
 
   const handleTabChange = (_, newValue) => {
     setValue(newValue);
