@@ -18,50 +18,54 @@ import Paper from '@material-ui/core/Paper';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import { blue } from '@material-ui/core/colors';
+import Box from '@material-ui/core/Box';
 const searchClient = algoliasearch(
   '5AS4E06TDY',
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
-const Hits = ({ hits }) => (
-  <Table aria-label="customized table">
-    <TableHead>
-      <TableRow>
-        <StyledTableCell>First Name</StyledTableCell>
-        <StyledTableCell>Last Name</StyledTableCell>
-        <StyledTableCell>D.O.B</StyledTableCell>
-        <StyledTableCell>Gender</StyledTableCell>
-        <StyledTableCell>Options</StyledTableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {hits.map((hit) => (
-        <StyledTableRow key={hit.objectID}>
-          <StyledTableCell>{hit.firstName}</StyledTableCell>
-          <StyledTableCell>{hit.lastName}</StyledTableCell>
-          <StyledTableCell>
-            {moment(hit.dob).format('MM/DD/YYYY')}
-          </StyledTableCell>
-          <StyledTableCell>{hit.gender}</StyledTableCell>
-          <StyledTableCell>
-            <Link
-              to={`/apps/e-commerce/orders/addorder/${hit.customerId}`}
-              className="btn btn-primary">
+const Hits = ({ hits, setCustomer }) => {
+  const handleSelect = (id) => {
+    setCustomer(id);
+  };
+
+  return (
+    <Table aria-label="customized table">
+      <TableHead>
+        <TableRow>
+          <StyledTableCell>First Name</StyledTableCell>
+          <StyledTableCell>Last Name</StyledTableCell>
+          <StyledTableCell>D.O.B</StyledTableCell>
+          <StyledTableCell>Gender</StyledTableCell>
+          <StyledTableCell>Options</StyledTableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {hits.map((hit) => (
+          <StyledTableRow key={hit.objectID}>
+            <StyledTableCell>{hit.firstName}</StyledTableCell>
+            <StyledTableCell>{hit.lastName}</StyledTableCell>
+            <StyledTableCell>
+              {moment(hit.dob).format('MM/DD/YYYY')}
+            </StyledTableCell>
+            <StyledTableCell>{hit.gender}</StyledTableCell>
+            <StyledTableCell>
               <Button
-                className="whitespace-no-wrap normal-case ml-24"
+                className="whitespace-no-wrap normal-case ml-24 btn btn-primary"
                 variant="contained"
                 color="secondary"
                 size="large"
+                onClick={() => handleSelect(hit.customerId)}
                 startIcon={<AddToQueueIcon />}>
                 Select
               </Button>
-            </Link>
-          </StyledTableCell>
-        </StyledTableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
+            </StyledTableCell>
+          </StyledTableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
 const CustomHits = connectHits(Hits);
 
 const StyledTableCell = withStyles((theme) => ({
@@ -105,7 +109,7 @@ const useStyles = makeStyles({
 
 function SimpleDialog(props) {
   const classes = useStyles();
-  const { onClose, selectedValue, open } = props;
+  const { onClose, selectedValue, open, setCustomer } = props;
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -154,7 +158,7 @@ function SimpleDialog(props) {
                 />
               </div>
             </div>
-            <CustomHits />
+            <CustomHits setCustomer={setCustomer} />
           </InstantSearch>
         </TableContainer>
       </div>
@@ -168,13 +172,14 @@ SimpleDialog.propTypes = {
   selectedValue: PropTypes.string.isRequired
 };
 
-export default function SearchDialouge() {
+export default function SearchDialouge({ type, title, setCustomer }) {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(emails[1]);
   const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
+    console.log({ open });
   };
 
   const handleClose = (value) => {
@@ -182,17 +187,34 @@ export default function SearchDialouge() {
     setSelectedValue(value);
   };
 
+  console.log({ open });
+
   return (
-    <div className="flex flex-col ">
-      <Button
-        // className="whitespace-no-wrap normal-case mt-42"
-        className={classes.button}
-        variant="contained"
-        color="secondary"
-        onClick={handleClickOpen}>
-        <span className="hidden sm:flex">+ Add New</span>
-        <span className="flex sm:hidden">New</span>
-      </Button>
+    <>
+      {type === 'button' ? (
+        <div className="flex flex-col ">
+          <Link to={`/apps/e-commerce/orders/addorder/new`}>
+            <Button
+              // className="whitespace-no-wrap normal-case mt-42"
+              className={classes.button}
+              variant="contained"
+              color="secondary"
+              onClick={handleClickOpen}>
+              <span className="hidden sm:flex">{title}</span>
+              <span className="flex sm:hidden">New</span>
+            </Button>
+          </Link>
+        </div>
+      ) : (
+        <>
+          <h2
+            className="font-700 cursor-pointer"
+            style={{ color: '#f15a25' }}
+            onClick={handleClickOpen}>
+            {title}
+          </h2>
+        </>
+      )}
       <SimpleDialog
         PaperProps={{
           style: {
@@ -203,7 +225,8 @@ export default function SearchDialouge() {
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
+        setCustomer={setCustomer}
       />
-    </div>
+    </>
   );
 }
