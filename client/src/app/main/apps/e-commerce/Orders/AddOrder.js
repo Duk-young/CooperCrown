@@ -94,6 +94,7 @@ function AddOrder(props) {
   const [isLoading, setisLoading] = useState(true);
   const [customer, setCustomer] = useState(null);
   const [newCustomer, setNewCustomer] = useState(null);
+  const [customerNote, setCustomerNote] = useState(null);
   const [showroom, setShowroom] = useState([]);
   const [discounts, setDiscounts] = useState([]);
   const [payments, setPayments] = useState([]);
@@ -122,6 +123,8 @@ function AddOrder(props) {
 
   const routeParams = useParams();
   const dispatch = useDispatch();
+
+  console.log({ customerNote });
 
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
@@ -167,6 +170,10 @@ function AddOrder(props) {
       });
       return;
     }
+  };
+
+  const handleCustomerNote = (event) => {
+    setCustomerNote(event.target.value);
   };
 
   const fetchLensRate = async () => {
@@ -268,7 +275,7 @@ function AddOrder(props) {
 
   const handleSelectedFrameChange = useCallback((event) => {
     event?.persist && event.persist();
-    setSelectedFrame((_selectedFrame) =>
+    setCustomerNote((_selectedFrame) =>
       _.setIn(
         { ..._selectedFrame },
         event.target.name,
@@ -916,9 +923,10 @@ function AddOrder(props) {
                     id="outlined-multiline-static"
                     multiline
                     rows={18}
-                    defaultValue=" "
                     variant="outlined"
                     className="w-full"
+                    value={customerNote}
+                    onChange={handleCustomerNote}
                   />
                   <br></br>
                 </div>
@@ -2185,7 +2193,7 @@ function AddOrder(props) {
                 </FuseAnimate>
               </div>
 
-              {/* <div className="flex flex-col p-16 sm:px-24">
+              <div className="flex flex-col p-16 sm:px-24">
                 <FuseAnimate animation="transition.slideRightIn" delay={500}>
                   <div className="py-8 border-1 border-black border-solid rounded-6">
                     <div className="flex flex-row justify-center border-b-1 border-black border-solid">
@@ -2417,7 +2425,7 @@ function AddOrder(props) {
                     </div>
                   </div>
                 </FuseAnimate>
-              </div> */}
+              </div>
 
               <div className="flex flex-col p-16 sm:px-24">
                 <FuseAnimate animation="transition.slideRightIn" delay={500}>
@@ -2557,6 +2565,107 @@ function AddOrder(props) {
                 </FuseAnimate>
               </div>
 
+              <div className="flex flex-col p-16 sm:px-24">
+                <FuseAnimate animation="transition.slideRightIn" delay={500}>
+                  <div className="py-8 border-1 border-black border-solid rounded-6">
+                    <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                      <h1 className="font-700" style={{ color: '#f15a25' }}>
+                        ORDER LIST
+                      </h1>
+                    </div>
+                    <div>
+                      <div className="flex flex-row justify-between">
+                        <h2 className="mt-6 underline font-700">Sub-Total:</h2>
+                        <h2 className="mt-6 font-700">
+                          $
+                          {(
+                            eyeglasses.reduce((a, b) => +a + +b.lensRate, 0) +
+                            eyeglasses.reduce((a, b) => +a + +b.frameRate, 0) +
+                            medication.reduce((a, b) => +a + +b.price, 0) +
+                            contactLenses.reduce(
+                              (a, b) => +a + +b.contactLensRate,
+                              0
+                            )
+                          ).toLocaleString()}
+                        </h2>
+                      </div>
+                      <div className="flex flex-row justify-between">
+                        <div>
+                          <FormControl style={{ minWidth: 225 }}>
+                            <FormHelperText>Select Discount</FormHelperText>
+                            <Select
+                              labelId="demo-simple-select-autowidth-label"
+                              disabled={disabledState}
+                              defaultValue={form?.discount}
+                              value={form?.discount}
+                              name="discount"
+                              onChange={handleChange}
+                              autoWidth>
+                              {discounts.map((row) => (
+                                <MenuItem value={row?.amount}>
+                                  {row?.code}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div>
+                          <FormControl
+                            className="mt-6"
+                            disabled={true}
+                            fullWidth
+                            variant="outlined">
+                            <InputLabel htmlFor="outlined-adornment-amount">
+                              Amount
+                            </InputLabel>
+                            <OutlinedInput
+                              id="outlined-adornment-amount"
+                              value={form?.discount || 0}
+                              name={'discount'}
+                              onChange={handleChange}
+                              startAdornment={
+                                <InputAdornment position="start">
+                                  $
+                                </InputAdornment>
+                              }
+                              labelWidth={60}
+                              type="number"
+                            />
+                          </FormControl>
+                        </div>
+                      </div>
+                      <div className="flex flex-row justify-between">
+                        <h2 className="pt-20">Insurance Amount:</h2>
+                        <div>
+                          <FormControl
+                            className="mt-6"
+                            disabled={disabledState}
+                            fullWidth
+                            variant="outlined">
+                            <InputLabel htmlFor="outlined-adornment-amount">
+                              Amount
+                            </InputLabel>
+                            <OutlinedInput
+                              id="outlined-adornment-amount"
+                              value={form?.insuranceCost || 0}
+                              name={'insuranceCost'}
+                              onChange={handleChange}
+                              startAdornment={
+                                <InputAdornment position="start">
+                                  $
+                                </InputAdornment>
+                              }
+                              labelWidth={60}
+                              type="number"
+                            />
+                          </FormControl>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </FuseAnimate>
+              </div>
+
               {/* {routeParams?.orderId && (
                 <div className="flex flex-col p-16 sm:px-24">
                   <FuseAnimate animation="transition.slideRightIn" delay={500}>
@@ -2663,8 +2772,8 @@ function AddOrder(props) {
                 </div>
               )} */}
 
-              <div className="flex flex-col p-16 sm:px-24">
-                {/* <FuseAnimate animation="transition.slideRightIn" delay={500}>
+              {/* <div className="flex flex-col p-16 sm:px-24">
+                <FuseAnimate animation="transition.slideRightIn" delay={500}>
                   <div className="w-full flex flex-col border-1 border-black">
                     <div className="w-full flex flex-row ">
                       <div className="w-2/3">
@@ -3609,9 +3718,9 @@ function AddOrder(props) {
                       </div>
                     </div>
                   </div>
-                </FuseAnimate> */}
+                </FuseAnimate>
 
-                {/* <FuseAnimate animation="transition.slideRightIn" delay={500}>
+                <FuseAnimate animation="transition.slideRightIn" delay={500}>
                   <div className="w-full flex flex-col border-1 border-black">
                     <div className="w-full flex flex-row ">
                       <div className="w-2/3">
@@ -4069,7 +4178,7 @@ function AddOrder(props) {
                       </div>
                     </div>
                   </div>
-                </FuseAnimate> */}
+                </FuseAnimate>
 
                 <FuseAnimate animation="transition.slideRightIn" delay={500}>
                   <div className="w-full flex flex-col border-1 border-black">
@@ -4473,7 +4582,7 @@ function AddOrder(props) {
                     </div>
                   </div>
                 </FuseAnimate>
-              </div>
+              </div> */}
             </div>
           )
         }
