@@ -4458,6 +4458,7 @@ function AddOrder(props) {
                         <div className="flex flex-col px-20 gap-10">
                           <FormControlLabel
                             className="m-0"
+                            style={{ width: 'fit-content' }}
                             control={
                               <Checkbox
                                 checked={selectedContactLens?.OU}
