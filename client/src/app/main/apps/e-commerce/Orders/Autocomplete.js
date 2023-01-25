@@ -54,7 +54,7 @@ const CustomAutocomplete1 = (props) => {
         }
       }}
       renderInput={(params) => (
-        <TextField {...params} label={label} type={inputType} margin="normal" />
+        <TextField {...params} label={label} type={inputType} />
       )}
     />
   );

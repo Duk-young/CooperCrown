@@ -27,6 +27,7 @@ import { blue } from '@material-ui/core/colors';
 import { useState } from 'react';
 import Scanner from '../Inventory/Scanner';
 import '../Customers/Search.css';
+import Barcode from './images/barcode-icon.png';
 const searchClient = algoliasearch(
   '5AS4E06TDY',
   '42176bd827d90462ba9ccb9578eb43b2'
@@ -283,7 +284,7 @@ SimpleDialog.propTypes = {
 
 export default function SearchFrameDialouge(props) {
   const [open, setOpen] = React.useState(false);
-  const { form, setForm } = props;
+  const { form, setForm, disabledState } = props;
   const [selectedValue, setSelectedValue] = React.useState(emails[1]);
 
   const handleClickOpen = () => {
@@ -297,9 +298,12 @@ export default function SearchFrameDialouge(props) {
 
   return (
     <div>
-      <IconButton onClick={handleClickOpen}>
+      {/* <IconButton onClick={handleClickOpen}>
         <Icon>addcircle</Icon>
-      </IconButton>
+      </IconButton> */}
+      <button onClick={handleClickOpen} disabled={disabledState}>
+        <img src={Barcode} alt="barcode" />
+      </button>
       <SimpleDialog
         form={form}
         setForm={setForm}
