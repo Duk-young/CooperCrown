@@ -130,8 +130,14 @@ function AddOrder(props) {
   const routeParams = useParams();
   const dispatch = useDispatch();
 
-  console.log({ customerNote });
-
+  console.log({
+    routeParams,
+    showroom,
+    customer,
+    orders,
+    selectedFrame,
+    eyeglasses
+  });
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
     var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
@@ -281,7 +287,7 @@ function AddOrder(props) {
 
   const handleSelectedFrameChange = useCallback((event) => {
     event?.persist && event.persist();
-    setCustomerNote((_selectedFrame) =>
+    setSelectedFrame((_selectedFrame) =>
       _.setIn(
         { ..._selectedFrame },
         event.target.name,
@@ -707,26 +713,108 @@ function AddOrder(props) {
     <div>
       <FusePageCarded
         header={
-          <div>
-            <IconButton
-              onClick={() => {
-                if (disabledState || eyeglasses.length === 0) {
-                  props.history.push(`/apps/e-commerce/orders`);
-                } else {
-                  setOpenAlert1(true);
-                }
-              }}>
-              <Icon className="text-20">arrow_back</Icon>
-              <span className="mx-4 text-12">Orders</span>
-            </IconButton>
-            <div className="flex flex-row">
-              <Icon className="text-20 mt-4">description</Icon>
-              <Typography className="text-16 pl-16 sm:text-20 truncate">
+          <div className="w-full">
+            <div className="order-no relative">
+              <IconButton
+                className="absolute top-0 bottom-0 left-0"
+                onClick={() => {
+                  if (disabledState || eyeglasses.length === 0) {
+                    props.history.push(`/apps/e-commerce/orders`);
+                  } else {
+                    setOpenAlert1(true);
+                  }
+                }}>
+                <Icon className="text-20">arrow_back</Icon>
+                <span className="mx-4 text-12">Orders</span>
+              </IconButton>
+              <Typography className="text-16 sm:text-20 truncate text-center">
                 {routeParams.orderId
-                  ? `Order: ${routeParams.orderId}`
-                  : 'New Order'}
+                  ? `ORDER No. ${routeParams.orderId}`
+                  : 'NEW ORDER'}
               </Typography>
             </div>
+            <div className="order-header-content flex justify-between items-center p-16 sm:p-24">
+              <div className="date-picker w-1/3 flex gap-10">
+                <TextField
+                  id="date"
+                  label="Enter Date"
+                  type="date"
+                  defaultValue="2017-05-24"
+                  variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                    readOnly: true
+                  }}
+                />
+                {routeParams.orderId && (
+                  <TextField
+                    id="date"
+                    label="Last Edited"
+                    type="date"
+                    defaultValue="2017-05-24"
+                    variant="outlined"
+                    InputLabelProps={{
+                      shrink: true,
+                      readOnly: true
+                    }}
+                  />
+                )}
+              </div>
+              <div className="showroom w-1/3">
+                {routeParams.orderId ? (
+                  <Typography className="text-16 sm:text-20 truncate text-center">
+                    {routeParams.orderId
+                      ? `ORDER No. ${routeParams.orderId}`
+                      : 'NEW ORDER'}
+                  </Typography>
+                ) : (
+                  <CustomAutocomplete
+                    list={showroom}
+                    form={form}
+                    disabled={disabledState}
+                    setForm={setForm}
+                    handleChange={handleChange}
+                    id="locationName"
+                    freeSolo={false}
+                    label="Select Showroom"
+                  />
+                )}
+              </div>
+              {routeParams.orderId && (
+                <div className="CTAs flex gap-10 w-1/3 justify-end">
+                  <Button
+                    style={{
+                      backgroundColor: '#000',
+                      color: '#fff',
+                      width: 'unset'
+                    }}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      setDisabledState(false);
+                    }}>
+                    PRINT TICKET
+                  </Button>
+                  <Button
+                    className="w-0"
+                    style={{
+                      backgroundColor: '#f15a25',
+                      color: '#fff',
+                      width: 'unset'
+                    }}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      disabledState
+                        ? setDisabledState(false)
+                        : setDisabledState(true);
+                    }}>
+                    {disabledState ? 'EDIT' : 'SAVE'}
+                  </Button>
+                </div>
+              )}
+            </div>
+
             <div>
               <Dialog
                 fullWidth
@@ -2943,6 +3031,7 @@ function AddOrder(props) {
                     rows={18}
                     variant="outlined"
                     className={classes.noBorder}
+                    disabled={disabledState}
                     value={customerNote}
                     onChange={handleCustomerNote}
                   />
@@ -3028,7 +3117,6 @@ function AddOrder(props) {
                                         style: { textAlign: 'center' }
                                       }
                                     }}
-                                    type="number"
                                   />
                                 </div>
                                 <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3045,7 +3133,6 @@ function AddOrder(props) {
                                         style: { textAlign: 'center' }
                                       }
                                     }}
-                                    type="number"
                                   />
                                 </div>
                                 <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3062,7 +3149,6 @@ function AddOrder(props) {
                                         style: { textAlign: 'center' }
                                       }
                                     }}
-                                    type="number"
                                   />
                                 </div>
                                 <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3079,10 +3165,9 @@ function AddOrder(props) {
                                         style: { textAlign: 'center' }
                                       }
                                     }}
-                                    type="number"
                                   />
                                 </div>
-                                <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <div className="p-8 w-2/6 h-auto border-grey-400 border-solid border-1 justify-between">
                                   <TextField
                                     size="small"
                                     fullWidth
@@ -3091,23 +3176,6 @@ function AddOrder(props) {
                                     value={selectedFrame?.eyeglassesPrismOd}
                                     onChange={handleSelectedFrameChange}
                                     name={'eyeglassesPrismOd'}
-                                    InputProps={{
-                                      inputProps: {
-                                        style: { textAlign: 'center' }
-                                      }
-                                    }}
-                                  />
-                                </div>
-
-                                <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                  <TextField
-                                    size="small"
-                                    fullWidth
-                                    id="standard-basic"
-                                    disabled={disabledState}
-                                    value={selectedFrame?.eyeglassesVaOd}
-                                    onChange={handleSelectedFrameChange}
-                                    name={'eyeglassesVaOd'}
                                     InputProps={{
                                       inputProps: {
                                         style: { textAlign: 'center' }
@@ -3134,7 +3202,6 @@ function AddOrder(props) {
                                         style: { textAlign: 'center' }
                                       }
                                     }}
-                                    type="number"
                                   />
                                 </div>
                                 <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3151,7 +3218,6 @@ function AddOrder(props) {
                                         style: { textAlign: 'center' }
                                       }
                                     }}
-                                    type="number"
                                   />
                                 </div>
                                 <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3168,7 +3234,6 @@ function AddOrder(props) {
                                         style: { textAlign: 'center' }
                                       }
                                     }}
-                                    type="number"
                                   />
                                 </div>
                                 <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3185,11 +3250,10 @@ function AddOrder(props) {
                                         style: { textAlign: 'center' }
                                       }
                                     }}
-                                    type="number"
                                   />
                                 </div>
 
-                                <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <div className="p-8 w-2/6 h-auto border-grey-400 border-solid border-1 justify-between">
                                   <TextField
                                     size="small"
                                     fullWidth
@@ -3198,22 +3262,6 @@ function AddOrder(props) {
                                     value={selectedFrame?.eyeglassesPrismOs}
                                     onChange={handleSelectedFrameChange}
                                     name={'eyeglassesPrismOs'}
-                                    InputProps={{
-                                      inputProps: {
-                                        style: { textAlign: 'center' }
-                                      }
-                                    }}
-                                  />
-                                </div>
-                                <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                  <TextField
-                                    size="small"
-                                    fullWidth
-                                    disabled={disabledState}
-                                    id="standard-basic"
-                                    value={selectedFrame?.eyeglassesVaOs}
-                                    onChange={handleSelectedFrameChange}
-                                    name={'eyeglassesVaOs'}
                                     InputProps={{
                                       inputProps: {
                                         style: { textAlign: 'center' }
@@ -3259,7 +3307,6 @@ function AddOrder(props) {
                                           style: { textAlign: 'center' }
                                         }
                                       }}
-                                      type="number"
                                     />
                                   </div>
                                   <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3276,7 +3323,6 @@ function AddOrder(props) {
                                           style: { textAlign: 'center' }
                                         }
                                       }}
-                                      type="number"
                                     />
                                   </div>
                                   <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3293,7 +3339,6 @@ function AddOrder(props) {
                                           style: { textAlign: 'center' }
                                         }
                                       }}
-                                      type="number"
                                     />
                                   </div>
                                 </div>
@@ -3317,7 +3362,6 @@ function AddOrder(props) {
                                           style: { textAlign: 'center' }
                                         }
                                       }}
-                                      type="number"
                                     />
                                   </div>
                                   <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3334,7 +3378,6 @@ function AddOrder(props) {
                                           style: { textAlign: 'center' }
                                         }
                                       }}
-                                      type="number"
                                     />
                                   </div>
                                   <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -3351,7 +3394,6 @@ function AddOrder(props) {
                                           style: { textAlign: 'center' }
                                         }
                                       }}
-                                      type="number"
                                     />
                                   </div>
                                 </div>
@@ -3372,11 +3414,12 @@ function AddOrder(props) {
                     <div className="flex px-20 flex-row justify-between border-b-1 border-black border-solid">
                       <FormControlLabel
                         className="m-0"
+                        style={{ color: '#f15a25' }}
                         control={
                           <Checkbox
-                            checked={form?.rushOrder}
+                            checked={form?.shipFrameToCustomerLogic}
                             onChange={handleChange}
-                            name="rushOrder"
+                            name="shipFrameToCustomerLogic"
                             disabled={disabledState}
                           />
                         }
@@ -3387,11 +3430,12 @@ function AddOrder(props) {
                       </h1>
                       <FormControlLabel
                         className="m-0"
+                        style={{ color: '#f15a25' }}
                         control={
                           <Checkbox
-                            checked={form?.rushOrder}
+                            checked={form?.rushFrameOrder}
                             onChange={handleChange}
-                            name="rushOrder"
+                            name="rushFrameOrder"
                             disabled={disabledState}
                           />
                         }
@@ -3402,14 +3446,15 @@ function AddOrder(props) {
                       <div className="border-1 border-black border-solid w-1/2">
                         <div className="flex flex-col w-full">
                           <div className="flex flex-col px-8">
-                            <div className="flex flex-col my-10">
+                            <div className="flex flex-col my-10 relative">
                               <h2 className="text-center">Frame</h2>
-                              {/* <div className="flex flex-row">
+                              <div className="flex flex-row absolute right-0">
                                 <SearchFrameDialouge
+                                  disabledState={disabledState}
                                   form={selectedFrame}
                                   setForm={setSelectedFrame}
                                 />
-                              </div> */}
+                              </div>
                             </div>
                             <div className="flex flex-col">
                               <TextField
@@ -3500,11 +3545,12 @@ function AddOrder(props) {
                             <div className="flex flex-col gap-10">
                               <FormControlLabel
                                 className="m-0"
+                                style={{ color: '#f15a25' }}
                                 control={
                                   <Checkbox
-                                    checked={form?.rushOrder}
-                                    onChange={handleChange}
-                                    name="rushOrder"
+                                    checked={selectedFrame?.sendFrameToLab}
+                                    onChange={handleSelectedFrameChange}
+                                    name="sendFrameToLab"
                                     disabled={disabledState}
                                   />
                                 }
@@ -3538,30 +3584,54 @@ function AddOrder(props) {
                                 }
                                 label="Order Frame from Insurance"
                               />
-                              <FormControlLabel
-                                className="m-0"
-                                control={
-                                  <Checkbox
-                                    checked={form?.rushOrder}
-                                    onChange={handleChange}
-                                    name="rushOrder"
-                                    disabled={disabledState}
+                              <div>
+                                <FormControlLabel
+                                  className="m-0"
+                                  control={
+                                    <Checkbox
+                                      checked={selectedFrame?.customerFrame}
+                                      onChange={handleSelectedFrameChange}
+                                      name="customerFrame"
+                                      disabled={disabledState}
+                                    />
+                                  }
+                                  label="Customer’s Frame"
+                                />
+                                {selectedFrame?.customerFrame && (
+                                  <TextField
+                                    id="outlined-multiline-static"
+                                    variant="outlined"
+                                    size="small"
+                                    className="w-full"
+                                    name="customerFrameDetail"
+                                    value={selectedFrame?.customerFrameDetail}
+                                    onChange={handleSelectedFrameChange}
                                   />
-                                }
-                                label="Customer’s Frame"
-                              />
+                                )}
+                              </div>
                               <FormControlLabel
                                 className="m-0"
                                 control={
                                   <Checkbox
-                                    checked={form?.rushOrder}
-                                    onChange={handleChange}
-                                    name="rushOrder"
+                                    checked={selectedFrame?.otherFrame}
+                                    onChange={handleSelectedFrameChange}
+                                    name="otherFrame"
                                     disabled={disabledState}
                                   />
                                 }
                                 label="Other Frame"
                               />
+                              {selectedFrame?.otherFrame && (
+                                <TextField
+                                  id="outlined-multiline-static"
+                                  variant="outlined"
+                                  size="small"
+                                  className="w-full"
+                                  name="otherFrameDetail"
+                                  value={selectedFrame?.otherFrameDetail}
+                                  onChange={handleSelectedFrameChange}
+                                />
+                              )}
                             </div>
                             <div className="flex gap-10 py-10">
                               <TextField
@@ -3570,17 +3640,23 @@ function AddOrder(props) {
                                 variant="outlined"
                                 size="small"
                                 className="w-full"
-                                value={customerNote}
-                                onChange={handleCustomerNote}
+                                name="frameMemo"
+                                value={selectedFrame?.frameMemo}
+                                onChange={handleSelectedFrameChange}
                               />
                               <TextField
                                 id="outlined-multiline-static"
                                 label="Additional Price"
                                 variant="outlined"
                                 size="small"
-                                className="w-full"
-                                value={customerNote}
-                                onChange={handleCustomerNote}
+                                className="w-1"
+                                name="frameAdditionalPrice"
+                                error={
+                                  selectedFrame?.frameAdditionalPrice &&
+                                  !Number(selectedFrame?.frameAdditionalPrice)
+                                }
+                                value={selectedFrame?.frameAdditionalPrice}
+                                onChange={handleSelectedFrameChange}
                               />
                             </div>
                           </div>
@@ -3593,8 +3669,10 @@ function AddOrder(props) {
                           </div>
                           <div className="flex flex-col">
                             <div className="flex flex-row">
-                              <div className="">
-                                <FormControl component="fieldset">
+                              <div className="w-full">
+                                <FormControl
+                                  component="fieldset"
+                                  className="w-full">
                                   <RadioGroup
                                     className="flex px-20"
                                     row
@@ -3602,7 +3680,7 @@ function AddOrder(props) {
                                     name="lensType"
                                     value={selectedFrame?.lensType}
                                     onChange={handleSelectedFrameChange}>
-                                    <div className="w-1/2">
+                                    <div className="w-1/2 flex flex-col">
                                       <FormControlLabel
                                         disabled={disabledState}
                                         value="distance"
@@ -3616,7 +3694,7 @@ function AddOrder(props) {
                                         label="Flat Top"
                                       />
                                     </div>
-                                    <div className="w-1/2">
+                                    <div className="w-1/2 flex flex-col">
                                       <FormControlLabel
                                         value="read"
                                         disabled={disabledState}
@@ -3687,9 +3765,9 @@ function AddOrder(props) {
                                 className="m-0"
                                 control={
                                   <Checkbox
-                                    checked={form?.rushOrder}
-                                    onChange={handleChange}
-                                    name="rushOrder"
+                                    checked={selectedFrame?.oversizeLens}
+                                    onChange={handleSelectedFrameChange}
+                                    name="oversizeLens"
                                     disabled={disabledState}
                                   />
                                 }
@@ -3737,22 +3815,28 @@ function AddOrder(props) {
                             className="flex gap-10 py-10"
                             style={{ paddingTop: '5rem' }}>
                             <TextField
-                              id="outlined-multiline-static"
+                              id="outlined-memo"
                               label="Memo"
                               variant="outlined"
                               size="small"
                               className="w-full"
-                              value={customerNote}
-                              onChange={handleCustomerNote}
+                              name="lensMemo"
+                              value={selectedFrame?.lensMemo}
+                              onChange={handleSelectedFrameChange}
                             />
                             <TextField
-                              id="outlined-multiline-static"
+                              id="outlined-additional-price"
                               label="Additional Price"
                               variant="outlined"
                               size="small"
-                              className="w-full"
-                              value={customerNote}
-                              onChange={handleCustomerNote}
+                              className="w-1"
+                              name="lensAdditionalPrice"
+                              error={
+                                selectedFrame?.lensAdditionalPrice &&
+                                !Number(selectedFrame?.lensAdditionalPrice)
+                              }
+                              value={selectedFrame?.lensAdditionalPrice}
+                              onChange={handleSelectedFrameChange}
                             />
                           </div>
                         </div>
@@ -3826,7 +3910,7 @@ function AddOrder(props) {
                         disabled={disabledState}
                         aria-label="add">
                         <AddIcon />
-                        Add Frame
+                        Add to Order
                       </Button>
                     </div>
                     <div className="flex flex-col max-h-320">
@@ -3836,13 +3920,13 @@ function AddOrder(props) {
                         <Table aria-label="customized table">
                           <TableHead>
                             <TableRow>
-                              <StyledTableCell>Frame Brand</StyledTableCell>
-                              <StyledTableCell>Frame Model</StyledTableCell>
-                              <StyledTableCell>Frame Colour</StyledTableCell>
+                              <StyledTableCell>Brand</StyledTableCell>
+                              <StyledTableCell>Model</StyledTableCell>
+                              <StyledTableCell>Color</StyledTableCell>
                               <StyledTableCell>Lens Type</StyledTableCell>
-                              <StyledTableCell>Lens Detail</StyledTableCell>
-                              <StyledTableCell>Lens Colour</StyledTableCell>
-                              <StyledTableCell>Options</StyledTableCell>
+                              {/* <StyledTableCell>Lens Detail</StyledTableCell> */}
+                              <StyledTableCell>Colour/Tint</StyledTableCell>
+                              <StyledTableCell></StyledTableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -3865,14 +3949,14 @@ function AddOrder(props) {
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   {row?.lensType === 'distance' && 'Distance'}
-                                  {row?.lensType === 'read' && 'Read'}
-                                  {row?.lensType === 'fTop' && 'F. Top'}
+                                  {row?.lensType === 'read' && 'Reading'}
+                                  {row?.lensType === 'fTop' && 'Flat Top'}
                                   {row?.lensType === 'progressive' &&
                                     'Progressive'}
                                 </StyledTableCell>
-                                <StyledTableCell>
+                                {/* <StyledTableCell>
                                   {row?.lensDetail}
-                                </StyledTableCell>
+                                </StyledTableCell> */}
                                 <StyledTableCell>
                                   {row?.lensColour}
                                 </StyledTableCell>
@@ -3883,7 +3967,7 @@ function AddOrder(props) {
                                       newEyeglasses.splice(index, 1);
                                       setEyeglasses([...newEyeglasses]);
                                       setSelectedFrame(row);
-                                      setDisabledState(false);
+                                      // setDisabledState(false);
                                     }}
                                     aria-label="view">
                                     <EditIcon fontSize="small" />
@@ -3931,16 +4015,16 @@ function AddOrder(props) {
                           <div className="p-8 h-auto w-40">
                             <h3 className="text-center font-700">RX</h3>
                           </div>
-                          <div className="p-8 h-auto w-1/4">
+                          <div className="p-8 h-auto w-80">
                             <h3 className="text-center font-700">Sphere</h3>
                           </div>
-                          <div className="p-8 h-auto w-1/4">
+                          <div className="p-8 h-auto w-80">
                             <h3 className="text-center font-700">Cylinder</h3>
                           </div>
-                          <div className="p-8 h-auto w-1/4">
+                          <div className="p-8 h-auto w-80">
                             <h3 className="text-center font-700">Axis</h3>
                           </div>
-                          <div className="p-8 h-auto w-1/4">
+                          <div className="p-8 h-auto w-80">
                             <h3 className="text-center font-700">Add</h3>
                           </div>
                           <div className="p-8 h-auto w-1/4">
@@ -3951,7 +4035,7 @@ function AddOrder(props) {
                           <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center font-700">OD</h3>
                           </div>
-                          <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                          <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
                             <TextField
                               size="small"
                               fullWidth
@@ -3965,10 +4049,9 @@ function AddOrder(props) {
                                   style: { textAlign: 'center' }
                                 }
                               }}
-                              type="number"
                             />
                           </div>
-                          <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                          <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
                             <TextField
                               size="small"
                               fullWidth
@@ -3982,10 +4065,9 @@ function AddOrder(props) {
                                   style: { textAlign: 'center' }
                                 }
                               }}
-                              type="number"
                             />
                           </div>
-                          <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                          <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
                             <TextField
                               size="small"
                               fullWidth
@@ -3999,7 +4081,22 @@ function AddOrder(props) {
                                   style: { textAlign: 'center' }
                                 }
                               }}
-                              type="number"
+                            />
+                          </div>
+                          <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <TextField
+                              size="small"
+                              fullWidth
+                              id="standard-basic"
+                              disabled={disabledState}
+                              value={selectedContactLens?.contactLensAddOd}
+                              onChange={handleSelectedContactLensChange}
+                              name={'contactLensAddOd'}
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: 'center' }
+                                }
+                              }}
                             />
                           </div>
                           <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -4016,24 +4113,6 @@ function AddOrder(props) {
                                   style: { textAlign: 'center' }
                                 }
                               }}
-                              type="number"
-                            />
-                          </div>
-                          <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                            <TextField
-                              size="small"
-                              fullWidth
-                              id="standard-basic"
-                              disabled={disabledState}
-                              value={selectedContactLens?.contactLensAddOd}
-                              onChange={handleSelectedContactLensChange}
-                              name={'contactLensAddOd'}
-                              InputProps={{
-                                inputProps: {
-                                  style: { textAlign: 'center' }
-                                }
-                              }}
-                              type="number"
                             />
                           </div>
                         </div>
@@ -4041,7 +4120,7 @@ function AddOrder(props) {
                           <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center font-700">OS</h3>
                           </div>
-                          <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                          <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
                             <TextField
                               size="small"
                               fullWidth
@@ -4055,10 +4134,9 @@ function AddOrder(props) {
                                   style: { textAlign: 'center' }
                                 }
                               }}
-                              type="number"
                             />
                           </div>
-                          <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                          <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
                             <TextField
                               size="small"
                               fullWidth
@@ -4072,10 +4150,9 @@ function AddOrder(props) {
                                   style: { textAlign: 'center' }
                                 }
                               }}
-                              type="number"
                             />
                           </div>
-                          <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                          <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
                             <TextField
                               size="small"
                               fullWidth
@@ -4089,7 +4166,22 @@ function AddOrder(props) {
                                   style: { textAlign: 'center' }
                                 }
                               }}
-                              type="number"
+                            />
+                          </div>
+                          <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <TextField
+                              size="small"
+                              fullWidth
+                              id="standard-basic"
+                              disabled={disabledState}
+                              value={selectedContactLens?.contactLensAddOs}
+                              onChange={handleSelectedContactLensChange}
+                              name={'contactLensAddOs'}
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: 'center' }
+                                }
+                              }}
                             />
                           </div>
                           <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -4106,24 +4198,6 @@ function AddOrder(props) {
                                   style: { textAlign: 'center' }
                                 }
                               }}
-                              type="number"
-                            />
-                          </div>
-                          <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                            <TextField
-                              size="small"
-                              fullWidth
-                              id="standard-basic"
-                              disabled={disabledState}
-                              value={selectedContactLens?.contactLensAddOs}
-                              onChange={handleSelectedContactLensChange}
-                              name={'contactLensAddOs'}
-                              InputProps={{
-                                inputProps: {
-                                  style: { textAlign: 'center' }
-                                }
-                              }}
-                              type="number"
                             />
                           </div>
                         </div>
@@ -4139,11 +4213,12 @@ function AddOrder(props) {
                     <div className="flex px-20 flex-row justify-between border-b-1 border-black border-solid">
                       <FormControlLabel
                         className="m-0"
+                        style={{ color: '#f15a25' }}
                         control={
                           <Checkbox
-                            checked={form?.rushOrder}
+                            checked={form?.shipContactLensToCustomerLogic}
                             onChange={handleChange}
-                            name="rushOrder"
+                            name="shipContactLensToCustomerLogic"
                             disabled={disabledState}
                           />
                         }
@@ -4154,11 +4229,12 @@ function AddOrder(props) {
                       </h1>
                       <FormControlLabel
                         className="m-0"
+                        style={{ color: '#f15a25' }}
                         control={
                           <Checkbox
-                            checked={form?.rushOrder}
+                            checked={form?.rushContactLensOrder}
                             onChange={handleChange}
-                            name="rushOrder"
+                            name="rushContactLensOrder"
                             disabled={disabledState}
                           />
                         }
@@ -4177,10 +4253,10 @@ function AddOrder(props) {
                               disabled={disabledState}
                               labelId="demo-simple-select-autowidth-label"
                               defaultValue={
-                                selectedContactLens?.contactLensStyle
+                                selectedContactLens?.contactLensStyleOd
                               }
-                              value={selectedContactLens?.contactLensStyle}
-                              name="contactLensStyle"
+                              value={selectedContactLens?.contactLensStyleOd}
+                              name="contactLensStyleOd"
                               onChange={handleSelectedContactLensChange}>
                               <MenuItem value={'Spherical'}>Spherical</MenuItem>
                               <MenuItem value={'Toric'}>Toric</MenuItem>
@@ -4200,10 +4276,10 @@ function AddOrder(props) {
                               disabled={disabledState}
                               labelId="demo-simple-select-autowidth-label"
                               defaultValue={
-                                selectedContactLens?.contactLensBrand
+                                selectedContactLens?.contactLensBrandOd
                               }
-                              value={selectedContactLens?.contactLensBrand}
-                              name="contactLensBrand"
+                              value={selectedContactLens?.contactLensBrandOd}
+                              name="contactLensBrandOd"
                               onChange={handleSelectedContactLensChange}>
                               <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
                               <MenuItem value={'Alcon'}>Alcon</MenuItem>
@@ -4221,10 +4297,10 @@ function AddOrder(props) {
                               disabled={disabledState}
                               labelId="demo-simple-select-autowidth-label"
                               defaultValue={
-                                selectedContactLens?.contactLensName
+                                selectedContactLens?.contactLensNameOd
                               }
-                              value={selectedContactLens?.contactLensName}
-                              name="contactLensName"
+                              value={selectedContactLens?.contactLensNameOd}
+                              name="contactLensNameOd"
                               onChange={handleSelectedContactLensChange}>
                               <MenuItem value={'1-Day Moist'}>
                                 1-Day Moist
@@ -4236,38 +4312,40 @@ function AddOrder(props) {
                           </FormControl>
                           <FormControl className="w-1/5">
                             <InputLabel id="demo-simple-select-autowidth-label">
-                              Lens DIA
-                            </InputLabel>
-                            <Select
-                              disabled={disabledState}
-                              labelId="demo-simple-select-autowidth-label"
-                              defaultValue={selectedContactLens?.contactLensDia}
-                              value={selectedContactLens?.contactLensDia}
-                              name="contactLensDia"
-                              onChange={handleSelectedContactLensChange}>
-                              <MenuItem value={'3'}>3</MenuItem>
-                              <MenuItem value={'3.5'}>3.5</MenuItem>
-                              <MenuItem value={'4'}>4</MenuItem>
-                              <MenuItem value={'4.5'}>4.5</MenuItem>
-                            </Select>
-                          </FormControl>
-                          <FormControl className="w-1/5">
-                            <InputLabel id="demo-simple-select-autowidth-label">
                               Base Curve
                             </InputLabel>
                             <Select
                               disabled={disabledState}
                               labelId="demo-simple-select-autowidth-label"
                               defaultValue={
-                                selectedContactLens?.contactLensBaseCurve
+                                selectedContactLens?.contactLensBaseCurveOd
                               }
-                              value={selectedContactLens?.contactLensBaseCurve}
-                              name="contactLensBaseCurve"
+                              value={
+                                selectedContactLens?.contactLensBaseCurveOd
+                              }
+                              name="contactLensBaseCurveOd"
                               onChange={handleSelectedContactLensChange}>
                               <MenuItem value={'8.4'}>8.4</MenuItem>
                               <MenuItem value={'8.5'}>8.5</MenuItem>
                               <MenuItem value={'8.6'}>8.6</MenuItem>
                               <MenuItem value={'8.8'}>8.8</MenuItem>
+                            </Select>
+                          </FormControl>
+                          <FormControl className="w-1/5">
+                            <InputLabel id="demo-simple-select-autowidth-label">
+                              Pack Quantity
+                            </InputLabel>
+                            <Select
+                              disabled={disabledState}
+                              labelId="demo-simple-select-autowidth-label"
+                              defaultValue={
+                                selectedContactLens?.contactLensPackQtyOd
+                              }
+                              value={selectedContactLens?.contactLensPackQtyOd}
+                              name="contactLensPackQtyOd"
+                              onChange={handleSelectedContactLensChange}>
+                              <MenuItem value={'24'}>24</MenuItem>
+                              <MenuItem value={'12'}>12</MenuItem>
                             </Select>
                           </FormControl>
                         </div>
@@ -4281,10 +4359,10 @@ function AddOrder(props) {
                               disabled={disabledState}
                               labelId="demo-simple-select-autowidth-label"
                               defaultValue={
-                                selectedContactLens?.contactLensStyle
+                                selectedContactLens?.contactLensStyleOs
                               }
-                              value={selectedContactLens?.contactLensStyle}
-                              name="contactLensStyle"
+                              value={selectedContactLens?.contactLensStyleOs}
+                              name="contactLensStyleOs"
                               onChange={handleSelectedContactLensChange}>
                               <MenuItem value={'Spherical'}>Spherical</MenuItem>
                               <MenuItem value={'Toric'}>Toric</MenuItem>
@@ -4304,10 +4382,10 @@ function AddOrder(props) {
                               disabled={disabledState}
                               labelId="demo-simple-select-autowidth-label"
                               defaultValue={
-                                selectedContactLens?.contactLensBrand
+                                selectedContactLens?.contactLensBrandOs
                               }
-                              value={selectedContactLens?.contactLensBrand}
-                              name="contactLensBrand"
+                              value={selectedContactLens?.contactLensBrandOs}
+                              name="contactLensBrandOs"
                               onChange={handleSelectedContactLensChange}>
                               <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
                               <MenuItem value={'Alcon'}>Alcon</MenuItem>
@@ -4319,16 +4397,16 @@ function AddOrder(props) {
                           </FormControl>
                           <FormControl className="w-1/5">
                             <InputLabel id="demo-simple-select-autowidth-label">
-                              Lens Name
+                              Model
                             </InputLabel>
                             <Select
                               disabled={disabledState}
                               labelId="demo-simple-select-autowidth-label"
                               defaultValue={
-                                selectedContactLens?.contactLensName
+                                selectedContactLens?.contactLensNameOs
                               }
-                              value={selectedContactLens?.contactLensName}
-                              name="contactLensName"
+                              value={selectedContactLens?.contactLensNameOs}
+                              name="contactLensNameOs"
                               onChange={handleSelectedContactLensChange}>
                               <MenuItem value={'1-Day Moist'}>
                                 1-Day Moist
@@ -4340,38 +4418,40 @@ function AddOrder(props) {
                           </FormControl>
                           <FormControl className="w-1/5">
                             <InputLabel id="demo-simple-select-autowidth-label">
-                              Lens DIA
-                            </InputLabel>
-                            <Select
-                              disabled={disabledState}
-                              labelId="demo-simple-select-autowidth-label"
-                              defaultValue={selectedContactLens?.contactLensDia}
-                              value={selectedContactLens?.contactLensDia}
-                              name="contactLensDia"
-                              onChange={handleSelectedContactLensChange}>
-                              <MenuItem value={'3'}>3</MenuItem>
-                              <MenuItem value={'3.5'}>3.5</MenuItem>
-                              <MenuItem value={'4'}>4</MenuItem>
-                              <MenuItem value={'4.5'}>4.5</MenuItem>
-                            </Select>
-                          </FormControl>
-                          <FormControl className="w-1/5">
-                            <InputLabel id="demo-simple-select-autowidth-label">
                               Base Curve
                             </InputLabel>
                             <Select
                               disabled={disabledState}
                               labelId="demo-simple-select-autowidth-label"
                               defaultValue={
-                                selectedContactLens?.contactLensBaseCurve
+                                selectedContactLens?.contactLensBaseCurveOs
                               }
-                              value={selectedContactLens?.contactLensBaseCurve}
-                              name="contactLensBaseCurve"
+                              value={
+                                selectedContactLens?.contactLensBaseCurveOs
+                              }
+                              name="contactLensBaseCurveOs"
                               onChange={handleSelectedContactLensChange}>
                               <MenuItem value={'8.4'}>8.4</MenuItem>
                               <MenuItem value={'8.5'}>8.5</MenuItem>
                               <MenuItem value={'8.6'}>8.6</MenuItem>
                               <MenuItem value={'8.8'}>8.8</MenuItem>
+                            </Select>
+                          </FormControl>
+                          <FormControl className="w-1/5">
+                            <InputLabel id="demo-simple-select-autowidth-label">
+                              Pack Quantity
+                            </InputLabel>
+                            <Select
+                              disabled={disabledState}
+                              labelId="demo-simple-select-autowidth-label"
+                              defaultValue={
+                                selectedContactLens?.contactLensPackQtyOs
+                              }
+                              value={selectedContactLens?.contactLensPackQtyOs}
+                              name="contactLensPackQtyOs"
+                              onChange={handleSelectedContactLensChange}>
+                              <MenuItem value={'24'}>24</MenuItem>
+                              <MenuItem value={'12'}>12</MenuItem>
                             </Select>
                           </FormControl>
                         </div>
@@ -4380,9 +4460,9 @@ function AddOrder(props) {
                             className="m-0"
                             control={
                               <Checkbox
-                                checked={form?.rushOrder}
-                                onChange={handleChange}
-                                name="rushOrder"
+                                checked={selectedContactLens?.OU}
+                                onChange={handleSelectedContactLensChange}
+                                name="OU"
                                 disabled={disabledState}
                               />
                             }
@@ -4394,10 +4474,10 @@ function AddOrder(props) {
                               control={
                                 <Checkbox
                                   checked={
-                                    selectedContactLens.contactLensInsurance
+                                    selectedContactLens.orderFromShowroom
                                   }
                                   onChange={handleSelectedContactLensChange}
-                                  name="contactLensInsurance"
+                                  name="orderFromShowroom"
                                   disabled={disabledState}
                                 />
                               }
@@ -4407,11 +4487,9 @@ function AddOrder(props) {
                               className="m-0"
                               control={
                                 <Checkbox
-                                  checked={
-                                    selectedContactLens.contactLensInsurance
-                                  }
+                                  checked={selectedContactLens.orderFromLab}
                                   onChange={handleSelectedContactLensChange}
-                                  name="contactLensInsurance"
+                                  name="orderFromLab"
                                   disabled={disabledState}
                                 />
                               }
@@ -4465,7 +4543,7 @@ function AddOrder(props) {
                         disabled={disabledState}
                         aria-label="add">
                         <AddIcon />
-                        Add Contact Lens
+                        Add to Order
                       </Button>
                     </div>
                     <div className="flex flex-col max-h-320">
@@ -4475,14 +4553,13 @@ function AddOrder(props) {
                         <Table aria-label="customized table">
                           <TableHead>
                             <TableRow>
-                              <StyledTableCell>Contact Group</StyledTableCell>
-                              <StyledTableCell>Contact Style</StyledTableCell>
-                              <StyledTableCell>Contact Brand</StyledTableCell>
-                              <StyledTableCell>Contact Name</StyledTableCell>
-                              <StyledTableCell>Contact DIA</StyledTableCell>
+                              <StyledTableCell>Style</StyledTableCell>
+                              <StyledTableCell>Brand</StyledTableCell>
+                              <StyledTableCell>Model</StyledTableCell>
                               <StyledTableCell>Base Curve</StyledTableCell>
+                              <StyledTableCell>Pack Qty</StyledTableCell>
                               <StyledTableCell>Price</StyledTableCell>
-                              <StyledTableCell>Options</StyledTableCell>
+                              <StyledTableCell></StyledTableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -4494,9 +4571,7 @@ function AddOrder(props) {
                                 key={index}
                                 hover
                                 className="cursor-pointer">
-                                <StyledTableCell component="th" scope="row">
-                                  {row?.type}
-                                </StyledTableCell>
+                                {/* update */}
                                 <StyledTableCell>
                                   {row?.contactLensStyle}
                                 </StyledTableCell>
@@ -4507,10 +4582,10 @@ function AddOrder(props) {
                                   {row?.contactLensName}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                  {row?.contactLensDia}
+                                  {row?.contactLensBaseCurve}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                  {row?.contactLensBaseCurve}
+                                  ${row?.contactLensPackQty}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   ${row?.contactLensRate}
@@ -4745,7 +4820,7 @@ function AddOrder(props) {
                           </div>
                         )}
 
-                        <div className="px-20">
+                        <div className="flex flex-col gap-10 px-20">
                           <div className="sub-total flex flex-row justify-between pt-20 pb-10">
                             <h3 className="font-700">Sub Total</h3>
                             <h3 className="font-700">
@@ -4767,30 +4842,37 @@ function AddOrder(props) {
                               ).toLocaleString()}
                             </h3>
                           </div>
-                          <div className="discount flex flex-row justify-between">
-                            <div>
-                              <FormControl style={{ minWidth: 225 }}>
-                                <FormHelperText>Select Discount</FormHelperText>
-                                <Select
-                                  labelId="demo-simple-select-autowidth-label"
-                                  disabled={disabledState}
-                                  defaultValue={form?.discount}
-                                  value={form?.discount}
-                                  name="discount"
-                                  onChange={handleChange}
-                                  autoWidth>
-                                  {discounts.map((row) => (
-                                    <MenuItem value={row?.amount}>
-                                      {row?.code}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              </FormControl>
-                            </div>
-                            <div>
+                          <div className="discount flex flex-row justify-between items-end">
+                            <FormControl style={{ minWidth: 225 }}>
+                              <InputLabel id="demo-simple-select-label">
+                                Select Discount
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                disabled={disabledState}
+                                defaultValue={form?.discount}
+                                value={form?.discount}
+                                name="discount"
+                                onChange={handleChange}>
+                                {discounts.map((row) => (
+                                  <MenuItem value={row?.amount}>
+                                    {row?.code}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                            <div className="flex gap-10 w-1/2">
+                              <TextField
+                                id="outlined-multiline-static"
+                                label="Memo"
+                                variant="outlined"
+                                className="w-full"
+                                value={customerNote}
+                                onChange={handleCustomerNote}
+                              />
                               <FormControl
                                 disabled={true}
-                                fullWidth
+                                className="w-1/2"
                                 variant="outlined">
                                 <InputLabel htmlFor="outlined-adornment-amount">
                                   Amount
@@ -4811,11 +4893,33 @@ function AddOrder(props) {
                               </FormControl>
                             </div>
                           </div>
-                          <div className="insurance-amount flex flex-row justify-between">
-                            <h2 className="pt-20">Insurance Amount:</h2>
-                            <div>
+                          <div className="insurance-amount-1 flex flex-row justify-between items-end">
+                            <FormControl style={{ minWidth: 225 }}>
+                              <InputLabel id="demo-simple-select-label">
+                                Insurance Coverage 1
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={form?.discount}
+                                onChange={handleChange}>
+                                <MenuItem value={10}>Ten</MenuItem>
+                                <MenuItem value={20}>Twenty</MenuItem>
+                                <MenuItem value={30}>Thirty</MenuItem>
+                              </Select>
+                            </FormControl>
+                            <div className="flex gap-10 w-1/2">
+                              <TextField
+                                id="outlined-multiline-static"
+                                label="Memo"
+                                variant="outlined"
+                                // size="small"
+                                className="w-full"
+                                value={customerNote}
+                                onChange={handleCustomerNote}
+                              />
                               <FormControl
-                                className="mt-6"
+                                className="w-1/2"
                                 disabled={disabledState}
                                 fullWidth
                                 variant="outlined">
@@ -4838,37 +4942,59 @@ function AddOrder(props) {
                               </FormControl>
                             </div>
                           </div>
-                          <div className="addition-cost flex flex-row justify-between">
-                            <h2 className="mt-6 pt-12 ">Additional Cost</h2>
-                            <div>
+                          <div className="insurance-amount-2 flex flex-row justify-between items-end">
+                            <FormControl style={{ minWidth: 225 }}>
+                              <InputLabel id="demo-simple-select-label">
+                                Insurance Coverage 2
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={form?.discount}
+                                onChange={handleChange}>
+                                <MenuItem value={10}>Ten</MenuItem>
+                                <MenuItem value={20}>Twenty</MenuItem>
+                                <MenuItem value={30}>Thirty</MenuItem>
+                              </Select>
+                            </FormControl>
+                            <div className="flex gap-10 w-1/2">
+                              <TextField
+                                id="outlined-multiline-static"
+                                label="Memo"
+                                variant="outlined"
+                                // size="small"
+                                className="w-full"
+                                value={customerNote}
+                                onChange={handleCustomerNote}
+                              />
                               <FormControl
-                                className="mt-6"
+                                className="w-1/2"
                                 disabled={disabledState}
                                 fullWidth
                                 variant="outlined">
                                 <InputLabel htmlFor="outlined-adornment-amount">
-                                  Additional Cost
+                                  Amount
                                 </InputLabel>
                                 <OutlinedInput
                                   id="outlined-adornment-amount"
-                                  value={form?.additionalCost || +0}
-                                  name={'additionalCost'}
+                                  value={form?.insuranceCost || 0}
+                                  name={'insuranceCost'}
                                   onChange={handleChange}
                                   startAdornment={
                                     <InputAdornment position="start">
                                       $
                                     </InputAdornment>
                                   }
-                                  labelWidth={100}
+                                  labelWidth={60}
                                   type="number"
                                 />
                               </FormControl>
                             </div>
                           </div>
-                          <div className="grand-total flex flex-row justify-between">
-                            <h3 className="font-700">Grand Total</h3>
+                          <div className="insurance-total flex flex-row justify-between pt-20 pb-10">
+                            <h3 className="font-700">Insurance Total</h3>
                             <h3 className="font-700">
-                              ${' '}
+                              $
                               {(
                                 eyeglasses.reduce(
                                   (a, b) => +a + +b.lensRate,
@@ -4882,20 +5008,11 @@ function AddOrder(props) {
                                 contactLenses.reduce(
                                   (a, b) => +a + +b.contactLensRate,
                                   0
-                                ) +
-                                (form?.additionalCost
-                                  ? +form?.additionalCost
-                                  : 0) -
-                                (form?.discount ? +form?.discount : 0)
+                                )
                               ).toLocaleString()}
                             </h3>
                           </div>
-                          <div className="total-payment flex flex-row justify-between">
-                            <h3 className="font-700">Total Payments</h3>
-                            <h3 className="font-700">
-                              $ {payments.reduce((a, b) => +a + +b.amount, 0)}
-                            </h3>
-                          </div>
+
                           <div className="balance-due flex flex-row justify-between mt-96">
                             <h3
                               className="font-700"
