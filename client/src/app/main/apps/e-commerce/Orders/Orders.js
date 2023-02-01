@@ -415,7 +415,7 @@ function Orders(props) {
                   })}
                 </Tabs>
               </div>
-              <div className={clsx(classes.header)}>
+              <div className={classes.header}>
                 <div className="flex flex-col w-1/3">
                   <div className="flex flex-row gap-10">
                     <TextField
@@ -423,20 +423,19 @@ function Orders(props) {
                       label="Start Date"
                       type="date"
                       className="w-1/2"
+                      variant="outlined"
                       defaultValue={form?.start}
                       InputLabelProps={{
                         shrink: true,
                         style: {
                           color: 'white',
-                          marginTop: '3px',
+                          marginTop: '5px',
                           padding: '0 5px 0'
                         }
                       }}
                       InputProps={{
                         style: {
-                          color: 'white',
-                          borderColor: 'white',
-                          borderRadius: '4px'
+                          color: 'white'
                         }
                       }}
                       onChange={(e) => {
@@ -457,11 +456,12 @@ function Orders(props) {
                       className="w-1/2"
                       style={{ color: '#fff' }}
                       defaultValue={form?.end}
+                      variant="outlined"
                       InputLabelProps={{
                         shrink: true,
                         style: {
                           color: 'white',
-                          marginTop: '3px',
+                          marginTop: '5px',
                           padding: '0 5px 0'
                         }
                       }}
@@ -568,7 +568,9 @@ function Orders(props) {
                   value === statuses[value].value && (
                     <div className="flex justify-end mt-8 pr-20">
                       <Button
-                        className="whitespace-no-wrap mt-42 uppercase"
+                        className={`whitespace-no-wrap mt-42 uppercase ${
+                          selected.length === 0 && 'opacity-75'
+                        }`}
                         style={{
                           backgroundColor: '#222',
                           color: '#FFF'

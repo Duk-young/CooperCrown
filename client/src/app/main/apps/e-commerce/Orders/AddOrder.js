@@ -132,17 +132,6 @@ function AddOrder(props) {
   const routeParams = useParams();
   const dispatch = useDispatch();
 
-  console.log({
-    routeParams,
-    showroom,
-    customer,
-    orders,
-    selectedFrame,
-    eyeglasses,
-    form,
-    otherProductInfo
-  });
-
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
     var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
@@ -525,7 +514,6 @@ function AddOrder(props) {
 
         if (eyeglasses.length) {
           for (var i = 0; i < prevEyeglasses.length; i++) {
-            console.log(prevEyeglasses[i]);
             const queryFrame = await firestore()
               .collection('frames')
               .where('frameId', '==', Number(prevEyeglasses[i]?.frameId))
@@ -567,7 +555,7 @@ function AddOrder(props) {
         );
         props.history.push('/apps/e-commerce/orders');
       } catch (error) {
-        console.log(error);
+        throw error;
       }
       setisLoading(false);
     } else {
@@ -686,24 +674,27 @@ function AddOrder(props) {
 
         props.history.push('/apps/e-commerce/orders');
       } catch (error) {
-        console.log(error);
+        throw error;
       }
       setisLoading(false);
     }
   };
 
   useEffect(() => {
+    let resultOrder;
+    let queryCustomer;
+
     if (routeParams.orderId) {
       setisLoading(true);
       setDisabledState(true);
-      const orderId = routeParams.orderId;
       const fetchDetails = async () => {
         const queryOrder = await firestore()
           .collection('orders')
-          .where('orderId', '==', Number(orderId))
+          .where('orderId', '==', Number(routeParams.orderId))
           .limit(1)
           .get();
-        let resultOrder = queryOrder.docs[0].data();
+
+        resultOrder = queryOrder.docs[0].data();
         resultOrder.orderDate =
           resultOrder.orderDate && resultOrder.orderDate.toDate();
         resultOrder.id = queryOrder.docs[0].id;
@@ -712,19 +703,23 @@ function AddOrder(props) {
         setPrevEyeglasses(resultOrder?.eyeglasses);
         setContactLenses(resultOrder?.contactLenses);
         setMedication(resultOrder?.medication);
-        const queryCustomer = await firestore()
+
+        queryCustomer = await firestore()
           .collection('customers')
-          .where('customerId', '==', Number(resultOrder.customerId))
+          .where('customerId', '==', resultOrder?.customerId)
           .limit(1)
           .get();
-        let resultCustomer = queryCustomer.docs[0].data();
+
+        const resultCustomer = queryCustomer.docs[0].data();
         resultCustomer.dob = resultCustomer.dob && resultCustomer.dob.toDate();
         resultCustomer.id = queryCustomer.docs[0].id;
         setCustomer(resultCustomer);
+
         const queryPrescription = await firestore()
           .collection('prescriptions')
-          .where('customerId', '==', Number(resultOrder.customerId))
+          .where('customerId', '==', resultOrder?.customerId)
           .get();
+
         let resultPrescription = [];
         queryPrescription.forEach((doc) => {
           resultPrescription.push(doc.data());
@@ -749,14 +744,13 @@ function AddOrder(props) {
         setDiscounts(resultDiscounts);
         const queryPayments = await firestore()
           .collection('orderPayments')
-          .where('orderId', '==', Number(orderId))
+          .where('orderId', '==', Number(routeParams.orderId))
           .get();
         let resultPayments = [];
         queryPayments.forEach((doc) => {
           resultPayments.push(doc.data());
         });
         setPayments(resultPayments);
-
         const queryContactLens = await firestore().collection('contacts').get();
 
         let resultContacts = [];
@@ -788,27 +782,23 @@ function AddOrder(props) {
     } else {
       setisLoading(true);
 
-      const customerId = routeParams.customerId;
       const fetchDetails = async () => {
-        if (newCustomer || routeParams.customerId !== 'new') {
-          const queryCustomer = await firestore()
+        if (newCustomer && routeParams?.customerId === 'new') {
+          queryCustomer = await firestore()
             .collection('customers')
-            .where(
-              'customerId',
-              '==',
-              newCustomer ? Number(newCustomer) : Number(customerId)
-            )
+            .where('customerId', '==', newCustomer)
             .limit(1)
             .get();
 
-          let resultCustomer = queryCustomer.docs[0].data();
+          const resultCustomer = queryCustomer.docs[0].data();
           resultCustomer.dob =
             resultCustomer.dob && resultCustomer.dob.toDate();
           resultCustomer.id = queryCustomer.docs[0].id;
           setCustomer(resultCustomer);
+
           const queryPrescription = await firestore()
             .collection('prescriptions')
-            .where('customerId', '==', Number(customerId))
+            .where('customerId', '==', newCustomer)
             .get();
 
           let resultPrescription = [];
@@ -822,31 +812,27 @@ function AddOrder(props) {
           });
           setPrescription(resultPrescriptionString);
         }
-
         const queryShowroom = await firestore().collection('showRooms').get();
-
         let resultShowroom = [];
         queryShowroom.forEach((doc) => {
           resultShowroom.push(doc.data());
         });
         setShowroom(resultShowroom);
-
-        const queryOrders = await firestore().collection('orders').get();
-
-        let resultOrders = [];
-        queryOrders.forEach((doc) => {
-          resultOrders.push(doc.data());
-        });
-        setOrders(resultOrders);
-
         const queryDiscounts = await firestore().collection('discounts').get();
-
         let resultDiscounts = [];
         queryDiscounts.forEach((doc) => {
           resultDiscounts.push(doc.data());
         });
         setDiscounts(resultDiscounts);
-
+        const queryPayments = await firestore()
+          .collection('orderPayments')
+          .where('orderId', '==', Number(routeParams.orderId))
+          .get();
+        let resultPayments = [];
+        queryPayments.forEach((doc) => {
+          resultPayments.push(doc.data());
+        });
+        setPayments(resultPayments);
         const queryContactLens = await firestore().collection('contacts').get();
 
         let resultContacts = [];
@@ -872,19 +858,15 @@ function AddOrder(props) {
           lensTypeNames.push({ lensTypeName: row.replace(/"/g, '') });
         });
         setLensTypeNames(lensTypeNames);
-
         setisLoading(false);
       };
       fetchDetails();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newCustomer]);
 
   const date = moment();
 
   const currentDate = date.format('YYYY-MM-DD');
-
-  console.log(currentDate, typeof currentDate);
 
   const sumPrice = (value1, value2) => {
     const sum = value1 + value2;
@@ -3224,380 +3206,391 @@ function AddOrder(props) {
                   <br></br>
                 </div>
               </div>
-
-              <>
-                <div className="eyeglasses-prescription flex flex-col p-16 sm:px-24">
-                  <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                    <div className="py-8  border-1 border-black border-solid rounded-6">
-                      <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                        <h1 className="font-700" style={{ color: '#f15a25' }}>
-                          EYEGLASSES PRESCRIPTION
-                        </h1>
-                      </div>
-                      <div className="w-full flex flex-row ">
-                        <div>
-                          <div className="flex flex-col p-8 flex-1 h-auto justify-between">
-                            <div className="flex flex-row w-full pb-10">
-                              <div className="flex flex-col px-10 w-1/2 ">
-                                <CustomAutocomplete1
-                                  list={prescription.filter(
-                                    (word) =>
-                                      word.prescriptionType === 'eyeglassesRx'
-                                  )}
-                                  form={selectedFrame}
-                                  disabled={disabledState}
-                                  setForm={setSelectedFrame}
-                                  handleChange={handleSelectedFrameChange}
-                                  id="prescriptionId"
-                                  freeSolo={false}
-                                  label="Select Prescription"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex gap-10">
-                              <div className="w-2/3">
-                                <div className="flex flex-row ">
-                                  <div className="p-8 h-auto w-40">
-                                    <h3 className="text-center font-700">RX</h3>
-                                  </div>
-                                  <div className="p-8 h-auto w-1/6">
-                                    <h3 className="text-center font-700">
-                                      Sphere
-                                    </h3>
-                                  </div>
-                                  <div className="p-8 h-auto w-1/6">
-                                    <h3 className="text-center font-700">
-                                      Cylinder
-                                    </h3>
-                                  </div>
-                                  <div className="p-8 h-auto w-1/6">
-                                    <h3 className="text-center font-700">
-                                      Axis
-                                    </h3>
-                                  </div>
-                                  <div className="p-8 h-auto w-1/6">
-                                    <h3 className="text-center font-700">
-                                      Add
-                                    </h3>
-                                  </div>
-                                  <div className="p-8 h-auto w-2/6">
-                                    <h3 className="text-center font-700">
-                                      Prism/Base
-                                    </h3>
-                                  </div>
-                                </div>
-                                <div className="flex flex-row ">
-                                  <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <h3 className="text-center font-700">OD</h3>
-                                  </div>
-                                  <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      id="standard-basic"
-                                      value={
-                                        selectedFrame?.eyeglassesSphereOd
-                                          ? selectedFrame?.eyeglassesSphereOd
-                                          : ''
-                                      }
-                                      onChange={handleSelectedFrameChange}
-                                      disabled={disabledState}
-                                      name={'eyeglassesSphereOd'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      id="standard-basic"
-                                      value={
-                                        selectedFrame?.eyeglassesCylinderOd
-                                      }
-                                      onChange={handleSelectedFrameChange}
-                                      disabled={disabledState}
-                                      name={'eyeglassesCylinderOd'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      id="standard-basic"
-                                      value={selectedFrame?.eyeglassesAxisOd}
-                                      disabled={disabledState}
-                                      onChange={handleSelectedFrameChange}
-                                      name={'eyeglassesAxisOd'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      id="standard-basic"
-                                      disabled={disabledState}
-                                      value={selectedFrame?.eyeglassesAddOd}
-                                      onChange={handleSelectedFrameChange}
-                                      name={'eyeglassesAddOd'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="p-8 w-2/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      id="standard-basic"
-                                      disabled={disabledState}
-                                      value={selectedFrame?.eyeglassesPrismOd}
-                                      onChange={handleSelectedFrameChange}
-                                      name={'eyeglassesPrismOd'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="flex flex-row ">
-                                  <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <h3 className="text-center font-700">OS</h3>
-                                  </div>
-                                  <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      id="standard-basic"
-                                      disabled={disabledState}
-                                      value={selectedFrame?.eyeglassesSphereOs}
-                                      onChange={handleSelectedFrameChange}
-                                      name={'eyeglassesSphereOs'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      id="standard-basic"
-                                      disabled={disabledState}
-                                      value={
-                                        selectedFrame?.eyeglassesCylinderOs
-                                      }
-                                      onChange={handleSelectedFrameChange}
-                                      name={'eyeglassesCylinderOs'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      id="standard-basic"
-                                      disabled={disabledState}
-                                      value={selectedFrame?.eyeglassesAxisOs}
-                                      onChange={handleSelectedFrameChange}
-                                      name={'eyeglassesAxisOs'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      id="standard-basic"
-                                      disabled={disabledState}
-                                      value={selectedFrame?.eyeglassesAddOs}
-                                      onChange={handleSelectedFrameChange}
-                                      name={'eyeglassesAddOs'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
-
-                                  <div className="p-8 w-2/6 h-auto border-grey-400 border-solid border-1 justify-between">
-                                    <TextField
-                                      size="small"
-                                      fullWidth
-                                      disabled={disabledState}
-                                      id="standard-basic"
-                                      value={selectedFrame?.eyeglassesPrismOs}
-                                      onChange={handleSelectedFrameChange}
-                                      name={'eyeglassesPrismOs'}
-                                      InputProps={{
-                                        inputProps: {
-                                          style: { textAlign: 'center' }
-                                        }
-                                      }}
-                                    />
-                                  </div>
+              {customer && (
+                <>
+                  <div className="eyeglasses-prescription flex flex-col p-16 sm:px-24">
+                    <FuseAnimate
+                      animation="transition.slideRightIn"
+                      delay={500}>
+                      <div className="py-8  border-1 border-black border-solid rounded-6">
+                        <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                          <h1 className="font-700" style={{ color: '#f15a25' }}>
+                            EYEGLASSES PRESCRIPTION
+                          </h1>
+                        </div>
+                        <div className="w-full flex flex-row ">
+                          <div>
+                            <div className="flex flex-col p-8 flex-1 h-auto justify-between">
+                              <div className="flex flex-row w-full pb-10">
+                                <div className="flex flex-col px-10 w-1/2 ">
+                                  <CustomAutocomplete1
+                                    list={prescription.filter(
+                                      (word) =>
+                                        word.prescriptionType === 'eyeglassesRx'
+                                    )}
+                                    form={selectedFrame}
+                                    disabled={disabledState}
+                                    setForm={setSelectedFrame}
+                                    handleChange={handleSelectedFrameChange}
+                                    id="prescriptionId"
+                                    freeSolo={false}
+                                    label="Select Prescription"
+                                  />
                                 </div>
                               </div>
-                              <div className="w-1/3">
-                                <div className="flex flex-col mt-0 flex-1 h-auto justify-between">
+                              <div className="flex gap-10">
+                                <div className="w-2/3">
                                   <div className="flex flex-row ">
-                                    <div className="p-8 h-auto w-1/4">
+                                    <div className="p-8 h-auto w-40">
                                       <h3 className="text-center font-700">
-                                        PD
+                                        RX
                                       </h3>
                                     </div>
-                                    <div className="p-8 h-auto w-1/4">
+                                    <div className="p-8 h-auto w-1/6">
                                       <h3 className="text-center font-700">
-                                        OU
+                                        Sphere
                                       </h3>
                                     </div>
-                                    <div className="p-8 h-auto w-1/4">
+                                    <div className="p-8 h-auto w-1/6">
+                                      <h3 className="text-center font-700">
+                                        Cylinder
+                                      </h3>
+                                    </div>
+                                    <div className="p-8 h-auto w-1/6">
+                                      <h3 className="text-center font-700">
+                                        Axis
+                                      </h3>
+                                    </div>
+                                    <div className="p-8 h-auto w-1/6">
+                                      <h3 className="text-center font-700">
+                                        Add
+                                      </h3>
+                                    </div>
+                                    <div className="p-8 h-auto w-2/6">
+                                      <h3 className="text-center font-700">
+                                        Prism/Base
+                                      </h3>
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-row ">
+                                    <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
                                       <h3 className="text-center font-700">
                                         OD
                                       </h3>
                                     </div>
-                                    <div className="p-8 h-auto w-1/4">
+                                    <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        id="standard-basic"
+                                        value={
+                                          selectedFrame?.eyeglassesSphereOd
+                                            ? selectedFrame?.eyeglassesSphereOd
+                                            : ''
+                                        }
+                                        onChange={handleSelectedFrameChange}
+                                        disabled={disabledState}
+                                        name={'eyeglassesSphereOd'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        id="standard-basic"
+                                        value={
+                                          selectedFrame?.eyeglassesCylinderOd
+                                        }
+                                        onChange={handleSelectedFrameChange}
+                                        disabled={disabledState}
+                                        name={'eyeglassesCylinderOd'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        id="standard-basic"
+                                        value={selectedFrame?.eyeglassesAxisOd}
+                                        disabled={disabledState}
+                                        onChange={handleSelectedFrameChange}
+                                        name={'eyeglassesAxisOd'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        id="standard-basic"
+                                        disabled={disabledState}
+                                        value={selectedFrame?.eyeglassesAddOd}
+                                        onChange={handleSelectedFrameChange}
+                                        name={'eyeglassesAddOd'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="p-8 w-2/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        id="standard-basic"
+                                        disabled={disabledState}
+                                        value={selectedFrame?.eyeglassesPrismOd}
+                                        onChange={handleSelectedFrameChange}
+                                        name={'eyeglassesPrismOd'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-row ">
+                                    <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
                                       <h3 className="text-center font-700">
                                         OS
                                       </h3>
                                     </div>
+                                    <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        id="standard-basic"
+                                        disabled={disabledState}
+                                        value={
+                                          selectedFrame?.eyeglassesSphereOs
+                                        }
+                                        onChange={handleSelectedFrameChange}
+                                        name={'eyeglassesSphereOs'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        id="standard-basic"
+                                        disabled={disabledState}
+                                        value={
+                                          selectedFrame?.eyeglassesCylinderOs
+                                        }
+                                        onChange={handleSelectedFrameChange}
+                                        name={'eyeglassesCylinderOs'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        id="standard-basic"
+                                        disabled={disabledState}
+                                        value={selectedFrame?.eyeglassesAxisOs}
+                                        onChange={handleSelectedFrameChange}
+                                        name={'eyeglassesAxisOs'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="p-8 w-1/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        id="standard-basic"
+                                        disabled={disabledState}
+                                        value={selectedFrame?.eyeglassesAddOs}
+                                        onChange={handleSelectedFrameChange}
+                                        name={'eyeglassesAddOs'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
+
+                                    <div className="p-8 w-2/6 h-auto border-grey-400 border-solid border-1 justify-between">
+                                      <TextField
+                                        size="small"
+                                        fullWidth
+                                        disabled={disabledState}
+                                        id="standard-basic"
+                                        value={selectedFrame?.eyeglassesPrismOs}
+                                        onChange={handleSelectedFrameChange}
+                                        name={'eyeglassesPrismOs'}
+                                        InputProps={{
+                                          inputProps: {
+                                            style: { textAlign: 'center' }
+                                          }
+                                        }}
+                                      />
+                                    </div>
                                   </div>
-                                  <div className="flex flex-row ">
-                                    <div className="p-3 flex w-1/3 h-auto border-grey-400 border-solid border-1 justify-center items-center">
-                                      <h3 className="text-center font-700">
-                                        Distance
-                                      </h3>
+                                </div>
+                                <div className="w-1/3">
+                                  <div className="flex flex-col mt-0 flex-1 h-auto justify-between">
+                                    <div className="flex flex-row ">
+                                      <div className="p-8 h-auto w-1/4">
+                                        <h3 className="text-center font-700">
+                                          PD
+                                        </h3>
+                                      </div>
+                                      <div className="p-8 h-auto w-1/4">
+                                        <h3 className="text-center font-700">
+                                          OU
+                                        </h3>
+                                      </div>
+                                      <div className="p-8 h-auto w-1/4">
+                                        <h3 className="text-center font-700">
+                                          OD
+                                        </h3>
+                                      </div>
+                                      <div className="p-8 h-auto w-1/4">
+                                        <h3 className="text-center font-700">
+                                          OS
+                                        </h3>
+                                      </div>
                                     </div>
-                                    <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                                      <TextField
-                                        size="small"
-                                        fullWidth
-                                        id="standard-basic"
-                                        value={selectedFrame?.pdOuDistance}
-                                        onChange={handleSelectedFrameChange}
-                                        disabled={disabledState}
-                                        name={'pdOuDistance'}
-                                        InputProps={{
-                                          inputProps: {
-                                            style: { textAlign: 'center' }
-                                          }
-                                        }}
-                                      />
+                                    <div className="flex flex-row ">
+                                      <div className="p-3 flex w-1/3 h-auto border-grey-400 border-solid border-1 justify-center items-center">
+                                        <h3 className="text-center font-700">
+                                          Distance
+                                        </h3>
+                                      </div>
+                                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                                        <TextField
+                                          size="small"
+                                          fullWidth
+                                          id="standard-basic"
+                                          value={selectedFrame?.pdOuDistance}
+                                          onChange={handleSelectedFrameChange}
+                                          disabled={disabledState}
+                                          name={'pdOuDistance'}
+                                          InputProps={{
+                                            inputProps: {
+                                              style: { textAlign: 'center' }
+                                            }
+                                          }}
+                                        />
+                                      </div>
+                                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                                        <TextField
+                                          size="small"
+                                          fullWidth
+                                          id="standard-basic"
+                                          value={selectedFrame?.pdOdDistance}
+                                          onChange={handleSelectedFrameChange}
+                                          disabled={disabledState}
+                                          name={'pdOdDistance'}
+                                          InputProps={{
+                                            inputProps: {
+                                              style: { textAlign: 'center' }
+                                            }
+                                          }}
+                                        />
+                                      </div>
+                                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                                        <TextField
+                                          size="small"
+                                          fullWidth
+                                          id="standard-basic"
+                                          value={selectedFrame?.pdOsDistance}
+                                          disabled={disabledState}
+                                          onChange={handleSelectedFrameChange}
+                                          name={'pdOsDistance'}
+                                          InputProps={{
+                                            inputProps: {
+                                              style: { textAlign: 'center' }
+                                            }
+                                          }}
+                                        />
+                                      </div>
                                     </div>
-                                    <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                                      <TextField
-                                        size="small"
-                                        fullWidth
-                                        id="standard-basic"
-                                        value={selectedFrame?.pdOdDistance}
-                                        onChange={handleSelectedFrameChange}
-                                        disabled={disabledState}
-                                        name={'pdOdDistance'}
-                                        InputProps={{
-                                          inputProps: {
-                                            style: { textAlign: 'center' }
-                                          }
-                                        }}
-                                      />
-                                    </div>
-                                    <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                                      <TextField
-                                        size="small"
-                                        fullWidth
-                                        id="standard-basic"
-                                        value={selectedFrame?.pdOsDistance}
-                                        disabled={disabledState}
-                                        onChange={handleSelectedFrameChange}
-                                        name={'pdOsDistance'}
-                                        InputProps={{
-                                          inputProps: {
-                                            style: { textAlign: 'center' }
-                                          }
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                  <div className="flex flex-row ">
-                                    <div className="p-3 flex w-1/3 h-auto border-grey-400 border-solid border-1 justify-center items-center">
-                                      <h3 className="text-center font-700">
-                                        Near
-                                      </h3>
-                                    </div>
-                                    <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                                      <TextField
-                                        size="small"
-                                        fullWidth
-                                        id="standard-basic"
-                                        value={selectedFrame?.pdOuNear}
-                                        onChange={handleSelectedFrameChange}
-                                        disabled={disabledState}
-                                        name={'pdOuNear'}
-                                        InputProps={{
-                                          inputProps: {
-                                            style: { textAlign: 'center' }
-                                          }
-                                        }}
-                                      />
-                                    </div>
-                                    <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                                      <TextField
-                                        size="small"
-                                        fullWidth
-                                        id="standard-basic"
-                                        value={selectedFrame?.pdOdNear}
-                                        onChange={handleSelectedFrameChange}
-                                        disabled={disabledState}
-                                        name={'pdOdNear'}
-                                        InputProps={{
-                                          inputProps: {
-                                            style: { textAlign: 'center' }
-                                          }
-                                        }}
-                                      />
-                                    </div>
-                                    <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                                      <TextField
-                                        size="small"
-                                        fullWidth
-                                        id="standard-basic"
-                                        value={selectedFrame?.pdOsNear}
-                                        disabled={disabledState}
-                                        onChange={handleSelectedFrameChange}
-                                        name={'pdOsNear'}
-                                        InputProps={{
-                                          inputProps: {
-                                            style: { textAlign: 'center' }
-                                          }
-                                        }}
-                                      />
+                                    <div className="flex flex-row ">
+                                      <div className="p-3 flex w-1/3 h-auto border-grey-400 border-solid border-1 justify-center items-center">
+                                        <h3 className="text-center font-700">
+                                          Near
+                                        </h3>
+                                      </div>
+                                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                                        <TextField
+                                          size="small"
+                                          fullWidth
+                                          id="standard-basic"
+                                          value={selectedFrame?.pdOuNear}
+                                          onChange={handleSelectedFrameChange}
+                                          disabled={disabledState}
+                                          name={'pdOuNear'}
+                                          InputProps={{
+                                            inputProps: {
+                                              style: { textAlign: 'center' }
+                                            }
+                                          }}
+                                        />
+                                      </div>
+                                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                                        <TextField
+                                          size="small"
+                                          fullWidth
+                                          id="standard-basic"
+                                          value={selectedFrame?.pdOdNear}
+                                          onChange={handleSelectedFrameChange}
+                                          disabled={disabledState}
+                                          name={'pdOdNear'}
+                                          InputProps={{
+                                            inputProps: {
+                                              style: { textAlign: 'center' }
+                                            }
+                                          }}
+                                        />
+                                      </div>
+                                      <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                                        <TextField
+                                          size="small"
+                                          fullWidth
+                                          id="standard-basic"
+                                          value={selectedFrame?.pdOsNear}
+                                          disabled={disabledState}
+                                          onChange={handleSelectedFrameChange}
+                                          name={'pdOsNear'}
+                                          InputProps={{
+                                            inputProps: {
+                                              style: { textAlign: 'center' }
+                                            }
+                                          }}
+                                        />
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -3605,52 +3598,1309 @@ function AddOrder(props) {
                             </div>
                           </div>
                         </div>
+                        <br></br>
                       </div>
-                      <br></br>
-                    </div>
-                  </FuseAnimate>
-                </div>
+                    </FuseAnimate>
+                  </div>
 
-                <div className="eyeglasses-info flex flex-col p-16 sm:px-24">
-                  <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                    <div className="py-8 border-1 border-black border-solid rounded-6">
-                      <div className="flex px-20 flex-row justify-between border-b-1 border-black border-solid">
-                        <FormControlLabel
-                          className="m-0"
-                          style={{ color: '#f15a25' }}
-                          control={
-                            <Checkbox
-                              checked={form?.shipFrameToCustomerLogic}
-                              onChange={handleChange}
-                              name="shipFrameToCustomerLogic"
-                              disabled={disabledState}
-                            />
-                          }
-                          label="Ship To Customer Logic"
-                        />
-                        <h1 className="font-700" style={{ color: '#f15a25' }}>
-                          EYEGLASSES INFO
-                        </h1>
-                        <FormControlLabel
-                          className="m-0"
-                          style={{ color: '#f15a25' }}
-                          control={
-                            <Checkbox
-                              checked={form?.rushFrameOrder}
-                              onChange={handleChange}
-                              name="rushFrameOrder"
-                              disabled={disabledState}
-                            />
-                          }
-                          label="Rush Order"
-                        />
+                  <div className="eyeglasses-info flex flex-col p-16 sm:px-24">
+                    <FuseAnimate
+                      animation="transition.slideRightIn"
+                      delay={500}>
+                      <div className="py-8 border-1 border-black border-solid rounded-6">
+                        <div className="flex px-20 flex-row justify-between border-b-1 border-black border-solid">
+                          <FormControlLabel
+                            className="m-0"
+                            style={{ color: '#f15a25' }}
+                            control={
+                              <Checkbox
+                                checked={form?.shipFrameToCustomerLogic}
+                                onChange={handleChange}
+                                name="shipFrameToCustomerLogic"
+                                disabled={disabledState}
+                              />
+                            }
+                            label="Ship To Customer Logic"
+                          />
+                          <h1 className="font-700" style={{ color: '#f15a25' }}>
+                            EYEGLASSES INFO
+                          </h1>
+                          <FormControlLabel
+                            className="m-0"
+                            style={{ color: '#f15a25' }}
+                            control={
+                              <Checkbox
+                                checked={form?.rushFrameOrder}
+                                onChange={handleChange}
+                                name="rushFrameOrder"
+                                disabled={disabledState}
+                              />
+                            }
+                            label="Rush Order"
+                          />
+                        </div>
+                        <div className="flex flex-row w-full p-8 gap-10">
+                          <div className="border-1 border-black border-solid w-1/2">
+                            <div className="flex flex-col w-full">
+                              <div className="flex flex-col px-8">
+                                <div className="flex flex-col my-10 relative">
+                                  <h2 className="text-center">Frame</h2>
+                                  <div className="flex flex-row absolute right-0">
+                                    <SearchFrameDialouge
+                                      disabledState={disabledState}
+                                      form={selectedFrame}
+                                      setForm={setSelectedFrame}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="flex flex-col">
+                                  <TextField
+                                    fullWidth
+                                    style={{ borderRadius: '0px' }}
+                                    variant="outlined"
+                                    disabled={true}
+                                    id="standard-basic"
+                                    value={selectedFrame?.frameBrand}
+                                    onChange={handleSelectedFrameChange}
+                                    name={'frameBrand'}
+                                    label="Brand"
+                                    InputProps={{
+                                      inputProps: {
+                                        style: { textAlign: 'center' }
+                                      }
+                                    }}
+                                  />
+                                  <TextField
+                                    className="mt-4"
+                                    fullWidth
+                                    variant="outlined"
+                                    disabled={true}
+                                    id="standard-basic"
+                                    value={selectedFrame?.frameModel}
+                                    onChange={handleSelectedFrameChange}
+                                    name={'frameModel'}
+                                    label="Model"
+                                    InputProps={{
+                                      inputProps: {
+                                        style: { textAlign: 'center' }
+                                      }
+                                    }}
+                                  />
+                                  <TextField
+                                    className="mt-4"
+                                    fullWidth
+                                    variant="outlined"
+                                    disabled={true}
+                                    id="standard-basic"
+                                    value={selectedFrame?.frameColour}
+                                    onChange={handleSelectedFrameChange}
+                                    name={'frameColour'}
+                                    label="Colour"
+                                    InputProps={{
+                                      inputProps: {
+                                        style: { textAlign: 'center' }
+                                      }
+                                    }}
+                                  />
+                                  <div className="flex flex-row">
+                                    <TextField
+                                      className="mt-4"
+                                      fullWidth
+                                      variant="outlined"
+                                      disabled={disabledState}
+                                      id="standard-basic"
+                                      value={selectedFrame?.segHtOd}
+                                      onChange={handleSelectedFrameChange}
+                                      name={'segHtOd'}
+                                      label="Seg Ht OD"
+                                      InputProps={{
+                                        inputProps: {
+                                          style: { textAlign: 'center' }
+                                        }
+                                      }}
+                                      type="number"
+                                    />
+                                    <TextField
+                                      className="mt-4 ml-2"
+                                      fullWidth
+                                      variant="outlined"
+                                      disabled={disabledState}
+                                      id="standard-basic"
+                                      value={selectedFrame?.segHtOs}
+                                      onChange={handleSelectedFrameChange}
+                                      name={'segHtOs'}
+                                      label="Seg Ht OS"
+                                      InputProps={{
+                                        inputProps: {
+                                          style: { textAlign: 'center' }
+                                        }
+                                      }}
+                                      type="number"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="flex flex-col gap-10">
+                                  <FormControlLabel
+                                    className="m-0"
+                                    style={{ color: '#f15a25' }}
+                                    control={
+                                      <Checkbox
+                                        checked={selectedFrame?.sendFrameToLab}
+                                        onChange={handleSelectedFrameChange}
+                                        name="sendFrameToLab"
+                                        disabled={disabledState}
+                                      />
+                                    }
+                                    label="Sending Frame to Lab"
+                                  />
+                                  <FormControlLabel
+                                    className="m-0"
+                                    control={
+                                      <Checkbox
+                                        checked={
+                                          selectedFrame?.frameLater
+                                            ? selectedFrame?.frameLater
+                                            : ''
+                                        }
+                                        onChange={handleSelectedFrameChange}
+                                        name="frameLater"
+                                        disabled={disabledState}
+                                      />
+                                    }
+                                    label="Frame to come later"
+                                  />
+                                  <FormControlLabel
+                                    className="m-0"
+                                    control={
+                                      <Checkbox
+                                        checked={
+                                          selectedFrame?.orderFrameInsurance
+                                        }
+                                        onChange={handleSelectedFrameChange}
+                                        name="orderFrameInsurance"
+                                        disabled={disabledState}
+                                      />
+                                    }
+                                    label="Order Frame from Insurance"
+                                  />
+                                  <div>
+                                    <FormControlLabel
+                                      className="m-0"
+                                      control={
+                                        <Checkbox
+                                          checked={selectedFrame?.customerFrame}
+                                          onChange={handleSelectedFrameChange}
+                                          name="customerFrame"
+                                          disabled={disabledState}
+                                        />
+                                      }
+                                      label="Customer’s Frame"
+                                    />
+                                    {selectedFrame?.customerFrame && (
+                                      <TextField
+                                        id="outlined-multiline-static"
+                                        variant="outlined"
+                                        size="small"
+                                        className="w-full"
+                                        name="customerFrameDetail"
+                                        value={
+                                          selectedFrame?.customerFrameDetail
+                                        }
+                                        onChange={handleSelectedFrameChange}
+                                      />
+                                    )}
+                                  </div>
+                                  <FormControlLabel
+                                    className="m-0"
+                                    control={
+                                      <Checkbox
+                                        checked={selectedFrame?.otherFrame}
+                                        onChange={handleSelectedFrameChange}
+                                        name="otherFrame"
+                                        disabled={disabledState}
+                                      />
+                                    }
+                                    label="Other Frame"
+                                  />
+                                  {selectedFrame?.otherFrame && (
+                                    <TextField
+                                      id="outlined-multiline-static"
+                                      variant="outlined"
+                                      size="small"
+                                      className="w-full"
+                                      name="otherFrameDetail"
+                                      value={selectedFrame?.otherFrameDetail}
+                                      onChange={handleSelectedFrameChange}
+                                    />
+                                  )}
+                                </div>
+                                <div className="flex gap-10 py-10">
+                                  <TextField
+                                    id="outlined-multiline-static"
+                                    label="Memo"
+                                    variant="outlined"
+                                    size="small"
+                                    className="w-full"
+                                    name="frameMemo"
+                                    value={selectedFrame?.frameMemo}
+                                    onChange={handleSelectedFrameChange}
+                                  />
+                                  <TextField
+                                    id="outlined-multiline-static"
+                                    label="Additional Price"
+                                    variant="outlined"
+                                    size="small"
+                                    className="w-1"
+                                    name="frameAdditionalPrice"
+                                    error={
+                                      selectedFrame?.frameAdditionalPrice &&
+                                      !Number(
+                                        selectedFrame?.frameAdditionalPrice
+                                      )
+                                    }
+                                    value={selectedFrame?.frameAdditionalPrice}
+                                    onChange={handleSelectedFrameChange}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="border-1 border-black border-solid w-1/2">
+                            <div className="flex flex-col w-full px-8">
+                              <div className="flex flex-col my-10">
+                                <h2 className="text-center">Lens</h2>
+                              </div>
+                              <div className="flex flex-col">
+                                <div className="flex flex-row">
+                                  <div className="w-full">
+                                    <FormControl
+                                      component="fieldset"
+                                      className="w-full">
+                                      <RadioGroup
+                                        className="flex px-20"
+                                        row
+                                        aria-label="lensType"
+                                        name="lensType"
+                                        value={selectedFrame?.lensType}
+                                        onChange={handleSelectedFrameChange}>
+                                        <div className="w-1/2 flex flex-col">
+                                          <FormControlLabel
+                                            disabled={disabledState}
+                                            value="distance"
+                                            control={<Radio />}
+                                            label="Distance"
+                                          />
+                                          <FormControlLabel
+                                            value="fTop"
+                                            disabled={disabledState}
+                                            control={<Radio />}
+                                            label="Flat Top"
+                                          />
+                                        </div>
+                                        <div className="w-1/2 flex flex-col">
+                                          <FormControlLabel
+                                            value="read"
+                                            disabled={disabledState}
+                                            control={<Radio />}
+                                            label="Reading"
+                                          />
+                                          <FormControlLabel
+                                            value="progressive"
+                                            disabled={disabledState}
+                                            control={<Radio />}
+                                            label="Progressive"
+                                          />
+                                        </div>
+                                      </RadioGroup>
+                                    </FormControl>
+                                  </div>
+                                </div>
+                                <div className="flex flex-row justify-between">
+                                  <div className="flex flex-col px-10 w-full">
+                                    <CustomAutocomplete
+                                      list={lensTypeNames}
+                                      form={selectedFrame}
+                                      setForm={setSelectedFrame}
+                                      handleChange={handleSelectedFrameChange}
+                                      id="lensTypeName"
+                                      freeSolo={false}
+                                      label="Select Lens Type"
+                                    />
+                                  </div>
+                                </div>
+                                <div>
+                                  <TextField
+                                    className="mt-4"
+                                    fullWidth
+                                    variant="outlined"
+                                    disabled={disabledState}
+                                    id="standard-basic"
+                                    value={selectedFrame?.lensColour}
+                                    onChange={handleSelectedFrameChange}
+                                    name={'lensColour'}
+                                    label="Colour/Tint"
+                                    InputProps={{
+                                      inputProps: {
+                                        style: { textAlign: 'center' }
+                                      }
+                                    }}
+                                  />
+                                  <TextField
+                                    className="mt-4"
+                                    fullWidth
+                                    variant="outlined"
+                                    disabled={disabledState}
+                                    id="standard-basic"
+                                    value={selectedFrame?.lensDetail}
+                                    onChange={handleSelectedFrameChange}
+                                    name={'lensDetail'}
+                                    label="Detail"
+                                    InputProps={{
+                                      inputProps: {
+                                        style: { textAlign: 'center' }
+                                      }
+                                    }}
+                                  />
+                                </div>
+
+                                <div className="flex flex-col gap-10">
+                                  <FormControlLabel
+                                    className="m-0"
+                                    control={
+                                      <Checkbox
+                                        checked={selectedFrame?.oversizeLens}
+                                        onChange={handleSelectedFrameChange}
+                                        name="oversizeLens"
+                                        disabled={disabledState}
+                                      />
+                                    }
+                                    label="Oversize Lens ( Additional Price )"
+                                  />
+                                  <FormControlLabel
+                                    className="m-0"
+                                    control={
+                                      <Checkbox
+                                        checked={selectedFrame?.cutLensOnly}
+                                        onChange={handleSelectedFrameChange}
+                                        name="cutLensOnly"
+                                        disabled={disabledState}
+                                      />
+                                    }
+                                    label="Cut Lens Only"
+                                  />
+                                  <FormControlLabel
+                                    className="m-0"
+                                    control={
+                                      <Checkbox
+                                        checked={selectedFrame?.sendUncutLenses}
+                                        onChange={handleSelectedFrameChange}
+                                        name="sendUncutLenses"
+                                        disabled={disabledState}
+                                      />
+                                    }
+                                    label="Send Uncut Lenses"
+                                  />
+                                  <FormControlLabel
+                                    className="m-0"
+                                    control={
+                                      <Checkbox
+                                        checked={
+                                          selectedFrame?.orderLensInsurance
+                                        }
+                                        onChange={handleSelectedFrameChange}
+                                        name="orderLensInsurance"
+                                        disabled={disabledState}
+                                      />
+                                    }
+                                    label="Order Lens from Insurance"
+                                  />
+                                </div>
+                              </div>
+                              <div
+                                className="flex gap-10 py-10"
+                                style={{ paddingTop: '5rem' }}>
+                                <TextField
+                                  id="outlined-memo"
+                                  label="Memo"
+                                  variant="outlined"
+                                  size="small"
+                                  className="w-full"
+                                  name="lensMemo"
+                                  value={selectedFrame?.lensMemo}
+                                  onChange={handleSelectedFrameChange}
+                                />
+                                <TextField
+                                  id="outlined-additional-price"
+                                  label="Additional Price"
+                                  variant="outlined"
+                                  size="small"
+                                  className="w-1"
+                                  name="lensAdditionalPrice"
+                                  error={
+                                    selectedFrame?.lensAdditionalPrice &&
+                                    !Number(selectedFrame?.lensAdditionalPrice)
+                                  }
+                                  value={selectedFrame?.lensAdditionalPrice}
+                                  onChange={handleSelectedFrameChange}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-10">
+                          <Button
+                            className={classes.button}
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleAddFrameToOrder}
+                            disabled={disabledState}
+                            aria-label="add">
+                            <AddIcon />
+                            Add to Order
+                          </Button>
+                        </div>
+                        <div className="flex flex-col max-h-320">
+                          <TableContainer
+                            className="flex flex-col w-full overflow-scroll"
+                            component={Paper}>
+                            <Table aria-label="customized table">
+                              <TableHead>
+                                <TableRow>
+                                  <StyledTableCell>Brand</StyledTableCell>
+                                  <StyledTableCell>Model</StyledTableCell>
+                                  <StyledTableCell>Color</StyledTableCell>
+                                  <StyledTableCell>Lens Type</StyledTableCell>
+                                  {/* <StyledTableCell>Lens Detail</StyledTableCell> */}
+                                  <StyledTableCell>Colour/Tint</StyledTableCell>
+                                  <StyledTableCell></StyledTableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {eyeglasses.map((row, index) => (
+                                  <StyledTableRow
+                                    onClick={() => {
+                                      setSelectedFrame(row);
+                                    }}
+                                    key={index}
+                                    hover
+                                    className="cursor-pointer">
+                                    <StyledTableCell component="th" scope="row">
+                                      {row?.frameBrand}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.frameModel}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.frameColour}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.lensType === 'distance' &&
+                                        'Distance'}
+                                      {row?.lensType === 'read' && 'Reading'}
+                                      {row?.lensType === 'fTop' && 'Flat Top'}
+                                      {row?.lensType === 'progressive' &&
+                                        'Progressive'}
+                                    </StyledTableCell>
+                                    {/* <StyledTableCell>
+                                    {row?.lensDetail}
+                                  </StyledTableCell> */}
+                                    <StyledTableCell>
+                                      {row?.lensColour}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      <IconButton
+                                        onClick={() => {
+                                          let newEyeglasses = eyeglasses;
+                                          newEyeglasses.splice(index, 1);
+                                          setEyeglasses([...newEyeglasses]);
+                                          setSelectedFrame(row);
+                                          // setDisabledState(false);
+                                        }}
+                                        aria-label="view">
+                                        <Icon>delete</Icon>
+                                      </IconButton>
+                                    </StyledTableCell>
+                                  </StyledTableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </div>
                       </div>
-                      <div className="flex flex-row w-full p-8 gap-10">
-                        <div className="border-1 border-black border-solid w-1/2">
+                    </FuseAnimate>
+                  </div>
+
+                  <div className="contact-lens-prescription flex flex-col p-16 sm:px-24">
+                    <FuseAnimate
+                      animation="transition.slideRightIn"
+                      delay={500}>
+                      <div className="py-8  border-1 border-black border-solid rounded-6">
+                        <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                          <h1 className="font-700" style={{ color: '#f15a25' }}>
+                            CONTACT LENS PRESCRIPTION
+                          </h1>
+                        </div>
+                        <div>
+                          <div className="flex flex-col p-8 flex-1 h-auto justify-between">
+                            <div className="flex flex-row w-full">
+                              <div className="flex flex-col px-10 w-1/2 ">
+                                <CustomAutocomplete1
+                                  list={prescription.filter(
+                                    (word) =>
+                                      word.prescriptionType === 'contactLensRx'
+                                  )}
+                                  form={selectedContactLens}
+                                  disabled={disabledState}
+                                  setForm={setSelectedContactLens}
+                                  handleChange={handleSelectedContactLensChange}
+                                  id="prescriptionId"
+                                  freeSolo={false}
+                                  label="Select Prescription"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="flex flex-row ">
+                              <div className="p-8 h-auto w-40">
+                                <h3 className="text-center font-700">RX</h3>
+                              </div>
+                              <div className="p-8 h-auto w-80">
+                                <h3 className="text-center font-700">Sphere</h3>
+                              </div>
+                              <div className="p-8 h-auto w-80">
+                                <h3 className="text-center font-700">
+                                  Cylinder
+                                </h3>
+                              </div>
+                              <div className="p-8 h-auto w-80">
+                                <h3 className="text-center font-700">Axis</h3>
+                              </div>
+                              <div className="p-8 h-auto w-80">
+                                <h3 className="text-center font-700">Add</h3>
+                              </div>
+                              <div className="p-8 h-auto w-1/4">
+                                <h3 className="text-center font-700">Model</h3>
+                              </div>
+                            </div>
+                            <div className="flex flex-row ">
+                              <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <h3 className="text-center font-700">OD</h3>
+                              </div>
+                              <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  value={
+                                    selectedContactLens?.contactLensSphereOd
+                                  }
+                                  onChange={handleSelectedContactLensChange}
+                                  disabled={disabledState}
+                                  name={'contactLensSphereOd'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  value={
+                                    selectedContactLens?.contactLensCylinderOd
+                                  }
+                                  onChange={handleSelectedContactLensChange}
+                                  disabled={disabledState}
+                                  name={'contactLensCylinderOd'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  value={selectedContactLens?.contactLensAxisOd}
+                                  disabled={disabledState}
+                                  onChange={handleSelectedContactLensChange}
+                                  name={'contactLensAxisOd'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  disabled={disabledState}
+                                  value={selectedContactLens?.contactLensAddOd}
+                                  onChange={handleSelectedContactLensChange}
+                                  name={'contactLensAddOd'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  disabled={disabledState}
+                                  value={selectedContactLens?.contactLensAddOd}
+                                  onChange={handleSelectedContactLensChange}
+                                  name={'contactLensAddOd'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <div className="flex flex-row ">
+                              <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <h3 className="text-center font-700">OS</h3>
+                              </div>
+                              <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  disabled={disabledState}
+                                  value={
+                                    selectedContactLens?.contactLensSphereOs
+                                  }
+                                  onChange={handleSelectedContactLensChange}
+                                  name={'contactLensSphereOs'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  disabled={disabledState}
+                                  value={
+                                    selectedContactLens?.contactLensCylinderOs
+                                  }
+                                  onChange={handleSelectedContactLensChange}
+                                  name={'contactLensCylinderOs'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  disabled={disabledState}
+                                  value={selectedContactLens?.contactLensAxisOs}
+                                  onChange={handleSelectedContactLensChange}
+                                  name={'contactLensAxisOs'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  disabled={disabledState}
+                                  value={selectedContactLens?.contactLensAddOs}
+                                  onChange={handleSelectedContactLensChange}
+                                  name={'contactLensAddOs'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                                <TextField
+                                  size="small"
+                                  fullWidth
+                                  id="standard-basic"
+                                  disabled={disabledState}
+                                  value={selectedContactLens?.contactLensAddOs}
+                                  onChange={handleSelectedContactLensChange}
+                                  name={'contactLensAddOs'}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </FuseAnimate>
+                  </div>
+
+                  <div className="contact-lens-info flex flex-col p-16 sm:px-24">
+                    <FuseAnimate
+                      animation="transition.slideRightIn"
+                      delay={500}>
+                      <div className="py-8 border-1 border-black border-solid rounded-6">
+                        <div className="flex px-20 flex-row justify-between border-b-1 border-black border-solid">
+                          <FormControlLabel
+                            className="m-0"
+                            style={{ color: '#f15a25' }}
+                            control={
+                              <Checkbox
+                                checked={form?.shipContactLensToCustomerLogic}
+                                onChange={handleChange}
+                                name="shipContactLensToCustomerLogic"
+                                disabled={disabledState}
+                              />
+                            }
+                            label="Ship To Customer Logic"
+                          />
+                          <h1 className="font-700" style={{ color: '#f15a25' }}>
+                            CONTACT LENS INFO
+                          </h1>
+                          <FormControlLabel
+                            className="m-0"
+                            style={{ color: '#f15a25' }}
+                            control={
+                              <Checkbox
+                                checked={form?.rushContactLensOrder}
+                                onChange={handleChange}
+                                name="rushContactLensOrder"
+                                disabled={disabledState}
+                              />
+                            }
+                            label="Rush Order"
+                          />
+                        </div>
+                        <div className="flex flex-row w-full">
+                          <div className="flex flex-col gap-10 w-full">
+                            <div className="flex w-full items-end gap-20 px-20">
+                              <h3 className="text-center font-700">OD</h3>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Style
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensStyleOd
+                                  }
+                                  value={
+                                    selectedContactLens?.contactLensStyleOd
+                                  }
+                                  name="contactLensStyleOd"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'Spherical'}>
+                                    Spherical
+                                  </MenuItem>
+                                  <MenuItem value={'Toric'}>Toric</MenuItem>
+                                  <MenuItem value={'Multifocal'}>
+                                    Multifocal
+                                  </MenuItem>
+                                  <MenuItem value={'Toric Multifocal'}>
+                                    Toric Multifocal
+                                  </MenuItem>
+                                </Select>
+                              </FormControl>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Brand
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensBrandOd
+                                  }
+                                  value={
+                                    selectedContactLens?.contactLensBrandOd
+                                  }
+                                  name="contactLensBrandOd"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
+                                  <MenuItem value={'Alcon'}>Alcon</MenuItem>
+                                  <MenuItem value={'Baush & Lomb'}>
+                                    Baush & Lomb
+                                  </MenuItem>
+                                  <MenuItem value={'Unilens'}>Unilens</MenuItem>
+                                </Select>
+                              </FormControl>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Lens Name
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensNameOd
+                                  }
+                                  value={selectedContactLens?.contactLensNameOd}
+                                  name="contactLensNameOd"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'1-Day Moist'}>
+                                    1-Day Moist
+                                  </MenuItem>
+                                  <MenuItem value={'Acuvue Oasys Transition'}>
+                                    Acuvue Oasys Transition
+                                  </MenuItem>
+                                </Select>
+                              </FormControl>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Base Curve
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensBaseCurveOd
+                                  }
+                                  value={
+                                    selectedContactLens?.contactLensBaseCurveOd
+                                  }
+                                  name="contactLensBaseCurveOd"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'8.4'}>8.4</MenuItem>
+                                  <MenuItem value={'8.5'}>8.5</MenuItem>
+                                  <MenuItem value={'8.6'}>8.6</MenuItem>
+                                  <MenuItem value={'8.8'}>8.8</MenuItem>
+                                </Select>
+                              </FormControl>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Pack Quantity
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensPackQtyOd
+                                  }
+                                  value={
+                                    selectedContactLens?.contactLensPackQtyOd
+                                  }
+                                  name="contactLensPackQtyOd"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'24'}>24</MenuItem>
+                                  <MenuItem value={'12'}>12</MenuItem>
+                                </Select>
+                              </FormControl>
+                            </div>
+                            <div className="flex w-full items-end gap-20 px-20">
+                              <h3 className="text-center font-700">OS</h3>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Style
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensStyleOs
+                                  }
+                                  value={
+                                    selectedContactLens?.contactLensStyleOs
+                                  }
+                                  name="contactLensStyleOs"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'Spherical'}>
+                                    Spherical
+                                  </MenuItem>
+                                  <MenuItem value={'Toric'}>Toric</MenuItem>
+                                  <MenuItem value={'Multifocal'}>
+                                    Multifocal
+                                  </MenuItem>
+                                  <MenuItem value={'Toric Multifocal'}>
+                                    Toric Multifocal
+                                  </MenuItem>
+                                </Select>
+                              </FormControl>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Brand
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensBrandOs
+                                  }
+                                  value={
+                                    selectedContactLens?.contactLensBrandOs
+                                  }
+                                  name="contactLensBrandOs"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
+                                  <MenuItem value={'Alcon'}>Alcon</MenuItem>
+                                  <MenuItem value={'Baush & Lomb'}>
+                                    Baush & Lomb
+                                  </MenuItem>
+                                  <MenuItem value={'Unilens'}>Unilens</MenuItem>
+                                </Select>
+                              </FormControl>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Model
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensNameOs
+                                  }
+                                  value={selectedContactLens?.contactLensNameOs}
+                                  name="contactLensNameOs"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'1-Day Moist'}>
+                                    1-Day Moist
+                                  </MenuItem>
+                                  <MenuItem value={'Acuvue Oasys Transition'}>
+                                    Acuvue Oasys Transition
+                                  </MenuItem>
+                                </Select>
+                              </FormControl>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Base Curve
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensBaseCurveOs
+                                  }
+                                  value={
+                                    selectedContactLens?.contactLensBaseCurveOs
+                                  }
+                                  name="contactLensBaseCurveOs"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'8.4'}>8.4</MenuItem>
+                                  <MenuItem value={'8.5'}>8.5</MenuItem>
+                                  <MenuItem value={'8.6'}>8.6</MenuItem>
+                                  <MenuItem value={'8.8'}>8.8</MenuItem>
+                                </Select>
+                              </FormControl>
+                              <FormControl className="w-1/5">
+                                <InputLabel id="demo-simple-select-autowidth-label">
+                                  Pack Quantity
+                                </InputLabel>
+                                <Select
+                                  disabled={disabledState}
+                                  labelId="demo-simple-select-autowidth-label"
+                                  defaultValue={
+                                    selectedContactLens?.contactLensPackQtyOs
+                                  }
+                                  value={
+                                    selectedContactLens?.contactLensPackQtyOs
+                                  }
+                                  name="contactLensPackQtyOs"
+                                  onChange={handleSelectedContactLensChange}>
+                                  <MenuItem value={'24'}>24</MenuItem>
+                                  <MenuItem value={'12'}>12</MenuItem>
+                                </Select>
+                              </FormControl>
+                            </div>
+                            <div className="flex flex-col px-20 gap-10">
+                              <FormControlLabel
+                                className="m-0"
+                                style={{ width: 'fit-content' }}
+                                control={
+                                  <Checkbox
+                                    checked={selectedContactLens?.OU}
+                                    onChange={handleSelectedContactLensChange}
+                                    name="OU"
+                                    disabled={disabledState}
+                                  />
+                                }
+                                label="OU"
+                              />
+                              <div className="flex gap-10 justify-between">
+                                <FormControlLabel
+                                  className="m-0"
+                                  control={
+                                    <Checkbox
+                                      checked={
+                                        selectedContactLens.orderFromShowroom
+                                      }
+                                      onChange={handleSelectedContactLensChange}
+                                      name="orderFromShowroom"
+                                      disabled={disabledState}
+                                    />
+                                  }
+                                  label="Order From Showroom"
+                                />
+                                <FormControlLabel
+                                  className="m-0"
+                                  control={
+                                    <Checkbox
+                                      checked={selectedContactLens.orderFromLab}
+                                      onChange={handleSelectedContactLensChange}
+                                      name="orderFromLab"
+                                      disabled={disabledState}
+                                    />
+                                  }
+                                  label="Order From Lab"
+                                />
+                                <FormControlLabel
+                                  className="m-0"
+                                  control={
+                                    <Checkbox
+                                      checked={
+                                        selectedContactLens.contactLensInsurance
+                                      }
+                                      onChange={handleSelectedContactLensChange}
+                                      name="contactLensInsurance"
+                                      disabled={disabledState}
+                                    />
+                                  }
+                                  label="Order From Insurance"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-10">
+                          <Button
+                            className={classes.button}
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleAddContactsLensToOrder}
+                            disabled={disabledState}
+                            aria-label="add">
+                            <AddIcon />
+                            Add to Order
+                          </Button>
+                        </div>
+                        <div className="flex flex-col max-h-320">
+                          <TableContainer
+                            className="flex flex-col w-full overflow-scroll"
+                            component={Paper}>
+                            <Table aria-label="customized table">
+                              <TableHead>
+                                <TableRow>
+                                  <StyledTableCell>Style</StyledTableCell>
+                                  <StyledTableCell>Brand</StyledTableCell>
+                                  <StyledTableCell>Model</StyledTableCell>
+                                  <StyledTableCell>Base Curve</StyledTableCell>
+                                  <StyledTableCell>Pack Qty</StyledTableCell>
+                                  <StyledTableCell>Price</StyledTableCell>
+                                  <StyledTableCell></StyledTableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {contactLenses.map((row, index) => (
+                                  <StyledTableRow
+                                    onClick={() => {
+                                      setSelectedContactLens(row);
+                                    }}
+                                    key={index}
+                                    hover
+                                    className="cursor-pointer">
+                                    {/* update */}
+                                    <StyledTableCell>
+                                      {row?.contactLensStyle}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.contactLensBrand}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.contactLensName}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.contactLensBaseCurve}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.contactLensPackQty}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      ${row?.contactLensRate}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      <IconButton
+                                        onClick={() => {
+                                          let newContactLenses = contactLenses;
+                                          newContactLenses.splice(index, 1);
+                                          setContactLenses([
+                                            ...newContactLenses
+                                          ]);
+                                          setSelectedContactLens(row);
+                                          setDisabledState(false);
+                                        }}
+                                        aria-label="view">
+                                        <Icon>delete</Icon>
+                                      </IconButton>
+                                    </StyledTableCell>
+                                  </StyledTableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </div>
+                      </div>
+                    </FuseAnimate>
+                  </div>
+
+                  <div className="exam-service flex flex-col p-16 sm:px-24">
+                    <FuseAnimate
+                      animation="transition.slideRightIn"
+                      delay={500}>
+                      <div className="py-8 border-1 border-black border-solid rounded-6">
+                        <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                          <h1 className="font-700" style={{ color: '#f15a25' }}>
+                            EXAM / SERVICE
+                          </h1>
+                        </div>
+                        <div className="flex flex-col w-full">
+                          <div className="flex flex-col px-10 w-1/2">
+                            <CustomAutocomplete
+                              list={services}
+                              form={selectedMedication}
+                              disabled={disabledState}
+                              setForm={setSelectedMedication}
+                              handleChange={handleSelectedMedicationChange}
+                              id="name"
+                              freeSolo={false}
+                              label="Select Services..."
+                            />
+                          </div>
+                          <div className="p-10">
+                            <Button
+                              className={classes.button}
+                              variant="contained"
+                              color="secondary"
+                              onClick={handleAddExamServiceToOrder}
+                              disabled={disabledState}
+                              aria-label="add">
+                              <AddIcon />
+                              Add To Order
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="flex flex-col max-h-320">
+                          <TableContainer
+                            className="flex flex-col w-full overflow-scroll"
+                            component={Paper}>
+                            <Table aria-label="customized table">
+                              <TableHead>
+                                <TableRow>
+                                  <StyledTableCell>
+                                    Service Name
+                                  </StyledTableCell>
+                                  <StyledTableCell>
+                                    Service Price
+                                  </StyledTableCell>
+                                  <StyledTableCell></StyledTableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {medication.map((row, index) => (
+                                  <StyledTableRow
+                                    onClick={() => {
+                                      setSelectedMedication(row);
+                                    }}
+                                    key={index}
+                                    hover
+                                    className="cursor-pointer">
+                                    <StyledTableCell>
+                                      {row?.name}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.price}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      <IconButton
+                                        onClick={() => {
+                                          let newMedication = medication;
+                                          newMedication.splice(index, 1);
+                                          setMedication([...newMedication]);
+                                          setDisabledState(false);
+                                        }}
+                                        aria-label="view">
+                                        <Icon>delete</Icon>
+                                      </IconButton>
+                                    </StyledTableCell>
+                                  </StyledTableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </div>
+                      </div>
+                    </FuseAnimate>
+                  </div>
+
+                  <div className="other-products-info flex flex-col p-16 sm:px-24">
+                    <FuseAnimate
+                      animation="transition.slideRightIn"
+                      delay={500}>
+                      <div className="py-8 border-1 border-black border-solid rounded-6">
+                        <div className="flex px-20 flex-row justify-between border-b-1 border-black border-solid">
+                          <FormControlLabel
+                            className="m-0"
+                            style={{ color: '#f15a25' }}
+                            control={
+                              <Checkbox
+                                checked={form?.shipOtherProductToCustomerLogic}
+                                onChange={handleChange}
+                                name="shipOtherProductToCustomerLogic"
+                                disabled={disabledState}
+                              />
+                            }
+                            label="Ship To Customer Logic"
+                          />
+                          <h2 className="font-700" style={{ color: '#f15a25' }}>
+                            OTHER PRODUCT INFO
+                          </h2>
+                          <FormControlLabel
+                            className="m-0"
+                            style={{ color: '#f15a25' }}
+                            control={
+                              <Checkbox
+                                checked={form?.rushOtherProductOrder}
+                                onChange={handleChange}
+                                name="rushOtherProductOrder"
+                                disabled={disabledState}
+                              />
+                            }
+                            label="Rush Order"
+                          />
+                        </div>
+                        <div className="flex flex-row w-full p-8 gap-10">
                           <div className="flex flex-col w-full">
                             <div className="flex flex-col px-8">
                               <div className="flex flex-col my-10 relative">
-                                <h2 className="text-center">Frame</h2>
                                 <div className="flex flex-row absolute right-0">
                                   <SearchFrameDialouge
                                     disabledState={disabledState}
@@ -3659,1498 +4909,279 @@ function AddOrder(props) {
                                   />
                                 </div>
                               </div>
-                              <div className="flex flex-col">
+                              <div className="flex flex-col w-1/2 my-0 mx-auto gap-10">
                                 <TextField
                                   fullWidth
                                   style={{ borderRadius: '0px' }}
                                   variant="outlined"
-                                  disabled={true}
+                                  disabled={disabledState}
                                   id="standard-basic"
-                                  value={selectedFrame?.frameBrand}
-                                  onChange={handleSelectedFrameChange}
-                                  name={'frameBrand'}
+                                  value={otherProduct?.otherProductBrand}
+                                  onChange={handleOtherProductChange}
+                                  name={'otherProductBrand'}
                                   label="Brand"
-                                  InputProps={{
-                                    inputProps: {
-                                      style: { textAlign: 'center' }
-                                    }
-                                  }}
+                                  size="small"
                                 />
                                 <TextField
                                   className="mt-4"
                                   fullWidth
                                   variant="outlined"
-                                  disabled={true}
+                                  disabled={disabledState}
                                   id="standard-basic"
-                                  value={selectedFrame?.frameModel}
-                                  onChange={handleSelectedFrameChange}
-                                  name={'frameModel'}
+                                  value={otherProduct?.otherProductModel}
+                                  onChange={handleOtherProductChange}
+                                  name={'otherProductModel'}
                                   label="Model"
-                                  InputProps={{
-                                    inputProps: {
-                                      style: { textAlign: 'center' }
-                                    }
-                                  }}
+                                  size="small"
                                 />
                                 <TextField
                                   className="mt-4"
                                   fullWidth
                                   variant="outlined"
-                                  disabled={true}
+                                  disabled={disabledState}
                                   id="standard-basic"
-                                  value={selectedFrame?.frameColour}
-                                  onChange={handleSelectedFrameChange}
-                                  name={'frameColour'}
+                                  value={otherProduct?.otherProductColour}
+                                  onChange={handleOtherProductChange}
+                                  name={'otherProductColour'}
                                   label="Colour"
-                                  InputProps={{
-                                    inputProps: {
-                                      style: { textAlign: 'center' }
-                                    }
-                                  }}
+                                  size="small"
                                 />
-                                <div className="flex flex-row">
-                                  <TextField
-                                    className="mt-4"
-                                    fullWidth
-                                    variant="outlined"
-                                    disabled={disabledState}
-                                    id="standard-basic"
-                                    value={selectedFrame?.segHtOd}
-                                    onChange={handleSelectedFrameChange}
-                                    name={'segHtOd'}
-                                    label="Seg Ht OD"
-                                    InputProps={{
-                                      inputProps: {
-                                        style: { textAlign: 'center' }
-                                      }
-                                    }}
-                                    type="number"
-                                  />
-                                  <TextField
-                                    className="mt-4 ml-2"
-                                    fullWidth
-                                    variant="outlined"
-                                    disabled={disabledState}
-                                    id="standard-basic"
-                                    value={selectedFrame?.segHtOs}
-                                    onChange={handleSelectedFrameChange}
-                                    name={'segHtOs'}
-                                    label="Seg Ht OS"
-                                    InputProps={{
-                                      inputProps: {
-                                        style: { textAlign: 'center' }
-                                      }
-                                    }}
-                                    type="number"
-                                  />
-                                </div>
-                              </div>
-                              <div className="flex flex-col gap-10">
-                                <FormControlLabel
-                                  className="m-0"
-                                  style={{ color: '#f15a25' }}
-                                  control={
-                                    <Checkbox
-                                      checked={selectedFrame?.sendFrameToLab}
-                                      onChange={handleSelectedFrameChange}
-                                      name="sendFrameToLab"
-                                      disabled={disabledState}
-                                    />
-                                  }
-                                  label="Sending Frame to Lab"
+                                <TextField
+                                  className="mt-4"
+                                  fullWidth
+                                  variant="outlined"
+                                  disabled={disabledState}
+                                  id="standard-basic"
+                                  value={otherProduct?.otherProductMaterial}
+                                  onChange={handleOtherProductChange}
+                                  name={'otherProductMaterial'}
+                                  label="Material"
+                                  size="small"
                                 />
-                                <FormControlLabel
-                                  className="m-0"
-                                  control={
-                                    <Checkbox
-                                      checked={
-                                        selectedFrame?.frameLater
-                                          ? selectedFrame?.frameLater
-                                          : ''
-                                      }
-                                      onChange={handleSelectedFrameChange}
-                                      name="frameLater"
-                                      disabled={disabledState}
-                                    />
-                                  }
-                                  label="Frame to come later"
+                                <TextField
+                                  className="mt-4"
+                                  fullWidth
+                                  variant="outlined"
+                                  disabled={disabledState}
+                                  id="standard-basic"
+                                  value={otherProduct?.otherProductSize}
+                                  onChange={handleOtherProductChange}
+                                  name={'otherProductSize'}
+                                  label="Size"
+                                  size="small"
                                 />
-                                <FormControlLabel
-                                  className="m-0"
-                                  control={
-                                    <Checkbox
-                                      checked={
-                                        selectedFrame?.orderFrameInsurance
-                                      }
-                                      onChange={handleSelectedFrameChange}
-                                      name="orderFrameInsurance"
-                                      disabled={disabledState}
-                                    />
-                                  }
-                                  label="Order Frame from Insurance"
+                                <TextField
+                                  className="mt-4"
+                                  fullWidth
+                                  variant="outlined"
+                                  disabled={disabledState}
+                                  id="standard-basic"
+                                  value={otherProduct?.otherProductQty}
+                                  onChange={handleOtherProductChange}
+                                  name={'otherProductQty'}
+                                  label="QTY"
+                                  size="small"
                                 />
-                                <div>
-                                  <FormControlLabel
-                                    className="m-0"
-                                    control={
-                                      <Checkbox
-                                        checked={selectedFrame?.customerFrame}
-                                        onChange={handleSelectedFrameChange}
-                                        name="customerFrame"
-                                        disabled={disabledState}
-                                      />
-                                    }
-                                    label="Customer’s Frame"
-                                  />
-                                  {selectedFrame?.customerFrame && (
-                                    <TextField
-                                      id="outlined-multiline-static"
-                                      variant="outlined"
-                                      size="small"
-                                      className="w-full"
-                                      name="customerFrameDetail"
-                                      value={selectedFrame?.customerFrameDetail}
-                                      onChange={handleSelectedFrameChange}
-                                    />
-                                  )}
-                                </div>
-                                <FormControlLabel
-                                  className="m-0"
-                                  control={
-                                    <Checkbox
-                                      checked={selectedFrame?.otherFrame}
-                                      onChange={handleSelectedFrameChange}
-                                      name="otherFrame"
-                                      disabled={disabledState}
-                                    />
-                                  }
-                                  label="Other Frame"
-                                />
-                                {selectedFrame?.otherFrame && (
+                                <div className="flex gap-10">
                                   <TextField
                                     id="outlined-multiline-static"
+                                    label="Memo"
                                     variant="outlined"
                                     size="small"
                                     className="w-full"
-                                    name="otherFrameDetail"
-                                    value={selectedFrame?.otherFrameDetail}
-                                    onChange={handleSelectedFrameChange}
+                                    name="otherProductMemo"
+                                    disabled={disabledState}
+                                    value={otherProduct?.otherProductMemo}
+                                    onChange={handleOtherProductChange}
                                   />
-                                )}
-                              </div>
-                              <div className="flex gap-10 py-10">
-                                <TextField
-                                  id="outlined-multiline-static"
-                                  label="Memo"
-                                  variant="outlined"
-                                  size="small"
-                                  className="w-full"
-                                  name="frameMemo"
-                                  value={selectedFrame?.frameMemo}
-                                  onChange={handleSelectedFrameChange}
-                                />
-                                <TextField
-                                  id="outlined-multiline-static"
-                                  label="Additional Price"
-                                  variant="outlined"
-                                  size="small"
-                                  className="w-1"
-                                  name="frameAdditionalPrice"
-                                  error={
-                                    selectedFrame?.frameAdditionalPrice &&
-                                    !Number(selectedFrame?.frameAdditionalPrice)
-                                  }
-                                  value={selectedFrame?.frameAdditionalPrice}
-                                  onChange={handleSelectedFrameChange}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="border-1 border-black border-solid w-1/2">
-                          <div className="flex flex-col w-full px-8">
-                            <div className="flex flex-col my-10">
-                              <h2 className="text-center">Lens</h2>
-                            </div>
-                            <div className="flex flex-col">
-                              <div className="flex flex-row">
-                                <div className="w-full">
-                                  <FormControl
-                                    component="fieldset"
-                                    className="w-full">
-                                    <RadioGroup
-                                      className="flex px-20"
-                                      row
-                                      aria-label="lensType"
-                                      name="lensType"
-                                      value={selectedFrame?.lensType}
-                                      onChange={handleSelectedFrameChange}>
-                                      <div className="w-1/2 flex flex-col">
-                                        <FormControlLabel
-                                          disabled={disabledState}
-                                          value="distance"
-                                          control={<Radio />}
-                                          label="Distance"
-                                        />
-                                        <FormControlLabel
-                                          value="fTop"
-                                          disabled={disabledState}
-                                          control={<Radio />}
-                                          label="Flat Top"
-                                        />
-                                      </div>
-                                      <div className="w-1/2 flex flex-col">
-                                        <FormControlLabel
-                                          value="read"
-                                          disabled={disabledState}
-                                          control={<Radio />}
-                                          label="Reading"
-                                        />
-                                        <FormControlLabel
-                                          value="progressive"
-                                          disabled={disabledState}
-                                          control={<Radio />}
-                                          label="Progressive"
-                                        />
-                                      </div>
-                                    </RadioGroup>
-                                  </FormControl>
-                                </div>
-                              </div>
-                              <div className="flex flex-row justify-between">
-                                <div className="flex flex-col px-10 w-full">
-                                  <CustomAutocomplete
-                                    list={lensTypeNames}
-                                    form={selectedFrame}
-                                    setForm={setSelectedFrame}
-                                    handleChange={handleSelectedFrameChange}
-                                    id="lensTypeName"
-                                    freeSolo={false}
-                                    label="Select Lens Type"
+                                  <TextField
+                                    id="outlined-multiline-static"
+                                    label="Additional Price"
+                                    variant="outlined"
+                                    size="small"
+                                    className="w-1"
+                                    disabled={disabledState}
+                                    name="otherProductAdditionalPrice"
+                                    error={
+                                      otherProduct?.otherProductAdditionalPrice &&
+                                      !Number(
+                                        otherProduct?.otherProductAdditionalPrice
+                                      )
+                                    }
+                                    value={
+                                      otherProduct?.otherProductAdditionalPrice
+                                    }
+                                    onChange={handleOtherProductChange}
                                   />
                                 </div>
                               </div>
-                              <div>
-                                <TextField
-                                  className="mt-4"
-                                  fullWidth
-                                  variant="outlined"
-                                  disabled={disabledState}
-                                  id="standard-basic"
-                                  value={selectedFrame?.lensColour}
-                                  onChange={handleSelectedFrameChange}
-                                  name={'lensColour'}
-                                  label="Colour/Tint"
-                                  InputProps={{
-                                    inputProps: {
-                                      style: { textAlign: 'center' }
-                                    }
-                                  }}
-                                />
-                                <TextField
-                                  className="mt-4"
-                                  fullWidth
-                                  variant="outlined"
-                                  disabled={disabledState}
-                                  id="standard-basic"
-                                  value={selectedFrame?.lensDetail}
-                                  onChange={handleSelectedFrameChange}
-                                  name={'lensDetail'}
-                                  label="Detail"
-                                  InputProps={{
-                                    inputProps: {
-                                      style: { textAlign: 'center' }
-                                    }
-                                  }}
-                                />
-                              </div>
-
-                              <div className="flex flex-col gap-10">
-                                <FormControlLabel
-                                  className="m-0"
-                                  control={
-                                    <Checkbox
-                                      checked={selectedFrame?.oversizeLens}
-                                      onChange={handleSelectedFrameChange}
-                                      name="oversizeLens"
-                                      disabled={disabledState}
-                                    />
-                                  }
-                                  label="Oversize Lens ( Additional Price )"
-                                />
-                                <FormControlLabel
-                                  className="m-0"
-                                  control={
-                                    <Checkbox
-                                      checked={selectedFrame?.cutLensOnly}
-                                      onChange={handleSelectedFrameChange}
-                                      name="cutLensOnly"
-                                      disabled={disabledState}
-                                    />
-                                  }
-                                  label="Cut Lens Only"
-                                />
-                                <FormControlLabel
-                                  className="m-0"
-                                  control={
-                                    <Checkbox
-                                      checked={selectedFrame?.sendUncutLenses}
-                                      onChange={handleSelectedFrameChange}
-                                      name="sendUncutLenses"
-                                      disabled={disabledState}
-                                    />
-                                  }
-                                  label="Send Uncut Lenses"
-                                />
-                                <FormControlLabel
-                                  className="m-0"
-                                  control={
-                                    <Checkbox
-                                      checked={
-                                        selectedFrame?.orderLensInsurance
-                                      }
-                                      onChange={handleSelectedFrameChange}
-                                      name="orderLensInsurance"
-                                      disabled={disabledState}
-                                    />
-                                  }
-                                  label="Order Lens from Insurance"
-                                />
-                              </div>
-                            </div>
-                            <div
-                              className="flex gap-10 py-10"
-                              style={{ paddingTop: '5rem' }}>
-                              <TextField
-                                id="outlined-memo"
-                                label="Memo"
-                                variant="outlined"
-                                size="small"
-                                className="w-full"
-                                name="lensMemo"
-                                value={selectedFrame?.lensMemo}
-                                onChange={handleSelectedFrameChange}
-                              />
-                              <TextField
-                                id="outlined-additional-price"
-                                label="Additional Price"
-                                variant="outlined"
-                                size="small"
-                                className="w-1"
-                                name="lensAdditionalPrice"
-                                error={
-                                  selectedFrame?.lensAdditionalPrice &&
-                                  !Number(selectedFrame?.lensAdditionalPrice)
-                                }
-                                value={selectedFrame?.lensAdditionalPrice}
-                                onChange={handleSelectedFrameChange}
-                              />
                             </div>
                           </div>
-                        </div>
-                      </div>
-                      <div className="p-10">
-                        <Button
-                          className={classes.button}
-                          variant="contained"
-                          color="secondary"
-                          onClick={handleAddFrameToOrder}
-                          disabled={disabledState}
-                          aria-label="add">
-                          <AddIcon />
-                          Add to Order
-                        </Button>
-                      </div>
-                      <div className="flex flex-col max-h-320">
-                        <TableContainer
-                          className="flex flex-col w-full overflow-scroll"
-                          component={Paper}>
-                          <Table aria-label="customized table">
-                            <TableHead>
-                              <TableRow>
-                                <StyledTableCell>Brand</StyledTableCell>
-                                <StyledTableCell>Model</StyledTableCell>
-                                <StyledTableCell>Color</StyledTableCell>
-                                <StyledTableCell>Lens Type</StyledTableCell>
-                                {/* <StyledTableCell>Lens Detail</StyledTableCell> */}
-                                <StyledTableCell>Colour/Tint</StyledTableCell>
-                                <StyledTableCell></StyledTableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {eyeglasses.map((row, index) => (
-                                <StyledTableRow
-                                  onClick={() => {
-                                    setSelectedFrame(row);
-                                  }}
-                                  key={index}
-                                  hover
-                                  className="cursor-pointer">
-                                  <StyledTableCell component="th" scope="row">
-                                    {row?.frameBrand}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.frameModel}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.frameColour}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.lensType === 'distance' && 'Distance'}
-                                    {row?.lensType === 'read' && 'Reading'}
-                                    {row?.lensType === 'fTop' && 'Flat Top'}
-                                    {row?.lensType === 'progressive' &&
-                                      'Progressive'}
-                                  </StyledTableCell>
-                                  {/* <StyledTableCell>
-                                    {row?.lensDetail}
-                                  </StyledTableCell> */}
-                                  <StyledTableCell>
-                                    {row?.lensColour}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    <IconButton
-                                      onClick={() => {
-                                        let newEyeglasses = eyeglasses;
-                                        newEyeglasses.splice(index, 1);
-                                        setEyeglasses([...newEyeglasses]);
-                                        setSelectedFrame(row);
-                                        // setDisabledState(false);
-                                      }}
-                                      aria-label="view">
-                                      <Icon>delete</Icon>
-                                    </IconButton>
-                                  </StyledTableCell>
-                                </StyledTableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </div>
-                    </div>
-                  </FuseAnimate>
-                </div>
-
-                <div className="contact-lens-prescription flex flex-col p-16 sm:px-24">
-                  <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                    <div className="py-8  border-1 border-black border-solid rounded-6">
-                      <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                        <h1 className="font-700" style={{ color: '#f15a25' }}>
-                          CONTACT LENS PRESCRIPTION
-                        </h1>
-                      </div>
-                      <div>
-                        <div className="flex flex-col p-8 flex-1 h-auto justify-between">
-                          <div className="flex flex-row w-full">
-                            <div className="flex flex-col px-10 w-1/2 ">
-                              <CustomAutocomplete1
-                                list={prescription.filter(
-                                  (word) =>
-                                    word.prescriptionType === 'contactLensRx'
-                                )}
-                                form={selectedContactLens}
-                                disabled={disabledState}
-                                setForm={setSelectedContactLens}
-                                handleChange={handleSelectedContactLensChange}
-                                id="prescriptionId"
-                                freeSolo={false}
-                                label="Select Prescription"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="flex flex-row ">
-                            <div className="p-8 h-auto w-40">
-                              <h3 className="text-center font-700">RX</h3>
-                            </div>
-                            <div className="p-8 h-auto w-80">
-                              <h3 className="text-center font-700">Sphere</h3>
-                            </div>
-                            <div className="p-8 h-auto w-80">
-                              <h3 className="text-center font-700">Cylinder</h3>
-                            </div>
-                            <div className="p-8 h-auto w-80">
-                              <h3 className="text-center font-700">Axis</h3>
-                            </div>
-                            <div className="p-8 h-auto w-80">
-                              <h3 className="text-center font-700">Add</h3>
-                            </div>
-                            <div className="p-8 h-auto w-1/4">
-                              <h3 className="text-center font-700">Model</h3>
-                            </div>
-                          </div>
-                          <div className="flex flex-row ">
-                            <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <h3 className="text-center font-700">OD</h3>
-                            </div>
-                            <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                value={selectedContactLens?.contactLensSphereOd}
-                                onChange={handleSelectedContactLensChange}
-                                disabled={disabledState}
-                                name={'contactLensSphereOd'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                value={
-                                  selectedContactLens?.contactLensCylinderOd
-                                }
-                                onChange={handleSelectedContactLensChange}
-                                disabled={disabledState}
-                                name={'contactLensCylinderOd'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                value={selectedContactLens?.contactLensAxisOd}
-                                disabled={disabledState}
-                                onChange={handleSelectedContactLensChange}
-                                name={'contactLensAxisOd'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                disabled={disabledState}
-                                value={selectedContactLens?.contactLensAddOd}
-                                onChange={handleSelectedContactLensChange}
-                                name={'contactLensAddOd'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                disabled={disabledState}
-                                value={selectedContactLens?.contactLensAddOd}
-                                onChange={handleSelectedContactLensChange}
-                                name={'contactLensAddOd'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                          </div>
-                          <div className="flex flex-row ">
-                            <div className="p-8 w-40 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <h3 className="text-center font-700">OS</h3>
-                            </div>
-                            <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                disabled={disabledState}
-                                value={selectedContactLens?.contactLensSphereOs}
-                                onChange={handleSelectedContactLensChange}
-                                name={'contactLensSphereOs'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                disabled={disabledState}
-                                value={
-                                  selectedContactLens?.contactLensCylinderOs
-                                }
-                                onChange={handleSelectedContactLensChange}
-                                name={'contactLensCylinderOs'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                disabled={disabledState}
-                                value={selectedContactLens?.contactLensAxisOs}
-                                onChange={handleSelectedContactLensChange}
-                                name={'contactLensAxisOs'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="p-8 w-80 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                disabled={disabledState}
-                                value={selectedContactLens?.contactLensAddOs}
-                                onChange={handleSelectedContactLensChange}
-                                name={'contactLensAddOs'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
-                              <TextField
-                                size="small"
-                                fullWidth
-                                id="standard-basic"
-                                disabled={disabledState}
-                                value={selectedContactLens?.contactLensAddOs}
-                                onChange={handleSelectedContactLensChange}
-                                name={'contactLensAddOs'}
-                                InputProps={{
-                                  inputProps: {
-                                    style: { textAlign: 'center' }
-                                  }
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </FuseAnimate>
-                </div>
-
-                <div className="contact-lens-info flex flex-col p-16 sm:px-24">
-                  <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                    <div className="py-8 border-1 border-black border-solid rounded-6">
-                      <div className="flex px-20 flex-row justify-between border-b-1 border-black border-solid">
-                        <FormControlLabel
-                          className="m-0"
-                          style={{ color: '#f15a25' }}
-                          control={
-                            <Checkbox
-                              checked={form?.shipContactLensToCustomerLogic}
-                              onChange={handleChange}
-                              name="shipContactLensToCustomerLogic"
-                              disabled={disabledState}
-                            />
-                          }
-                          label="Ship To Customer Logic"
-                        />
-                        <h1 className="font-700" style={{ color: '#f15a25' }}>
-                          CONTACT LENS INFO
-                        </h1>
-                        <FormControlLabel
-                          className="m-0"
-                          style={{ color: '#f15a25' }}
-                          control={
-                            <Checkbox
-                              checked={form?.rushContactLensOrder}
-                              onChange={handleChange}
-                              name="rushContactLensOrder"
-                              disabled={disabledState}
-                            />
-                          }
-                          label="Rush Order"
-                        />
-                      </div>
-                      <div className="flex flex-row w-full">
-                        <div className="flex flex-col gap-10 w-full">
-                          <div className="flex w-full items-end gap-20 px-20">
-                            <h3 className="text-center font-700">OD</h3>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Style
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensStyleOd
-                                }
-                                value={selectedContactLens?.contactLensStyleOd}
-                                name="contactLensStyleOd"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'Spherical'}>
-                                  Spherical
-                                </MenuItem>
-                                <MenuItem value={'Toric'}>Toric</MenuItem>
-                                <MenuItem value={'Multifocal'}>
-                                  Multifocal
-                                </MenuItem>
-                                <MenuItem value={'Toric Multifocal'}>
-                                  Toric Multifocal
-                                </MenuItem>
-                              </Select>
-                            </FormControl>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Brand
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensBrandOd
-                                }
-                                value={selectedContactLens?.contactLensBrandOd}
-                                name="contactLensBrandOd"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
-                                <MenuItem value={'Alcon'}>Alcon</MenuItem>
-                                <MenuItem value={'Baush & Lomb'}>
-                                  Baush & Lomb
-                                </MenuItem>
-                                <MenuItem value={'Unilens'}>Unilens</MenuItem>
-                              </Select>
-                            </FormControl>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Lens Name
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensNameOd
-                                }
-                                value={selectedContactLens?.contactLensNameOd}
-                                name="contactLensNameOd"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'1-Day Moist'}>
-                                  1-Day Moist
-                                </MenuItem>
-                                <MenuItem value={'Acuvue Oasys Transition'}>
-                                  Acuvue Oasys Transition
-                                </MenuItem>
-                              </Select>
-                            </FormControl>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Base Curve
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensBaseCurveOd
-                                }
-                                value={
-                                  selectedContactLens?.contactLensBaseCurveOd
-                                }
-                                name="contactLensBaseCurveOd"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'8.4'}>8.4</MenuItem>
-                                <MenuItem value={'8.5'}>8.5</MenuItem>
-                                <MenuItem value={'8.6'}>8.6</MenuItem>
-                                <MenuItem value={'8.8'}>8.8</MenuItem>
-                              </Select>
-                            </FormControl>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Pack Quantity
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensPackQtyOd
-                                }
-                                value={
-                                  selectedContactLens?.contactLensPackQtyOd
-                                }
-                                name="contactLensPackQtyOd"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'24'}>24</MenuItem>
-                                <MenuItem value={'12'}>12</MenuItem>
-                              </Select>
-                            </FormControl>
-                          </div>
-                          <div className="flex w-full items-end gap-20 px-20">
-                            <h3 className="text-center font-700">OS</h3>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Style
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensStyleOs
-                                }
-                                value={selectedContactLens?.contactLensStyleOs}
-                                name="contactLensStyleOs"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'Spherical'}>
-                                  Spherical
-                                </MenuItem>
-                                <MenuItem value={'Toric'}>Toric</MenuItem>
-                                <MenuItem value={'Multifocal'}>
-                                  Multifocal
-                                </MenuItem>
-                                <MenuItem value={'Toric Multifocal'}>
-                                  Toric Multifocal
-                                </MenuItem>
-                              </Select>
-                            </FormControl>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Brand
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensBrandOs
-                                }
-                                value={selectedContactLens?.contactLensBrandOs}
-                                name="contactLensBrandOs"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
-                                <MenuItem value={'Alcon'}>Alcon</MenuItem>
-                                <MenuItem value={'Baush & Lomb'}>
-                                  Baush & Lomb
-                                </MenuItem>
-                                <MenuItem value={'Unilens'}>Unilens</MenuItem>
-                              </Select>
-                            </FormControl>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Model
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensNameOs
-                                }
-                                value={selectedContactLens?.contactLensNameOs}
-                                name="contactLensNameOs"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'1-Day Moist'}>
-                                  1-Day Moist
-                                </MenuItem>
-                                <MenuItem value={'Acuvue Oasys Transition'}>
-                                  Acuvue Oasys Transition
-                                </MenuItem>
-                              </Select>
-                            </FormControl>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Base Curve
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensBaseCurveOs
-                                }
-                                value={
-                                  selectedContactLens?.contactLensBaseCurveOs
-                                }
-                                name="contactLensBaseCurveOs"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'8.4'}>8.4</MenuItem>
-                                <MenuItem value={'8.5'}>8.5</MenuItem>
-                                <MenuItem value={'8.6'}>8.6</MenuItem>
-                                <MenuItem value={'8.8'}>8.8</MenuItem>
-                              </Select>
-                            </FormControl>
-                            <FormControl className="w-1/5">
-                              <InputLabel id="demo-simple-select-autowidth-label">
-                                Pack Quantity
-                              </InputLabel>
-                              <Select
-                                disabled={disabledState}
-                                labelId="demo-simple-select-autowidth-label"
-                                defaultValue={
-                                  selectedContactLens?.contactLensPackQtyOs
-                                }
-                                value={
-                                  selectedContactLens?.contactLensPackQtyOs
-                                }
-                                name="contactLensPackQtyOs"
-                                onChange={handleSelectedContactLensChange}>
-                                <MenuItem value={'24'}>24</MenuItem>
-                                <MenuItem value={'12'}>12</MenuItem>
-                              </Select>
-                            </FormControl>
-                          </div>
-                          <div className="flex flex-col px-20 gap-10">
-                            <FormControlLabel
-                              className="m-0"
-                              style={{ width: 'fit-content' }}
-                              control={
-                                <Checkbox
-                                  checked={selectedContactLens?.OU}
-                                  onChange={handleSelectedContactLensChange}
-                                  name="OU"
-                                  disabled={disabledState}
-                                />
-                              }
-                              label="OU"
-                            />
-                            <div className="flex gap-10 justify-between">
-                              <FormControlLabel
-                                className="m-0"
-                                control={
-                                  <Checkbox
-                                    checked={
-                                      selectedContactLens.orderFromShowroom
-                                    }
-                                    onChange={handleSelectedContactLensChange}
-                                    name="orderFromShowroom"
-                                    disabled={disabledState}
-                                  />
-                                }
-                                label="Order From Showroom"
-                              />
-                              <FormControlLabel
-                                className="m-0"
-                                control={
-                                  <Checkbox
-                                    checked={selectedContactLens.orderFromLab}
-                                    onChange={handleSelectedContactLensChange}
-                                    name="orderFromLab"
-                                    disabled={disabledState}
-                                  />
-                                }
-                                label="Order From Lab"
-                              />
-                              <FormControlLabel
-                                className="m-0"
-                                control={
-                                  <Checkbox
-                                    checked={
-                                      selectedContactLens.contactLensInsurance
-                                    }
-                                    onChange={handleSelectedContactLensChange}
-                                    name="contactLensInsurance"
-                                    disabled={disabledState}
-                                  />
-                                }
-                                label="Order From Insurance"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="p-10">
-                        <Button
-                          className={classes.button}
-                          variant="contained"
-                          color="secondary"
-                          onClick={handleAddContactsLensToOrder}
-                          disabled={disabledState}
-                          aria-label="add">
-                          <AddIcon />
-                          Add to Order
-                        </Button>
-                      </div>
-                      <div className="flex flex-col max-h-320">
-                        <TableContainer
-                          className="flex flex-col w-full overflow-scroll"
-                          component={Paper}>
-                          <Table aria-label="customized table">
-                            <TableHead>
-                              <TableRow>
-                                <StyledTableCell>Style</StyledTableCell>
-                                <StyledTableCell>Brand</StyledTableCell>
-                                <StyledTableCell>Model</StyledTableCell>
-                                <StyledTableCell>Base Curve</StyledTableCell>
-                                <StyledTableCell>Pack Qty</StyledTableCell>
-                                <StyledTableCell>Price</StyledTableCell>
-                                <StyledTableCell></StyledTableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {contactLenses.map((row, index) => (
-                                <StyledTableRow
-                                  onClick={() => {
-                                    setSelectedContactLens(row);
-                                  }}
-                                  key={index}
-                                  hover
-                                  className="cursor-pointer">
-                                  {/* update */}
-                                  <StyledTableCell>
-                                    {row?.contactLensStyle}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.contactLensBrand}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.contactLensName}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.contactLensBaseCurve}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.contactLensPackQty}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    ${row?.contactLensRate}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    <IconButton
-                                      onClick={() => {
-                                        let newContactLenses = contactLenses;
-                                        newContactLenses.splice(index, 1);
-                                        setContactLenses([...newContactLenses]);
-                                        setSelectedContactLens(row);
-                                        setDisabledState(false);
-                                      }}
-                                      aria-label="view">
-                                      <Icon>delete</Icon>
-                                    </IconButton>
-                                  </StyledTableCell>
-                                </StyledTableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </div>
-                    </div>
-                  </FuseAnimate>
-                </div>
-
-                <div className="exam-service flex flex-col p-16 sm:px-24">
-                  <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                    <div className="py-8 border-1 border-black border-solid rounded-6">
-                      <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                        <h1 className="font-700" style={{ color: '#f15a25' }}>
-                          EXAM / SERVICE
-                        </h1>
-                      </div>
-                      <div className="flex flex-col w-full">
-                        <div className="flex flex-col px-10 w-1/2">
-                          <CustomAutocomplete
-                            list={services}
-                            form={selectedMedication}
-                            disabled={disabledState}
-                            setForm={setSelectedMedication}
-                            handleChange={handleSelectedMedicationChange}
-                            id="name"
-                            freeSolo={false}
-                            label="Select Services..."
-                          />
                         </div>
                         <div className="p-10">
                           <Button
                             className={classes.button}
                             variant="contained"
                             color="secondary"
-                            onClick={handleAddExamServiceToOrder}
+                            onClick={handleAddOtherProductToOrder}
                             disabled={disabledState}
                             aria-label="add">
                             <AddIcon />
-                            Add To Order
+                            Add to Order
                           </Button>
                         </div>
-                      </div>
-                      <div className="flex flex-col max-h-320">
-                        <TableContainer
-                          className="flex flex-col w-full overflow-scroll"
-                          component={Paper}>
-                          <Table aria-label="customized table">
-                            <TableHead>
-                              <TableRow>
-                                <StyledTableCell>Service Name</StyledTableCell>
-                                <StyledTableCell>Service Price</StyledTableCell>
-                                <StyledTableCell></StyledTableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {medication.map((row, index) => (
-                                <StyledTableRow
-                                  onClick={() => {
-                                    setSelectedMedication(row);
-                                  }}
-                                  key={index}
-                                  hover
-                                  className="cursor-pointer">
-                                  <StyledTableCell>{row?.name}</StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.price}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    <IconButton
-                                      onClick={() => {
-                                        let newMedication = medication;
-                                        newMedication.splice(index, 1);
-                                        setMedication([...newMedication]);
-                                        setDisabledState(false);
-                                      }}
-                                      aria-label="view">
-                                      <Icon>delete</Icon>
-                                    </IconButton>
-                                  </StyledTableCell>
-                                </StyledTableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </div>
-                    </div>
-                  </FuseAnimate>
-                </div>
-
-                <div className="other-products-info flex flex-col p-16 sm:px-24">
-                  <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                    <div className="py-8 border-1 border-black border-solid rounded-6">
-                      <div className="flex px-20 flex-row justify-between border-b-1 border-black border-solid">
-                        <FormControlLabel
-                          className="m-0"
-                          style={{ color: '#f15a25' }}
-                          control={
-                            <Checkbox
-                              checked={form?.shipOtherProductToCustomerLogic}
-                              onChange={handleChange}
-                              name="shipOtherProductToCustomerLogic"
-                              disabled={disabledState}
-                            />
-                          }
-                          label="Ship To Customer Logic"
-                        />
-                        <h2 className="font-700" style={{ color: '#f15a25' }}>
-                          OTHER PRODUCT INFO
-                        </h2>
-                        <FormControlLabel
-                          className="m-0"
-                          style={{ color: '#f15a25' }}
-                          control={
-                            <Checkbox
-                              checked={form?.rushOtherProductOrder}
-                              onChange={handleChange}
-                              name="rushOtherProductOrder"
-                              disabled={disabledState}
-                            />
-                          }
-                          label="Rush Order"
-                        />
-                      </div>
-                      <div className="flex flex-row w-full p-8 gap-10">
-                        <div className="flex flex-col w-full">
-                          <div className="flex flex-col px-8">
-                            <div className="flex flex-col my-10 relative">
-                              <div className="flex flex-row absolute right-0">
-                                <SearchFrameDialouge
-                                  disabledState={disabledState}
-                                  form={selectedFrame}
-                                  setForm={setSelectedFrame}
-                                />
-                              </div>
-                            </div>
-                            <div className="flex flex-col w-1/2 my-0 mx-auto gap-10">
-                              <TextField
-                                fullWidth
-                                style={{ borderRadius: '0px' }}
-                                variant="outlined"
-                                disabled={disabledState}
-                                id="standard-basic"
-                                value={otherProduct?.otherProductBrand}
-                                onChange={handleOtherProductChange}
-                                name={'otherProductBrand'}
-                                label="Brand"
-                                size="small"
-                              />
-                              <TextField
-                                className="mt-4"
-                                fullWidth
-                                variant="outlined"
-                                disabled={disabledState}
-                                id="standard-basic"
-                                value={otherProduct?.otherProductModel}
-                                onChange={handleOtherProductChange}
-                                name={'otherProductModel'}
-                                label="Model"
-                                size="small"
-                              />
-                              <TextField
-                                className="mt-4"
-                                fullWidth
-                                variant="outlined"
-                                disabled={disabledState}
-                                id="standard-basic"
-                                value={otherProduct?.otherProductColour}
-                                onChange={handleOtherProductChange}
-                                name={'otherProductColour'}
-                                label="Colour"
-                                size="small"
-                              />
-                              <TextField
-                                className="mt-4"
-                                fullWidth
-                                variant="outlined"
-                                disabled={disabledState}
-                                id="standard-basic"
-                                value={otherProduct?.otherProductMaterial}
-                                onChange={handleOtherProductChange}
-                                name={'otherProductMaterial'}
-                                label="Material"
-                                size="small"
-                              />
-                              <TextField
-                                className="mt-4"
-                                fullWidth
-                                variant="outlined"
-                                disabled={disabledState}
-                                id="standard-basic"
-                                value={otherProduct?.otherProductSize}
-                                onChange={handleOtherProductChange}
-                                name={'otherProductSize'}
-                                label="Size"
-                                size="small"
-                              />
-                              <TextField
-                                className="mt-4"
-                                fullWidth
-                                variant="outlined"
-                                disabled={disabledState}
-                                id="standard-basic"
-                                value={otherProduct?.otherProductQty}
-                                onChange={handleOtherProductChange}
-                                name={'otherProductQty'}
-                                label="QTY"
-                                size="small"
-                              />
-                              <div className="flex gap-10">
-                                <TextField
-                                  id="outlined-multiline-static"
-                                  label="Memo"
-                                  variant="outlined"
-                                  size="small"
-                                  className="w-full"
-                                  name="otherProductMemo"
-                                  disabled={disabledState}
-                                  value={otherProduct?.otherProductMemo}
-                                  onChange={handleOtherProductChange}
-                                />
-                                <TextField
-                                  id="outlined-multiline-static"
-                                  label="Additional Price"
-                                  variant="outlined"
-                                  size="small"
-                                  className="w-1"
-                                  disabled={disabledState}
-                                  name="otherProductAdditionalPrice"
-                                  error={
-                                    otherProduct?.otherProductAdditionalPrice &&
-                                    !Number(
-                                      otherProduct?.otherProductAdditionalPrice
-                                    )
-                                  }
-                                  value={
-                                    otherProduct?.otherProductAdditionalPrice
-                                  }
-                                  onChange={handleOtherProductChange}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                        <div className="flex flex-col max-h-320">
+                          <TableContainer
+                            className="flex flex-col w-full overflow-scroll"
+                            component={Paper}>
+                            <Table aria-label="customized table">
+                              <TableHead>
+                                <TableRow>
+                                  {/* <StyledTableCell>Order No</StyledTableCell>
+                                <StyledTableCell>SKU</StyledTableCell> */}
+                                  <StyledTableCell>Brand</StyledTableCell>
+                                  <StyledTableCell>Model</StyledTableCell>
+                                  <StyledTableCell>Color</StyledTableCell>
+                                  <StyledTableCell>Material</StyledTableCell>
+                                  <StyledTableCell>Size</StyledTableCell>
+                                  <StyledTableCell>Qty</StyledTableCell>
+                                  {/* <StyledTableCell>Price</StyledTableCell> */}
+                                  <StyledTableCell></StyledTableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {otherProductInfo.map((row, index) => (
+                                  <StyledTableRow
+                                    onClick={() => {
+                                      otherProduct(row);
+                                    }}
+                                    key={index}
+                                    hover
+                                    className="cursor-pointer">
+                                    <StyledTableCell component="th" scope="row">
+                                      {row?.otherProductBrand}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.otherProductModel}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.otherProductColour}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.otherProductMaterial}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.otherProductSize}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.otherProductQty}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      <IconButton
+                                        onClick={() => {
+                                          let data = otherProductInfo;
+                                          otherProductInfo.splice(index, 1);
+                                          setOtherProductInfo([...data]);
+                                          otherProduct(row);
+                                          // setDisabledState(false);
+                                        }}
+                                        aria-label="view">
+                                        <Icon>delete</Icon>
+                                      </IconButton>
+                                    </StyledTableCell>
+                                  </StyledTableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
                         </div>
                       </div>
-                      <div className="p-10">
-                        <Button
-                          className={classes.button}
-                          variant="contained"
-                          color="secondary"
-                          onClick={handleAddOtherProductToOrder}
-                          disabled={disabledState}
-                          aria-label="add">
-                          <AddIcon />
-                          Add to Order
-                        </Button>
-                      </div>
-                      <div className="flex flex-col max-h-320">
-                        <TableContainer
-                          className="flex flex-col w-full overflow-scroll"
-                          component={Paper}>
-                          <Table aria-label="customized table">
-                            <TableHead>
-                              <TableRow>
-                                {/* <StyledTableCell>Order No</StyledTableCell>
-                                <StyledTableCell>SKU</StyledTableCell> */}
-                                <StyledTableCell>Brand</StyledTableCell>
-                                <StyledTableCell>Model</StyledTableCell>
-                                <StyledTableCell>Color</StyledTableCell>
-                                <StyledTableCell>Material</StyledTableCell>
-                                <StyledTableCell>Size</StyledTableCell>
-                                <StyledTableCell>Qty</StyledTableCell>
-                                {/* <StyledTableCell>Price</StyledTableCell> */}
-                                <StyledTableCell></StyledTableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {otherProductInfo.map((row, index) => (
-                                <StyledTableRow
-                                  onClick={() => {
-                                    otherProduct(row);
-                                  }}
-                                  key={index}
-                                  hover
-                                  className="cursor-pointer">
-                                  <StyledTableCell component="th" scope="row">
-                                    {row?.otherProductBrand}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.otherProductModel}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.otherProductColour}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.otherProductMaterial}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.otherProductSize}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    {row?.otherProductQty}
-                                  </StyledTableCell>
-                                  <StyledTableCell>
-                                    <IconButton
-                                      onClick={() => {
-                                        let data = otherProductInfo;
-                                        otherProductInfo.splice(index, 1);
-                                        setOtherProductInfo([...data]);
-                                        otherProduct(row);
-                                        // setDisabledState(false);
-                                      }}
-                                      aria-label="view">
-                                      <Icon>delete</Icon>
-                                    </IconButton>
-                                  </StyledTableCell>
-                                </StyledTableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </div>
-                    </div>
-                  </FuseAnimate>
-                </div>
+                    </FuseAnimate>
+                  </div>
 
-                <div className="order-list flex flex-col p-16 sm:px-24">
-                  <FuseAnimate animation="transition.slideRightIn" delay={500}>
-                    <div className="py-8 border-1 border-black border-solid rounded-6">
-                      <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                        <h1 className="font-700" style={{ color: '#f15a25' }}>
-                          ORDER LIST
-                        </h1>
-                      </div>
-                      <div className="flex flex-col p-12 flex-1 h-auto">
-                        <div className="flex flex-col">
-                          {(eyeglasses || contactLenses || medication) && (
-                            <div className="flex flex-col border-t-1 border-r-1 border-l-1 border-black border-solid">
-                              {eyeglasses.map((row, index) => (
-                                <div
-                                  key={index}
-                                  className="px-20 py-10 border-b-1 border-black border-solid">
-                                  <div className="flex flex-row justify-between">
-                                    <h3>{`${row.frameBrand ?? '-'} / ${
-                                      row.frameModel ?? '-'
-                                    } / ${row.frameColour ?? '-'} / ${
-                                      row.lensType ?? '-'
-                                    } / ${row.lensColour ?? '-'}`}</h3>
-                                    <h3>
-                                      $
-                                      {(row?.frameRate || row?.lensRate) &&
-                                        sumPrice(
-                                          Number(row?.frameRate),
-                                          Number(row?.lensRate)
-                                        )}
-                                    </h3>
+                  <div className="order-list flex flex-col p-16 sm:px-24">
+                    <FuseAnimate
+                      animation="transition.slideRightIn"
+                      delay={500}>
+                      <div className="py-8 border-1 border-black border-solid rounded-6">
+                        <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                          <h1 className="font-700" style={{ color: '#f15a25' }}>
+                            ORDER LIST
+                          </h1>
+                        </div>
+                        <div className="flex flex-col p-12 flex-1 h-auto">
+                          <div className="flex flex-col">
+                            {(eyeglasses || contactLenses || medication) && (
+                              <div className="flex flex-col border-t-1 border-r-1 border-l-1 border-black border-solid">
+                                {eyeglasses.map((row, index) => (
+                                  <div
+                                    key={index}
+                                    className="px-20 py-10 border-b-1 border-black border-solid">
+                                    <div className="flex flex-row justify-between">
+                                      <h3>{`${row.frameBrand ?? '-'} / ${
+                                        row.frameModel ?? '-'
+                                      } / ${row.frameColour ?? '-'} / ${
+                                        row.lensType ?? '-'
+                                      } / ${row.lensColour ?? '-'}`}</h3>
+                                      <h3>
+                                        $
+                                        {(row?.frameRate || row?.lensRate) &&
+                                          sumPrice(
+                                            Number(row?.frameRate),
+                                            Number(row?.lensRate)
+                                          )}
+                                      </h3>
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                ))}
 
-                              {contactLenses.map((row, index) => (
-                                <div
-                                  className="px-20 py-10 border-b-1 border-black border-solid"
-                                  key={index}>
-                                  <div className="flex flex-row justify-between">
-                                    <h3>
-                                      {`
+                                {contactLenses.map((row, index) => (
+                                  <div
+                                    className="px-20 py-10 border-b-1 border-black border-solid"
+                                    key={index}>
+                                    <div className="flex flex-row justify-between">
+                                      <h3>
+                                        {`
                                         ${row.contactLensStyle ?? '-'}
                                         / ${row.contactLensBrand ?? '-'}
                                         / ${row.contactLensName ?? '-'}
                                         / ${row.contactLensBaseCurve ?? '-'}
                                         / ${row.contactLensPackQty ?? '-'}
                                       `}
-                                    </h3>
-                                    <h3>
-                                      $
-                                      {row?.contactLensRate &&
-                                        Number(
-                                          row?.contactLensRate
-                                        ).toLocaleString()}
-                                    </h3>
+                                      </h3>
+                                      <h3>
+                                        $
+                                        {row?.contactLensRate &&
+                                          Number(
+                                            row?.contactLensRate
+                                          ).toLocaleString()}
+                                      </h3>
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                ))}
 
-                              {medication.map((row, index) => (
-                                <div
-                                  className="px-20 py-10 border-b-1 border-black border-solid"
-                                  key={index}>
-                                  <div className="flex flex-row justify-between">
-                                    <h3> {row?.name}</h3>
-                                    <h3>
-                                      $
-                                      {row?.price &&
-                                        Number(row?.price).toLocaleString()}
-                                    </h3>
+                                {medication.map((row, index) => (
+                                  <div
+                                    className="px-20 py-10 border-b-1 border-black border-solid"
+                                    key={index}>
+                                    <div className="flex flex-row justify-between">
+                                      <h3> {row?.name}</h3>
+                                      <h3>
+                                        $
+                                        {row?.price &&
+                                          Number(row?.price).toLocaleString()}
+                                      </h3>
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                ))}
 
-                              {otherProductInfo.map((row, index) => (
-                                <div
-                                  key={index}
-                                  className="px-20 py-10 border-b-1 border-black border-solid">
-                                  <div className="flex flex-row justify-between">
-                                    <h3>
-                                      {`
+                                {otherProductInfo.map((row, index) => (
+                                  <div
+                                    key={index}
+                                    className="px-20 py-10 border-b-1 border-black border-solid">
+                                    <div className="flex flex-row justify-between">
+                                      <h3>
+                                        {`
                                           ${row.otherProductBrand ?? '-'}
                                         / ${row.otherProductModel ?? '-'}
                                         / ${row.otherProductColour ?? '-'}
@@ -5158,323 +5189,329 @@ function AddOrder(props) {
                                         / ${row.otherProductSize ?? '-'}
                                         / ${row.otherProductQty ?? '-'}
                                       `}
-                                    </h3>
-                                    {/* <h3>
+                                      </h3>
+                                      {/* <h3>
                                       $
                                       {row?.price &&
                                         Number(row?.price).toLocaleString()}
                                     </h3> */}
+                                    </div>
                                   </div>
+                                ))}
+                              </div>
+                            )}
+
+                            <div className="flex flex-col gap-10 px-20">
+                              <div className="sub-total flex flex-row justify-between pt-20 pb-10">
+                                <h3 className="font-700">Sub Total</h3>
+                                <h3 className="font-700">
+                                  $
+                                  {(
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.lensRate,
+                                      0
+                                    ) +
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.frameRate,
+                                      0
+                                    ) +
+                                    medication.reduce(
+                                      (a, b) => +a + +b.price,
+                                      0
+                                    ) +
+                                    contactLenses.reduce(
+                                      (a, b) => +a + +b.contactLensRate,
+                                      0
+                                    )
+                                  ).toLocaleString()}
+                                </h3>
+                              </div>
+                              <div className="discount flex flex-row justify-between items-end">
+                                <FormControl style={{ minWidth: 225 }}>
+                                  <InputLabel id="demo-simple-select-label">
+                                    Select Discount
+                                  </InputLabel>
+                                  <Select
+                                    labelId="demo-simple-select-label"
+                                    disabled={disabledState}
+                                    defaultValue={form?.discount}
+                                    value={form?.discount}
+                                    name="discount"
+                                    onChange={handleChange}>
+                                    {discounts.map((row) => (
+                                      <MenuItem value={row?.amount}>
+                                        {row?.code}
+                                      </MenuItem>
+                                    ))}
+                                  </Select>
+                                </FormControl>
+                                <div className="flex gap-10 w-1/2">
+                                  <TextField
+                                    id="outlined-multiline-static"
+                                    label="Memo"
+                                    variant="outlined"
+                                    className="w-full"
+                                    value={customerNote}
+                                    onChange={handleCustomerNote}
+                                  />
+                                  <FormControl
+                                    disabled={true}
+                                    className="w-1/2"
+                                    variant="outlined">
+                                    <InputLabel htmlFor="outlined-adornment-amount">
+                                      Amount
+                                    </InputLabel>
+                                    <OutlinedInput
+                                      id="outlined-adornment-amount"
+                                      value={form?.discount || 0}
+                                      name={'discount'}
+                                      onChange={handleChange}
+                                      startAdornment={
+                                        <InputAdornment position="start">
+                                          $
+                                        </InputAdornment>
+                                      }
+                                      labelWidth={60}
+                                      type="number"
+                                    />
+                                  </FormControl>
                                 </div>
-                              ))}
-                            </div>
-                          )}
+                              </div>
+                              <div className="insurance-amount-1 flex flex-row justify-between items-end">
+                                <FormControl style={{ minWidth: 225 }}>
+                                  <InputLabel id="demo-simple-select-label">
+                                    Insurance Coverage 1
+                                  </InputLabel>
+                                  <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={form?.discount}
+                                    onChange={handleChange}>
+                                    <MenuItem value={10}>Ten</MenuItem>
+                                    <MenuItem value={20}>Twenty</MenuItem>
+                                    <MenuItem value={30}>Thirty</MenuItem>
+                                  </Select>
+                                </FormControl>
+                                <div className="flex gap-10 w-1/2">
+                                  <TextField
+                                    id="outlined-multiline-static"
+                                    label="Memo"
+                                    variant="outlined"
+                                    // size="small"
+                                    className="w-full"
+                                    value={customerNote}
+                                    onChange={handleCustomerNote}
+                                  />
+                                  <FormControl
+                                    className="w-1/2"
+                                    disabled={disabledState}
+                                    fullWidth
+                                    variant="outlined">
+                                    <InputLabel htmlFor="outlined-adornment-amount">
+                                      Amount
+                                    </InputLabel>
+                                    <OutlinedInput
+                                      id="outlined-adornment-amount"
+                                      value={form?.insuranceCost || 0}
+                                      name={'insuranceCost'}
+                                      onChange={handleChange}
+                                      startAdornment={
+                                        <InputAdornment position="start">
+                                          $
+                                        </InputAdornment>
+                                      }
+                                      labelWidth={60}
+                                      type="number"
+                                    />
+                                  </FormControl>
+                                </div>
+                              </div>
+                              <div className="insurance-amount-2 flex flex-row justify-between items-end">
+                                <FormControl style={{ minWidth: 225 }}>
+                                  <InputLabel id="demo-simple-select-label">
+                                    Insurance Coverage 2
+                                  </InputLabel>
+                                  <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={form?.discount}
+                                    onChange={handleChange}>
+                                    <MenuItem value={10}>Ten</MenuItem>
+                                    <MenuItem value={20}>Twenty</MenuItem>
+                                    <MenuItem value={30}>Thirty</MenuItem>
+                                  </Select>
+                                </FormControl>
+                                <div className="flex gap-10 w-1/2">
+                                  <TextField
+                                    id="outlined-multiline-static"
+                                    label="Memo"
+                                    variant="outlined"
+                                    // size="small"
+                                    className="w-full"
+                                    value={customerNote}
+                                    onChange={handleCustomerNote}
+                                  />
+                                  <FormControl
+                                    className="w-1/2"
+                                    disabled={disabledState}
+                                    fullWidth
+                                    variant="outlined">
+                                    <InputLabel htmlFor="outlined-adornment-amount">
+                                      Amount
+                                    </InputLabel>
+                                    <OutlinedInput
+                                      id="outlined-adornment-amount"
+                                      value={form?.insuranceCost || 0}
+                                      name={'insuranceCost'}
+                                      onChange={handleChange}
+                                      startAdornment={
+                                        <InputAdornment position="start">
+                                          $
+                                        </InputAdornment>
+                                      }
+                                      labelWidth={60}
+                                      type="number"
+                                    />
+                                  </FormControl>
+                                </div>
+                              </div>
+                              <div className="insurance-total flex flex-row justify-between pt-20 pb-10">
+                                <h3 className="font-700">Insurance Total</h3>
+                                <h3 className="font-700">
+                                  ${(form?.insuranceCost ?? 0).toLocaleString()}
+                                </h3>
+                              </div>
 
-                          <div className="flex flex-col gap-10 px-20">
-                            <div className="sub-total flex flex-row justify-between pt-20 pb-10">
-                              <h3 className="font-700">Sub Total</h3>
-                              <h3 className="font-700">
-                                $
-                                {(
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b.lensRate,
-                                    0
-                                  ) +
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b.frameRate,
-                                    0
-                                  ) +
-                                  medication.reduce(
-                                    (a, b) => +a + +b.price,
-                                    0
-                                  ) +
-                                  contactLenses.reduce(
-                                    (a, b) => +a + +b.contactLensRate,
-                                    0
-                                  )
-                                ).toLocaleString()}
-                              </h3>
-                            </div>
-                            <div className="discount flex flex-row justify-between items-end">
-                              <FormControl style={{ minWidth: 225 }}>
-                                <InputLabel id="demo-simple-select-label">
-                                  Select Discount
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-label"
-                                  disabled={disabledState}
-                                  defaultValue={form?.discount}
-                                  value={form?.discount}
-                                  name="discount"
-                                  onChange={handleChange}>
-                                  {discounts.map((row) => (
-                                    <MenuItem value={row?.amount}>
-                                      {row?.code}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              </FormControl>
-                              <div className="flex gap-10 w-1/2">
-                                <TextField
-                                  id="outlined-multiline-static"
-                                  label="Memo"
-                                  variant="outlined"
-                                  className="w-full"
-                                  value={customerNote}
-                                  onChange={handleCustomerNote}
-                                />
-                                <FormControl
-                                  disabled={true}
-                                  className="w-1/2"
-                                  variant="outlined">
-                                  <InputLabel htmlFor="outlined-adornment-amount">
-                                    Amount
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    value={form?.discount || 0}
-                                    name={'discount'}
-                                    onChange={handleChange}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        $
-                                      </InputAdornment>
-                                    }
-                                    labelWidth={60}
-                                    type="number"
-                                  />
-                                </FormControl>
+                              <div className="balance-due flex flex-row justify-between mt-96">
+                                <h3
+                                  className="font-700"
+                                  style={{ color: '#f15a25' }}>
+                                  Balance
+                                </h3>
+                                <h3
+                                  className="font-700"
+                                  style={{ color: '#f15a25' }}>
+                                  ${' '}
+                                  {(
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.lensRate,
+                                      0
+                                    ) +
+                                    eyeglasses.reduce(
+                                      (a, b) => +a + +b.frameRate,
+                                      0
+                                    ) +
+                                    medication.reduce(
+                                      (a, b) => +a + +b.price,
+                                      0
+                                    ) +
+                                    contactLenses.reduce(
+                                      (a, b) => +a + +b.contactLensRate,
+                                      0
+                                    ) +
+                                    (form?.additionalCost
+                                      ? +form?.additionalCost
+                                      : 0) -
+                                    (form?.discount ? +form?.discount : 0) -
+                                    (form?.insuranceCost
+                                      ? +form?.insuranceCost
+                                      : 0) -
+                                    payments.reduce((a, b) => +a + +b.amount, 0)
+                                  ).toLocaleString()}
+                                </h3>
                               </div>
-                            </div>
-                            <div className="insurance-amount-1 flex flex-row justify-between items-end">
-                              <FormControl style={{ minWidth: 225 }}>
-                                <InputLabel id="demo-simple-select-label">
-                                  Insurance Coverage 1
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-label"
-                                  id="demo-simple-select"
-                                  value={form?.discount}
-                                  onChange={handleChange}>
-                                  <MenuItem value={10}>Ten</MenuItem>
-                                  <MenuItem value={20}>Twenty</MenuItem>
-                                  <MenuItem value={30}>Thirty</MenuItem>
-                                </Select>
-                              </FormControl>
-                              <div className="flex gap-10 w-1/2">
-                                <TextField
-                                  id="outlined-multiline-static"
-                                  label="Memo"
-                                  variant="outlined"
-                                  // size="small"
-                                  className="w-full"
-                                  value={customerNote}
-                                  onChange={handleCustomerNote}
-                                />
-                                <FormControl
-                                  className="w-1/2"
-                                  disabled={disabledState}
-                                  fullWidth
-                                  variant="outlined">
-                                  <InputLabel htmlFor="outlined-adornment-amount">
-                                    Amount
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    value={form?.insuranceCost || 0}
-                                    name={'insuranceCost'}
-                                    onChange={handleChange}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        $
-                                      </InputAdornment>
-                                    }
-                                    labelWidth={60}
-                                    type="number"
-                                  />
-                                </FormControl>
-                              </div>
-                            </div>
-                            <div className="insurance-amount-2 flex flex-row justify-between items-end">
-                              <FormControl style={{ minWidth: 225 }}>
-                                <InputLabel id="demo-simple-select-label">
-                                  Insurance Coverage 2
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-label"
-                                  id="demo-simple-select"
-                                  value={form?.discount}
-                                  onChange={handleChange}>
-                                  <MenuItem value={10}>Ten</MenuItem>
-                                  <MenuItem value={20}>Twenty</MenuItem>
-                                  <MenuItem value={30}>Thirty</MenuItem>
-                                </Select>
-                              </FormControl>
-                              <div className="flex gap-10 w-1/2">
-                                <TextField
-                                  id="outlined-multiline-static"
-                                  label="Memo"
-                                  variant="outlined"
-                                  // size="small"
-                                  className="w-full"
-                                  value={customerNote}
-                                  onChange={handleCustomerNote}
-                                />
-                                <FormControl
-                                  className="w-1/2"
-                                  disabled={disabledState}
-                                  fullWidth
-                                  variant="outlined">
-                                  <InputLabel htmlFor="outlined-adornment-amount">
-                                    Amount
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    value={form?.insuranceCost || 0}
-                                    name={'insuranceCost'}
-                                    onChange={handleChange}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        $
-                                      </InputAdornment>
-                                    }
-                                    labelWidth={60}
-                                    type="number"
-                                  />
-                                </FormControl>
-                              </div>
-                            </div>
-                            <div className="insurance-total flex flex-row justify-between pt-20 pb-10">
-                              <h3 className="font-700">Insurance Total</h3>
-                              <h3 className="font-700">
-                                ${(form?.insuranceCost ?? 0).toLocaleString()}
-                              </h3>
-                            </div>
-
-                            <div className="balance-due flex flex-row justify-between mt-96">
-                              <h3
-                                className="font-700"
-                                style={{ color: '#f15a25' }}>
-                                Balance
-                              </h3>
-                              <h3
-                                className="font-700"
-                                style={{ color: '#f15a25' }}>
-                                ${' '}
-                                {(
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b.lensRate,
-                                    0
-                                  ) +
-                                  eyeglasses.reduce(
-                                    (a, b) => +a + +b.frameRate,
-                                    0
-                                  ) +
-                                  medication.reduce(
-                                    (a, b) => +a + +b.price,
-                                    0
-                                  ) +
-                                  contactLenses.reduce(
-                                    (a, b) => +a + +b.contactLensRate,
-                                    0
-                                  ) +
-                                  (form?.additionalCost
-                                    ? +form?.additionalCost
-                                    : 0) -
-                                  (form?.discount ? +form?.discount : 0) -
-                                  (form?.insuranceCost
-                                    ? +form?.insuranceCost
-                                    : 0) -
-                                  payments.reduce((a, b) => +a + +b.amount, 0)
-                                ).toLocaleString()}
-                              </h3>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </FuseAnimate>
-                </div>
+                    </FuseAnimate>
+                  </div>
 
-                {/* PAYMENT HISTORY */}
-                {routeParams?.orderId && (
-                  <div className="payment-history flex flex-col p-16 sm:px-24">
-                    <FuseAnimate
-                      animation="transition.slideRightIn"
-                      delay={500}>
-                      <div className="py-8 border-1 border-black border-solid rounded-6">
-                        <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                          <h1 className="font-700" style={{ color: '#f15a25' }}>
-                            PAYMENT HISTORY
-                          </h1>
-                        </div>
-                        {routeParams?.orderId && (
-                          <div className="p-10">
-                            <Button
-                              className={classes.button}
-                              variant="contained"
-                              color="secondary"
-                              onClick={() => {
-                                setOpenOrderPayment(true);
-                              }}
-                              aria-label="add">
-                              Receive Payment
-                            </Button>
+                  {/* PAYMENT HISTORY */}
+                  {routeParams?.orderId && (
+                    <div className="payment-history flex flex-col p-16 sm:px-24">
+                      <FuseAnimate
+                        animation="transition.slideRightIn"
+                        delay={500}>
+                        <div className="py-8 border-1 border-black border-solid rounded-6">
+                          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                            <h1
+                              className="font-700"
+                              style={{ color: '#f15a25' }}>
+                              PAYMENT HISTORY
+                            </h1>
                           </div>
-                        )}
-                        <div className="flex flex-col h-200">
-                          <TableContainer
-                            component={Paper}
-                            className="flex flex-col w-full overflow-scroll">
-                            <Table stickyHeader aria-label="customized table">
-                              <TableHead>
-                                <TableRow>
-                                  <StyledTableCell>DATE</StyledTableCell>
-                                  <StyledTableCell>METHOD</StyledTableCell>
-                                  <StyledTableCell>MEMO</StyledTableCell>
-                                  <StyledTableCell>AMOUNT</StyledTableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {payments
-                                  .sort((a, b) =>
-                                    a.orderPaymentId > b.orderPaymentId ? -1 : 1
-                                  )
-                                  .map((hit, index) => (
-                                    <StyledTableRow key={hit.orderPaymentId}>
-                                      <StyledTableCell>
-                                        {moment(
-                                          hit?.paymentDate.toDate()
-                                        ).format('MM/DD/YYYY')}
-                                      </StyledTableCell>
-                                      <StyledTableCell>
-                                        {hit?.paymentMode}
-                                      </StyledTableCell>
-                                      <StyledTableCell>
-                                        {hit?.extraNotes}
-                                      </StyledTableCell>
-                                      <StyledTableCell className="whitespace-no-wrap">{`$ ${Number(
-                                        hit?.amount
-                                      ).toLocaleString()}`}</StyledTableCell>
-                                    </StyledTableRow>
-                                  ))}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        </div>
-                        {routeParams?.orderId && (
-                          <div>
-                            <OrderReceipt
-                              mainForm={form}
-                              openOrderReceipt={openOrderReceipt}
-                              handleOrderReceiptClose={handleOrderReceiptClose}
-                              customer={customer}
-                              eyeglasses={eyeglasses}
-                              contactLenses={contactLenses}
-                              medication={medication}
-                              payments={payments}
-                            />
-                            {/* <Fab
+                          {routeParams?.orderId && (
+                            <div className="p-10">
+                              <Button
+                                className={classes.button}
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => {
+                                  setOpenOrderPayment(true);
+                                }}
+                                aria-label="add">
+                                Receive Payment
+                              </Button>
+                            </div>
+                          )}
+                          <div className="flex flex-col h-200">
+                            <TableContainer
+                              component={Paper}
+                              className="flex flex-col w-full overflow-scroll">
+                              <Table stickyHeader aria-label="customized table">
+                                <TableHead>
+                                  <TableRow>
+                                    <StyledTableCell>DATE</StyledTableCell>
+                                    <StyledTableCell>METHOD</StyledTableCell>
+                                    <StyledTableCell>MEMO</StyledTableCell>
+                                    <StyledTableCell>AMOUNT</StyledTableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {payments
+                                    .sort((a, b) =>
+                                      a.orderPaymentId > b.orderPaymentId
+                                        ? -1
+                                        : 1
+                                    )
+                                    .map((hit, index) => (
+                                      <StyledTableRow key={hit.orderPaymentId}>
+                                        <StyledTableCell>
+                                          {moment(
+                                            hit?.paymentDate.toDate()
+                                          ).format('MM/DD/YYYY')}
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                          {hit?.paymentMode}
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                          {hit?.extraNotes}
+                                        </StyledTableCell>
+                                        <StyledTableCell className="whitespace-no-wrap">{`$ ${Number(
+                                          hit?.amount
+                                        ).toLocaleString()}`}</StyledTableCell>
+                                      </StyledTableRow>
+                                    ))}
+                                </TableBody>
+                              </Table>
+                            </TableContainer>
+                          </div>
+                          {routeParams?.orderId && (
+                            <div>
+                              <OrderReceipt
+                                mainForm={form}
+                                openOrderReceipt={openOrderReceipt}
+                                handleOrderReceiptClose={
+                                  handleOrderReceiptClose
+                                }
+                                customer={customer}
+                                eyeglasses={eyeglasses}
+                                contactLenses={contactLenses}
+                                medication={medication}
+                                payments={payments}
+                              />
+                              {/* <Fab
                               onClick={() => {
                                 setOpenOrderReceipt(true);
                               }}
@@ -5485,13 +5522,14 @@ function AddOrder(props) {
                               <AddIcon />
                               Print Receipt
                             </Fab> */}
-                          </div>
-                        )}
-                      </div>
-                    </FuseAnimate>
-                  </div>
-                )}
-              </>
+                            </div>
+                          )}
+                        </div>
+                      </FuseAnimate>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           )
         }
