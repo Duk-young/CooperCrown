@@ -53,6 +53,7 @@ import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import '../Customers/Search.css';
 import SearchDialouge from './SearchDialouge';
+import ConfirmDelete from './DeleteOrder';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -127,6 +128,7 @@ function AddOrder(props) {
   const [editablePayment, setEditablePayment] = useState({});
   const [orders, setOrders] = useState([]);
   const { form, handleChange, setForm } = useForm(null);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const classes = useStyles();
 
@@ -156,6 +158,10 @@ function AddOrder(props) {
         message: 'Status changed Successfully'
       })
     );
+  };
+
+  const handleDeleteClose = () => {
+    setOpenDelete(false);
   };
 
   const handleCloseAlert1 = () => {
@@ -740,6 +746,23 @@ function AddOrder(props) {
     const balance = total - deductions - payment;
 
     return balance.toLocaleString();
+  };
+
+  const handleDeleteOrder = async () => {
+    try {
+      const queryOrder = await firestore()
+        .collection('orders')
+        .where('orderId', '==', Number(routeParams.orderId))
+        .limit(1)
+        .get();
+
+      let result = queryOrder.docs[0].data();
+      result.id = queryOrder.docs[0].id;
+      await firestore().collection('orders').doc(result.id).delete();
+      props.history.push(`/apps/e-commerce/orders`);
+    } catch (error) {
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -5451,7 +5474,13 @@ function AddOrder(props) {
                                     defaultValue={form?.insuranceCostOne}
                                     value={form?.insuranceCostOne}
                                     name="insuranceCostOne"
+                                    disabled={disabledState}
                                     onChange={handleChange}>
+                                    {insurances?.length === 0 && (
+                                      <MenuItem value={0} disabled>
+                                        No insurances available
+                                      </MenuItem>
+                                    )}
                                     {insurances.map((row) => (
                                       <MenuItem value={row?.insuranceCost}>
                                         {row?.insuranceCompany}
@@ -5505,6 +5534,7 @@ function AddOrder(props) {
                                     defaultValue={form?.insuranceCostTwo}
                                     value={form?.insuranceCostTwo}
                                     name="insuranceCostTwo"
+                                    disabled={disabledState}
                                     onChange={handleChange}>
                                     {insurances?.length === 0 && (
                                       <MenuItem value={0} disabled>
@@ -5606,6 +5636,7 @@ function AddOrder(props) {
                             <div className="p-10">
                               <Button
                                 className={classes.button}
+                                disabled={disabledState}
                                 variant="contained"
                                 color="secondary"
                                 onClick={() => {
@@ -5672,22 +5703,51 @@ function AddOrder(props) {
                                 medication={medication}
                                 payments={payments}
                               />
-                              {/* <Fab
-                              onClick={() => {
-                                setOpenOrderReceipt(true);
-                              }}
-                              variant="extended"
-                              color="primary"
-                              disabled={!disabledState}
-                              aria-label="add">
-                              <AddIcon />
-                              Print Receipt
-                            </Fab> */}
                             </div>
                           )}
                         </div>
                       </FuseAnimate>
                     </div>
+                  )}
+
+                  <Button
+                    className={classes.button}
+                    disabled={disabledState}
+                    variant="contained"
+                    color="secondary"
+                    onClick={onSubmit}
+                    aria-label="add">
+                    {routeParams?.customerId === 'new'
+                      ? 'Submit Order'
+                      : 'SAVE'}
+                  </Button>
+
+                  {routeParams?.orderId && (
+                    <>
+                      <ConfirmDelete
+                        open={openDelete}
+                        handleClose={handleDeleteClose}
+                        form={form}
+                        propssent={props}
+                      />
+                      <Button
+                        style={{
+                          backgroundColor: 'transparent',
+                          color: '#f47b51',
+                          width: 'unset'
+                        }}
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => {
+                          if (routeParams.customerId === 'new') {
+                            alert('No Data to delete');
+                          } else {
+                            setOpenDelete(true);
+                          }
+                        }}>
+                        delete
+                      </Button>
+                    </>
                   )}
                 </>
               )}

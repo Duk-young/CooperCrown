@@ -238,7 +238,7 @@ const CustomHits = connectHits(
                       hit?.shipOtherProductToCustomerLogic) && (
                       <LabelImportantIcon
                         color="secondary"
-                        style={{ color: green[500] }}
+                        style={{ color: 'green' }}
                       />
                     )}
                     {(hit?.rushFrameOrder ||
@@ -246,16 +246,15 @@ const CustomHits = connectHits(
                       hit?.rushOtherProductOrder) && (
                       <LabelImportantIcon
                         color="secondary"
-                        style={{ color: red[500] }}
+                        style={{ color: 'red' }}
                       />
                     )}
                     {hit?.sendFrameToLab && (
                       <LabelImportantIcon
                         color="secondary"
-                        style={{ color: green[500] }}
+                        style={{ color: 'blue' }}
                       />
                     )}
-                    {/** Blue */}
                   </StyledTableCell>
                   <StyledTableCell padding="checkbox">
                     <Checkbox
