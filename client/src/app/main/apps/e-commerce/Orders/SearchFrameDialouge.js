@@ -101,6 +101,85 @@ const CustomHits = connectHits(({ hits, form, setForm, handleClose }) => {
   );
 });
 
+const CustomProductHits = connectHits(
+  ({ hits, form, setForm, handleClose }) => {
+    console.log({ hits });
+    return (
+      <Table aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>SKU</StyledTableCell>
+            <StyledTableCell>Brand</StyledTableCell>
+            <StyledTableCell>Description</StyledTableCell>
+            <StyledTableCell>Colour</StyledTableCell>
+            <StyledTableCell>Material</StyledTableCell>
+            <StyledTableCell>Shape</StyledTableCell>
+            <StyledTableCell>Options</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {hits.map((hit) => (
+            <StyledTableRow key={hit.objectID}>
+              <StyledTableCell>{hit?.sku}</StyledTableCell>
+              <StyledTableCell>{hit?.brand}</StyledTableCell>
+              <StyledTableCell>{hit?.productDescription}</StyledTableCell>
+              <StyledTableCell>{hit?.colour}</StyledTableCell>
+              <StyledTableCell>{hit?.material}</StyledTableCell>
+              <StyledTableCell>{hit?.shape}</StyledTableCell>
+
+              <StyledTableCell>
+                <Button
+                  className="whitespace-no-wrap normal-case ml-24"
+                  variant="contained"
+                  color="secondary"
+                  size="large"
+                  onClick={() => {
+                    if (hit?.quantity > 0) {
+                      setForm({
+                        ...form,
+                        otherProductBrand: hit?.brand,
+                        otherProductModel: hit?.productDescription,
+                        otherProductColour: hit?.colour,
+                        otherProductMaterial: hit?.material,
+                        otherProductSize: hit?.retailRate,
+                        otherProductQty: hit?.quantity,
+                        otherProductMemo: hit?.otherProductMemo,
+                        otherProductAdditionalPrice:
+                          hit?.otherProductAdditionalPrice,
+                        otherProductPrice: hit?.retailRate,
+                        otherProductWS: hit?.ws,
+                        otherProductSKU: hit?.sku,
+                        saleType: undefined
+                      });
+                      handleClose();
+                    } else {
+                      toast.error(
+                        'Required product is not available in Inventory',
+                        {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        }
+                      );
+                    }
+                  }}
+                  startIcon={<AddToQueueIcon />}>
+                  Select
+                </Button>
+              </StyledTableCell>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
+  }
+);
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -165,7 +244,7 @@ function SimpleDialog(props) {
         });
         handleClose();
       } else {
-        toast.error('Required Frame is not availabl in Invntory', {
+        toast.error('Required Frame is not available in Inventory', {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
@@ -275,6 +354,154 @@ function SimpleDialog(props) {
     </Dialog>
   );
 }
+function SimpleInventoryDialog(props) {
+  const classes = useStyles();
+  const { onClose, selectedValue, open, form, setForm } = props;
+  const [searchType, setSearchType] = useState();
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const onDetected = async (result) => {
+    const queryOtherProducts = await firestore()
+      .collection('other')
+      .where('sku', '==', result.codeResult.code)
+      .limit(1)
+      .get();
+
+    if (queryOtherProducts?.docs.length) {
+      let resultOtherProducts = queryOtherProducts.docs[0].data();
+
+      if (resultOtherProducts?.quantity > 0) {
+        setForm({
+          ...form,
+          otherProductBrand: resultOtherProducts?.brand,
+          otherProductModel: resultOtherProducts?.productDescription,
+          otherProductColour: resultOtherProducts?.colour,
+          otherProductMaterial: resultOtherProducts?.material,
+          otherProductSize: resultOtherProducts?.retailRate,
+          otherProductQty: resultOtherProducts?.quantity,
+          otherProductMemo: resultOtherProducts?.otherProductMemo,
+          otherProductAdditionalPrice:
+            resultOtherProducts?.otherProductAdditionalPrice,
+          otherProductPrice: resultOtherProducts?.retailRate,
+          otherProductWS: resultOtherProducts?.ws,
+          otherProductSKU: resultOtherProducts?.sku,
+          saleType: undefined
+        });
+        handleClose();
+      } else {
+        toast.error('Required product is not available in Inventory', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          transition: Zoom
+        });
+      }
+    } else {
+      toast.error('Required product is not available in Inventory', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Zoom
+      });
+    }
+  };
+
+  return (
+    <Dialog
+      maxWidth="md"
+      fullWidth
+      onClose={handleClose}
+      aria-labelledby="simple-dialog-title"
+      open={open}>
+      <DialogTitle className={classes.title} id="simple-dialog-title">
+        Select Frame
+      </DialogTitle>
+      <div className="p-8 w-full h-auto relative">
+        <FormControl component="fieldset">
+          <RadioGroup
+            className="ml-60"
+            row
+            aria-label="searchType"
+            name="searchType"
+            value={searchType}
+            onChange={(e) => {
+              setSearchType(e.target.value);
+            }}>
+            <FormControlLabel
+              value="search"
+              control={<Radio />}
+              label="Search Other Product"
+            />
+            <FormControlLabel
+              value="barcode"
+              control={<Radio />}
+              label="Scan Barcode"
+            />
+          </RadioGroup>
+        </FormControl>
+      </div>
+      {searchType === 'search' && (
+        <div className="flex w-full ">
+          <TableContainer
+            component={Paper}
+            className="flex flex-col w-full p-20 rounded-32 shadow-20">
+            <InstantSearch searchClient={searchClient} indexName="frames">
+              <div className="flex flex-row">
+                <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12">
+                  <SearchBox
+                    translations={{
+                      placeholder: 'Searh for Frames...'
+                    }}
+                    submit={
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 18 18">
+                        <g
+                          fill="none"
+                          fillRule="evenodd"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.67"
+                          transform="translate(1 1)">
+                          <circle cx="7.11" cy="7.11" r="7.11" />
+                          <path d="M16 16l-3.87-3.87" />
+                        </g>
+                      </svg>
+                    }
+                  />
+                </div>
+              </div>
+              <CustomProductHits
+                form={form}
+                setForm={setForm}
+                handleClose={handleClose}
+              />
+            </InstantSearch>
+          </TableContainer>
+        </div>
+      )}
+      {searchType === 'barcode' && (
+        <Paper variant="outlined">
+          <Scanner onDetected={onDetected} />
+        </Paper>
+      )}
+    </Dialog>
+  );
+}
 
 SimpleDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
@@ -284,7 +511,7 @@ SimpleDialog.propTypes = {
 
 export default function SearchFrameDialouge(props) {
   const [open, setOpen] = React.useState(false);
-  const { form, setForm, disabledState } = props;
+  const { form, setForm, disabledState, variant } = props;
   const [selectedValue, setSelectedValue] = React.useState(emails[1]);
 
   const handleClickOpen = () => {
@@ -304,13 +531,24 @@ export default function SearchFrameDialouge(props) {
       <button onClick={handleClickOpen} disabled={disabledState}>
         <img src={Barcode} alt="barcode" />
       </button>
-      <SimpleDialog
-        form={form}
-        setForm={setForm}
-        selectedValue={selectedValue}
-        open={open}
-        onClose={handleClose}
-      />
+      {variant === 'frame' && (
+        <SimpleDialog
+          form={form}
+          setForm={setForm}
+          selectedValue={selectedValue}
+          open={open}
+          onClose={handleClose}
+        />
+      )}
+      {variant === 'inventory' && (
+        <SimpleInventoryDialog
+          form={form}
+          setForm={setForm}
+          selectedValue={selectedValue}
+          open={open}
+          onClose={handleClose}
+        />
+      )}
     </div>
   );
 }

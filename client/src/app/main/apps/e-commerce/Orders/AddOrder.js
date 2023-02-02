@@ -119,6 +119,7 @@ function AddOrder(props) {
   const [openOrderPayment, setOpenOrderPayment] = useState(false);
   const [openOrderReceipt, setOpenOrderReceipt] = useState(false);
   const [contactLens, setContactLens] = useState([]);
+  const [insurances, setInsurances] = useState([]);
   const [services, setServices] = useState([]);
   const [openAlert, setOpenAlert] = useState(false);
   const [openAlert1, setOpenAlert1] = useState(false);
@@ -249,9 +250,15 @@ function AddOrder(props) {
   };
 
   const fetchContactLensRate = () => {
-    if (selectedContactLens?.type) {
+    if (
+      selectedContactLens?.contactLensStyleOd ||
+      selectedContactLens?.contactLensStyleOs
+    ) {
       contactLens.map((row) => {
-        if (row?.type === selectedContactLens?.type) {
+        if (
+          row?.style === selectedContactLens?.contactLensStyleOd ||
+          selectedContactLens?.contactLensStyleOs
+        ) {
           setSelectedContactLens({
             ...selectedContactLens,
             contactLensRate: +row?.price
@@ -265,7 +272,7 @@ function AddOrder(props) {
         return null;
       });
     } else {
-      toast.error('Please select Contact Lens Type...', {
+      toast.error('Please select Contact Lens Style...', {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
@@ -338,6 +345,8 @@ function AddOrder(props) {
 
   const handleAddContactsLensToOrder = () => {
     fetchContactLensRate();
+
+    console.log({ contactLenses });
 
     if (selectedContactLens?.contactLensRate) {
       setContactLenses([...contactLenses, selectedContactLens]);
@@ -598,7 +607,8 @@ function AddOrder(props) {
               orderStatus: 'Order Received',
               eyeglasses: eyeglasses,
               contactLenses: contactLenses,
-              medication: medication
+              medication: medication,
+              otherProductInfo: otherProductInfo
             });
 
           await firestore()
@@ -629,7 +639,8 @@ function AddOrder(props) {
               orderStatus: 'Order Received',
               eyeglasses: eyeglasses,
               contactLenses: contactLenses,
-              medication: medication
+              medication: medication,
+              otherProductInfo: otherProductInfo
             });
 
           await firestore()
@@ -678,6 +689,57 @@ function AddOrder(props) {
       }
       setisLoading(false);
     }
+  };
+
+  const handleTotal = () => {
+    const mainSum =
+      eyeglasses.reduce((a, b) => +a + +b.lensRate, 0) +
+      eyeglasses.reduce((a, b) => +a + +b.frameRate, 0) +
+      medication.reduce((a, b) => +a + +b.price, 0) +
+      contactLenses.reduce((a, b) => +a + +b.contactLensRate, 0) +
+      otherProductInfo.reduce((a, b) => +a + +b.otherProductPrice, 0);
+
+    const frameVal = eyeglasses.find(
+      (item) => item?.frameAdditionalPrice || item?.frameAdditionalPrice <= 0
+    );
+    const lensVal = eyeglasses.find(
+      (item) => item?.lensAdditionalPrice || item?.lensAdditionalPrice <= 0
+    );
+
+    const otherProductVal = otherProductInfo.find(
+      (item) =>
+        item?.otherProductAdditionalPrice ||
+        item?.otherProductAdditionalPrice <= 0
+    );
+
+    if (frameVal || lensVal || otherProductVal) {
+      return (
+        mainSum +
+        eyeglasses.reduce((a, b) => +a + +b.frameAdditionalPrice, 0) +
+        eyeglasses.reduce((a, b) => +a + +b.lensAdditionalPrice, 0) +
+        otherProductInfo.reduce(
+          (a, b) => +a + +b.otherProductAdditionalPrice,
+          0
+        )
+      );
+    } else {
+      return mainSum;
+    }
+  };
+
+  const handleBalance = () => {
+    const total = handleTotal();
+
+    const deductions =
+      (form?.discount ? +form?.discount : 0) -
+      (form?.insuranceCostOne ? +form?.insuranceCostOne : 0) -
+      (form?.insuranceCostTwo ? +form?.insuranceCostTwo : 0);
+
+    const payment = payments.reduce((a, b) => +a + +b.amount, 0);
+
+    const balance = total - deductions - payment;
+
+    return balance.toLocaleString();
   };
 
   useEffect(() => {
@@ -751,6 +813,18 @@ function AddOrder(props) {
           resultPayments.push(doc.data());
         });
         setPayments(resultPayments);
+
+        const queryInsurance = await firestore()
+          .collection('insuranceClaims')
+          .where('customerId', '==', resultOrder?.customerId)
+          .get();
+
+        let resultInsurance = [];
+        queryInsurance.forEach((doc) => {
+          resultInsurance.push(doc.data());
+        });
+        setInsurances(resultInsurance);
+
         const queryContactLens = await firestore().collection('contacts').get();
 
         let resultContacts = [];
@@ -824,6 +898,18 @@ function AddOrder(props) {
           resultDiscounts.push(doc.data());
         });
         setDiscounts(resultDiscounts);
+
+        const queryInsurance = await firestore()
+          .collection('insuranceClaims')
+          .where('customerId', '==', newCustomer)
+          .get();
+
+        let resultInsurance = [];
+        queryInsurance.forEach((doc) => {
+          resultInsurance.push(doc.data());
+        });
+        setInsurances(resultInsurance);
+
         const queryPayments = await firestore()
           .collection('orderPayments')
           .where('orderId', '==', Number(routeParams.orderId))
@@ -3650,6 +3736,7 @@ function AddOrder(props) {
                                       disabledState={disabledState}
                                       form={selectedFrame}
                                       setForm={setSelectedFrame}
+                                      variant="frame"
                                     />
                                   </div>
                                 </div>
@@ -3745,8 +3832,8 @@ function AddOrder(props) {
                                     style={{ color: '#f15a25' }}
                                     control={
                                       <Checkbox
-                                        checked={selectedFrame?.sendFrameToLab}
-                                        onChange={handleSelectedFrameChange}
+                                        checked={form?.sendFrameToLab}
+                                        onChange={handleChange}
                                         name="sendFrameToLab"
                                         disabled={disabledState}
                                       />
@@ -4421,16 +4508,18 @@ function AddOrder(props) {
                                   }
                                   name="contactLensStyleOd"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'Spherical'}>
-                                    Spherical
-                                  </MenuItem>
-                                  <MenuItem value={'Toric'}>Toric</MenuItem>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.style}>
+                                      {row?.style}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'Toric'}>Toric</MenuItem>
                                   <MenuItem value={'Multifocal'}>
                                     Multifocal
                                   </MenuItem>
                                   <MenuItem value={'Toric Multifocal'}>
                                     Toric Multifocal
-                                  </MenuItem>
+                                  </MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4448,17 +4537,22 @@ function AddOrder(props) {
                                   }
                                   name="contactLensBrandOd"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.brand}>
+                                      {row?.brand}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
                                   <MenuItem value={'Alcon'}>Alcon</MenuItem>
                                   <MenuItem value={'Baush & Lomb'}>
                                     Baush & Lomb
                                   </MenuItem>
-                                  <MenuItem value={'Unilens'}>Unilens</MenuItem>
+                                  <MenuItem value={'Unilens'}>Unilens</MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
                                 <InputLabel id="demo-simple-select-autowidth-label">
-                                  Lens Name
+                                  Model
                                 </InputLabel>
                                 <Select
                                   disabled={disabledState}
@@ -4469,12 +4563,17 @@ function AddOrder(props) {
                                   value={selectedContactLens?.contactLensNameOd}
                                   name="contactLensNameOd"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'1-Day Moist'}>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.model}>
+                                      {row?.model}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'1-Day Moist'}>
                                     1-Day Moist
                                   </MenuItem>
                                   <MenuItem value={'Acuvue Oasys Transition'}>
                                     Acuvue Oasys Transition
-                                  </MenuItem>
+                                  </MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4492,10 +4591,15 @@ function AddOrder(props) {
                                   }
                                   name="contactLensBaseCurveOd"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'8.4'}>8.4</MenuItem>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.basecurve}>
+                                      {row?.basecurve}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'8.4'}>8.4</MenuItem>
                                   <MenuItem value={'8.5'}>8.5</MenuItem>
                                   <MenuItem value={'8.6'}>8.6</MenuItem>
-                                  <MenuItem value={'8.8'}>8.8</MenuItem>
+                                  <MenuItem value={'8.8'}>8.8</MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4513,8 +4617,13 @@ function AddOrder(props) {
                                   }
                                   name="contactLensPackQtyOd"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'24'}>24</MenuItem>
-                                  <MenuItem value={'12'}>12</MenuItem>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.packquantity}>
+                                      {row?.packquantity}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'24'}>24</MenuItem>
+                                  <MenuItem value={'12'}>12</MenuItem> */}
                                 </Select>
                               </FormControl>
                             </div>
@@ -4535,16 +4644,18 @@ function AddOrder(props) {
                                   }
                                   name="contactLensStyleOs"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'Spherical'}>
-                                    Spherical
-                                  </MenuItem>
-                                  <MenuItem value={'Toric'}>Toric</MenuItem>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.style}>
+                                      {row?.style}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'Toric'}>Toric</MenuItem>
                                   <MenuItem value={'Multifocal'}>
                                     Multifocal
                                   </MenuItem>
                                   <MenuItem value={'Toric Multifocal'}>
                                     Toric Multifocal
-                                  </MenuItem>
+                                  </MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4562,12 +4673,17 @@ function AddOrder(props) {
                                   }
                                   name="contactLensBrandOs"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.brand}>
+                                      {row?.brand}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
                                   <MenuItem value={'Alcon'}>Alcon</MenuItem>
                                   <MenuItem value={'Baush & Lomb'}>
                                     Baush & Lomb
                                   </MenuItem>
-                                  <MenuItem value={'Unilens'}>Unilens</MenuItem>
+                                  <MenuItem value={'Unilens'}>Unilens</MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4583,12 +4699,17 @@ function AddOrder(props) {
                                   value={selectedContactLens?.contactLensNameOs}
                                   name="contactLensNameOs"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'1-Day Moist'}>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.model}>
+                                      {row?.model}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'1-Day Moist'}>
                                     1-Day Moist
                                   </MenuItem>
                                   <MenuItem value={'Acuvue Oasys Transition'}>
                                     Acuvue Oasys Transition
-                                  </MenuItem>
+                                  </MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4606,10 +4727,15 @@ function AddOrder(props) {
                                   }
                                   name="contactLensBaseCurveOs"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'8.4'}>8.4</MenuItem>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.basecurve}>
+                                      {row?.basecurve}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'8.4'}>8.4</MenuItem>
                                   <MenuItem value={'8.5'}>8.5</MenuItem>
                                   <MenuItem value={'8.6'}>8.6</MenuItem>
-                                  <MenuItem value={'8.8'}>8.8</MenuItem>
+                                  <MenuItem value={'8.8'}>8.8</MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4627,8 +4753,13 @@ function AddOrder(props) {
                                   }
                                   name="contactLensPackQtyOs"
                                   onChange={handleSelectedContactLensChange}>
-                                  <MenuItem value={'24'}>24</MenuItem>
-                                  <MenuItem value={'12'}>12</MenuItem>
+                                  {contactLens.map((row) => (
+                                    <MenuItem value={row?.packquantity}>
+                                      {row?.packquantity}
+                                    </MenuItem>
+                                  ))}
+                                  {/* <MenuItem value={'24'}>24</MenuItem>
+                                  <MenuItem value={'12'}>12</MenuItem> */}
                                 </Select>
                               </FormControl>
                             </div>
@@ -4710,6 +4841,7 @@ function AddOrder(props) {
                             <Table aria-label="customized table">
                               <TableHead>
                                 <TableRow>
+                                  <StyledTableCell>RX</StyledTableCell>
                                   <StyledTableCell>Style</StyledTableCell>
                                   <StyledTableCell>Brand</StyledTableCell>
                                   <StyledTableCell>Model</StyledTableCell>
@@ -4728,21 +4860,31 @@ function AddOrder(props) {
                                     key={index}
                                     hover
                                     className="cursor-pointer">
-                                    {/* update */}
                                     <StyledTableCell>
-                                      {row?.contactLensStyle}
+                                      {(row?.contactLensStyleOd !== '' &&
+                                        'OD') ||
+                                        (row?.contactLensStyleOs !== '' &&
+                                          'OS')}
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                      {row?.contactLensBrand}
+                                      {row?.contactLensStyleOd ||
+                                        row?.contactLensStyleOs}
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                      {row?.contactLensName}
+                                      {row?.contactLensBrandOd ||
+                                        row?.contactLensBrandOs}
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                      {row?.contactLensBaseCurve}
+                                      {row?.contactLensNameOd ||
+                                        row?.contactLensNameOs}
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                      {row?.contactLensPackQty}
+                                      {row?.contactLensBaseCurveOd ||
+                                        row?.contactLensBaseCurveOs}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.contactLensPackQtyOd ||
+                                        row?.contactLensPackQtyOs}
                                     </StyledTableCell>
                                     <StyledTableCell>
                                       ${row?.contactLensRate}
@@ -4904,8 +5046,9 @@ function AddOrder(props) {
                                 <div className="flex flex-row absolute right-0">
                                   <SearchFrameDialouge
                                     disabledState={disabledState}
-                                    form={selectedFrame}
-                                    setForm={setSelectedFrame}
+                                    form={otherProduct}
+                                    setForm={setOtherProduct}
+                                    variant="inventory"
                                   />
                                 </div>
                               </div>
@@ -4914,73 +5057,103 @@ function AddOrder(props) {
                                   fullWidth
                                   style={{ borderRadius: '0px' }}
                                   variant="outlined"
-                                  disabled={disabledState}
                                   id="standard-basic"
                                   value={otherProduct?.otherProductBrand}
                                   onChange={handleOtherProductChange}
                                   name={'otherProductBrand'}
                                   label="Brand"
                                   size="small"
+                                  disabled={true}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
                                 />
                                 <TextField
                                   className="mt-4"
                                   fullWidth
                                   variant="outlined"
-                                  disabled={disabledState}
                                   id="standard-basic"
                                   value={otherProduct?.otherProductModel}
                                   onChange={handleOtherProductChange}
                                   name={'otherProductModel'}
                                   label="Model"
                                   size="small"
+                                  disabled={true}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
                                 />
                                 <TextField
                                   className="mt-4"
                                   fullWidth
                                   variant="outlined"
-                                  disabled={disabledState}
                                   id="standard-basic"
                                   value={otherProduct?.otherProductColour}
                                   onChange={handleOtherProductChange}
                                   name={'otherProductColour'}
                                   label="Colour"
                                   size="small"
+                                  disabled={true}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
                                 />
                                 <TextField
                                   className="mt-4"
                                   fullWidth
                                   variant="outlined"
-                                  disabled={disabledState}
                                   id="standard-basic"
                                   value={otherProduct?.otherProductMaterial}
                                   onChange={handleOtherProductChange}
                                   name={'otherProductMaterial'}
                                   label="Material"
                                   size="small"
+                                  disabled={true}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
                                 />
                                 <TextField
                                   className="mt-4"
                                   fullWidth
                                   variant="outlined"
-                                  disabled={disabledState}
                                   id="standard-basic"
                                   value={otherProduct?.otherProductSize}
                                   onChange={handleOtherProductChange}
                                   name={'otherProductSize'}
                                   label="Size"
                                   size="small"
+                                  disabled={true}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
                                 />
                                 <TextField
                                   className="mt-4"
                                   fullWidth
                                   variant="outlined"
-                                  disabled={disabledState}
                                   id="standard-basic"
                                   value={otherProduct?.otherProductQty}
                                   onChange={handleOtherProductChange}
                                   name={'otherProductQty'}
                                   label="QTY"
                                   size="small"
+                                  disabled={true}
+                                  InputProps={{
+                                    inputProps: {
+                                      style: { textAlign: 'center' }
+                                    }
+                                  }}
                                 />
                                 <div className="flex gap-10">
                                   <TextField
@@ -5037,15 +5210,15 @@ function AddOrder(props) {
                             <Table aria-label="customized table">
                               <TableHead>
                                 <TableRow>
-                                  {/* <StyledTableCell>Order No</StyledTableCell>
-                                <StyledTableCell>SKU</StyledTableCell> */}
+                                  {/* <StyledTableCell>Order No</StyledTableCell> */}
+                                  <StyledTableCell>SKU</StyledTableCell>
                                   <StyledTableCell>Brand</StyledTableCell>
                                   <StyledTableCell>Model</StyledTableCell>
                                   <StyledTableCell>Color</StyledTableCell>
                                   <StyledTableCell>Material</StyledTableCell>
                                   <StyledTableCell>Size</StyledTableCell>
                                   <StyledTableCell>Qty</StyledTableCell>
-                                  {/* <StyledTableCell>Price</StyledTableCell> */}
+                                  <StyledTableCell>Price</StyledTableCell>
                                   <StyledTableCell></StyledTableCell>
                                 </TableRow>
                               </TableHead>
@@ -5059,6 +5232,9 @@ function AddOrder(props) {
                                     hover
                                     className="cursor-pointer">
                                     <StyledTableCell component="th" scope="row">
+                                      {row?.otherProductSKU}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
                                       {row?.otherProductBrand}
                                     </StyledTableCell>
                                     <StyledTableCell>
@@ -5075,6 +5251,9 @@ function AddOrder(props) {
                                     </StyledTableCell>
                                     <StyledTableCell>
                                       {row?.otherProductQty}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                      {row?.otherProductPrice}
                                     </StyledTableCell>
                                     <StyledTableCell>
                                       <IconButton
@@ -5205,25 +5384,7 @@ function AddOrder(props) {
                               <div className="sub-total flex flex-row justify-between pt-20 pb-10">
                                 <h3 className="font-700">Sub Total</h3>
                                 <h3 className="font-700">
-                                  $
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.lensRate,
-                                      0
-                                    ) +
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.frameRate,
-                                      0
-                                    ) +
-                                    medication.reduce(
-                                      (a, b) => +a + +b.price,
-                                      0
-                                    ) +
-                                    contactLenses.reduce(
-                                      (a, b) => +a + +b.contactLensRate,
-                                      0
-                                    )
-                                  ).toLocaleString()}
+                                  ${handleTotal().toLocaleString()}
                                 </h3>
                               </div>
                               <div className="discount flex flex-row justify-between items-end">
@@ -5251,8 +5412,10 @@ function AddOrder(props) {
                                     label="Memo"
                                     variant="outlined"
                                     className="w-full"
-                                    value={customerNote}
-                                    onChange={handleCustomerNote}
+                                    disabled={disabledState}
+                                    value={form?.discountMemo}
+                                    name="discountMemo"
+                                    onChange={handleChange}
                                   />
                                   <FormControl
                                     disabled={true}
@@ -5285,11 +5448,15 @@ function AddOrder(props) {
                                   <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    value={form?.discount}
+                                    defaultValue={form?.insuranceCostOne}
+                                    value={form?.insuranceCostOne}
+                                    name="insuranceCostOne"
                                     onChange={handleChange}>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
+                                    {insurances.map((row) => (
+                                      <MenuItem value={row?.insuranceCost}>
+                                        {row?.insuranceCompany}
+                                      </MenuItem>
+                                    ))}
                                   </Select>
                                 </FormControl>
                                 <div className="flex gap-10 w-1/2">
@@ -5297,14 +5464,15 @@ function AddOrder(props) {
                                     id="outlined-multiline-static"
                                     label="Memo"
                                     variant="outlined"
-                                    // size="small"
                                     className="w-full"
-                                    value={customerNote}
-                                    onChange={handleCustomerNote}
+                                    disabled={disabledState}
+                                    value={form?.insuranceOneMemo}
+                                    name="insuranceOneMemo"
+                                    onChange={handleChange}
                                   />
                                   <FormControl
                                     className="w-1/2"
-                                    disabled={disabledState}
+                                    disabled={true}
                                     fullWidth
                                     variant="outlined">
                                     <InputLabel htmlFor="outlined-adornment-amount">
@@ -5312,8 +5480,8 @@ function AddOrder(props) {
                                     </InputLabel>
                                     <OutlinedInput
                                       id="outlined-adornment-amount"
-                                      value={form?.insuranceCost || 0}
-                                      name={'insuranceCost'}
+                                      value={form?.insuranceCostOne || 0}
+                                      name={'insuranceCostOne'}
                                       onChange={handleChange}
                                       startAdornment={
                                         <InputAdornment position="start">
@@ -5334,11 +5502,21 @@ function AddOrder(props) {
                                   <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    value={form?.discount}
+                                    defaultValue={form?.insuranceCostTwo}
+                                    value={form?.insuranceCostTwo}
+                                    name="insuranceCostTwo"
                                     onChange={handleChange}>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
+                                    {insurances?.length === 0 && (
+                                      <MenuItem value={0} disabled>
+                                        No insurances available
+                                      </MenuItem>
+                                    )}
+                                    {insurances?.length > 0 &&
+                                      insurances.map((row) => (
+                                        <MenuItem value={row?.insuranceCost}>
+                                          {row?.insuranceCompany}
+                                        </MenuItem>
+                                      ))}
                                   </Select>
                                 </FormControl>
                                 <div className="flex gap-10 w-1/2">
@@ -5346,14 +5524,15 @@ function AddOrder(props) {
                                     id="outlined-multiline-static"
                                     label="Memo"
                                     variant="outlined"
-                                    // size="small"
                                     className="w-full"
-                                    value={customerNote}
-                                    onChange={handleCustomerNote}
+                                    disabled={disabledState}
+                                    value={form?.insuranceTwoMemo}
+                                    name="insuranceTwoMemo"
+                                    onChange={handleChange}
                                   />
                                   <FormControl
                                     className="w-1/2"
-                                    disabled={disabledState}
+                                    disabled={true}
                                     fullWidth
                                     variant="outlined">
                                     <InputLabel htmlFor="outlined-adornment-amount">
@@ -5361,8 +5540,8 @@ function AddOrder(props) {
                                     </InputLabel>
                                     <OutlinedInput
                                       id="outlined-adornment-amount"
-                                      value={form?.insuranceCost || 0}
-                                      name={'insuranceCost'}
+                                      value={form?.insuranceCostTwo || 0}
+                                      name={'insuranceCostTwo'}
                                       onChange={handleChange}
                                       startAdornment={
                                         <InputAdornment position="start">
@@ -5378,7 +5557,15 @@ function AddOrder(props) {
                               <div className="insurance-total flex flex-row justify-between pt-20 pb-10">
                                 <h3 className="font-700">Insurance Total</h3>
                                 <h3 className="font-700">
-                                  ${(form?.insuranceCost ?? 0).toLocaleString()}
+                                  {`$${
+                                    form?.insuranceCostOne ||
+                                    form?.insuranceCostOne
+                                      ? (
+                                          form?.insuranceCostOne +
+                                            form?.insuranceCostTwo ?? 0
+                                        ).toLocaleString()
+                                      : 0
+                                  }`}
                                 </h3>
                               </div>
 
@@ -5391,33 +5578,7 @@ function AddOrder(props) {
                                 <h3
                                   className="font-700"
                                   style={{ color: '#f15a25' }}>
-                                  ${' '}
-                                  {(
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.lensRate,
-                                      0
-                                    ) +
-                                    eyeglasses.reduce(
-                                      (a, b) => +a + +b.frameRate,
-                                      0
-                                    ) +
-                                    medication.reduce(
-                                      (a, b) => +a + +b.price,
-                                      0
-                                    ) +
-                                    contactLenses.reduce(
-                                      (a, b) => +a + +b.contactLensRate,
-                                      0
-                                    ) +
-                                    (form?.additionalCost
-                                      ? +form?.additionalCost
-                                      : 0) -
-                                    (form?.discount ? +form?.discount : 0) -
-                                    (form?.insuranceCost
-                                      ? +form?.insuranceCost
-                                      : 0) -
-                                    payments.reduce((a, b) => +a + +b.amount, 0)
-                                  ).toLocaleString()}
+                                  {`$${handleBalance()}`}
                                 </h3>
                               </div>
                             </div>

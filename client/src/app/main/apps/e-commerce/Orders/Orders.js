@@ -233,7 +233,29 @@ const CustomHits = connectHits(
                   className="cursor-pointer"
                   onClick={(event) => handleClick(event, hit.orderId)}>
                   <StyledTableCell component="th" scope="row">
-                    {hit?.rushOrder && <LabelImportantIcon color="secondary" />}
+                    {(hit?.shipFrameToCustomerLogic ||
+                      hit?.shipContactLensToCustomerLogic ||
+                      hit?.shipOtherProductToCustomerLogic) && (
+                      <LabelImportantIcon
+                        color="secondary"
+                        style={{ color: green[500] }}
+                      />
+                    )}
+                    {(hit?.rushFrameOrder ||
+                      hit?.rushContactLensOrder ||
+                      hit?.rushOtherProductOrder) && (
+                      <LabelImportantIcon
+                        color="secondary"
+                        style={{ color: red[500] }}
+                      />
+                    )}
+                    {hit?.sendFrameToLab && (
+                      <LabelImportantIcon
+                        color="secondary"
+                        style={{ color: green[500] }}
+                      />
+                    )}
+                    {/** Blue */}
                   </StyledTableCell>
                   <StyledTableCell padding="checkbox">
                     <Checkbox
@@ -365,8 +387,6 @@ function Orders(props) {
       console.log(error);
     }
   };
-
-  console.log({ selected, data });
 
   const handleTabChange = (_, newValue) => {
     setValue(newValue);
