@@ -748,23 +748,6 @@ function AddOrder(props) {
     return balance.toLocaleString();
   };
 
-  const handleDeleteOrder = async () => {
-    try {
-      const queryOrder = await firestore()
-        .collection('orders')
-        .where('orderId', '==', Number(routeParams.orderId))
-        .limit(1)
-        .get();
-
-      let result = queryOrder.docs[0].data();
-      result.id = queryOrder.docs[0].id;
-      await firestore().collection('orders').doc(result.id).delete();
-      props.history.push(`/apps/e-commerce/orders`);
-    } catch (error) {
-      throw error;
-    }
-  };
-
   useEffect(() => {
     let resultOrder;
     let queryCustomer;
@@ -838,7 +821,7 @@ function AddOrder(props) {
         setPayments(resultPayments);
 
         const queryInsurance = await firestore()
-          .collection('insuranceClaims')
+          .collection('insurances')
           .where('customerId', '==', resultOrder?.customerId)
           .get();
 
@@ -923,7 +906,7 @@ function AddOrder(props) {
         setDiscounts(resultDiscounts);
 
         const queryInsurance = await firestore()
-          .collection('insuranceClaims')
+          .collection('insurances')
           .where('customerId', '==', newCustomer)
           .get();
 
@@ -4627,10 +4610,13 @@ function AddOrder(props) {
                               </FormControl>
                               <FormControl className="w-1/5">
                                 <InputLabel id="demo-simple-select-autowidth-label">
-                                  Pack Quantity
+                                  Pack Qty
                                 </InputLabel>
                                 <Select
-                                  disabled={disabledState}
+                                  disabled={
+                                    disabledState ||
+                                    !selectedContactLens?.contactLensBaseCurveOd
+                                  }
                                   labelId="demo-simple-select-autowidth-label"
                                   defaultValue={
                                     selectedContactLens?.contactLensPackQtyOd
@@ -4763,10 +4749,13 @@ function AddOrder(props) {
                               </FormControl>
                               <FormControl className="w-1/5">
                                 <InputLabel id="demo-simple-select-autowidth-label">
-                                  Pack Quantity
+                                  Pack Qty
                                 </InputLabel>
                                 <Select
-                                  disabled={disabledState}
+                                  disabled={
+                                    disabledState ||
+                                    !selectedContactLens?.contactLensBaseCurveOs
+                                  }
                                   labelId="demo-simple-select-autowidth-label"
                                   defaultValue={
                                     selectedContactLens?.contactLensPackQtyOs
@@ -5482,7 +5471,7 @@ function AddOrder(props) {
                                       </MenuItem>
                                     )}
                                     {insurances.map((row) => (
-                                      <MenuItem value={row?.insuranceCost}>
+                                      <MenuItem value={row?.insuranceId}>
                                         {row?.insuranceCompany}
                                       </MenuItem>
                                     ))}
@@ -5501,7 +5490,7 @@ function AddOrder(props) {
                                   />
                                   <FormControl
                                     className="w-1/2"
-                                    disabled={true}
+                                    disabled={disabledState}
                                     fullWidth
                                     variant="outlined">
                                     <InputLabel htmlFor="outlined-adornment-amount">
@@ -5543,7 +5532,7 @@ function AddOrder(props) {
                                     )}
                                     {insurances?.length > 0 &&
                                       insurances.map((row) => (
-                                        <MenuItem value={row?.insuranceCost}>
+                                        <MenuItem value={row?.insuranceId}>
                                           {row?.insuranceCompany}
                                         </MenuItem>
                                       ))}
@@ -5562,7 +5551,7 @@ function AddOrder(props) {
                                   />
                                   <FormControl
                                     className="w-1/2"
-                                    disabled={true}
+                                    disabled={disabledState}
                                     fullWidth
                                     variant="outlined">
                                     <InputLabel htmlFor="outlined-adornment-amount">
