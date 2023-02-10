@@ -5465,11 +5465,6 @@ function AddOrder(props) {
                                     name="insuranceCostOne"
                                     disabled={disabledState}
                                     onChange={handleChange}>
-                                    {insurances?.length === 0 && (
-                                      <MenuItem value={0} disabled>
-                                        No insurances available
-                                      </MenuItem>
-                                    )}
                                     {insurances.map((row) => (
                                       <MenuItem value={row?.insuranceId}>
                                         {row?.insuranceCompany}
@@ -5498,7 +5493,7 @@ function AddOrder(props) {
                                     </InputLabel>
                                     <OutlinedInput
                                       id="outlined-adornment-amount"
-                                      value={form?.insuranceCostOne || 0}
+                                      value={form?.insuranceCostOne}
                                       name={'insuranceCostOne'}
                                       onChange={handleChange}
                                       startAdornment={
@@ -5525,11 +5520,6 @@ function AddOrder(props) {
                                     name="insuranceCostTwo"
                                     disabled={disabledState}
                                     onChange={handleChange}>
-                                    {insurances?.length === 0 && (
-                                      <MenuItem value={0} disabled>
-                                        No insurances available
-                                      </MenuItem>
-                                    )}
                                     {insurances?.length > 0 &&
                                       insurances.map((row) => (
                                         <MenuItem value={row?.insuranceId}>
@@ -5559,7 +5549,7 @@ function AddOrder(props) {
                                     </InputLabel>
                                     <OutlinedInput
                                       id="outlined-adornment-amount"
-                                      value={form?.insuranceCostTwo || 0}
+                                      value={form?.insuranceCostTwo}
                                       name={'insuranceCostTwo'}
                                       onChange={handleChange}
                                       startAdornment={
@@ -5577,13 +5567,12 @@ function AddOrder(props) {
                                 <h3 className="font-700">Insurance Total</h3>
                                 <h3 className="font-700">
                                   {`$${
-                                    form?.insuranceCostOne ||
-                                    form?.insuranceCostOne
-                                      ? (
-                                          form?.insuranceCostOne +
-                                            form?.insuranceCostTwo ?? 0
-                                        ).toLocaleString()
-                                      : 0
+                                    (form?.insuranceCostOne
+                                      ? +form?.insuranceCostOne
+                                      : 0) +
+                                    (form?.insuranceCostTwo
+                                      ? +form?.insuranceCostTwo
+                                      : 0)
                                   }`}
                                 </h3>
                               </div>
