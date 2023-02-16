@@ -4519,13 +4519,6 @@ function AddOrder(props) {
                                       {row?.style}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'Toric'}>Toric</MenuItem>
-                                  <MenuItem value={'Multifocal'}>
-                                    Multifocal
-                                  </MenuItem>
-                                  <MenuItem value={'Toric Multifocal'}>
-                                    Toric Multifocal
-                                  </MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4548,12 +4541,6 @@ function AddOrder(props) {
                                       {row?.brand}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
-                                  <MenuItem value={'Alcon'}>Alcon</MenuItem>
-                                  <MenuItem value={'Baush & Lomb'}>
-                                    Baush & Lomb
-                                  </MenuItem>
-                                  <MenuItem value={'Unilens'}>Unilens</MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4574,12 +4561,6 @@ function AddOrder(props) {
                                       {row?.model}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'1-Day Moist'}>
-                                    1-Day Moist
-                                  </MenuItem>
-                                  <MenuItem value={'Acuvue Oasys Transition'}>
-                                    Acuvue Oasys Transition
-                                  </MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4602,10 +4583,6 @@ function AddOrder(props) {
                                       {row?.basecurve}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'8.4'}>8.4</MenuItem>
-                                  <MenuItem value={'8.5'}>8.5</MenuItem>
-                                  <MenuItem value={'8.6'}>8.6</MenuItem>
-                                  <MenuItem value={'8.8'}>8.8</MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4631,8 +4608,6 @@ function AddOrder(props) {
                                       {row?.packquantity}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'24'}>24</MenuItem>
-                                  <MenuItem value={'12'}>12</MenuItem> */}
                                 </Select>
                               </FormControl>
                             </div>
@@ -4658,13 +4633,6 @@ function AddOrder(props) {
                                       {row?.style}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'Toric'}>Toric</MenuItem>
-                                  <MenuItem value={'Multifocal'}>
-                                    Multifocal
-                                  </MenuItem>
-                                  <MenuItem value={'Toric Multifocal'}>
-                                    Toric Multifocal
-                                  </MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4687,12 +4655,6 @@ function AddOrder(props) {
                                       {row?.brand}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'Acuvue'}>Acuvue</MenuItem>
-                                  <MenuItem value={'Alcon'}>Alcon</MenuItem>
-                                  <MenuItem value={'Baush & Lomb'}>
-                                    Baush & Lomb
-                                  </MenuItem>
-                                  <MenuItem value={'Unilens'}>Unilens</MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4713,12 +4675,6 @@ function AddOrder(props) {
                                       {row?.model}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'1-Day Moist'}>
-                                    1-Day Moist
-                                  </MenuItem>
-                                  <MenuItem value={'Acuvue Oasys Transition'}>
-                                    Acuvue Oasys Transition
-                                  </MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4741,10 +4697,6 @@ function AddOrder(props) {
                                       {row?.basecurve}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'8.4'}>8.4</MenuItem>
-                                  <MenuItem value={'8.5'}>8.5</MenuItem>
-                                  <MenuItem value={'8.6'}>8.6</MenuItem>
-                                  <MenuItem value={'8.8'}>8.8</MenuItem> */}
                                 </Select>
                               </FormControl>
                               <FormControl className="w-1/5">
@@ -4770,8 +4722,6 @@ function AddOrder(props) {
                                       {row?.packquantity}
                                     </MenuItem>
                                   ))}
-                                  {/* <MenuItem value={'24'}>24</MenuItem>
-                                  <MenuItem value={'12'}>12</MenuItem> */}
                                 </Select>
                               </FormControl>
                             </div>

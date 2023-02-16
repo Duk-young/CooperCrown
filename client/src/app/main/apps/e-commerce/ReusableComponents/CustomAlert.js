@@ -29,9 +29,7 @@ export default function CustomAlert(props) {
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description">
-        <DialogTitle id="alert-dialog-slide-title">
-          <h2>{text1}</h2>
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{text1}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {text2}

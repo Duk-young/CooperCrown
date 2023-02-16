@@ -24,6 +24,7 @@ import '../Search.css';
 
 function UpdateCustomer(props) {
   const [error] = useState(null);
+  // const [errors, setErrors] = useState({});
   const [familyMembers, setFamilyMembers] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [isLoading, setisLoading] = useState(true);
@@ -120,6 +121,24 @@ function UpdateCustomer(props) {
     return <FuseLoading />;
   }
 
+  //   const isFormValid = () => {
+  //  const errs = {};
+
+  //   };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   const errs = isFormValid();
+  //   setErrors(errs);
+
+  //   if (Object.entries(errs).some((err) => err !== '')) {
+  //     return;
+  //   }
+
+  //   console.log('submitting!!!');
+  // };
+
   const onSubmit = async () => {
     // if (!validate()) return;
     if (form.customerId) {
@@ -140,6 +159,7 @@ function UpdateCustomer(props) {
             message: 'Customer updated successfully'
           })
         );
+
         props.history.push('/apps/e-commerce/customers');
       } catch (error) {
         console.log(error);
@@ -154,12 +174,14 @@ function UpdateCustomer(props) {
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
 
+        const dateOfBirth = firestore.Timestamp.fromDate(form?.dob);
+
         await firestore()
           .collection('customers')
           .add({
             ...form,
             family: form?.family ? form?.family : customerNo?.customerId + 1,
-            dob: firestore.Timestamp.fromDate(form?.dob),
+            dob: dateOfBirth,
             dobString: moment(form?.dob).format('MM/DD/YYYY'),
             customerId: customerNo?.customerId + 1,
             recentUpdated: customerNo?.recentUpdated + 1
@@ -194,7 +216,9 @@ function UpdateCustomer(props) {
             console.log(error);
           });
 
-        props.history.push('/apps/e-commerce/customers');
+        props.history.push(
+          `/apps/e-commerce/customers/profile/${customerNo?.customerId + 1}`
+        );
       } catch (error) {
         console.log(error);
       }
@@ -208,9 +232,10 @@ function UpdateCustomer(props) {
       <FusePageCarded
         header={
           <div className="flex flex-1 w-full items-center justify-between">
-            <div className="flex flex-col items-start max-w-full">
+            <div className="flex flex-col items-start max-w-full w-full relative">
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
                 <IconButton
+                  className="absolute"
                   onClick={() => {
                     if (
                       Object.keys(form).length === 0 &&
@@ -237,11 +262,11 @@ function UpdateCustomer(props) {
                 }}
               />
 
-              <div className="flex items-center max-w-full">
+              <div className="flex items-center max-w-full w-full text-center justify-center">
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                     <Typography className="text-16 sm:text-20 truncate">
-                      {form?.customerId ? 'Update ' : 'Create '}
+                      {form?.customerId ? 'Update ' : 'New '}
                       Customer
                     </Typography>
                   </FuseAnimate>
