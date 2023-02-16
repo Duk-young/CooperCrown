@@ -313,7 +313,7 @@ function SimpleDialog(props) {
                 <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12">
                   <SearchBox
                     translations={{
-                      placeholder: 'Searh for Frames...'
+                      placeholder: 'Search for Frames...'
                     }}
                     submit={
                       <svg
@@ -354,6 +354,7 @@ function SimpleDialog(props) {
     </Dialog>
   );
 }
+
 function SimpleInventoryDialog(props) {
   const classes = useStyles();
   const { onClose, selectedValue, open, form, setForm } = props;
@@ -425,7 +426,7 @@ function SimpleInventoryDialog(props) {
       aria-labelledby="simple-dialog-title"
       open={open}>
       <DialogTitle className={classes.title} id="simple-dialog-title">
-        Select Frame
+        Select Other Product
       </DialogTitle>
       <div className="p-8 w-full h-auto relative">
         <FormControl component="fieldset">
@@ -456,12 +457,12 @@ function SimpleInventoryDialog(props) {
           <TableContainer
             component={Paper}
             className="flex flex-col w-full p-20 rounded-32 shadow-20">
-            <InstantSearch searchClient={searchClient} indexName="frames">
+            <InstantSearch searchClient={searchClient} indexName="other">
               <div className="flex flex-row">
                 <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12">
                   <SearchBox
                     translations={{
-                      placeholder: 'Searh for Frames...'
+                      placeholder: 'Search for other product...'
                     }}
                     submit={
                       <svg

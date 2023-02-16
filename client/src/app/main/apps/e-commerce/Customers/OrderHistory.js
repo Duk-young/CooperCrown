@@ -77,18 +77,17 @@ const OrderHistory = (props) => {
           stickyHeader>
           <TableHead>
             <TableRow>
-              <StyledTableCell>ORDER No</StyledTableCell>
               <StyledTableCell>DATE</StyledTableCell>
+              <StyledTableCell>ORDER No</StyledTableCell>
 
               <StyledTableCell>AMOUNT</StyledTableCell>
               <StyledTableCell>INSURANCE</StyledTableCell>
               <StyledTableCell>PAID</StyledTableCell>
               <StyledTableCell>BALANCE</StyledTableCell>
-              <StyledTableCell>STATUS</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders?.length ? (
+            {orders?.length &&
               orders
                 .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
                 .map((row) => (
@@ -145,14 +144,8 @@ const OrderHistory = (props) => {
                           .reduce((a, b) => +a + +b.amount, 0)
                       ).toLocaleString()}`}
                     </StyledTableCell>
-                    <StyledTableCell>{row?.orderStatus}</StyledTableCell>
                   </StyledTableRow>
-                ))
-            ) : (
-              <div className="flex flex-row justify-center">
-                <h2>No Orders</h2>
-              </div>
-            )}
+                ))}
           </TableBody>
         </Table>
       </TableContainer>

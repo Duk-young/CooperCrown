@@ -32,13 +32,13 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    fontSize: 12,
-    padding: 5,
+    fontSize: 14,
+    padding: 10,
     textAlign: 'center'
   },
   body: {
-    fontSize: 12,
-    padding: 0,
+    fontSize: 14,
+    padding: 10,
     textAlign: 'center'
   }
 }))(TableCell);
@@ -201,9 +201,9 @@ const CustomerProfile = (props) => {
   ) : (
     <FusePageCarded
       header={
-        <div className=" flex flex-col w-full mt-4">
+        <div className=" flex flex-col w-full mt-4 relative">
           <Typography
-            className="normal-case flex items-center sm:mb-12"
+            className="normal-case flex items-center sm:mb-12 absolute"
             component={Link}
             role="button"
             to="/apps/e-commerce/customers"
@@ -211,11 +211,10 @@ const CustomerProfile = (props) => {
             <Icon className="text-20">arrow_back</Icon>
             <span className="mx-4">Customers</span>
           </Typography>
-          <div className="flex flex-row w-full px-10 justify-between">
+          <div className="flex flex-row w-full px-10 justify-center">
             <div className="flex flex-row">
-              <Icon className="text-28 ">people</Icon>
               <Typography className="text-16 pl-8 sm:text-20 truncate">
-                Customer's Details
+                ID: {customer?.customerId}
               </Typography>
             </div>
           </div>
@@ -224,12 +223,12 @@ const CustomerProfile = (props) => {
       content={
         <div className="flex flex-col w-full">
           <div className="flex p-16 flex-row w-full">
-            <div className=" w-1/2 h-auto">
+            <div className="customer-info w-1/2 h-auto">
               <div className="py-4 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  <h2 className="font-700" style={{ color: '#f15a25' }}>
                     CUSTOMER INFO
-                  </h1>
+                  </h2>
                 </div>
                 <div className="flex flex-row w-full">
                   <div className="flex flex-col md:w-1/4 w-1/3 border-black border-t-1 border-b-1 border-r-1">
@@ -359,22 +358,21 @@ const CustomerProfile = (props) => {
                 </div>
               </div>
             </div>
-            <div className="ml-10 w-1/2 h-auto  ">
-              <div className="py-4 border-1 border-black border-solid rounded-6">
+            <div className="note ml-10 w-1/2 h-auto  ">
+              <div className="py-4 border-1 border-black border-solid rounded-6 h-full">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  <h2 className="font-700" style={{ color: '#f15a25' }}>
                     NOTE
-                  </h1>
+                  </h2>
                 </div>
                 <div className="relative">
                   <div className="flex w-full">
                     <TextField
-                      className="my-10"
+                      className="my-10 p-2"
                       disabled={disabledState}
                       inputProps={{ style: { fontSize: 20, lineHeight: 1 } }}
                       InputLabelProps={{ style: { fontSize: 16 } }}
                       id="memos"
-                      label="Memos"
                       type="text"
                       name="memos"
                       value={customer?.memos}
@@ -389,7 +387,7 @@ const CustomerProfile = (props) => {
                   </div>
 
                   {disabledState && (
-                    <div className="flex flex-col p-2">
+                    <div className="flex flex-col p-2 mt-10">
                       <Button
                         className={classes.button}
                         variant="contained"
@@ -422,12 +420,12 @@ const CustomerProfile = (props) => {
             </div>
           </div>
 
-          <div className="flex flex-col px-16">
+          <div className="family-tree flex flex-col px-16">
             <div className="py-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                <h1 className="font-700" style={{ color: '#f15a25' }}>
+                <h2 className="font-700" style={{ color: '#f15a25' }}>
                   FAMILY TREE
-                </h1>
+                </h2>
               </div>
               <div className="flex flex-col w-full h-auto">
                 <TableContainer
@@ -437,8 +435,9 @@ const CustomerProfile = (props) => {
                     <TableHead>
                       <TableRow style={{ height: 10 }}>
                         <StyledTableCell>ID</StyledTableCell>
-                        <StyledTableCell>NAME</StyledTableCell>
-                        <StyledTableCell>BIRTHDAY</StyledTableCell>
+                        <StyledTableCell>FIRST NAME</StyledTableCell>
+                        <StyledTableCell>LAST NAME</StyledTableCell>
+                        <StyledTableCell>D.O.B</StyledTableCell>
                         <StyledTableCell>GENDER</StyledTableCell>
                         <StyledTableCell>STATE</StyledTableCell>
                         <StyledTableCell>ZIP CODE</StyledTableCell>
@@ -452,15 +451,9 @@ const CustomerProfile = (props) => {
                           <StyledTableRow
                             key={row.customerId}
                             style={{ height: 10 }}>
-                            <StyledTableCell>
-                              <Link
-                                to={`/apps/e-commerce/customers/profile/${row.customerId}`}>
-                                <h3 className="text-black">
-                                  {row?.customerId}
-                                </h3>
-                              </Link>
-                            </StyledTableCell>
-                            <StyledTableCell>{`${row?.lastName}, ${row?.firstName} `}</StyledTableCell>
+                            <StyledTableCell>{row?.customerId}</StyledTableCell>
+                            <StyledTableCell>{row?.firstName}</StyledTableCell>
+                            <StyledTableCell>{row?.lastName}</StyledTableCell>
                             <StyledTableCell>
                               {moment(row.dob.toDate()).format('MM/DD/YYYY')}
                             </StyledTableCell>
@@ -479,13 +472,13 @@ const CustomerProfile = (props) => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row p-16 w-full">
-            <div className="flex flex-col  w-full md:w-1/3 h-400">
+          <div className="flex flex-col md:flex-row p-16 w-full gap-10">
+            <div className="insurance flex flex-col  w-full md:w-1/3 max-h-400">
               <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  <h2 className="font-700" style={{ color: '#f15a25' }}>
                     INSURANCE
-                  </h1>
+                  </h2>
                 </div>
                 <div className="flex flex-col p-12">
                   <Button
@@ -497,12 +490,11 @@ const CustomerProfile = (props) => {
                         `/apps/e-commerce/customers/addinsurance/${customer?.customerId}`
                       );
                     }}>
-                    <AddCircleOutlineOutlinedIcon />
-                    ADD NEW
+                    + ADD NEW
                   </Button>
                 </div>
                 <div className="flex flex-1 overflow-scroll">
-                  <div className="flex flex-col w-full pl-12">
+                  <div className="flex flex-col w-full">
                     <TableContainer component={Paper}>
                       <Table
                         className={classes.table}
@@ -510,10 +502,10 @@ const CustomerProfile = (props) => {
                         aria-label="customized table">
                         <TableHead>
                           <TableRow style={{ height: 10 }}>
-                            <StyledTableCell>Insurance</StyledTableCell>
-                            <StyledTableCell>Holder</StyledTableCell>
-                            <StyledTableCell>Policy #</StyledTableCell>
-                            <StyledTableCell>Options</StyledTableCell>
+                            <StyledTableCell>Date</StyledTableCell>
+                            <StyledTableCell>Company</StyledTableCell>
+                            <StyledTableCell>Primary Holder</StyledTableCell>
+                            <StyledTableCell>Policy No</StyledTableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -526,6 +518,9 @@ const CustomerProfile = (props) => {
                                 key={row.insuranceId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
+                                  {row?.dateCreated}
+                                </StyledTableCell>
+                                <StyledTableCell>
                                   {row.insuranceCompany}
                                 </StyledTableCell>
                                 <StyledTableCell>
@@ -533,17 +528,6 @@ const CustomerProfile = (props) => {
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   {row.policyNo}
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                  <IconButton
-                                    onClick={() => {
-                                      props.history.push(
-                                        `/apps/e-commerce/customers/profile/editinsurance/${row.insuranceId}`
-                                      );
-                                    }}
-                                    aria-label="edit">
-                                    <EditIcon fontSize="small" />
-                                  </IconButton>
                                 </StyledTableCell>
                               </StyledTableRow>
                             ))}
@@ -554,12 +538,12 @@ const CustomerProfile = (props) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col mt-6 md:mt-0 md:ml-6 w-full md:w-1/3 h-400">
+            <div className="RX flex flex-col mt-6 md:mt-0 md:ml-6 w-full md:w-1/3 max-h-400">
               <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  <h2 className="font-700" style={{ color: '#f15a25' }}>
                     RX
-                  </h1>
+                  </h2>
                 </div>
                 <div className="flex flex-col p-12">
                   <Button
@@ -571,8 +555,7 @@ const CustomerProfile = (props) => {
                         `/apps/e-commerce/customers/addRx/${customer?.customerId}`
                       );
                     }}>
-                    <AddCircleOutlineOutlinedIcon />
-                    ADD NEW
+                    + ADD NEW
                   </Button>
                 </div>
                 <PrescriptionReceipt
@@ -587,9 +570,13 @@ const CustomerProfile = (props) => {
                 <div className="flex justify-center">
                   <ButtonGroup
                     variant="text"
-                    color="secondary"
-                    aria-label="text primary button group">
+                    color="primary"
+                    aria-label="text primary button group gap-10">
                     <Button
+                      style={{
+                        border: 'none',
+                        color: prescriptionType === 'eyeglassesRx' && '#f15a25'
+                      }}
                       onClick={() => {
                         let eyeglassesRx = prescription.filter(
                           (word) => word.prescriptionType === 'eyeglassesRx'
@@ -597,9 +584,13 @@ const CustomerProfile = (props) => {
                         setFilteredPrescription(eyeglassesRx);
                         setPrescriptionType('eyeglassesRx');
                       }}>
-                      Glasses
+                      EYEGLASSES
                     </Button>
                     <Button
+                      style={{
+                        border: 'none',
+                        color: prescriptionType === 'contactLensRx' && '#f15a25'
+                      }}
                       onClick={() => {
                         let contactLensRx = prescription.filter(
                           (word) => word.prescriptionType === 'contactLensRx'
@@ -608,9 +599,13 @@ const CustomerProfile = (props) => {
                         setFilteredPrescription(contactLensRx);
                         setPrescriptionType('contactLensRx');
                       }}>
-                      Contacts
+                      CONTACT LENS
                     </Button>
                     <Button
+                      style={{
+                        border: 'none',
+                        color: prescriptionType === 'medicationRx' && '#f15a25'
+                      }}
                       onClick={() => {
                         let medicationRx = prescription.filter(
                           (word) => word.prescriptionType === 'medicationRx'
@@ -619,7 +614,7 @@ const CustomerProfile = (props) => {
                         setFilteredPrescription(medicationRx);
                         setPrescriptionType('medicationRx');
                       }}>
-                      Medical
+                      MEDICAL
                     </Button>
                   </ButtonGroup>
                 </div>
@@ -633,13 +628,12 @@ const CustomerProfile = (props) => {
                           aria-label="customized table">
                           <TableHead>
                             <TableRow style={{ height: 10 }}>
-                              <StyledTableCell>Date</StyledTableCell>
-                              <StyledTableCell>SPH</StyledTableCell>
-                              <StyledTableCell>CYL</StyledTableCell>
+                              <StyledTableCell>DATE</StyledTableCell>
+                              <StyledTableCell>SPHERE</StyledTableCell>
+                              <StyledTableCell>CYLINDER</StyledTableCell>
                               <StyledTableCell>AXIS</StyledTableCell>
                               <StyledTableCell>ADD</StyledTableCell>
-                              <StyledTableCell>PRISM</StyledTableCell>
-                              <StyledTableCell>Options</StyledTableCell>
+                              <StyledTableCell>PRISM / BASE</StyledTableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -726,17 +720,6 @@ const CustomerProfile = (props) => {
                                       <div>{row.eyeglassesPrismOs}</div>
                                     </div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
-                                    <IconButton
-                                      onClick={() => {
-                                        props.history.push(
-                                          `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
-                                        );
-                                      }}
-                                      aria-label="edit">
-                                      <EditIcon fontSize="small" />
-                                    </IconButton>
-                                  </StyledTableCell>
                                 </StyledTableRow>
                               ))}
                           </TableBody>
@@ -756,13 +739,12 @@ const CustomerProfile = (props) => {
                           aria-label="customized table">
                           <TableHead>
                             <TableRow style={{ height: 10 }}>
-                              <StyledTableCell>Date</StyledTableCell>
-                              <StyledTableCell>SPH</StyledTableCell>
-                              <StyledTableCell>CYL</StyledTableCell>
+                              <StyledTableCell>DATE</StyledTableCell>
+                              <StyledTableCell>SPHERE</StyledTableCell>
+                              <StyledTableCell>CYLINDER</StyledTableCell>
                               <StyledTableCell>AXIS</StyledTableCell>
                               <StyledTableCell>ADD</StyledTableCell>
                               <StyledTableCell>MODEL</StyledTableCell>
-                              <StyledTableCell>Options</StyledTableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -845,22 +827,6 @@ const CustomerProfile = (props) => {
                                     }>
                                     {row?.contactLensModel}
                                   </StyledTableCell>
-                                  <StyledTableCell
-                                    style={
-                                      row?.onRx
-                                        ? { color: 'red' }
-                                        : { color: 'black' }
-                                    }>
-                                    <IconButton
-                                      onClick={() => {
-                                        props.history.push(
-                                          `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
-                                        );
-                                      }}
-                                      aria-label="edit">
-                                      <EditIcon fontSize="small" />
-                                    </IconButton>
-                                  </StyledTableCell>
                                 </StyledTableRow>
                               ))}
                           </TableBody>
@@ -880,9 +846,8 @@ const CustomerProfile = (props) => {
                           aria-label="customized table">
                           <TableHead>
                             <TableRow style={{ height: 10 }}>
-                              <StyledTableCell>Date</StyledTableCell>
-                              <StyledTableCell>Medication</StyledTableCell>
-                              <StyledTableCell>Options</StyledTableCell>
+                              <StyledTableCell>DATE</StyledTableCell>
+                              <StyledTableCell>MEDICATION</StyledTableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -902,17 +867,6 @@ const CustomerProfile = (props) => {
                                   <StyledTableCell>
                                     <div>{row?.medicationComments}</div>
                                   </StyledTableCell>
-                                  <StyledTableCell>
-                                    <IconButton
-                                      onClick={() => {
-                                        props.history.push(
-                                          `/apps/e-commerce/customers/profile/editprescription/${row.prescriptionId}`
-                                        );
-                                      }}
-                                      aria-label="edit">
-                                      <EditIcon fontSize="small" />
-                                    </IconButton>
-                                  </StyledTableCell>
                                 </StyledTableRow>
                               ))}
                           </TableBody>
@@ -923,12 +877,12 @@ const CustomerProfile = (props) => {
                 )}
               </div>
             </div>
-            <div className="flex flex-col mt-6 md:mt-0 md:ml-6 w-full md:w-1/3 h-400">
+            <div className="exam-history flex flex-col mt-6 md:mt-0 md:ml-6 w-full md:w-1/3 max-h-400">
               <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                  <h1 className="font-700" style={{ color: '#f15a25' }}>
+                  <h2 className="font-700" style={{ color: '#f15a25' }}>
                     EXAM HISTORY
-                  </h1>
+                  </h2>
                 </div>
                 <div className="flex flex-col p-12">
                   <Button
@@ -940,12 +894,11 @@ const CustomerProfile = (props) => {
                         `/apps/e-commerce/customers/addExam/${customer?.customerId}`
                       );
                     }}>
-                    <AddCircleOutlineOutlinedIcon />
-                    ADD NEW
+                    + ADD NEW
                   </Button>
                 </div>
                 <div className="flex flex-1 overflow-scroll">
-                  <div className="flex flex-col w-full pl-12">
+                  <div className="flex flex-col w-full">
                     <TableContainer component={Paper}>
                       <Table
                         className={classes.table}
@@ -956,7 +909,6 @@ const CustomerProfile = (props) => {
                             <StyledTableCell>DATE</StyledTableCell>
                             <StyledTableCell>LOCATION</StyledTableCell>
                             <StyledTableCell>DOCTOR</StyledTableCell>
-                            <StyledTableCell>Options</StyledTableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -975,17 +927,6 @@ const CustomerProfile = (props) => {
                                   {checkLocationName(row?.showRoomId)}
                                 </StyledTableCell>
                                 <StyledTableCell>{row?.doctor}</StyledTableCell>
-                                <StyledTableCell>
-                                  <IconButton
-                                    onClick={() => {
-                                      props.history.push(
-                                        `/apps/e-commerce/customers/profile/viewexam/${row.examId}`
-                                      );
-                                    }}
-                                    aria-label="view">
-                                    <PageviewOutlinedIcon fontSize="small" />
-                                  </IconButton>
-                                </StyledTableCell>
                               </StyledTableRow>
                             ))}
                         </TableBody>
@@ -996,12 +937,12 @@ const CustomerProfile = (props) => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col h-400 px-16 py-6">
+          <div className="order history flex flex-col max-h-400 px-16 py-6">
             <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                <h1 className="font-700" style={{ color: '#f15a25' }}>
+                <h2 className="font-700" style={{ color: '#f15a25' }}>
                   ORDER HISTORY
-                </h1>
+                </h2>
               </div>
               <div className="flex flex-col p-12">
                 <Button
@@ -1013,8 +954,7 @@ const CustomerProfile = (props) => {
                       `/apps/e-commerce/orders/addorder/${customer.customerId}`
                     );
                   }}>
-                  <AddCircleOutlineOutlinedIcon />
-                  ADD NEW
+                  + ADD NEW
                 </Button>
               </div>
               <OrderHistory customer={customer} />
