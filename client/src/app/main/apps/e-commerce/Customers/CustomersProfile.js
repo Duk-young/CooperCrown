@@ -429,7 +429,7 @@ const CustomerProfile = (props) => {
               </div>
               <div className="flex flex-col w-full h-auto">
                 <TableContainer
-                  className="flex flex-col w-full"
+                  className="flex flex-col w-full max-h-400"
                   component={Paper}>
                   <Table stickyHeader aria-label="customized table">
                     <TableHead>
@@ -472,8 +472,8 @@ const CustomerProfile = (props) => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row p-16 w-full gap-10">
-            <div className="insurance flex flex-col  w-full md:w-1/3 max-h-400">
+          <div className="flex flex-col p-16 w-full gap-10">
+            <div className="insurance flex flex-col w-full">
               <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                   <h2 className="font-700" style={{ color: '#f15a25' }}>
@@ -495,7 +495,7 @@ const CustomerProfile = (props) => {
                 </div>
                 <div className="flex flex-1 overflow-scroll">
                   <div className="flex flex-col w-full">
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} className="max-h-400">
                       <Table
                         className={classes.table}
                         stickyHeader
@@ -538,7 +538,7 @@ const CustomerProfile = (props) => {
                 </div>
               </div>
             </div>
-            <div className="RX flex flex-col mt-6 md:mt-0 md:ml-6 w-full md:w-1/3 max-h-400">
+            <div className="RX flex flex-col mt-6 w-full">
               <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                   <h2 className="font-700" style={{ color: '#f15a25' }}>
@@ -621,7 +621,7 @@ const CustomerProfile = (props) => {
                 {prescriptionType === 'eyeglassesRx' && (
                   <div className="flex flex-1 overflow-scroll">
                     <div className="flex flex-col w-full">
-                      <TableContainer component={Paper}>
+                      <TableContainer component={Paper} className="max-h-400">
                         <Table
                           className={classes.table}
                           stickyHeader
@@ -732,7 +732,7 @@ const CustomerProfile = (props) => {
                 {prescriptionType === 'contactLensRx' && (
                   <div className="flex flex-1 overflow-scroll">
                     <div className="flex flex-col w-full">
-                      <TableContainer component={Paper}>
+                      <TableContainer component={Paper} className="max-h-400">
                         <Table
                           className={classes.table}
                           stickyHeader
@@ -839,7 +839,7 @@ const CustomerProfile = (props) => {
                 {prescriptionType === 'medicationRx' && (
                   <div className="flex flex-1 overflow-scroll">
                     <div className="flex flex-col w-full">
-                      <TableContainer component={Paper}>
+                      <TableContainer component={Paper} className="max-h-400">
                         <Table
                           className={classes.table}
                           stickyHeader
@@ -877,7 +877,7 @@ const CustomerProfile = (props) => {
                 )}
               </div>
             </div>
-            <div className="exam-history flex flex-col mt-6 md:mt-0 md:ml-6 w-full md:w-1/3 max-h-400">
+            <div className="exam-history flex flex-col mt-6 w-full">
               <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                   <h2 className="font-700" style={{ color: '#f15a25' }}>
@@ -899,7 +899,7 @@ const CustomerProfile = (props) => {
                 </div>
                 <div className="flex flex-1 overflow-scroll">
                   <div className="flex flex-col w-full">
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} className="max-h-400">
                       <Table
                         className={classes.table}
                         stickyHeader
