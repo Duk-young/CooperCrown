@@ -17,11 +17,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import EditIcon from '@material-ui/icons/Edit';
-import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
@@ -37,10 +34,8 @@ import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useCallback, useState, useEffect } from 'react';
-import ReceiveOrderPayment from './ReceiveOrderPayment';
 import reducer from '../store/reducers';
 import SearchFrameDialouge from './SearchFrameDialouge';
-import SearchInsuranceDialouge from './SearchInsuranceDialouge';
 import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -189,6 +184,8 @@ function AddOrder(props) {
     setCustomerNote(event.target.value);
   };
 
+  console.log({ selectedFrame });
+
   const fetchLensRate = async () => {
     const lensPrices = (
       await firestore().collection('lensPrice').doc('lensPrice').get()
@@ -293,50 +290,54 @@ function AddOrder(props) {
   };
 
   const handleAddFrameToOrder = () => {
-    fetchLensRate();
-
-    if (selectedFrame?.lensRate) {
-      let count = 1;
-      eyeglasses.map((row) => {
-        if (row?.frameId === selectedFrame?.frameId) {
-          count++;
+    if (selectedFrame?.lensTypeName) {
+      fetchLensRate();
+      if (selectedFrame?.lensRate) {
+        let count = 1;
+        eyeglasses.map((row) => {
+          if (row?.frameId === selectedFrame?.frameId) {
+            count++;
+          }
+          return null;
+        });
+        if (selectedFrame?.frameQuantity < count) {
+          toast.error('Required quantity is not available!', {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            transition: Zoom
+          });
+          return null;
         }
-        return null;
-      });
-      if (selectedFrame?.frameQuantity < count) {
-        toast.error('Required quantity is not available!', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          transition: Zoom
-        });
-        return null;
-      }
-
-      if (
-        selectedFrame !== {} &&
-        selectedFrame?.saleType !== undefined &&
-        selectedFrame?.frameBrand !== undefined
-      ) {
-        setEyeglasses([...eyeglasses, selectedFrame]);
       } else {
-        toast.error('Please Fill Required Fields!', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          transition: Zoom
-        });
+        toast.error(
+          'Lens Rate is not calculated yet. Press Fetch Lens Rate...',
+          {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            transition: Zoom
+          }
+        );
       }
+    }
+
+    if (
+      selectedFrame !== {} &&
+      selectedFrame?.saleType !== undefined &&
+      selectedFrame?.frameBrand !== undefined
+    ) {
+      setEyeglasses([...eyeglasses, selectedFrame]);
     } else {
-      toast.error('Lens Rate is not calculated yet. Press Fetch Lens Rate...', {
+      toast.error('Please Fill Required Fields!', {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
@@ -3712,7 +3713,7 @@ function AddOrder(props) {
                                 disabled={disabledState}
                               />
                             }
-                            label="Ship To Customer Logic"
+                            label="Ship To Customer"
                           />
                           <h1 className="font-700" style={{ color: '#f15a25' }}>
                             EYEGLASSES INFO
@@ -4476,7 +4477,7 @@ function AddOrder(props) {
                                 disabled={disabledState}
                               />
                             }
-                            label="Ship To Customer Logic"
+                            label="Ship To Customer"
                           />
                           <h1 className="font-700" style={{ color: '#f15a25' }}>
                             CONTACT LENS INFO
@@ -4982,7 +4983,7 @@ function AddOrder(props) {
                                 disabled={disabledState}
                               />
                             }
-                            label="Ship To Customer Logic"
+                            label="Ship To Customer"
                           />
                           <h2 className="font-700" style={{ color: '#f15a25' }}>
                             OTHER PRODUCT INFO
