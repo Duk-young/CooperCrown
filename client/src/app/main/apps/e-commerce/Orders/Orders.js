@@ -232,29 +232,33 @@ const CustomHits = connectHits(
                   hover
                   className="cursor-pointer"
                   onClick={(event) => handleClick(event, hit.orderId)}>
-                  <StyledTableCell component="th" scope="row">
-                    {(hit?.shipFrameToCustomerLogic ||
-                      hit?.shipContactLensToCustomerLogic ||
-                      hit?.shipOtherProductToCustomerLogic) && (
-                      <LabelImportantIcon
-                        color="secondary"
-                        style={{ color: 'green' }}
-                      />
-                    )}
-                    {(hit?.rushFrameOrder ||
-                      hit?.rushContactLensOrder ||
-                      hit?.rushOtherProductOrder) && (
-                      <LabelImportantIcon
-                        color="secondary"
-                        style={{ color: 'red' }}
-                      />
-                    )}
-                    {hit?.sendFrameToLab && (
-                      <LabelImportantIcon
-                        color="secondary"
-                        style={{ color: 'blue' }}
-                      />
-                    )}
+                  <StyledTableCell
+                    scope="row"
+                    style={{ maxWidth: 'max-content' }}>
+                    <div className="flex">
+                      {(hit?.shipFrameToCustomerLogic ||
+                        hit?.shipContactLensToCustomerLogic ||
+                        hit?.shipOtherProductToCustomerLogic) && (
+                        <LabelImportantIcon
+                          color="secondary"
+                          style={{ color: 'green' }}
+                        />
+                      )}
+                      {(hit?.rushFrameOrder ||
+                        hit?.rushContactLensOrder ||
+                        hit?.rushOtherProductOrder) && (
+                        <LabelImportantIcon
+                          color="secondary"
+                          style={{ color: 'red' }}
+                        />
+                      )}
+                      {hit?.sendFrameToLab && (
+                        <LabelImportantIcon
+                          color="secondary"
+                          style={{ color: 'blue' }}
+                        />
+                      )}
+                    </div>
                   </StyledTableCell>
                   <StyledTableCell padding="checkbox">
                     <Checkbox
