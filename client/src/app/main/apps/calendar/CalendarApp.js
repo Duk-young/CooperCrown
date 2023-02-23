@@ -16,6 +16,7 @@ import reducer from './store/reducers';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import withReducer from 'app/store/withReducer';
 import { useSelector } from 'react-redux';
+import { toast, Zoom } from 'react-toastify';
 
 moment.locale('ko', {
   week: {
@@ -251,13 +252,26 @@ function CalendarApp(props) {
           dispatch(Actions.openEditEventDialog(event));
         }}
         onSelectSlot={(slotInfo) => {
-          dispatch(
-            Actions.openNewEventDialog({
-              start: slotInfo.start.toLocaleString(),
-              end: slotInfo.end.toLocaleString(),
-              showRoomId: events[0].showRoomId
-            })
-          );
+          if (!events[0]?.showRoomId) {
+            toast.error('Please select showroom first', {
+              position: 'top-center',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              transition: Zoom
+            });
+          }else {
+            dispatch(
+              Actions.openNewEventDialog({
+                start: slotInfo.start,
+                end: slotInfo.end,
+                showRoomId: events[0].showRoomId
+              })
+            );
+          }
         }}
       />
 

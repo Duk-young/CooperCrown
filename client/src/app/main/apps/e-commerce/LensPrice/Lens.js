@@ -1,72 +1,90 @@
-import { useForm } from '@fuse/hooks';
-import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 import FuseAnimate from '@fuse/core/FuseAnimate';
-import AddLensTypeDialog from './AddLensTypeDialog';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
-import { makeStyles } from '@material-ui/core/styles';
 import TableGrid from './TableGrid';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import { firestore } from 'firebase';
-const useStyles = makeStyles({
-  table: {
-    minWidth: 450
-  },
-  button: {
-    backgroundColor: '#f15a25',
-    color: '#fff',
-    '&:hover': {
-      backgroundColor: '#f47b51',
-      color: '#fff'
-    }
-  }
-});
-function Lens() {
-  const [lensTypes, setLensTypes] = useState([]);
-  const { form, handleChange, setForm } = useForm({});
-  const [rows, setRows] = useState([]);
-  const classes = useStyles();
-  const [disabledState, setDisabledState] = useState(false);
-  const [open, setOpen] = useState(false);
+import { useParams } from 'react-router-dom';
+import FuseLoading from '@fuse/core/FuseLoading';
+import { Button } from '@material-ui/core';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
+import EditIcon from '@material-ui/icons/Edit';
+import { useDispatch } from 'react-redux';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+const useStyles = makeStyles((theme) =>
+    createStyles({
+      root: {
+        '& .MuiDataGrid-renderingZone': {
+          '& .MuiDataGrid-row': {
+            '&:nth-child(2n)': {
+              backgroundColor: 'rgba(16, 232, 212, 0.08)'
+            }
+          }
+        }
+      },
+      table: {
+        minWidth: 450
+      },
+      button: {
+        backgroundColor: '#f15a25',
+        color: '#fff',
+        '&:hover': {
+          backgroundColor: '#f47b51',
+          color: '#fff'
+        }
+      }
+    })
+  );
+
+
+function Lens() {
+  const [lensType, setLensType] = useState();
+  const [rows, setRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [disabledState, setDisabledState] = useState(false);
+  const routeParams = useParams();
+  const classes = useStyles();
+  const dispatch = useDispatch();
+
+  
   useEffect(() => {
     const fetchDetails = async () => {
-      const lensPrice = (
-        await firestore().collection('lensPrice').doc('lensPrice').get()
-      ).data();
-      var keys = Object.keys(lensPrice);
-      let lensTypes = [];
-      keys.forEach((row) => {
-        lensTypes.push({ a: row.replace(/"/g, '') });
-      });
-      setLensTypes(lensTypes);
-      // console.log(lensTypes)
-      // console.log(lensTypes.length)
-      // console.log(lensTypes[3]);
-      for (let i = 0; i < lensTypes.length; i++) {
-        console.log(lensTypes[i]);
-      }
+      setIsLoading(true)
+      if (routeParams?.lensName) {
+        setLensType(routeParams.lensName)
+        const lensPrices = (
+          await firestore().collection('lensPrice').doc('lensPrice').get()
+          ).data();
+          setRows(lensPrices[routeParams.lensName]);
+        } else {
+          setRows([]);
+        }
+        setIsLoading(false)
     };
 
     fetchDetails();
   }, []);
 
-  const customFunction = async (value) => {
-    if (value) {
-      const lensPrices = (
-        await firestore().collection('lensPrice').doc('lensPrice').get()
-      ).data();
-      setRows(lensPrices[value]);
-    } else {
-      setRows([]);
-    }
+  const onSubmit = async () => {
+    await firestore()
+      .collection('lensPrice')
+      .doc('lensPrice')
+      .update({ [lensType]: rows });
+
+    dispatch(
+      MessageActions.showMessage({
+        message: 'Prices Updated Successfully'
+      })
+    );
+    setDisabledState(false);
   };
+
+  if (isLoading) return (
+    <FuseLoading/>
+  )
 
   return (
     <FusePageCarded
@@ -81,59 +99,40 @@ function Lens() {
                   </Typography>
                 </FuseAnimate>
               </div>
-              {/* <div className="flex flex-1 justify-around">
-                <div className="flex flex-col px-10 w-1/2 ">
-                  <CustomAutocomplete
-                    list={lensTypes}
-                    form={form}
-                    setForm={setForm}
-                    handleChange={handleChange}
-                    id="a"
-                    freeSolo={false}
-                    label="Select Lens Type"
-                    customFunction={customFunction}
-                  />
-                </div>
-              </div> */}
+              <div className="flex flex-row p-6 justify-end w-full">
+       {!disabledState && (
+         <Button
+         onClick={() => {
+           setDisabledState(true);
+         }}
+         className={classes.button}
+         variant="contained"
+         color="secondary"
+         disabled={rows?.length ? disabledState : true}
+         
+         aria-label="add">
+         <EditIcon fontSize="small" />
+         Edit Prices
+       </Button>
+       )}
+        {disabledState && (
+          <Button
+            onClick={onSubmit}
+            className={classes.button}
+                  variant="contained"
+                  color="secondary">
+            Save Changes!
+          </Button>
+        )}
+       
+      </div>
             </div>
           </div>
         </div>
       }
       content={
         <div className="p-16 sm:p-24 ">
-          <div className='justify-right'>
-            <AddLensTypeDialog open={open} handleClose={handleClose} />
-
-            {!disabledState && (
-              <> <Button
-
-                className={classes.button}
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                  setOpen(true);
-                }}
-                aria-label="add">
-
-                Add New Lens Type
-              </Button></>
-
-            )}
-          </div>
-          <CustomAutocomplete
-            list={lensTypes}
-            form={form}
-            size="small"
-            setForm={setForm}
-            handleChange={handleChange}
-            id="a"
-            freeSolo={false}
-            label="Select Lens Type"
-            customFunction={customFunction}
-          />
-
-          <br></br>
-          <TableGrid form={form} rows={rows} setRows={setRows} />
+          <TableGrid disabledState={disabledState} rows={rows} setRows={setRows} />
         </div>
       }
       innerScroll

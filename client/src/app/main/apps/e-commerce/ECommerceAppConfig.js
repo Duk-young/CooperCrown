@@ -47,7 +47,7 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./LensPrice/LensPrice'))
     },
     {
-      path: '/apps/e-commerce/lensPrice/new',
+      path: '/apps/e-commerce/viewlens/:lensName',
       component: React.lazy(() => import('./LensPrice/Lens'))
     },
     {
