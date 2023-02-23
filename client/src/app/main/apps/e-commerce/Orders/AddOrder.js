@@ -184,8 +184,6 @@ function AddOrder(props) {
     setCustomerNote(event.target.value);
   };
 
-  console.log({ selectedFrame });
-
   const fetchLensRate = async () => {
     const lensPrices = (
       await firestore().collection('lensPrice').doc('lensPrice').get()
@@ -332,7 +330,7 @@ function AddOrder(props) {
 
     if (
       selectedFrame !== {} &&
-      selectedFrame?.saleType !== undefined &&
+      // selectedFrame?.saleType !== undefined &&
       selectedFrame?.frameBrand !== undefined
     ) {
       setEyeglasses([...eyeglasses, selectedFrame]);
@@ -989,7 +987,7 @@ function AddOrder(props) {
               </IconButton>
               <Typography className="text-16 sm:text-20 truncate text-center">
                 {routeParams.orderId
-                  ? `ORDER No. ${routeParams.orderId}`
+                  ? `ORDER No. ${form?.customOrderId}`
                   : 'NEW ORDER'}
               </Typography>
             </div>
@@ -999,8 +997,12 @@ function AddOrder(props) {
                   id="date"
                   label="Enter Date"
                   type="date"
-                  defaultValue={currentDate} // Update with info from customer
-                  value={currentDate}
+                  defaultValue={
+                    moment(form?.orderDate).format('YYYY-MM-DD') ?? currentDate
+                  } // Update with info from customer
+                  value={
+                    moment(form?.orderDate).format('YYYY-MM-DD') ?? currentDate
+                  }
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
@@ -1012,8 +1014,14 @@ function AddOrder(props) {
                     id="date"
                     label="Last Edited"
                     type="date"
-                    defaultValue={currentDate} // Update with info from customer
-                    value={currentDate}
+                    defaultValue={
+                      moment(form?.orderDate).format('YYYY-MM-DD') ??
+                      currentDate
+                    } // Update with info from customer
+                    value={
+                      moment(form?.orderDate).format('YYYY-MM-DD') ??
+                      currentDate
+                    }
                     variant="outlined"
                     InputLabelProps={{
                       shrink: true,
