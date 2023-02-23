@@ -5,7 +5,6 @@ import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
 import Dialog from '@material-ui/core/Dialog';
-import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,7 +25,7 @@ const useStyles = makeStyles({
     }
   }
 });
-export default function ReceiveInsurancePayment(props) {
+export default function AddLensTypeDialog(props) {
   const { open, handleClose } = props;
   const classes = useStyles();
   const { form, handleChange } = useForm(null);
@@ -218,6 +217,6 @@ export default function ReceiveInsurancePayment(props) {
   );
 }
 
-ReceiveInsurancePayment.propTypes = {
+AddLensTypeDialog.propTypes = {
   open: PropTypes.bool.isRequired
 };

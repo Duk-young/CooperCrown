@@ -1,12 +1,7 @@
 import { DataGrid } from '@material-ui/data-grid';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import EditIcon from '@material-ui/icons/Edit';
-import React, { useState } from 'react';
-import { firestore } from 'firebase';
-import { Button } from '@material-ui/core';
-import Fab from '@material-ui/core/Fab';
+import React from 'react';
+
 const useStyles = makeStyles((theme) =>
     createStyles({
       root: {
@@ -31,27 +26,10 @@ const useStyles = makeStyles((theme) =>
       }
     })
   );
+
 export default function TableGrid(props) {
-  const { form, rows, setRows } = props;
-  const [disabledState, setDisabledState] = useState(false);
+  const { disabledState, rows, setRows } = props;
   const classes = useStyles();
-
-  const dispatch = useDispatch();
-
-
-  const onSubmit = async () => {
-    await firestore()
-      .collection('lensPrice')
-      .doc('lensPrice')
-      .update({ [form?.a]: rows });
-
-    dispatch(
-      MessageActions.showMessage({
-        message: 'Prices Updated Successfully'
-      })
-    );
-    setDisabledState(false);
-  };
 
   const handleCommit = (e) => {
     const array = rows.map((row) => {
@@ -415,31 +393,7 @@ export default function TableGrid(props) {
         disableColumnMenu={true}
         hideFooterPagination={true}
       />
-      <div className="flex flex-row p-6 justify-around w-full">
-        <Button
-          onClick={() => {
-            setDisabledState(true);
-          }}
-          className={classes.button}
-          variant="contained"
-          color="secondary"
-          disabled={rows?.length ? disabledState : true}
-          
-          aria-label="add">
-          <EditIcon fontSize="small" />
-          Edit Prices
-        </Button>
-        {disabledState && (
-          <Button
-            onClick={onSubmit}
-            className={classes.button}
-                  variant="contained"
-                  color="secondary">
-            Save Changes!
-          </Button>
-        )}
-       
-      </div>
+      
     </div>
   );
 }

@@ -50,7 +50,7 @@ const searchClient = algoliasearch(
   '42176bd827d90462ba9ccb9578eb43b2'
 );
 
-const CustomHits = connectHits(({ hits, form }) => {
+const CustomHits = connectHits(({ hits, form, closeComposeDialog }) => {
   const history = useHistory();
   return (
     <Table aria-label="customized table">
@@ -76,6 +76,7 @@ const CustomHits = connectHits(({ hits, form }) => {
               <Button
                 className="whitespace-no-wrap normal-case ml-24"
                 onClick={() => {
+                  closeComposeDialog();
                   history.push(
                     `/apps/e-commerce/customers/addAppointment/${hit?.customerId}`,
                     {
@@ -123,6 +124,7 @@ export default function NewAppointmentDialog() {
   const [error, setError] = useState();
   const [appointments, setAppointments] = useState([]);
   const [showRooms, setShowRooms] = useState([]);
+  const [disabledState, setDisabledState] = useState(false);
   const dispatch = useDispatch();
 
   const newAppointmentDialog = useSelector(
@@ -174,6 +176,7 @@ export default function NewAppointmentDialog() {
 
   const onSubmit = async () => {
     try {
+      setDisabledState(true)
       const dbConfig = (
         await firestore().collection('dbConfig').doc('dbConfig').get()
       ).data();
@@ -228,6 +231,7 @@ export default function NewAppointmentDialog() {
           message: 'Appointment Saved Successfully!'
         })
       );
+      setDisabledState(false)
     } catch (error) {
       console.log(error);
     }
@@ -486,6 +490,7 @@ export default function NewAppointmentDialog() {
                   setError('Name or showroom cannot be Empty!');
                 }
               }}
+              disabled={disabledState}
               variant="extended"
               color="primary"
               aria-label="add">
@@ -530,7 +535,7 @@ export default function NewAppointmentDialog() {
                   />
                 </div>
               </div>
-              <CustomHits form={form} />
+              <CustomHits form={form} closeComposeDialog={closeComposeDialog} />
             </InstantSearch>
           </TableContainer>
         </div>
