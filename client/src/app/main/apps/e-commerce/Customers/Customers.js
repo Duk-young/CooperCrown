@@ -35,6 +35,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
+import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -168,6 +169,7 @@ function Customers(props) {
                   />
                   <Typography
                     className="hidden sm:flex mx-0 sm:mx-12 uppercase"
+                    style={{ fontSize: '3rem', fontWeight: 600 }}
                     variant="h6">
                     Customer
                   </Typography>
@@ -175,7 +177,55 @@ function Customers(props) {
                 <div className="flex pt-32 pb-16 pl-8 items-center">
                   <div className="flex flex-col w-1/3 mt-0 px-12">
                     <div className="flex flex-row justify-around gap-8">
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <div className="date-picker w-full flex gap-10">
+                        <TextField
+                          id="date"
+                          label="Start Date"
+                          type="date"
+                          defaultValue={form?.start} // Update with info from customer
+                          value={form?.start}
+                          variant="outlined"
+                          style={{ border: 'none' }}
+                          InputLabelProps={{
+                            shrink: true,
+                            style: { color: 'white' }
+                          }}
+                          InputProps={{
+                            inputProps: {
+                              style: { color: 'white' }
+                            }
+                          }}
+                          onChange={(date) => {
+                            handleChange({
+                              target: { name: 'start', value: date }
+                            });
+                          }}
+                        />
+                        <TextField
+                          id="date"
+                          label="End Date"
+                          type="date"
+                          defaultValue={form?.end} // Update with info from customer
+                          value={form?.end}
+                          variant="outlined"
+                          style={{ border: 'none' }}
+                          InputLabelProps={{
+                            shrink: true,
+                            style: { color: 'white' }
+                          }}
+                          InputProps={{
+                            inputProps: {
+                              style: { color: 'white' }
+                            }
+                          }}
+                          onChange={(date) => {
+                            handleChange({
+                              target: { name: 'end', value: date }
+                            });
+                          }}
+                        />
+                      </div>
+                      {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Grid container justifyContent="start">
                           <KeyboardDatePicker
                             label="Start Date"
@@ -230,13 +280,13 @@ function Customers(props) {
                             }}
                           />
                         </Grid>
-                      </MuiPickersUtilsProvider>
+                      </MuiPickersUtilsProvider> */}
                     </div>
                   </div>
                   <div className="flex flex-col w-1/3 border-1 headerSearch">
                     <SearchBox
                       translations={{
-                        placeholder: 'Searh for customers...'
+                        placeholder: 'Search for customers...'
                       }}
                       submit={
                         <svg
