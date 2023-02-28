@@ -39,6 +39,7 @@ const StyledTableCell = withStyles((theme) => ({
   body: {
     fontSize: 14,
     padding: 10,
+    minWidth: 'min-content',
     textAlign: 'center'
   }
 }))(TableCell);
@@ -502,10 +503,10 @@ const CustomerProfile = (props) => {
                         aria-label="customized table">
                         <TableHead>
                           <TableRow style={{ height: 10 }}>
-                            <StyledTableCell>Date</StyledTableCell>
-                            <StyledTableCell>Company</StyledTableCell>
-                            <StyledTableCell>Primary Holder</StyledTableCell>
-                            <StyledTableCell>Policy No</StyledTableCell>
+                            <StyledTableCell>DATE</StyledTableCell>
+                            <StyledTableCell>COMPANY</StyledTableCell>
+                            <StyledTableCell>PRIMARY HOLDER</StyledTableCell>
+                            <StyledTableCell>POLICY No</StyledTableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>

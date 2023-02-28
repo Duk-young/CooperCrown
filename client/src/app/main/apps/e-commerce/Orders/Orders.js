@@ -202,16 +202,18 @@ const CustomHits = connectHits(
         <TableHead>
           <TableRow>
             <StyledTableCell> </StyledTableCell>
-            <StyledTableCell padding="checkbox">
-              <Checkbox
-                indeterminate={
-                  selected.length > 0 && selected.length < data.length
-                }
-                checked={data.length > 0 && selected.length === data.length}
-                onChange={handleSelectAllClick}
-                style={{ color: '#fff' }}
-              />
-            </StyledTableCell>
+            {value === 0 && (
+              <StyledTableCell padding="checkbox">
+                <Checkbox
+                  indeterminate={
+                    selected.length > 0 && selected.length < data.length
+                  }
+                  checked={data.length > 0 && selected.length === data.length}
+                  onChange={handleSelectAllClick}
+                  style={{ color: '#fff' }}
+                />
+              </StyledTableCell>
+            )}
             <StyledTableCell>ORDER No.</StyledTableCell>
             <StyledTableCell>DATE</StyledTableCell>
             <StyledTableCell>FIRST NAME</StyledTableCell>
@@ -404,10 +406,9 @@ function Orders(props) {
               <div className={clsx(classes.tabHeader)}>
                 <div className="p-4 flex justify-center">
                   <Typography
-                    className="hidden sm:flex mx-0 sm:mx-12 text-center cursor-pointer"
+                    className="hidden sm:flex mx-0 sm:mx-12 text-center uppercase"
                     variant="h6"
-                    style={{ fontSize: '3rem', fontWeight: 600 }}
-                    onClick={() => setSelectAllData(true)}>
+                    style={{ fontSize: '3rem', fontWeight: 600 }}>
                     ORDERS
                   </Typography>
                 </div>
