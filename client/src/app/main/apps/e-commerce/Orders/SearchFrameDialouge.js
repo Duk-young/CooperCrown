@@ -6,8 +6,6 @@ import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
 import { connectHits } from 'react-instantsearch-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import { toast, Zoom } from 'react-toastify';
 import Table from '@material-ui/core/Table';
@@ -103,7 +101,6 @@ const CustomHits = connectHits(({ hits, form, setForm, handleClose }) => {
 
 const CustomProductHits = connectHits(
   ({ hits, form, setForm, handleClose }) => {
-    console.log({ hits });
     return (
       <Table aria-label="customized table">
         <TableHead>

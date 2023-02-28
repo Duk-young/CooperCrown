@@ -162,7 +162,11 @@ export default function AddLensTypeDialog(props) {
       await firestore()
         .collection('lensPrice')
         .doc('lensPrice')
-        .update({ [form?.lensType]: newTable });
+        .update({ [form?.lensType]: {
+          prismPrice: form?.prismPrice,
+          outOfRangePrice: form?.outOfRangePrice,
+          rows: newTable
+        } });
 
       handleClose();
 
@@ -199,6 +203,28 @@ export default function AddLensTypeDialog(props) {
           type="text"
           name="lensType"
           value={form?.lensType}
+          onChange={handleChange}
+          variant="outlined"
+          fullWidth
+        />
+        <TextField
+          className="mt-8 mb-16"
+          id="prismPrice"
+          label="Prism Price"
+          type="number"
+          name="prismPrice"
+          value={form?.prismPrice}
+          onChange={handleChange}
+          variant="outlined"
+          fullWidth
+        />
+        <TextField
+          className="mt-8 mb-16"
+          id="outOfRangePrice"
+          label="Out Of Range Price"
+          type="text"
+          name="outOfRangePrice"
+          value={form?.outOfRangePrice}
           onChange={handleChange}
           variant="outlined"
           fullWidth

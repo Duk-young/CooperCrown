@@ -83,7 +83,6 @@ function LensPrice(props) {
         lensTypes.push(row.replace(/"/g, ''));
       });
       setLensTypes(lensTypes);
-      console.log(lensPrice)
     };
 
 

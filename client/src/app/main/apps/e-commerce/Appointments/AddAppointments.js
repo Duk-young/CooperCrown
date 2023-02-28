@@ -140,7 +140,7 @@ const AddAppointments = (props) => {
         })
       );
 
-      props.history.push('/apps/e-commerce/customers');
+      props.history.push('/apps/calendar');
     } catch (error) {
       console.log(error);
     }
@@ -285,7 +285,7 @@ const AddAppointments = (props) => {
         variant="contained"
         color="secondary"
         onClick={() => {
-          if (form?.showRoomId) {
+          if (form?.showRoomId && form?.duration) {
             let start = firestore.Timestamp.fromDate(form?.start);
             let end = firestore.Timestamp.fromDate(
               moment(form?.start).add(form?.duration, 'm').toDate()
@@ -319,7 +319,7 @@ const AddAppointments = (props) => {
               onSubmit();
             }
           } else {
-            toast.error('Showroom cannot be empty!', {
+            toast.error('Showroom and duration are mandatory fields', {
               position: 'top-center',
               autoClose: 5000,
               hideProgressBar: false,

@@ -73,7 +73,7 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 function DoctorsTableHead(props) {
-  const classes = useStyles(props);
+
   const [selectedDoctorsMenu, setselectedDoctorsMenu] = useState(null);
 
   const createSortHandler = (property) => (event) => {
@@ -97,26 +97,8 @@ function DoctorsTableHead(props) {
             <StyledTableCell
               key={row.id}
               align={row.align}
-              padding={row.disablePadding ? 'none' : 'default'}
-              sortDirection={
-                props.order.id === row.id ? props.order.direction : false
-              }>
+              padding={row.disablePadding ? 'none' : 'default'}>
               {row.label}
-              {/* {row.sort && (
-                <Tooltip
-                  title="Sort"
-                  placement={
-                    row.align === 'right' ? 'bottom-end' : 'bottom-start'
-                  }
-                  enterDelay={300}>
-                  <TableSortLabel
-                    active={props.order.id === row.id}
-                    direction={props.order.direction}
-                    onClick={createSortHandler(row.id)}>
-                    {row.label}
-                  </TableSortLabel>
-                </Tooltip>
-              )} */}
             </StyledTableCell>
           );
         }, this)}

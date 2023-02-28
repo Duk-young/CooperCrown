@@ -7,7 +7,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useSelector } from 'react-redux';
 
-export default function ShowroomSelect({ setEvents }) {
+export default function ShowroomSelect({ setEvents, setCurrentShowroom }) {
   const appointments = useSelector(
     ({ calendarApp }) => calendarApp.events.entities
   );
@@ -33,7 +33,7 @@ export default function ShowroomSelect({ setEvents }) {
   ) : (
     <div className="flex flex-col w-1/2 pl-2">
       <FormControl>
-        <FormHelperText>Select Showroom from the list</FormHelperText>
+        <FormHelperText>Select Showroom</FormHelperText>
         <Select
           labelId="demo-simple-select-autowidth-label"
           onChange={(e) => {
@@ -44,6 +44,7 @@ export default function ShowroomSelect({ setEvents }) {
             );
 
             setEvents(filteredEvents);
+            setCurrentShowroom(e?.target?.value)
           }}
           autoWidth>
           {showRooms.map((row) => (

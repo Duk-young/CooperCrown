@@ -462,7 +462,7 @@ export default function NewAppointmentDialog() {
           <div className="flex flex-col p-10 w-full ">
             <Fab
               onClick={() => {
-                if (form?.firstName && form?.lastName && form?.showRoomId) {
+                if (form?.firstName && form?.lastName && form?.showRoomId && form?.duration) {
                   let start = firestore.Timestamp.fromDate(form?.start);
                   let end = firestore.Timestamp.fromDate(
                     moment(form?.start).add(form?.duration, 'm').toDate()
@@ -487,7 +487,7 @@ export default function NewAppointmentDialog() {
                     onSubmit();
                   }
                 } else {
-                  setError('Name or showroom cannot be Empty!');
+                  setError('Name, showroom or duration cannot be Empty!');
                 }
               }}
               disabled={disabledState}
