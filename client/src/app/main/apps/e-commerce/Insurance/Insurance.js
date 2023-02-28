@@ -164,7 +164,7 @@ const StyledTableCell = withStyles((theme) => ({
   body: {
     fontSize: 14,
     textAlign: 'center',
-    padding: 0
+    padding: 10,
   }
 }))(TableCell);
 
@@ -213,11 +213,10 @@ function Insurance(props) {
             indexName="insuranceClaims">
             <div className={clsx(classes.header)}>
               <div className="flex flex-col flex-1">
-                <div className="flex flex-row mt-12">
+                <div className="flex flex-row mt-12 pl-8">
                   <FuseAnimate animation="transition.expandIn" delay={300}>
-                    <PolicyOutlinedIcon className="mt-2 mr-4" />
-                  </FuseAnimate>
                   <h1>INSURANCE</h1>
+                  </FuseAnimate>
                 </div>
               </div>
               <div className="flex flex-col flex-1 border-1">

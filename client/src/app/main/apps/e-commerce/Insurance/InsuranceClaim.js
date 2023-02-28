@@ -355,11 +355,11 @@ const InsuranceClaim = (props) => {
                 <Table stickyHeader aria-label="customized table">
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell>PAYMENT DATE</StyledTableCell>
-                      <StyledTableCell>PAYMENT METHOD</StyledTableCell>
-                      <StyledTableCell>AMOUNT</StyledTableCell>
+                      <StyledTableCell className='w-96 lg:w-192 '>PAYMENT DATE</StyledTableCell>
+                      <StyledTableCell className='w-96 lg:w-192 '>PAYMENT METHOD</StyledTableCell>
+                      <StyledTableCell className='w-96 lg:w-192 '>AMOUNT</StyledTableCell>
                       <StyledTableCell>MEMO</StyledTableCell>
-                      <StyledTableCell>OPTIONS</StyledTableCell>
+                      <StyledTableCell className='w-96 lg:w-192 '>OPTIONS</StyledTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -415,7 +415,7 @@ const InsuranceClaim = (props) => {
           </div>
           <div className="my-6 border-1 border-black border-solid rounded-6 w-full">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-              <h1 className="font-700" style={{ color: '#f15a25' }}>
+              <h1 className="font-700" style={{ color: '#f15a25' }} onClick={()=> props.history.push(`/apps/e-commerce/orders/vieworder/${form?.orderId}`)}>
                 ORDER INFO
               </h1>
             </div>
