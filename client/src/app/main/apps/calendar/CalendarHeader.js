@@ -134,7 +134,7 @@ class CalendarHeader extends Toolbar {
   }
 
   render() {
-    const { classes, mainThemeDark, label, date, appointments, setEvents } =
+    const { classes, mainThemeDark, label, date, appointments, setEvents, setCurrentShowroom } =
       this.props;
 
     return (
@@ -159,6 +159,7 @@ class CalendarHeader extends Toolbar {
                 <ShowroomSelect
                   appointments={appointments}
                   setEvents={setEvents}
+                  setCurrentShowroom={setCurrentShowroom}
                 />
               </div>
               <div className="flex items-center">

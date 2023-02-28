@@ -19,42 +19,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import * as Actions from '../store/actions';
 import reducer from '../store/reducers';
+import { states } from 'app/main/apps/e-commerce/Emails/helper.js';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 
-// const useStyles = makeStyles((theme) => ({
-//   productImageFeaturedStar: {
-//     position: 'absolute',
-//     top: 0,
-//     right: 0,
-//     color: orange[400],
-//     opacity: 0
-//   },
-//   productImageUpload: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut
-//   },
-//   productImageItem: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut,
-//     '&:hover': {
-//       '& $productImageFeaturedStar': {
-//         opacity: 0.8
-//       }
-//     },
-//     '&.featured': {
-//       pointerEvents: 'none',
-//       boxShadow: theme.shadows[3],
-//       '& $productImageFeaturedStar': {
-//         opacity: 1
-//       },
-//       '&:hover $productImageFeaturedStar': {
-//         opacity: 1
-//       }
-//     }
-//   }
-// }));
+
 const useStyles = makeStyles({
   table: {
     minWidth: 450
@@ -78,8 +47,14 @@ function NewShowRoom(props) {
   const [isLoading, setisLoading] = useState(false);
   const [errors, setErrors] = useState({})
   const { form, handleChange, setForm } = useForm(null);
+  const [state, setState] = useState(form?.state);
 
   const routeParams = useParams();
+
+  const defaultStates = {
+    options: states,
+    getOptionLabel: (option) => option.name || option
+  };
 
   useDeepCompareEffect(() => {
     const updateProductState = async () => {
@@ -106,6 +81,12 @@ function NewShowRoom(props) {
       setForm(product.data);
     }
   }, [form, product.data, setForm]);
+
+  useEffect(() => {
+      if(routeParams.showRoomtId === 'new') {
+      setForm(null)
+    }
+  }, []);
 
   function handleChangeTab(event, value) {
     setTabValue(value);
@@ -352,21 +333,24 @@ function NewShowRoom(props) {
                         helperText={errors.city}
                         fullWidth
                       />
-                      <TextField
-                        className="mt-8 "
-                        required
-                        label="State"
-                        id="State"
-                        type="text"
-                        name="State"
-                        value={form.State}
-                        onChange={handleChange}
-                        variant="outlined"
-                        error={errors.state}
-                        helperText={errors.state}
-                        fullWidth
-                      />
-                      {/* <div className="flex flex-row justify-between w-full"> */}
+                      <Autocomplete
+                    {...defaultStates}
+                    id="stateId"
+                    value={form?.State}
+                    fullWidth
+                    getOptionSelected={(option, value) => option.name === value}
+                    inputValue={state}
+                    onInputChange={(e, value) => setState(value)}
+                    name="state"
+                    onChange={(_, value) =>
+                      handleChange({
+                        target: { value: value?.name, name: 'State' }
+                      })
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} label="State" margin="normal" variant='outlined'/>
+                    )}
+                  />
                       <TextField
                         className="mt-8  pr-4"
                         required

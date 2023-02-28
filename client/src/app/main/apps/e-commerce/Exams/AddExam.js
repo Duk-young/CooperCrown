@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import DateFnsUtils from '@date-io/date-fns';
 import FormControl from '@material-ui/core/FormControl';
@@ -16,11 +15,9 @@ import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useEffect, useState } from 'react';
-import SaveIcon from '@material-ui/icons/Save';
+
 import Sketch from './Sketch';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
+
 import TextField from '@material-ui/core/TextField';
 import {
   MuiPickersUtilsProvider,
@@ -394,7 +391,7 @@ const AddExam = (props) => {
         <div className="ml-10 w-1/2 h-600  ">
           <div className="w-full">
             <div className="flex flex-col h-600 px-16">
-              <div className="flex flex-col h-600 py-8 py-4 border-1 border-black border-solid rounded-6">
+              <div className="flex flex-col h-600 py-8 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                   <h1 className="font-700" style={{ color: '#f15a25' }}>
                     Note

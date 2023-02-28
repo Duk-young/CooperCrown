@@ -156,19 +156,19 @@ const useStyles = makeStyles((theme) => ({
       position: 'static'
     },
     '& .rbc-addons-dnd .rbc-addons-dnd-resizable-month-event .rbc-addons-dnd-resize-month-event-anchor:first-child':
-      {
-        left: 0,
-        top: 0,
-        bottom: 0,
-        height: 'auto'
-      },
+    {
+      left: 0,
+      top: 0,
+      bottom: 0,
+      height: 'auto'
+    },
     '& .rbc-addons-dnd .rbc-addons-dnd-resizable-month-event .rbc-addons-dnd-resize-month-event-anchor:last-child':
-      {
-        right: 0,
-        top: 0,
-        bottom: 0,
-        height: 'auto'
-      }
+    {
+      right: 0,
+      top: 0,
+      bottom: 0,
+      height: 'auto'
+    }
   },
   addButton: {
     position: 'absolute',
@@ -185,6 +185,7 @@ function CalendarApp(props) {
   );
 
   const [events, setEvents] = useState([]);
+  const [currentShowroom, setCurrentShowroom] = useState(null);
   const classes = useStyles(props);
   const headerEl = useRef(null);
 
@@ -240,9 +241,9 @@ function CalendarApp(props) {
           toolbar: (_props) => {
             return headerEl.current
               ? ReactDOM.createPortal(
-                  <CalendarHeader {..._props} setEvents={setEvents} />,
-                  headerEl.current
-                )
+                <CalendarHeader {..._props} setEvents={setEvents} setCurrentShowroom={setCurrentShowroom} />,
+                headerEl.current
+              )
               : null;
           },
           event: Event
@@ -252,7 +253,7 @@ function CalendarApp(props) {
           dispatch(Actions.openEditEventDialog(event));
         }}
         onSelectSlot={(slotInfo) => {
-          if (!events[0]?.showRoomId) {
+          if (!currentShowroom) {
             toast.error('Please select showroom first', {
               position: 'top-center',
               autoClose: 5000,
@@ -263,12 +264,12 @@ function CalendarApp(props) {
               progress: undefined,
               transition: Zoom
             });
-          }else {
+          } else {
             dispatch(
               Actions.openNewEventDialog({
                 start: slotInfo.start,
                 end: slotInfo.end,
-                showRoomId: events[0].showRoomId
+                showRoomId: currentShowroom
               })
             );
           }

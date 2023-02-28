@@ -213,8 +213,6 @@ function AccountSettings(props) {
                   label="Username"
                   type="text"
                   value={form.username}
-                  multiline
-                  rows={5}
                   variant="outlined"
                   fullWidth
                 />

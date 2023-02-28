@@ -29,7 +29,7 @@ export const getDoctor = (params) => async (dispatch) => {
 export const saveDoctor = (data) => async (dispatch) => {
   delete data.uid;
   try {
-        let today = new Date().toLocaleDateString()
+    let today = firestore.Timestamp.fromDate(new Date())
     const dbConfig = (
       await firebaseService.firestoreDb
         .collection('dbConfig')
@@ -37,33 +37,33 @@ export const saveDoctor = (data) => async (dispatch) => {
         .get()
     ).data();
     const queryloc1 = await firestore()
-    .collection('showRooms')
-    .where('showRoomId', '==', Number(data.showRoomId1))
-    .limit(1)
-    .get();
+      .collection('showRooms')
+      .where('showRoomId', '==', Number(data.showRoomId1))
+      .limit(1)
+      .get();
     let result1 = queryloc1.docs[0].data();
 
     const queryloc2 = await firestore()
-    .collection('showRooms')
-    .where('showRoomId', '==', Number(data.showRoomId2))
-    .limit(1)
-    .get();
+      .collection('showRooms')
+      .where('showRoomId', '==', Number(data.showRoomId2))
+      .limit(1)
+      .get();
     let result2 = queryloc2.docs[0].data();
 
     const queryloc3 = await firestore()
-    .collection('showRooms')
-    .where('showRoomId', '==', Number(data.showRoomId3))
-    .limit(1)
-    .get();
+      .collection('showRooms')
+      .where('showRoomId', '==', Number(data.showRoomId3))
+      .limit(1)
+      .get();
     let result3 = queryloc3.docs[0].data();
 
-    console.log(result1.locationName)
-    console.log(result2.locationName)
-    console.log(result3.locationName)
     await firebaseService.firestoreDb
       .collection('doctors')
-      .add({ ...data, date:today,location1:result1.locationName,location3:result3.locationName,location2:result2.locationName,   dob:  moment(data?.dob).format('MM/DD/YYYY'),
-      dobString: firestore.Timestamp.fromDate(data?.dob), doctorId: dbConfig?.doctorId + 1 });
+      .add({
+        ...data, date: today, location1: result1.locationName, location3: result3.locationName, 
+        location2: result2.locationName, dob: firestore.Timestamp.fromDate(data?.dob),
+        dobString: moment(data?.dob).format('MM/DD/YYYY'), doctorId: dbConfig?.doctorId + 1
+      });
     await firebaseService.firestoreDb
       .collection('dbCo nfig')
       .doc('dbConfig')
@@ -79,13 +79,15 @@ export const saveDoctor = (data) => async (dispatch) => {
 };
 export const updateDoctor = (data) => async (dispatch) => {
   const uuid = data.id;
-  delete data.id;
+  let updatedData = data
+  updatedData.dob = data?.dob && firestore.Timestamp.fromDate(data?.dob)
+
   try {
     await firebaseService.firestoreDb
       .collection('doctors')
       .doc(uuid)
-      .update(data);
-      dispatch(Actions.getDoctors());
+      .update(updatedData);
+    dispatch(Actions.getDoctors());
     dispatch(showMessage({ message: 'Doctor Update Successfully' }));
   } catch (error) {
     console.log(error);
@@ -93,32 +95,32 @@ export const updateDoctor = (data) => async (dispatch) => {
 };
 
 export function newDoctor() {
-  
+
   const data = {
     uid: FuseUtils.generateGUID(),
     date: '',
     doctorname: '',
     location1: '',
     location2: '',
-    location3: '', 
-    dob:'',
-    dobstring:'',
-    fname:'',
-    lname:'',
-    Gender:'',
-    phone1:'',
-    phone2:'',
-    address:'',
-    city:'',
-    State:'',
-    zipcode:'',
-    doctoremail:'',
-    other:'',
-    
+    location3: '',
+    dob: '',
+    dobstring: '',
+    fname: '',
+    lname: '',
+    Gender: '',
+    phone1: '',
+    phone2: '',
+    address: '',
+    city: '',
+    State: '',
+    zipcode: '',
+    doctoremail: '',
+    other: '',
+
   };
   return {
     type: GET_DOCTOR,
     payload: data
   };
-  
+
 }

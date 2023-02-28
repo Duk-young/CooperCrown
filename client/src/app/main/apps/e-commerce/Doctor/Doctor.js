@@ -1,11 +1,13 @@
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import { useForm, useDeepCompareEffect } from '@fuse/hooks';
+import { useForm } from '@fuse/hooks';
 import Button from '@material-ui/core/Button';
 import ConfirmDoctorDelete from './ConfirmDoctorDelete';
+import { firestore } from 'firebase';
 import Icon from '@material-ui/core/Icon';
 import DateFnsUtils from '@date-io/date-fns';
+import { toast, Zoom } from 'react-toastify';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
@@ -20,11 +22,9 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { firestore } from 'firebase';
-
 import * as Actions from '../store/actions';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -46,7 +46,6 @@ const useStyles = makeStyles({
 function Doctor(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const product = useSelector(({ eCommerceApp }) => eCommerceApp.doctor);
   const theme = useTheme();
   const [showRooms, setShowRooms] = useState([]);
 
@@ -59,39 +58,28 @@ function Doctor(props) {
 
   const routeParams = useParams();
 
-  useDeepCompareEffect(() => {
-    const updateProductState = async () => {
-      setisLoading(false);
-      const { doctorId } = routeParams;
-      if (doctorId === 'new') {
-        dispatch(Actions.newDoctor());
-        setisLoading(true);
-      } else {
-        await dispatch(await Actions.getDoctor(doctorId));
-        setisLoading(true);
-      }
-    };
-
-    updateProductState();
-  }, [dispatch, routeParams]);
+ 
 
   const handleClose = () => {
     setOpen(false);
   };
   useEffect(() => {
-    if (
-      (product.data && !form) ||
-      (product.data && form && product.data.id !== form.id)
-    ) {
-      setForm(product.data);
+    setisLoading(true);
+    const fetchDetails = async () => {
+      if (routeParams?.doctorId === 'new') {
+        setForm(null)
+      } else if (routeParams?.doctorId) {
+        setForm(null)
+        const query = await firestore()
+          .collection('doctors')
+          .doc(routeParams?.doctorId)
+          .get();
+        let doctor = query.data();
+        doctor.dob = doctor?.dob && doctor.dob.toDate();
+        doctor.id = query?.id
+        setForm(doctor)
+      }
     }
-
-    // const fetchCustomer = async () => {
-    //   const query = await firestore()
-    //     .collection('doctors')
-    //     .where('doctorId', '==', Number(id))
-    //     .limit(1)
-    //     .get(); }
 
     const fetchlocation = async () => {
       let showroomdata = [];
@@ -113,22 +101,10 @@ function Doctor(props) {
 
       setisLoading(false);
     };
+    fetchDetails();
     fetchlocation();
-  }, [form, product.data, setForm]);
+  }, []);
 
-  function handleChangeTab(event, value) {
-    setTabValue(value);
-  }
-
-  function canBeSubmitted() {
-    return (
-      form.docname.length > 0 &&
-      form.locationAddress.length > 0 &&
-      form.State.length > 0 &&
-      form.City.length > 0 &&
-      form.zipCode.length > 0
-    );
-  }
 
   const isFormValid = () => {
     const errs = {};
@@ -173,20 +149,34 @@ function Doctor(props) {
       errs.doctoremail = 'Please enter email address'
     }
 
+    if (form?.showRoomId1 === form?.showRoomId2 || form?.showRoomId1 === form?.showRoomId3 || form?.showRoomId2 === form?.showRoomId3) {
+      errs.showroom = 'Duplicate values found'
+      toast.error('Please select different showrooms in each field', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Zoom
+      });
+    }
+
     return errs;
   }
 
   const submitForm = async () => {
     if (routeParams.doctorId === 'new') {
-      setisLoading(false);
+      setisLoading(true);
       await dispatch(await Actions.saveDoctor(form));
       props.history.push('/apps/e-commerce/doctors');
-      setisLoading(true);
-    } else {
       setisLoading(false);
+    } else {
+      setisLoading(true);
       await dispatch(await Actions.updateDoctor(form));
       props.history.push('/apps/e-commerce/doctors');
-      setisLoading(true);
+      setisLoading(false);
     }
   }
 
@@ -207,10 +197,7 @@ function Doctor(props) {
 
 
   if (
-    (!product.data ||
-      (product.data && routeParams.doctorId !== product.data.id)) &&
-    routeParams.doctorId !== 'new' &&
-    !isLoading
+    isLoading
   ) {
     return <FuseLoading />;
   }
@@ -218,7 +205,7 @@ function Doctor(props) {
   return (
     <FusePageCarded
       header={
-        form && (
+        (
 
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">
@@ -241,13 +228,13 @@ function Doctor(props) {
                   <img
                     className="w-32 sm:w-48 rounded"
                     src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={`${form.fname} ${form.lname}`}
+                    alt={`${form?.fname} ${form?.lname}`}
                   />
                 </FuseAnimate>
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                     <Typography className="text-16 sm:text-20 truncate">
-                      {(form.fname || form.lname) ? `${form.fname} ${form.lname}` : 'New Doctor'}
+                      {(form?.fname && form?.lname) ? `${form.fname} ${form.lname}` : 'New Doctor'}
                     </Typography>
                   </FuseAnimate>
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
@@ -256,29 +243,6 @@ function Doctor(props) {
                 </div>
               </div>
             </div>
-
-            {/* <FuseAnimate animation="transition.slideRightIn" delay={300}>
-              <Button
-                className="whitespace-no-wrap normal-case"
-                variant="contained"
-                color="secondary"
-                disabled={!canBeSubmitted()}
-                onClick={async () => {
-                  if (routeParams.doctorId === 'new') {
-                    setisLoading(false);
-                    await dispatch(await Actions.saveShowRoom(form));
-                    setisLoading(true);
-                    props.history.push(`/apps/e-commerce/showRooms`);
-                  } else {
-                    setisLoading(false);
-                    await dispatch(await Actions.updateShowRoom(form));
-                    setisLoading(true);
-                    props.history.push(`/apps/e-commerce/showRooms`);
-                  }
-                }}>
-                Save
-              </Button>
-            </FuseAnimate> */}
           </div>
         )
       }
@@ -286,7 +250,6 @@ function Doctor(props) {
 
         <Tabs
           value={tabValue}
-          onChange={handleChangeTab}
           indicatorColor="primary"
           textColor="primary"
           variant="scrollable"
@@ -297,7 +260,7 @@ function Doctor(props) {
 
       }
       content={
-        form && (
+        (
           <div className="p-16 sm:p-24">
             <div className="flex flex-col h-260  px-16 py-6 gap-20">
               {tabValue === 0 && (
@@ -321,7 +284,7 @@ function Doctor(props) {
                             id="doctor-fname"
                             name="fname"
                             type="text"
-                            value={form.fname}
+                            value={form?.fname}
                             onChange={handleChange}
                             variant="outlined"
                             error={errors.fname}
@@ -336,7 +299,7 @@ function Doctor(props) {
                             onChange={handleChange}
                             label="Address"
                             type="address"
-                            value={form.address}
+                            value={form?.address}
                             variant="outlined"
                             error={errors.address}
                             helperText={errors.address}
@@ -348,11 +311,10 @@ function Doctor(props) {
                             className="w-1/2"
                             required
                             label="Last Name"
-                            autoFocus
                             id="doctor-lname"
                             name="lname"
                             type="text"
-                            value={form.lname}
+                            value={form?.lname}
                             onChange={handleChange}
                             variant="outlined"
                             error={errors.lname}
@@ -363,11 +325,10 @@ function Doctor(props) {
                             className="w-1/2"
                             required
                             label="City"
-                            autoFocus
                             id="doctor-city"
                             name="city"
                             type="text"
-                            value={form.city}
+                            value={form?.city}
                             onChange={handleChange}
                             variant="outlined"
                             error={errors.city}
@@ -377,35 +338,15 @@ function Doctor(props) {
                         </div>
                         <div className="flex flex-row p-6 mb-16 gap-10">
                           <div className="flex flex-row flex-wrap gap-4 w-1/2">
-                            <TextField
-                              id="date"
-                              required
-                              label="Date Of Birth"
-                              type="date"
-                              InputLabelProps={{ shrink: true }}
-                              defaultValue={form?.dob}
-                              variant='outlined'
-                              fullWidth
-                              error={errors.dob}
-                              helperText={errors.dob}
-                              onChange={(e) => {
-                                handleChange({
-                                  target: { 
-                                    name: 'dob', 
-                                    value: firestore.Timestamp.fromDate(new Date(e.target.value)) 
-                                  }
-                                });
-                              }}
-                            />
-
-                            {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
                               <KeyboardDatePicker
-                                className="ml-0 0 mt-0 w-full"
+                                inputVariant="outlined"
+                                className='m-0 p-0'
+                                fullWidth
+                                label="Date of birth"
                                 margin="normal"
                                 id="date-picker-dialog"
                                 format="MM/dd/yyyy"
-                                label="Date of Birth"
-                                fullwidth
                                 value={form?.dob}
                                 onChange={(date) => {
                                   handleChange({
@@ -416,17 +357,17 @@ function Doctor(props) {
                                   'aria-label': 'change date'
                                 }}
                               />
-                            </MuiPickersUtilsProvider> */}
+
+                            </MuiPickersUtilsProvider>
                           </div>
                           <TextField
                             className="w-1/2"
                             required
                             label="State"
-                            autoFocus
                             id="doctor-State"
                             name="State"
                             type="text"
-                            value={form.State}
+                            value={form?.State}
                             error={errors.State}
                             helperText={errors.State}
                             onChange={handleChange}
@@ -438,11 +379,10 @@ function Doctor(props) {
                             className="w-1/2"
                             required
                             label="Gender"
-                            autoFocus
                             id="user-Gender"
                             name="Gender"
                             type="text"
-                            value={form.Gender}
+                            value={form?.Gender}
                             onChange={handleChange}
                             variant="outlined"
                             error={errors.gender}
@@ -452,11 +392,10 @@ function Doctor(props) {
                             className="w-1/2"
                             required
                             label="Zip Code"
-                            autoFocus
                             id="doctor-zipcode"
                             name="zipcode"
                             type="Number"
-                            value={form.zipcode}
+                            value={form?.zipcode}
                             onChange={handleChange}
                             error={errors.zipcode}
                             helperText={errors.zipcode}
@@ -468,11 +407,10 @@ function Doctor(props) {
                             className="w-1/2"
                             required
                             label="Phone 1"
-                            autoFocus
                             id="user-phone1"
                             name="phone1"
                             type="phone"
-                            value={form.phone1}
+                            value={form?.phone1}
                             onChange={handleChange}
                             variant="outlined"
                             error={errors.phone1}
@@ -482,11 +420,10 @@ function Doctor(props) {
                             className="w-1/2"
                             required
                             label="Email"
-                            autoFocus
                             id="doctor-doctoremail"
                             name="doctoremail"
                             type="email"
-                            value={form.doctoremail}
+                            value={form?.doctoremail}
                             onChange={handleChange}
                             error={errors.doctoremail}
                             helperText={errors.doctoremail}
@@ -497,22 +434,20 @@ function Doctor(props) {
                           <TextField
                             className="w-1/2"
                             label="Phone 2"
-                            autoFocus
                             id="user-phone2"
                             name="phone2"
                             type="phone"
-                            value={form.phone2}
+                            value={form?.phone2}
                             onChange={handleChange}
                             variant="outlined"
                           />
                           <TextField
                             className="w-1/2"
                             label="Other"
-                            autoFocus
                             id="doctor-other"
                             name="other"
                             type="text"
-                            value={form.other}
+                            value={form?.other}
                             onChange={handleChange}
                             variant="outlined"
                           />
@@ -531,9 +466,9 @@ function Doctor(props) {
                         <Select
                           labelId="demo-simple-select-autowidth-label"
                           id="showRoomId1"
-                          defaultValue={form?.showRoomId}
                           value={form?.showRoomId1}
                           name="showRoomId1"
+                          error={errors.showroom}
                           onChange={handleChange}
                           autoWidth>
                           {showRooms.map((row) => (
@@ -548,9 +483,9 @@ function Doctor(props) {
                         <Select
                           labelId="demo-simple-select-autowidth-label"
                           id="showRoomId2"
-                          defaultValue={form?.showRoomId}
                           value={form?.showRoomId2}
                           name="showRoomId2"
+                          error={errors.showroom}
                           onChange={handleChange}
                           autoWidth>
                           {showRooms.map((row) => (
@@ -566,9 +501,9 @@ function Doctor(props) {
                           labelId="demo-simple-select-autowidth-label"
 
                           id="showRoomId3"
-                          defaultValue={form?.showRoomId}
                           value={form?.showRoomId3}
                           name="showRoomId3"
+                          error={errors.showroom}
                           onChange={handleChange}
                           autoWidth>
                           {showRooms.map((row) => (
@@ -606,7 +541,6 @@ function Doctor(props) {
                         padding: '10px 32px'
                       }}
                       variant="outlined"
-                      // onClick={() => setShowModal(true)}
                       onClick={() => {
                         if (routeParams.doctorId === 'new') {
                           alert('No Data to delete')

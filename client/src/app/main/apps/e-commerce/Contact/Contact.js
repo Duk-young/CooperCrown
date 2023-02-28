@@ -6,8 +6,6 @@ import Button from '@material-ui/core/Button';
 import ConfirmContactDelete from './ConfirmContactDelete';
 import Icon from '@material-ui/core/Icon';
 import { useTheme } from '@material-ui/core/styles';
-import { firestore, storage } from 'firebase';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
@@ -24,41 +22,10 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import { firestore } from 'firebase';
+import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 
-// const useStyles = makeStyles((theme) => ({
-//   productImageFeaturedStar: {
-//     position: 'absolute',
-//     top: 0,
-//     right: 0,
-//     color: orange[400],
-//     opacity: 0
-//   },
-//   productImageUpload: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut
-//   },
-//   productImageItem: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut,
-//     '&:hover': {
-//       '& $productImageFeaturedStar': {
-//         opacity: 0.8
-//       }
-//     },
-//     '&.featured': {
-//       pointerEvents: 'none',
-//       boxShadow: theme.shadows[3],
-//       '& $productImageFeaturedStar': {
-//         opacity: 1
-//       },
-//       '&:hover $productImageFeaturedStar': {
-//         opacity: 1
-//       }
-//     }
-//   }
-// }));
+
 const useStyles = makeStyles({
   table: {
     minWidth: 450
@@ -74,77 +41,52 @@ const useStyles = makeStyles({
 });
 function NewShowRoom(props) {
   const dispatch = useDispatch();
-  const product = useSelector(({ eCommerceApp }) => eCommerceApp.contact);
   const theme = useTheme();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
   const [tabValue, setTabValue] = useState(0);
-  const [showModal, setShowModal] = useState(false);
+  const [allContacts, setAllContacts] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
   const [errors, setErrors] = useState({});
 
   const routeParams = useParams();
 
-  useDeepCompareEffect(() => {
-    const updateProductState = async () => {
-      setisLoading(false);
-      const { contactId } = routeParams;
-      if (contactId === 'new') {
-        dispatch(Actions.newContact());
-        setisLoading(true);
-      } else {
-        await dispatch(await Actions.getContact(contactId));
-        setisLoading(true);
-      }
-    };
-    updateProductState();
-  }, [dispatch, routeParams]);
+
 
   useEffect(() => {
-    if (
-      (product.data && !form) ||
-      (product.data && form && product.data.id !== form.id)
-    ) {
-      setForm(product.data);
+    const fetchDetails = async () => {
+      setisLoading(true)
+
+      const queryContacts = await firestore()
+        .collection('contacts')
+        .get();
+
+      let resultContacts = [];
+      queryContacts.forEach((doc) => {
+        resultContacts.push(doc.data());
+        if (routeParams.contactId === doc?.id) {
+          setForm({...doc.data(), id: doc.id})
+        }
+      });
+      setAllContacts(resultContacts);
+      setisLoading(false)
     }
-  }, [form, product.data, setForm]);
+    fetchDetails()
+  }, []);
+
+  
 
   function handleChangeTab(event, value) {
     setTabValue(value);
   }
-  const handleDelete = async () => {
-    try {
-      const querycontacts = await firestore()
-        .collection('contacts')
-        .where('contactId', '==', Number(form.contactId))
-        .limit(1)
-        .get();
-
-      let result = querycontacts.docs[0].data();
-      result.id = querycontacts.docs[0].id;
-      await firestore().collection('contacts').doc(result.id).delete();
-      dispatch(
-        MessageActions.showMessage({
-          message: 'Contact deleted successfully'
-        })
-      );
-      props.history.push(
-        props.history.push(`/apps/e-commerce/contacts`)
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const handleClose = () => {
     setOpen(false);
   };
-  function canBeSubmitted() {
-    return form.type.length > 0 && form.style.length > 0 && form.brand.length > 0 && form.model.length > 0 && form.basecurve.length > 0 && form.price.length > 0;
-  }
 
-  const packQty = [24, 12, 1]
+
+
 
 
   const isFormValid = () => {
@@ -179,15 +121,15 @@ function NewShowRoom(props) {
 
   const submitForm = async () => {
     if (routeParams.contactId === 'new') {
-      setisLoading(false);
+      setisLoading(true);
       await dispatch(await Actions.saveContact(form));
       props.history.push('/apps/e-commerce/contacts');
-      setisLoading(true);
-    } else {
       setisLoading(false);
+    } else {
+      setisLoading(true);
       await dispatch(await Actions.updateContact(form));
       props.history.push('/apps/e-commerce/contacts');
-      setisLoading(true);
+      setisLoading(false);
     }
   }
 
@@ -205,14 +147,10 @@ function NewShowRoom(props) {
     submitForm();
   }
 
-  if (
-    (!product.data ||
-      (product.data && routeParams.contactId !== product.data.id)) &&
-    routeParams.contactId !== 'new' &&
-    !isLoading
-  ) {
+  if (isLoading) {
     return <FuseLoading />;
   }
+
 
   return (
     <FusePageCarded
@@ -221,7 +159,7 @@ function NewShowRoom(props) {
         header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
       }}
       header={
-        form && (
+         (
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
@@ -242,13 +180,13 @@ function NewShowRoom(props) {
                   <img
                     className="w-32 sm:w-48 rounded"
                     src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={form.type}
+                    alt={form?.type}
                   />
                 </FuseAnimate>
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                     <Typography className="text-16 sm:text-20 truncate">
-                      {form.type ? form.type : 'New Contact Lens'}
+                      {form?.type ? form.type : 'New Contact Lens'}
                     </Typography>
                   </FuseAnimate>
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
@@ -259,28 +197,6 @@ function NewShowRoom(props) {
                 </div>
               </div>
             </div>
-            {/* <FuseAnimate animation="transition.slideRightIn" delay={300}>
-              <Button
-                className="whitespace-no-wrap normal-case"
-                variant="contained"
-                color="secondary"
-                disabled={!canBeSubmitted()}
-                onClick={async () => {
-                  if (routeParams.contactId === 'new') {
-                    setisLoading(false);
-                    await dispatch(await Actions.saveContact(form));
-                    props.history.push('/apps/e-commerce/contacts');
-                    setisLoading(true);
-                  } else {
-                    setisLoading(false);
-                    await dispatch(await Actions.updateContact(form));
-                    props.history.push('/apps/e-commerce/contacts');
-                    setisLoading(true);
-                  }
-                }}>
-                Save
-              </Button>
-            </FuseAnimate> */}
           </div>
         )
       }
@@ -297,7 +213,7 @@ function NewShowRoom(props) {
         </Tabs>
       }
       content={
-        form && (
+         (
           <div className="flex flex-col h-260  px-16 py-6 gap-20">
             <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
@@ -308,19 +224,6 @@ function NewShowRoom(props) {
               <div className="justify-center p-16 sm:p-24 ">
                 {tabValue === 0 && (
                   <div>
-                    {/* <TextField
-                      className="mt-8 mb-16"
-                      required
-                      label="Contact Lens Type"
-                      id="contact-type"
-                      name="type"
-                      value={form.type}
-                      onChange={handleChange}
-                      variant="outlined"
-                      error={errors.type}
-                      helperText={errors.type}
-                      fullWidth
-                    /> */}
                     <TextField
                       className="mt-8 mb-16"
                       required
@@ -329,7 +232,7 @@ function NewShowRoom(props) {
                       onChange={handleChange}
                       label="Style"
                       type="style"
-                      value={form.style}
+                      value={form?.style}
                       variant="outlined"
                       error={errors.style}
                       helperText={errors.style}
@@ -343,7 +246,7 @@ function NewShowRoom(props) {
                       onChange={handleChange}
                       label="Brand"
                       type="brand"
-                      value={form.brand}
+                      value={form?.brand}
                       variant="outlined"
                       error={errors.brand}
                       helperText={errors.brand}
@@ -357,7 +260,7 @@ function NewShowRoom(props) {
                       onChange={handleChange}
                       label="Model"
                       type="model"
-                      value={form.model}
+                      value={form?.model}
                       variant="outlined"
                       error={errors.model}
                       helperText={errors.model}
@@ -371,48 +274,23 @@ function NewShowRoom(props) {
                       onChange={handleChange}
                       label="Base Curve"
                       type="basecurve"
-                      value={form.basecurve}
+                      value={form?.basecurve}
                       variant="outlined"
                       error={errors.basecurve}
                       helperText={errors.basecurve}
                       fullWidth
                     />
-                    {/* <TextField
-                      className="mt-8 mb-16"
-                      required
-                      id="contact-pack-quantity"
-                      name="packqty"
-                      onChange={handleChange}
-                      label="Pack Quantity"
-                      type="packqty"
-                      value={form.basecurve}
-                      variant="outlined"
-                      error={errors.basecurve}
-                      helperText={errors.basecurve}
-                      fullWidth
-                    /> */}
-                    <FormControl variant='outlined' className='w-full mt-8 mb-16' error={errors.packquantity}>
-                      <InputLabel id="demo-simple-select-outlined-label">Pack Quantity</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-outlined-label"
+                    <div className='mb-8'>
+                      <CustomAutocomplete
+                        list={allContacts}
+                        form={form}
+                        setForm={setForm}
+                        handleChange={handleChange}
                         id="packquantity"
-                        required
+                        freeSolo={true}
                         label="Pack Quantity"
-                        defaultValue={form?.packquantity}
-                        value={form?.packquantity}
-                        name="packquantity"
-                        onChange={handleChange}
-                      >
-                        {packQty.map((quantity, index) => (
-                          <MenuItem key={index} value={quantity}>
-                            {`${quantity} Pk`}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {errors.packquantity && (
-                        <FormHelperText>Select a pack quantity</FormHelperText>
-                      )}
-                    </FormControl>
+                      />
+                    </div>
                     <TextField
                       className="mt-8 mb-16"
                       required
@@ -421,7 +299,7 @@ function NewShowRoom(props) {
                       onChange={handleChange}
                       label="Price"
                       type="price"
-                      value={form.price}
+                      value={form?.price}
                       variant="outlined"
                       error={errors.price}
                       helperText={errors.price}

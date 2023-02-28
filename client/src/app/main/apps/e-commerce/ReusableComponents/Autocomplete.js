@@ -29,7 +29,7 @@ const CustomAutocomplete = (props) => {
   return (
     <div className={classes.root}>
       <Autocomplete
-        options={[...new Set(list?.map((item) => (item[id] ? item[id] : '')))]}
+        options={[...new Set(list?.map((item) => (item[id] ? String(item[id]) : '')))]}
         getOptionLabel={(option) => option[id] || option}
         id={id}
         disabled={disabled}
@@ -55,7 +55,7 @@ const CustomAutocomplete = (props) => {
           }
         }}
         renderInput={(params) => (
-          <TextField {...params} label={label} type={inputType} />
+          <TextField {...params} label={label} type={inputType} variant='outlined'/>
         )}
       />
     </div>
