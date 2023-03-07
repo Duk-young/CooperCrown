@@ -215,15 +215,7 @@ function AddInsurance(props) {
 
   const handleDelete = async () => {
     try {
-      const queryInsurance = await firestore()
-        .collection('insurances')
-        .where('insuranceId', '==', Number(form.insuranceId))
-        .limit(1)
-        .get();
-
-      let result = queryInsurance.docs[0].data();
-      result.id = queryInsurance.docs[0].id;
-      await firestore().collection('insurances').doc(result.id).delete();
+      await firestore().collection('insurances').doc(form.id).delete();
       dispatch(
         MessageActions.showMessage({
           message: 'Insurance deleted successfully'
