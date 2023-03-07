@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Actions from '../../dashboards/analytics/store/actions';
 import reducer from '../../dashboards/analytics/store/reducers';
-import Widget1 from '../../dashboards/analytics/widgets/Widget1';
 import PieChart from './PieChart';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -13,6 +12,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { useForm } from '@fuse/hooks';
 import FormControl from '@material-ui/core/FormControl';
 import { firestore } from 'firebase';
+import SalesChartYearWise from './SalesChartYearWise';
+import PaymentsChart from './PaymentsChart';
 
 function AnalyticsDashboardApp() {
   const { form, handleChange } = useForm({});
@@ -133,8 +134,8 @@ function AnalyticsDashboardApp() {
   }
   return (
     <div className="w-full">
-      <Widget1 data={widgets.widget1} />
-
+      <SalesChartYearWise orders={orders} />
+      <PaymentsChart />
       <FuseAnimate animation="transition.slideUpIn" delay={200}>
         <div className="flex flex-col md:flex-row sm:p-8 container">
           <div className="flex flex-col w-1/2">
