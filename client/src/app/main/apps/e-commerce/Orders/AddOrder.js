@@ -54,7 +54,8 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    textAlign: 'center'
+    textAlign: 'center',
+    textTransform: 'uppercase'
   },
   body: {
     fontSize: 14,
@@ -862,10 +863,19 @@ function AddOrder(props) {
       setisLoading(true);
 
       const fetchDetails = async () => {
-        if (newCustomer && routeParams?.customerId === 'new') {
+        if (
+          (newCustomer && routeParams?.customerId === 'new') ||
+          routeParams?.customerId
+        ) {
           queryCustomer = await firestore()
             .collection('customers')
-            .where('customerId', '==', newCustomer)
+            .where(
+              'customerId',
+              '==',
+              routeParams?.customerId === 'new'
+                ? newCustomer
+                : Number(routeParams?.customerId)
+            )
             .limit(1)
             .get();
 
@@ -4170,10 +4180,10 @@ function AddOrder(props) {
                                 <TableRow>
                                   <StyledTableCell>Brand</StyledTableCell>
                                   <StyledTableCell>Model</StyledTableCell>
-                                  <StyledTableCell>Color</StyledTableCell>
+                                  <StyledTableCell>Frame Color</StyledTableCell>
                                   <StyledTableCell>Lens Type</StyledTableCell>
                                   {/* <StyledTableCell>Lens Detail</StyledTableCell> */}
-                                  <StyledTableCell>Colour/Tint</StyledTableCell>
+                                  <StyledTableCell>Lens Color</StyledTableCell>
                                   <StyledTableCell></StyledTableCell>
                                 </TableRow>
                               </TableHead>

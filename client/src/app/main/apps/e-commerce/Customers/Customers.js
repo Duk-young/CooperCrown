@@ -3,6 +3,7 @@ import './Search.css';
 import './Themes.css';
 import { useForm } from '@fuse/hooks';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { firestore } from 'firebase';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
@@ -145,6 +146,28 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
+const StyledDatePicker = withStyles((theme) => ({
+  root: {
+    '& label.Mui-focused': {
+      color: 'white'
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'yellow'
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white'
+      },
+      '&:hover fieldset': {
+        borderColor: 'white'
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'yellow'
+      }
+    }
+  }
+}))(TextField);
+
 function Customers(props) {
   const classes = useStyles(props);
   const { form, handleChange } = useForm(null);
@@ -178,7 +201,7 @@ function Customers(props) {
                   <div className="flex flex-col w-1/3 mt-0 px-12">
                     <div className="flex flex-row justify-around gap-8">
                       <div className="date-picker w-full flex gap-10">
-                        <TextField
+                        <StyledDatePicker
                           id="date"
                           label="Start Date"
                           type="date"
@@ -195,13 +218,18 @@ function Customers(props) {
                               style: { color: 'white' }
                             }
                           }}
-                          onChange={(date) => {
+                          onChange={(e) => {
                             handleChange({
-                              target: { name: 'start', value: date }
+                              target: {
+                                name: 'start',
+                                value: firestore.Timestamp.fromDate(
+                                  new Date(e.target.value)
+                                )
+                              }
                             });
                           }}
                         />
-                        <TextField
+                        <StyledDatePicker
                           id="date"
                           label="End Date"
                           type="date"
@@ -218,9 +246,14 @@ function Customers(props) {
                               style: { color: 'white' }
                             }
                           }}
-                          onChange={(date) => {
+                          onChange={(e) => {
                             handleChange({
-                              target: { name: 'end', value: date }
+                              target: {
+                                name: 'end',
+                                value: firestore.Timestamp.fromDate(
+                                  new Date(e.target.value)
+                                )
+                              }
                             });
                           }}
                         />
