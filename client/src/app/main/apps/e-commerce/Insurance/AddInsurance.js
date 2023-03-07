@@ -174,7 +174,8 @@ function AddInsurance(props) {
             ...form,
             insuranceId: dbConfig?.insuranceId + 1,
             customerId: Number(routeParams.customerId),
-            images: { urls }
+            images: { urls },
+            dateCreated: firestore.Timestamp.fromDate(new Date())
           });
 
         const queryCustomer = await firestore()

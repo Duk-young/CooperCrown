@@ -514,9 +514,14 @@ const CustomerProfile = (props) => {
                             .map((row) => (
                               <StyledTableRow
                                 key={row.insuranceId}
-                                style={{ height: 10 }}>
+                                style={{ height: 10 }}
+                                onClick={() => {
+                                  props.history.push(
+                                    `/apps/e-commerce/customers/profile/editinsurance/${row?.insuranceId}`
+                                  );
+                                }}>
                                 <StyledTableCell>
-                                  {row?.dateCreated}
+                                  {moment(row?.dateCreated.toDate()).format('MM/DD/YYYY')}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   {row.insuranceCompany}
@@ -914,6 +919,11 @@ const CustomerProfile = (props) => {
                             .sort((a, b) => (a.examId > b.examId ? -1 : 1))
                             .map((row) => (
                               <StyledTableRow
+                              onClick={() => {
+                                props.history.push(
+                                  `/apps/e-commerce/customers/profile/viewexam/${row?.examId}`
+                                );
+                              }}
                                 key={row.examId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
