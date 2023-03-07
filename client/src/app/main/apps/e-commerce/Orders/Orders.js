@@ -202,7 +202,7 @@ const CustomHits = connectHits(
         <TableHead>
           <TableRow>
             <StyledTableCell> </StyledTableCell>
-            {value === 0 && (
+            {value !== 0 && (
               <StyledTableCell padding="checkbox">
                 <Checkbox
                   indeterminate={
@@ -241,33 +241,44 @@ const CustomHits = connectHits(
                       {(hit?.shipFrameToCustomerLogic ||
                         hit?.shipContactLensToCustomerLogic ||
                         hit?.shipOtherProductToCustomerLogic) && (
-                        <LabelImportantIcon
-                          color="secondary"
-                          style={{ color: 'green' }}
-                        />
+                        <div style={{ width: '20px', height: '20px' }}>
+                          <LabelImportantIcon
+                            color="secondary"
+                            className="w-full h-full"
+                            style={{ color: 'green' }}
+                          />
+                        </div>
                       )}
                       {(hit?.rushFrameOrder ||
                         hit?.rushContactLensOrder ||
                         hit?.rushOtherProductOrder) && (
-                        <LabelImportantIcon
-                          color="secondary"
-                          style={{ color: 'red' }}
-                        />
+                        <div style={{ width: '20px', height: '20px' }}>
+                          <LabelImportantIcon
+                            color="secondary"
+                            className="w-full h-full"
+                            style={{ color: 'red' }}
+                          />
+                        </div>
                       )}
                       {hit?.sendFrameToLab && (
-                        <LabelImportantIcon
-                          color="secondary"
-                          style={{ color: 'blue' }}
-                        />
+                        <div style={{ width: '20px', height: '20px' }}>
+                          <LabelImportantIcon
+                            color="secondary"
+                            className="w-full h-full"
+                            style={{ color: 'blue' }}
+                          />
+                        </div>
                       )}
                     </div>
                   </StyledTableCell>
-                  <StyledTableCell padding="checkbox">
-                    <Checkbox
-                      checked={isItemSelected}
-                      // inputProps={{ 'aria-labelledby': labelId }}
-                    />
-                  </StyledTableCell>
+                  {value !== 0 && (
+                    <StyledTableCell padding="checkbox">
+                      <Checkbox
+                        checked={isItemSelected}
+                        // inputProps={{ 'aria-labelledby': labelId }}
+                      />
+                    </StyledTableCell>
+                  )}
                   <StyledTableCell
                     component="th"
                     scope="row"
@@ -352,9 +363,34 @@ const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover
+    },
+    '&:hover': {
+      backgroundColor: 'lightyellow !important'
     }
   }
 }))(TableRow);
+
+const StyledDatePicker = withStyles((theme) => ({
+  root: {
+    '& label.Mui-focused': {
+      color: 'white'
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'yellow'
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white'
+      },
+      '&:hover fieldset': {
+        borderColor: 'white'
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'yellow'
+      }
+    }
+  }
+}))(TextField);
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -441,25 +477,21 @@ function Orders(props) {
               </div>
               <div className={classes.header}>
                 <div className="flex flex-col w-1/3">
-                  <div className="flex flex-row gap-10">
-                    <TextField
+                  <div className="date-picker w-full flex flex-row gap-10">
+                    <StyledDatePicker
                       id="date"
                       label="Start Date"
                       type="date"
-                      className="w-1/2"
                       variant="outlined"
+                      style={{ border: 'none' }}
                       defaultValue={form?.start}
                       InputLabelProps={{
                         shrink: true,
-                        style: {
-                          color: 'white',
-                          marginTop: '5px',
-                          padding: '0 5px 0'
-                        }
+                        style: { color: 'white' }
                       }}
                       InputProps={{
-                        style: {
-                          color: 'white'
+                        inputProps: {
+                          style: { color: 'white' }
                         }
                       }}
                       onChange={(e) => {
@@ -473,27 +505,20 @@ function Orders(props) {
                         });
                       }}
                     />
-                    <TextField
+                    <StyledDatePicker
                       id="date"
                       label="End Date"
                       type="date"
-                      className="w-1/2"
-                      style={{ color: '#fff' }}
+                      style={{ border: 'none' }}
                       defaultValue={form?.end}
                       variant="outlined"
                       InputLabelProps={{
                         shrink: true,
-                        style: {
-                          color: 'white',
-                          marginTop: '5px',
-                          padding: '0 5px 0'
-                        }
+                        style: { color: 'white' }
                       }}
                       InputProps={{
-                        style: {
-                          color: 'white',
-                          borderColor: 'white',
-                          borderRadius: '4px'
+                        inputProps: {
+                          style: { color: 'white' }
                         }
                       }}
                       onChange={(e) => {
