@@ -6,7 +6,7 @@ import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from '@material-ui/core/MenuItem';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 
@@ -20,23 +20,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sketch = (props) => {
-  const { form, setForm } = props;
+  const { form, setForm, disabledState } = props;
   const [saveableCanvas, setSaveableCanvas] = useState();
-  const [selectedColour, setSelectedColour] = useState('#000000');
+  const [selectedColour, setSelectedColour] = useState('Black');
   const classes = useStyles();
+
+  useEffect(() => {
+    if (form?.sketch && saveableCanvas) saveableCanvas.loadSaveData(form?.sketch)
+  }, [saveableCanvas])
 
   return (
     <div>
-      {form?.examId && (
-        <CanvasDraw
-          ref={(canvasDraw) => setSaveableCanvas(canvasDraw)}
-          imgSrc={Capture}
-          disabled
-          saveData={form?.sketch}
-          lazyRadius="1"
-        />
-      )}
-      {!form?.examId && (
         <div className="relative">
           <div className="flex flex-row justify-around">
             <div className="flex-1 flex flex-row ">
@@ -64,7 +58,7 @@ const Sketch = (props) => {
                 size="small"
                 id="outlined-multiline-static"
                 label="Brush Radius"
-                value={form?.brushRadius}
+                value={form?.brushRadius || 1}
                 onChange={(e) => {
                   setForm({ ...form, brushRadius: e.target.value });
                 }}
@@ -83,17 +77,18 @@ const Sketch = (props) => {
               setForm({ ...form, sketch: saveableCanvas.getSaveData() });
             }}
             lazyRadius="0"
+            disabled={disabledState}
           />
           <Fab
             onClick={() => {
               saveableCanvas.eraseAll();
             }}
             color="secondary"
+            disabled={disabledState}
             className={classes.fab}>
             Reset
           </Fab>
         </div>
-      )}
     </div>
   );
 };

@@ -146,7 +146,6 @@ const CustomerInfo = (props) => {
             </div>
 
             <TextField
-              className="px-25"
               fullWidth
               disabled={disabledState}
               id="outlined-multiline-static"
@@ -161,7 +160,7 @@ const CustomerInfo = (props) => {
 
         <div className="ml-10 w-1/2 h-600  ">
           <div className="w-full">
-            <div className="flex flex-col h-600 px-16">
+            <div className="flex flex-col h-600">
               <div className="flex flex-col h-600 py-8 border-1 border-black border-solid rounded-6">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                   <h1 className="font-700" style={{ color: '#f15a25' }}>

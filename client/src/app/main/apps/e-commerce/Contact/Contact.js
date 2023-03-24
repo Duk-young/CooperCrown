@@ -17,11 +17,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import * as Actions from '../store/actions';
 import reducer from '../store/reducers';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import { firestore } from 'firebase';
 import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 
