@@ -934,7 +934,7 @@ const CustomerProfile = (props) => {
                                 <StyledTableCell>
                                   {checkLocationName(row?.showRoomId)}
                                 </StyledTableCell>
-                                <StyledTableCell>{row?.doctor}</StyledTableCell>
+                                <StyledTableCell>{row?.fullName}</StyledTableCell>
                               </StyledTableRow>
                             ))}
                         </TableBody>

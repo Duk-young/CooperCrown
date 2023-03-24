@@ -83,7 +83,7 @@ function NewShowRoom(props) {
   }, [form, product.data, setForm]);
 
   useEffect(() => {
-      if(routeParams.showRoomtId === 'new') {
+    if (routeParams.showRoomtId === 'new') {
       setForm(null)
     }
   }, []);
@@ -334,23 +334,23 @@ function NewShowRoom(props) {
                         fullWidth
                       />
                       <Autocomplete
-                    {...defaultStates}
-                    id="stateId"
-                    value={form?.State}
-                    fullWidth
-                    getOptionSelected={(option, value) => option.name === value}
-                    inputValue={state}
-                    onInputChange={(e, value) => setState(value)}
-                    name="state"
-                    onChange={(_, value) =>
-                      handleChange({
-                        target: { value: value?.name, name: 'State' }
-                      })
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} label="State" margin="normal" variant='outlined'/>
-                    )}
-                  />
+                        {...defaultStates}
+                        id="stateId"
+                        value={form?.State}
+                        fullWidth
+                        getOptionSelected={(option, value) => option.name === value}
+                        inputValue={state}
+                        onInputChange={(e, value) => setState(value)}
+                        name="state"
+                        onChange={(_, value) =>
+                          handleChange({
+                            target: { value: value?.name, name: 'State' }
+                          })
+                        }
+                        renderInput={(params) => (
+                          <TextField {...params} label="State" margin="normal" variant='outlined' />
+                        )}
+                      />
                       <TextField
                         className="mt-8  pr-4"
                         required
@@ -375,19 +375,6 @@ function NewShowRoom(props) {
                         variant="outlined"
                         fullWidth
                       />
-                      {/* <TextField
-                    className="mt-8 "
-                   
-                    required
-                    label="Fax No."
-                    id="faxNo"
-                    name="faxNo"
-                    value={form.faxNo}
-                    onChange={handleChange}
-                    variant="outlined"
-                    fullWidth
-                  /> */}
-                      {/* </div> */}
                       <TextField
                         className="mt-8 "
                         required

@@ -19,7 +19,7 @@ const PeripheralRetina = (props) => {
 
             <br></br>
             <div className="flex flex-row justify-center min-w-800">
-              <Sketch form={form} setForm={setForm} handleChange={handleChange} />
+              <Sketch form={form} setForm={setForm} handleChange={handleChange} disabledState={disabledState} />
             </div>
             <br></br>
             <div className="flex flex-row justify-center">

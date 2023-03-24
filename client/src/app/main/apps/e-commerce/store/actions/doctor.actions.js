@@ -60,17 +60,16 @@ export const saveDoctor = (data) => async (dispatch) => {
     await firebaseService.firestoreDb
       .collection('doctors')
       .add({
-        ...data, date: today, location1: result1.locationName, location3: result3.locationName, 
+        ...data, date: today, location1: result1.locationName, location3: result3.locationName,
         location2: result2.locationName, dob: firestore.Timestamp.fromDate(data?.dob),
-        dobString: moment(data?.dob).format('MM/DD/YYYY'), doctorId: dbConfig?.doctorId + 1
+        dobString: moment(data?.dob).format('MM/DD/YYYY'), doctorId: dbConfig?.doctorId + 1,
+        fullName: `${data?.fname} ${data?.lname}`
       });
     await firebaseService.firestoreDb
-      .collection('dbCo nfig')
+      .collection('dbConfig')
       .doc('dbConfig')
-      .update({
-        doctorId: dbConfig?.doctorId + 1
-      });
-    // await firebaseService.firestoreDb.collection('doctors').add(data);
+      .update({ doctorId: dbConfig?.doctorId + 1 });
+
     dispatch(Actions.getDoctors());
     dispatch(showMessage({ message: 'Doctor Saved' }));
   } catch (error) {
@@ -81,6 +80,7 @@ export const updateDoctor = (data) => async (dispatch) => {
   const uuid = data.id;
   let updatedData = data
   updatedData.dob = data?.dob && firestore.Timestamp.fromDate(data?.dob)
+  updatedData.fullName = `${data?.fname} ${data?.lname}`
 
   try {
     await firebaseService.firestoreDb
