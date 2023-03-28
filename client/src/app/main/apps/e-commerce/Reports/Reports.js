@@ -14,6 +14,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { firestore } from 'firebase';
 import SalesChartYearWise from './SalesChartYearWise';
 import PaymentsChart from './PaymentsChart';
+import ExamsChart from './ExamsChart';
 
 function AnalyticsDashboardApp() {
   const { form, handleChange } = useForm({});
@@ -135,6 +136,7 @@ function AnalyticsDashboardApp() {
   return (
     <div className="w-full">
       <SalesChartYearWise orders={orders} />
+      {/* <ExamsChart /> */}
       <PaymentsChart />
       <FuseAnimate animation="transition.slideUpIn" delay={200}>
         <div className="flex flex-col md:flex-row sm:p-8 container">

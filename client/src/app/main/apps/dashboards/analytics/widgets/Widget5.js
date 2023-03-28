@@ -15,7 +15,9 @@ function Widget5(props) {
     <Card className="w-full rounded-8 shadow-none border-1">
       <div className="relative p-24 flex flex-row items-center justify-between">
         <div className="flex flex-col">
-          <Typography className="h3 sm:h2">Visitors & Page views</Typography>
+          <Typography className="h3 sm:h2">
+            Sales ( Order / Insurance Paymets )
+          </Typography>
         </div>
 
         <div className="flex flex-row items-center">

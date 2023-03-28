@@ -28,11 +28,14 @@ function Widget1(props) {
         <div className="container relative p-16 sm:p-24 flex flex-row justify-between items-center">
           <FuseAnimate delay={100}>
             <div className="flex-col">
-              <Typography className="h2" color="textPrimary">
-                Visitors
+              <Typography
+                id="orderGraphHeader"
+                className="h2"
+                color="textPrimary">
+                {props.title ?? 'Visitors'}
               </Typography>
               <Typography className="h5" color="textSecondary">
-                Unique visitors by month
+                {props.desc ?? 'Unique visitors by month'}
               </Typography>
             </div>
           </FuseAnimate>
