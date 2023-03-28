@@ -42,7 +42,7 @@ function SalesChartYearWise(orders) {
   if (chartData) {
     return (
       <div className="w-full">
-        <Widget1 data={chartData} />
+        <Widget1 title="Orders" desc="Orders Data Year Wise" data={chartData} />
       </div>
     );
   }
