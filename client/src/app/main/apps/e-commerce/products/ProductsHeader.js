@@ -3,7 +3,6 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Input from '@material-ui/core/Input';
 import Paper from '@material-ui/core/Paper';
-import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -51,7 +50,7 @@ function ProductsHeader(props) {
         </FuseAnimate> */}
           <FuseAnimate animation="transition.slideLeftIn" delay={300}>
             <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500" variant="h4">
-              Showrooms
+              SHOWROOMS
             </Typography>
           </FuseAnimate>
         </div>
@@ -93,7 +92,6 @@ function ProductsHeader(props) {
               className={classes.button}
               variant="contained"
               color="secondary">
-              <AddCircleOutlineOutlinedIcon />
               <span className="hidden sm:flex">Add New </span>
               <span className="flex sm:hidden">New</span>
             </Button>

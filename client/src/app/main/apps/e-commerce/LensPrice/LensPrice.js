@@ -1,4 +1,3 @@
-import { useForm } from '@fuse/hooks';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import React, { useState, useEffect } from 'react';
@@ -15,6 +14,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import AddLensTypeDialog from './AddLensTypeDialog';
+import Input from '@material-ui/core/Input';
+import Paper from '@material-ui/core/Paper';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -64,7 +65,6 @@ const StyledTableRow = withStyles((theme) => ({
 
 function LensPrice(props) {
   const classes = useStyles(props);
-  const { form, handleChange } = useForm(null);
   const [lensTypes, setLensTypes] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -93,20 +93,32 @@ function LensPrice(props) {
   return (
     <FusePageSimple
       content={
-
         <div className="flex flex-col w-full">
           <div className={clsx(classes.header)}>
             <div className='flex justify-between w-full items-center'>
-
-              <div className='flex ml-10'>
-                <Icon className="text-32">people</Icon>
-                <Typography
-                  className="hidden sm:flex mx-10 sm:mx-12"
-                  variant="h6">
-                  Lens Price
-                </Typography></div>
-              <div><div className="mr-10">
+              <div className='flex flex-row w-1/3 text-center'>
                 <AddLensTypeDialog open={open} handleClose={handleClose} />
+              </div>
+              <div className='flex flex-col justify-center items-center h-full w-1/3 text-center'>
+                <Typography className="hidden sm:flex mx-0 font-500 pb-10" variant="h4">
+                  LENS PRICE
+                </Typography>
+                <Paper
+                  className="flex items-center w-full max-w-192 px-8 py-4 rounded-8"
+                  elevation={1}>
+                  <Icon color="action">search</Icon>
+                  <Input
+                    placeholder="Search"
+                    className="flex flex-1 mx-8"
+                    disableUnderline
+                    fullWidth
+                    inputProps={{
+                      'aria-label': 'Search'
+                    }}
+                  />
+                </Paper>
+              </div>
+              <div className='flex flex-col justify-center items-center h-full w-1/3 text-center'>
                 <Button
                   className={classes.button}
                   onClick={() =>
@@ -117,7 +129,7 @@ function LensPrice(props) {
                   <span className="hidden sm:flex">ADD NEW</span>
                   <span className="flex sm:hidden">ADD</span>
                 </Button>
-              </div></div>
+              </div>
             </div>
           </div>
           <Table stickyHeader aria-label="customized table">
@@ -132,11 +144,11 @@ function LensPrice(props) {
                   key={index}
                   hover
                   className="cursor-pointer"
-                onClick={() => {
-                  props.history.push(
-                    `/apps/e-commerce/viewlens/${hit}`
-                  );
-                }} 
+                  onClick={() => {
+                    props.history.push(
+                      `/apps/e-commerce/viewlens/${hit}`
+                    );
+                  }}
                 >
                   <StyledTableCell component="th" scope="row">{hit}</StyledTableCell>
                 </StyledTableRow>

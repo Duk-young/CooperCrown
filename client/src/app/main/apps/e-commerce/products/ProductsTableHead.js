@@ -20,35 +20,35 @@ const rows = [
     id: 'Location-Name',
     align: 'center',
     disablePadding: false,
-    label: 'Location  Name',
+    label: 'LOCATION NAME',
     // sort: true
   },
   {
     id: 'Location Address',
     align: 'center',
     disablePadding: false,
-    label: 'Location Address',
+    label: 'ADDRESS',
     // sort: true
   },
   {
     id: 'City',
     align: 'center',
     disablePadding: false,
-    label: 'City',
+    label: 'CITY',
     // sort: true
   },
   {
     id: 'State',
     align: 'center',
     disablePadding: false,
-    label: 'State',
+    label: 'STATE',
     // sort: true
   },
   {
     id: 'Zip-Code',
     align: 'center',
     disablePadding: false,
-    label: 'Zip Code',
+    label: 'ZIP CODE',
     // sort: true
   },
   // {
@@ -62,7 +62,7 @@ const rows = [
     id: 'phoneNo',
     align: 'center',
     disablePadding: false,
-    label: 'Phone No',
+    label: 'PHONE',
     // sort: true
   },
   // {

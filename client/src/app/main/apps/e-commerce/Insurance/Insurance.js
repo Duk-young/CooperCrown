@@ -1,14 +1,27 @@
-import FusePageSimple from '@fuse/core/FusePageSimple';
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import PolicyOutlinedIcon from '@material-ui/icons/PolicyOutlined';
-import withReducer from 'app/store/withReducer';
-import reducer from '../store/reducers';
 import '../Customers/App.mobile.css';
 import '../Customers/Search.css';
 import '../Customers/Themes.css';
-import clsx from 'clsx';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
+import { Link, useParams } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import algoliasearch from 'algoliasearch/lite';
+import clsx from 'clsx';
+import FuseLoading from '@fuse/core/FuseLoading';
+import FusePageSimple from '@fuse/core/FusePageSimple';
+import moment from 'moment';
+import Paper from '@material-ui/core/Paper';
+import React, { useState, useEffect } from 'react';
+import reducer from '../store/reducers';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import Typography from '@material-ui/core/Typography';
+import TableRow from '@material-ui/core/TableRow';
+import withReducer from 'app/store/withReducer';
 import {
   InstantSearch,
   SearchBox,
@@ -16,26 +29,12 @@ import {
   HitsPerPage,
   Pagination
 } from 'react-instantsearch-dom';
-import { Link, useParams } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
-import algoliasearch from 'algoliasearch/lite';
-import FuseLoading from '@fuse/core/FuseLoading';
-import moment from 'moment';
-import Paper from '@material-ui/core/Paper';
-import React, { useState, useEffect } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    paddingTop: 23,
-    height: 100,
-    minHeight: 100,
+    paddingTop: 3,
+    height: 110,
+    minHeight: 110,
     display: 'flex',
     background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
     color: theme.palette.primary.contrastText,
@@ -213,13 +212,11 @@ function Insurance(props) {
             indexName="insuranceClaims">
             <div className={clsx(classes.header)}>
               <div className="flex flex-col flex-1">
-                <div className="flex flex-row mt-12 pl-8">
-                  <FuseAnimate animation="transition.expandIn" delay={300}>
-                  <h1>INSURANCE</h1>
-                  </FuseAnimate>
-                </div>
               </div>
-              <div className="flex flex-col flex-1 border-1">
+              <div className="flex flex-col flex-1 border-1 text-center">
+                  <Typography className="flex mx-0 pb-6 font-500 justify-center" variant="h4">
+                    INSURANCE
+                  </Typography>
                 <SearchBox
                   translations={{
                     placeholder: 'Search for claims...'
@@ -246,9 +243,9 @@ function Insurance(props) {
                   reset={false}
                 />
               </div>
-              <div className="flex flex-col md:flex-row flex-1">
+              <div className="flex flex-row flex-1">
                 <div className="w-1/3"></div>
-                <div className="flex flex-col ml-10 md:ml-0 w-full md:w-1/3">
+                <div className="flex flex-col justify-center items-center h-full w-1/3">
                   <h5>Sort By:</h5>
                   <SortBy
                     className="w-full"
