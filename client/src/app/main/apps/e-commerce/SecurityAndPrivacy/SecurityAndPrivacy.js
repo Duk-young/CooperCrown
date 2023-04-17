@@ -223,7 +223,7 @@ function SecurityAndPrivacy(props) {
             <div className="flex items-center">
               <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                 <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500" variant="h4">
-                  Security And Privacy
+                  SECURITY AND PRIVACY
                 </Typography>
               </FuseAnimate>
 

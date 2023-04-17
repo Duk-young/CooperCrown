@@ -20,7 +20,7 @@ const rows = [
     id: 'user-date',
     align: 'center',
     disablePadding: false,
-    label: 'Date',
+    label: 'DATE',
     sort: true,
     width: 160
   },
@@ -28,7 +28,7 @@ const rows = [
     id: 'user-location',
     align: 'center',
     disablePadding: false,
-    label: 'Location',
+    label: 'LOCATION',
     sort: true,
     width: 100
   },
@@ -36,7 +36,7 @@ const rows = [
     id: 'user-email',
     align: 'center',
     disablePadding: false,
-    label: 'Email',
+    label: 'EMAIL',
     sort: true,
     width: 100
   },
@@ -45,7 +45,7 @@ const rows = [
     id: 'user-username',
     align: 'center',
     disablePadding: false,
-    label: 'Username',
+    label: 'USERNAME',
     sort: true,
     width: 100
   },
@@ -53,7 +53,7 @@ const rows = [
     id: 'user-role',
     align: 'center',
     disablePadding: false,
-    label: 'Access Level',
+    label: 'ACCESS LEVEL',
     sort: true,
     width: 100
   }

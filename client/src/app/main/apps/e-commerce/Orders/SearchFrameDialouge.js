@@ -69,10 +69,9 @@ const CustomHits = connectHits(({ hits, form, setForm, handleClose }) => {
                       frameBrand: hit?.brand,
                       frameModel: hit?.productDescription,
                       frameColour: hit?.colour,
-                      frameRetailRate: hit?.retailRate,
+                      frameRate: hit?.retailRate,
                       frameWsRate: hit?.ws,
-                      frameQuantity: hit?.quantity,
-                      saleType: undefined
+                      frameQuantity: hit?.quantity
                     });
                     handleClose();
                   } else {
@@ -140,13 +139,9 @@ const CustomProductHits = connectHits(
                         otherProductMaterial: hit?.material,
                         otherProductSize: hit?.retailRate,
                         otherProductQty: hit?.quantity,
-                        otherProductMemo: hit?.otherProductMemo,
-                        otherProductAdditionalPrice:
-                          hit?.otherProductAdditionalPrice,
                         otherProductPrice: hit?.retailRate,
                         otherProductWS: hit?.ws,
-                        otherProductSKU: hit?.sku,
-                        saleType: undefined
+                        otherProductSKU: hit?.sku
                       });
                       handleClose();
                     } else {
@@ -234,10 +229,9 @@ function SimpleDialog(props) {
           frameBrand: resultFrames?.brand,
           frameModel: resultFrames?.productDescription,
           frameColour: resultFrames?.colour,
-          frameRetailRate: resultFrames?.retailRate,
+          frameRate: resultFrames?.retailRate,
           frameWsRate: resultFrames?.ws,
-          frameQuantity: resultFrames?.quantity,
-          saleType: undefined
+          frameQuantity: resultFrames?.quantity
         });
         handleClose();
       } else {
@@ -385,8 +379,7 @@ function SimpleInventoryDialog(props) {
             resultOtherProducts?.otherProductAdditionalPrice,
           otherProductPrice: resultOtherProducts?.retailRate,
           otherProductWS: resultOtherProducts?.ws,
-          otherProductSKU: resultOtherProducts?.sku,
-          saleType: undefined
+          otherProductSKU: resultOtherProducts?.sku
         });
         handleClose();
       } else {

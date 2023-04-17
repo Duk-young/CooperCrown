@@ -33,7 +33,7 @@ const CustomAutocomplete = (props) => {
         getOptionLabel={(option) => option[id] || option}
         id={id}
         disabled={disabled}
-        value={form ? form[id] : ''}
+        value={form?.[id] ?? ''}
         inputValue={input}
         freeSolo={freeSolo}
         onInputChange={(e, value) => {

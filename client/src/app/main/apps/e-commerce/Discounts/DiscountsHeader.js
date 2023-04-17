@@ -2,7 +2,6 @@ import FuseAnimate from '@fuse/core/FuseAnimate';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Input from '@material-ui/core/Input';
-import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -51,7 +50,7 @@ function DiscountsHeader(props) {
 
           <FuseAnimate animation="transition.slideLeftIn" delay={300}>
             <Typography className="hidden sm:flex mx-0 sm:mx-12font-700" variant="h4">
-              Discounts
+              DISCOUNTS
             </Typography>
           </FuseAnimate>
         </div>
@@ -93,7 +92,6 @@ function DiscountsHeader(props) {
               className={classes.button}
               variant="contained"
               color="secondary">
-              <AddCircleOutlineOutlinedIcon />
               <span className="hidden sm:flex">Add New</span>
               <span className="flex sm:hidden">New</span>
             </Button>
