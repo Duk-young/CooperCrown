@@ -932,15 +932,6 @@ function AddOrder(props) {
         });
         setInsurances(resultInsurance);
 
-        const queryPayments = await firestore()
-          .collection('orderPayments')
-          .where('orderId', '==', routeParams.orderId)
-          .get();
-        let resultPayments = [];
-        queryPayments.forEach((doc) => {
-          resultPayments.push(doc.data());
-        });
-        setPayments(resultPayments);
         const queryContactLens = await firestore().collection('contacts').get();
 
         let resultContacts = [];
