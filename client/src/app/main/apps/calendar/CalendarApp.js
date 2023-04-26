@@ -15,7 +15,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import reducer from './store/reducers';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import withReducer from 'app/store/withReducer';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { toast, Zoom } from 'react-toastify';
 
 moment.locale('ko', {
@@ -180,9 +180,9 @@ const useStyles = makeStyles((theme) => ({
 
 function CalendarApp(props) {
   const dispatch = useDispatch();
-  const appointments = useSelector(
-    ({ calendarApp }) => calendarApp.events.entities
-  );
+  // const appointments = useSelector(
+  //   ({ calendarApp }) => calendarApp.events.entities
+  // );
 
   const [events, setEvents] = useState([]);
   const [currentShowroom, setCurrentShowroom] = useState(null);

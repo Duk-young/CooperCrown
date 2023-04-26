@@ -1,11 +1,7 @@
 import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
-import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
-import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
-import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
-import IconButton from '@material-ui/core/IconButton';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
@@ -29,7 +25,6 @@ function ServicesTable(props) {
   );
   // const { form } = props;
   const [selected, setSelected] = useState([]);
-  const [open, setOpen] = useState(false);
   const [data, setData] = useState(products);
   const [isLoading, setisLoading] = useState(false);
   const [page, setPage] = useState(0);
@@ -56,9 +51,7 @@ function ServicesTable(props) {
     setData(products);
     // }
   }, [products, searchText]);
-  const handleClose = () => {
-    setOpen(false);
-  };
+
   function handleRequestSort(event, property) {
     const id = property;
     let direction = 'desc';
@@ -110,25 +103,25 @@ function ServicesTable(props) {
   //   props.history.push(`/apps/e-commerce/service/${item.id}`);
   // }
 
-  function handleCheck(event, id) {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
+  // function handleCheck(event, id) {
+  //   const selectedIndex = selected.indexOf(id);
+  //   let newSelected = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selected, id);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selected.slice(1));
+  //   } else if (selectedIndex === selected.length - 1) {
+  //     newSelected = newSelected.concat(selected.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(
+  //       selected.slice(0, selectedIndex),
+  //       selected.slice(selectedIndex + 1)
+  //     );
+  //   }
 
-    setSelected(newSelected);
-  }
+  //   setSelected(newSelected);
+  // }
 
   function handleChangePage(event, value) {
     setPage(value);

@@ -14,7 +14,6 @@ import FormControl from '@material-ui/core/FormControl';
 import { firestore } from 'firebase';
 import SalesChartYearWise from './SalesChartYearWise';
 import PaymentsChart from './PaymentsChart';
-import ExamsChart from './ExamsChart';
 
 function AnalyticsDashboardApp() {
   const { form, handleChange } = useForm({});

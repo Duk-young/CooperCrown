@@ -36,12 +36,9 @@ import moment from 'moment';
 import OrderReceipt from './OrderReceipt';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Paper from '@material-ui/core/Paper';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useCallback, useState, useEffect } from 'react';
 import ReceiveOrderPayment from './ReceiveOrderPayment';
 import reducer from '../store/reducers';
-import SearchDialouge from './SearchDialouge';
 import SearchFrameDialouge from './SearchFrameDialouge';
 import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
@@ -100,7 +97,6 @@ const useStyles = makeStyles({
 function AddOrder(props) {
   const [isLoading, setisLoading] = useState(true);
   const [customer, setCustomer] = useState(null);
-  const [customerNote, setCustomerNote] = useState(null);
   const [showroom, setShowroom] = useState([]);
   const [newCustomer, setNewCustomer] = useState(null);
   const [eyeglasses, setEyeglasses] = useState([]);
@@ -117,12 +113,10 @@ function AddOrder(props) {
   const [prescription, setPrescription] = useState([]);
   const [disabledState, setDisabledState] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openOrderPayment, setOpenOrderPayment] = useState(false);
   const [openOrderReceipt, setOpenOrderReceipt] = useState(false);
   const [contactLens, setContactLens] = useState([]);
   const [insurances, setInsurances] = useState([]);
   const [services, setServices] = useState([]);
-  const [openAlert, setOpenAlert] = useState(false);
   const [openAlert1, setOpenAlert1] = useState(false);
   const [lensTypeNames, setLensTypeNames] = useState(false);
   const [editablePayment, setEditablePayment] = useState({});
@@ -145,20 +139,6 @@ function AddOrder(props) {
     return phoneNumberString;
   }
 
-  const handleStatusChange = async (e) => {
-    const ref = firestore().collection('orders').doc(form?.id);
-    let data = {
-      ...form,
-      orderStatus: e.target.value
-    };
-
-    await ref.set(data);
-    dispatch(
-      MessageActions.showMessage({
-        message: 'Status changed Successfully'
-      })
-    );
-  };
 
   const handleDeleteClose = () => {
     setOpenDelete(false);
@@ -166,27 +146,6 @@ function AddOrder(props) {
 
   const handleCloseAlert1 = () => {
     setOpenAlert1(false);
-  };
-
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
-  };
-
-  const deleteExistingInsurance = async () => {
-    if (form?.orderId) {
-      const queryExisting = await firestore()
-        .collection('insuranceClaims')
-        .where('orderId', '==', Number(form?.orderId))
-        .get();
-      queryExisting.forEach((doc) => {
-        doc.ref.delete();
-      });
-      return;
-    }
-  };
-
-  const handleCustomerNote = (event) => {
-    setCustomerNote(event.target.value);
   };
 
   const fetchLensRate = async () => {
@@ -246,7 +205,6 @@ function AddOrder(props) {
       });
       return null;
     }
-    return null;
   };
 
   const fetchContactLensRate = () => {
@@ -308,6 +266,7 @@ function AddOrder(props) {
       if (row?.frameId === selectedFrame?.frameId) {
         count++;
       }
+      return null
     });
     if (selectedFrame?.frameQuantity < count) {
       toast.error('Required quantity is not available!', {
@@ -420,9 +379,7 @@ function AddOrder(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleOrderPaymentClose = () => {
-    setOpenOrderPayment(false);
-  };
+
   const handleOrderReceiptClose = () => {
     setOpenOrderReceipt(false);
   };
@@ -489,15 +446,6 @@ function AddOrder(props) {
         transition: Zoom
       });
     }
-
-    let count = 0;
-
-    otherProductInfo.map((row) => {
-      if (row.name === otherProduct?.name) {
-        count++;
-      }
-      return null;
-    });
 
     setOtherProductInfo([...otherProductInfo, otherProduct]);
   };
@@ -572,17 +520,6 @@ function AddOrder(props) {
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
 
-        let count = 0;
-        orders.map((row) => {
-          if (
-            row?.orderDate.toDate().setHours(0, 0, 0, 0) ===
-            new Date().setHours(0, 0, 0, 0)
-          ) {
-            count++;
-          }
-          return null;
-        });
-
         await firestore()
           .collection('orders')
           .add({
@@ -590,7 +527,7 @@ function AddOrder(props) {
             orderDate: firestore.Timestamp.fromDate(new Date()),
             orderDateString: moment(new Date()).format('MM/DD/YYYY'),
             orderId: dbConfig?.orderId + 1,
-            customOrderId: count > 0 ?
+            customOrderId: orders.length > 0 ?
               moment(new Date()).format('YYMMDD') +
               _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
             customerId: customer?.customerId,
@@ -652,7 +589,7 @@ function AddOrder(props) {
           .update({
             orderId: dbConfig?.orderId + 1,
             recentUpdated: dbConfig?.recentUpdated + 1,
-            customOrderId: count > 0 ? dbConfig?.customOrderId + 1 : 1,
+            customOrderId: orders.length > 0 ? dbConfig?.customOrderId + 1 : 1,
             insuranceClaimId: noOfInsuranceClaims > 0 ? dbConfig?.insuranceClaimId + noOfInsuranceClaims : dbConfig?.insuranceClaimId
           });
 
@@ -744,8 +681,55 @@ function AddOrder(props) {
 
     const balance = total - deductions - payment;
 
-    return balance.toLocaleString();
+    return balance
   };
+
+  // useEffect Hook to call delayed data to avoid loading times
+  useEffect(() => {
+    const fetchDelayedData = async () => {
+
+      const queryShowroom = await firestore().collection('showRooms').get();
+      let resultShowroom = [];
+      queryShowroom.forEach((doc) => {
+        resultShowroom.push(doc.data());
+      });
+      setShowroom(resultShowroom);
+
+      const queryDiscounts = await firestore().collection('discounts').get();
+      let resultDiscounts = [];
+      queryDiscounts.forEach((doc) => {
+        resultDiscounts.push(doc.data());
+      });
+      setDiscounts(resultDiscounts);
+
+      const queryContactLens = await firestore().collection('contacts').get();
+
+      let resultContacts = [];
+      queryContactLens.forEach((doc) => {
+        resultContacts.push(doc.data());
+      });
+      setContactLens(resultContacts);
+
+      const queryServices = await firestore().collection('services').get();
+
+      let resultServices = [];
+      queryServices.forEach((doc) => {
+        resultServices.push(doc.data());
+      });
+      setServices(resultServices);
+
+      const lensPrice = (
+        await firestore().collection('lensPrice').doc('lensPrice').get()
+      ).data();
+      var keys = Object.keys(lensPrice);
+      let lensTypeNames = [];
+      keys.forEach((row) => {
+        lensTypeNames.push({ lensTypeName: row.replace(/"/g, '') });
+      });
+      setLensTypeNames(lensTypeNames);
+    }
+    fetchDelayedData()
+  }, [])
 
   useEffect(() => {
     let resultOrder;
@@ -798,18 +782,6 @@ function AddOrder(props) {
           resultPrescriptionString.push(doc);
         });
         setPrescription(resultPrescriptionString);
-        const queryShowroom = await firestore().collection('showRooms').get();
-        let resultShowroom = [];
-        queryShowroom.forEach((doc) => {
-          resultShowroom.push(doc.data());
-        });
-        setShowroom(resultShowroom);
-        const queryDiscounts = await firestore().collection('discounts').get();
-        let resultDiscounts = [];
-        queryDiscounts.forEach((doc) => {
-          resultDiscounts.push(doc.data());
-        });
-        setDiscounts(resultDiscounts);
 
         const queryPayments = await firestore()
           .collection('orderPayments')
@@ -830,32 +802,6 @@ function AddOrder(props) {
           resultInsurance.push(doc.data());
         });
         setInsurances(resultInsurance);
-
-        const queryContactLens = await firestore().collection('contacts').get();
-
-        let resultContacts = [];
-        queryContactLens.forEach((doc) => {
-          resultContacts.push(doc.data());
-        });
-        setContactLens(resultContacts);
-
-        const queryServices = await firestore().collection('services').get();
-
-        let resultServices = [];
-        queryServices.forEach((doc) => {
-          resultServices.push(doc.data());
-        });
-        setServices(resultServices);
-
-        const lensPrice = (
-          await firestore().collection('lensPrice').doc('lensPrice').get()
-        ).data();
-        var keys = Object.keys(lensPrice);
-        let lensTypeNames = [];
-        keys.forEach((row) => {
-          lensTypeNames.push({ lensTypeName: row.replace(/"/g, '') });
-        });
-        setLensTypeNames(lensTypeNames);
         setisLoading(false);
       };
       fetchDetails();
@@ -900,26 +846,24 @@ function AddOrder(props) {
           });
           setPrescription(resultPrescriptionString);
         }
-        const queryShowroom = await firestore().collection('showRooms').get();
-        let resultShowroom = [];
-        queryShowroom.forEach((doc) => {
-          resultShowroom.push(doc.data());
-        });
-        setShowroom(resultShowroom);
 
-        const queryOrders = await firestore().collection('orders').get();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const startOfToday = firestore.Timestamp.fromDate(today);
+        const endOfToday = firestore.Timestamp.fromDate(new Date());
+
+        const queryOrders = await firestore()
+          .collection('orders')
+          .where('orderDate', '>=', startOfToday)
+          .where('orderDate', '<=', endOfToday)
+          .get();
+
         let resultOrders = [];
         queryOrders.forEach((doc) => {
           resultOrders.push(doc.data());
         });
         setOrders(resultOrders);
-
-        const queryDiscounts = await firestore().collection('discounts').get();
-        let resultDiscounts = [];
-        queryDiscounts.forEach((doc) => {
-          resultDiscounts.push(doc.data());
-        });
-        setDiscounts(resultDiscounts);
 
         const queryInsurance = await firestore()
           .collection('insurances')
@@ -932,14 +876,6 @@ function AddOrder(props) {
         });
         setInsurances(resultInsurance);
 
-        const queryContactLens = await firestore().collection('contacts').get();
-
-        let resultContacts = [];
-        queryContactLens.forEach((doc) => {
-          resultContacts.push(doc.data());
-        });
-        setContactLens(resultContacts);
-
         const queryServices = await firestore().collection('services').get();
 
         let resultServices = [];
@@ -948,19 +884,11 @@ function AddOrder(props) {
         });
         setServices(resultServices);
 
-        const lensPrice = (
-          await firestore().collection('lensPrice').doc('lensPrice').get()
-        ).data();
-        var keys = Object.keys(lensPrice);
-        let lensTypeNames = [];
-        keys.forEach((row) => {
-          lensTypeNames.push({ lensTypeName: row.replace(/"/g, '') });
-        });
-        setLensTypeNames(lensTypeNames);
         setisLoading(false);
       };
       fetchDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newCustomer]);
 
   const date = moment();
@@ -2412,7 +2340,7 @@ function AddOrder(props) {
                                 <h3
                                   className="font-700"
                                   style={{ color: '#f15a25' }}>
-                                  {`$${handleBalance()}`}
+                                  {`$${handleBalance().toLocaleString()}`}
                                 </h3>
                               </div>
                             </div>

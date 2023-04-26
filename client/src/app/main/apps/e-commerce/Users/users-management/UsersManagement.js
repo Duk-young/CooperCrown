@@ -1,27 +1,10 @@
-import { withStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { useHistory } from 'react-router-dom';
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import FuseLoading from '@fuse/core/FuseLoading';
-import { firestore, storage } from 'firebase';
-import FusePageCarded from '@fuse/core/FusePageCarded';
-import { useForm, useDeepCompareEffect } from '@fuse/hooks';
 import { makeStyles } from '@material-ui/core/styles';
+import { useForm } from '@fuse/hooks';
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import { useTheme } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import withReducer from 'app/store/withReducer';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { stubTrue } from 'lodash';
 
 
 const useStyles = makeStyles({
@@ -38,7 +21,6 @@ const useStyles = makeStyles({
   }
 });
 export default function CheckboxLabels(props) {
-  const [isLoading, setisLoading] = useState(true);
   const [checkedshowrroom, setCheckedshowroom] = useState(false);
   const [checkedbayside, setCheckedbayside] = useState(false);
   const [checkedbrooklyndubo, setCheckedbrooklyndubo] = useState(false);
@@ -68,10 +50,7 @@ export default function CheckboxLabels(props) {
  
   const { form, handleChange, setForm } = useForm(null);
   const classes = useStyles();
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const routeParams = useParams();
-  const [disabledState, setDisabledState] = useState(false);
+  const [disabledState] = useState(false);
 
   const showroomcheckchanged = (state) => {
    
@@ -80,18 +59,18 @@ export default function CheckboxLabels(props) {
       setCheckedshowroom(!checkedshowrroom);
       if (value === "showroomall") {
   
-        if (!checkedshowrroom === true && !checkedbayside == true
-          && !checkedbrooklyndubo == true
-          && !checkedBrooklynBedfordSt == true
-          && !checkedCloster == true
-          && !checkedFlushing == true
-          && !checkedGreenwichVillage == true
-          && !checkedLongIslandCity == true
-          && !checkedLongIslandRoslyn == true
-          && !checkedManhattan72ndSt == true
-          && !checkedManhattanMottSt == true
-          && !checkedmanhattanwallstreet == true
-          && !checkedsunnyside == true
+        if (!checkedshowrroom === true && !checkedbayside === true
+          && !checkedbrooklyndubo === true
+          && !checkedBrooklynBedfordSt === true
+          && !checkedCloster === true
+          && !checkedFlushing === true
+          && !checkedGreenwichVillage === true
+          && !checkedLongIslandCity === true
+          && !checkedLongIslandRoslyn === true
+          && !checkedManhattan72ndSt === true
+          && !checkedManhattanMottSt === true
+          && !checkedmanhattanwallstreet === true
+          && !checkedsunnyside === true
          ) {
             
         setForm({
@@ -149,18 +128,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedbayside(!checkedbayside)
     if (checkedbayside  === true && 
-      (checkedshowrroom == true
-      || checkedbrooklyndubo == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbrooklyndubo === true
+      || checkedBrooklynBedfordSt === true
+      || checkedCloster === true
+      || checkedFlushing === true
+      || checkedGreenwichVillage === true
+      || checkedLongIslandCity === true
+      || checkedLongIslandRoslyn === true
+      || checkedManhattan72ndSt === true
+      || checkedManhattanMottSt === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -215,18 +194,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedbrooklyndubo(!checkedbrooklyndubo);
     if (checkedbrooklyndubo   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      || checkedBrooklynBedfordSt === true
+      || checkedCloster === true
+      || checkedFlushing === true
+      || checkedGreenwichVillage === true
+      || checkedLongIslandCity === true
+      || checkedLongIslandRoslyn === true
+      || checkedManhattan72ndSt === true
+      || checkedManhattanMottSt === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -281,18 +260,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedBrooklynBedfordSt(!checkedBrooklynBedfordSt);
     if (checkedBrooklynBedfordSt  === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      ||  checkedbrooklyndubo == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      ||  checkedbrooklyndubo === true
+      || checkedCloster === true
+      || checkedFlushing === true
+      || checkedGreenwichVillage === true
+      || checkedLongIslandCity === true
+      || checkedLongIslandRoslyn === true
+      || checkedManhattan72ndSt === true
+      || checkedManhattanMottSt === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -347,18 +326,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedCloster(!checkedCloster);
     if (checkedCloster   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedbrooklyndubo == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      || checkedBrooklynBedfordSt === true
+      || checkedbrooklyndubo === true
+      || checkedFlushing === true
+      || checkedGreenwichVillage === true
+      || checkedLongIslandCity === true
+      || checkedLongIslandRoslyn === true
+      || checkedManhattan72ndSt === true
+      || checkedManhattanMottSt === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -413,18 +392,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedFlushing(!checkedFlushing);
     if (checkedFlushing   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedbrooklyndubo == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      || checkedBrooklynBedfordSt === true
+      || checkedCloster === true
+      || checkedbrooklyndubo === true
+      || checkedGreenwichVillage === true
+      || checkedLongIslandCity === true
+      || checkedLongIslandRoslyn === true
+      || checkedManhattan72ndSt === true
+      || checkedManhattanMottSt === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -479,18 +458,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedGreenwichVillage(!checkedGreenwichVillage);
     if (checkedGreenwichVillage   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedbrooklyndubo == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      || checkedBrooklynBedfordSt === true
+      || checkedCloster === true
+      || checkedFlushing === true
+      || checkedbrooklyndubo === true
+      || checkedLongIslandCity === true
+      || checkedLongIslandRoslyn === true
+      || checkedManhattan72ndSt === true
+      || checkedManhattanMottSt === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -545,18 +524,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedLongIslandCity(!checkedLongIslandCity);
     if (checkedLongIslandCity   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedbrooklyndubo == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      || checkedBrooklynBedfordSt === true
+      || checkedCloster === true
+      || checkedFlushing === true
+      || checkedGreenwichVillage === true
+      || checkedbrooklyndubo === true
+      || checkedLongIslandRoslyn === true
+      || checkedManhattan72ndSt === true
+      || checkedManhattanMottSt === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -611,18 +590,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedLongIslandRoslyn(!checkedLongIslandRoslyn);
     if (checkedLongIslandRoslyn   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedbrooklyndubo == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      || checkedBrooklynBedfordSt === true
+      || checkedCloster === true
+      || checkedFlushing === true
+      || checkedGreenwichVillage === true
+      || checkedLongIslandCity === true
+      || checkedbrooklyndubo === true
+      || checkedManhattan72ndSt === true
+      || checkedManhattanMottSt === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -677,18 +656,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedManhattan72ndSt(!checkedManhattan72ndSt);
     if (checkedManhattan72ndSt   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedbrooklyndubo == true
-      || checkedManhattanMottSt == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      || checkedBrooklynBedfordSt === true
+      || checkedCloster === true
+      || checkedFlushing === true
+      || checkedGreenwichVillage === true
+      || checkedLongIslandCity === true
+      || checkedLongIslandRoslyn === true
+      || checkedbrooklyndubo === true
+      || checkedManhattanMottSt === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -743,18 +722,18 @@ export default function CheckboxLabels(props) {
 
     setCheckedManhattanMottSt(!checkedManhattanMottSt);
     if (checkedManhattanMottSt   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedbrooklyndubo == true
-      || checkedmanhattanwallstreet == true
-      || checkedsunnyside == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      || checkedBrooklynBedfordSt === true
+      || checkedCloster === true
+      || checkedFlushing === true
+      || checkedGreenwichVillage === true
+      || checkedLongIslandCity === true
+      || checkedLongIslandRoslyn === true
+      || checkedManhattan72ndSt === true
+      || checkedbrooklyndubo === true
+      || checkedmanhattanwallstreet === true
+      || checkedsunnyside === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -805,88 +784,23 @@ export default function CheckboxLabels(props) {
     }
 
   };
-  const manhattanwallstreetchange = (state) => {
-
-    setCheckedmanhattanwallstreet(!checkedmanhattanwallstreet);
-    if (checkedmanhattanwallstreet   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedbrooklyndubo == true
-      || checkedsunnyside == true)
-     ) {
-
-      setCheckedshowroom(!checkedshowrroom);
-      setCheckedbayside(!checkedbayside);
-      setCheckedbrooklyndubo(!checkedbrooklyndubo);
-      setCheckedBrooklynBedfordSt(!checkedBrooklynBedfordSt);
-      setCheckedCloster(!checkedCloster);
-      setCheckedFlushing(!checkedFlushing);
-      setCheckedGreenwichVillage(!checkedGreenwichVillage);
-      setCheckedLongIslandCity(!checkedLongIslandCity);
-      setCheckedLongIslandRoslyn(!checkedLongIslandRoslyn);
-      setCheckedManhattan72ndSt(!checkedManhattan72ndSt);
-      setCheckedManhattanMottSt(!checkedManhattanMottSt);
-      setCheckedmanhattanwallstreet(!checkedmanhattanwallstreet);
-      setCheckedsunnyside(!checkedsunnyside);
-
-      setForm({
-        ...form,
-        Bayside: false,
-        brooklyndubo: false,
-        BrooklynBedfordSt: false,     
-        Closter: false,
-         Flushing: false,
-         GreenwichVillage: false,
-         LongIslandCity: false,
-         LongIslandRoslyn: false,
-         Manhattan72ndSt: false,
-         ManhattanMottSt: false,
-         manhattanwallstreet: false,
-         sunnyside: false,
-         showroomall:false
-      });
-
-     }
-   else if (!checkedmanhattanwallstreet === true) {
-      setForm({
-        ...form,
-        manhattanwallstreet: true,
-
-      });
-
-    } else {
-      setForm({
-        ...form,
-        manhattanwallstreet: false,
-
-      });
-    }
-
-  };
+  
   const sunnysidechange = (state) => {
 
     setCheckedsunnyside(!checkedsunnyside);
     if (checkedsunnyside   === true && 
-      (checkedshowrroom == true
-      || checkedbayside == true
-      || checkedBrooklynBedfordSt == true
-      || checkedCloster == true
-      || checkedFlushing == true
-      || checkedGreenwichVillage == true
-      || checkedLongIslandCity == true
-      || checkedLongIslandRoslyn == true
-      || checkedManhattan72ndSt == true
-      || checkedManhattanMottSt == true
-      || checkedbrooklyndubo == true
-      || checkedmanhattanwallstreet == true)
+      (checkedshowrroom === true
+      || checkedbayside === true
+      || checkedBrooklynBedfordSt === true
+      || checkedCloster === true
+      || checkedFlushing === true
+      || checkedGreenwichVillage === true
+      || checkedLongIslandCity === true
+      || checkedLongIslandRoslyn === true
+      || checkedManhattan72ndSt === true
+      || checkedManhattanMottSt === true
+      || checkedbrooklyndubo === true
+      || checkedmanhattanwallstreet === true)
      ) {
 
       setCheckedshowroom(!checkedshowrroom);
@@ -944,12 +858,12 @@ export default function CheckboxLabels(props) {
 
 
       console.log(!checkedstate)
-      if (!checkedstate === true && !checkedcalifornia == true
-        && !checkednewjersey == true
-        && !checkednewyork == true
-        && !checkedvirginia == true
-        && !checkedMaryland == true
-        && !checkedPennsylvania == true) {
+      if (!checkedstate === true && !checkedcalifornia === true
+        && !checkednewjersey === true
+        && !checkednewyork === true
+        && !checkedvirginia === true
+        && !checkedMaryland === true
+        && !checkedPennsylvania === true) {
         setForm({
           ...form,
           California: true,
@@ -987,11 +901,11 @@ export default function CheckboxLabels(props) {
    
     if (checkedcalifornia === true &&
       (checkedstate === true ||
-      checkednewjersey == true
-      || checkednewyork == true
-      || checkedvirginia == true
-      || checkedMaryland == true
-      || checkedPennsylvania == true) ) {
+      checkednewjersey === true
+      || checkednewyork === true
+      || checkedvirginia === true
+      || checkedMaryland === true
+      || checkedPennsylvania === true) ) {
          
         setCheckedcalifornia(!checkedcalifornia);
         setCheckednewjersey(!checkednewjersey);
@@ -1038,11 +952,11 @@ export default function CheckboxLabels(props) {
     console.log(!checkednewjersey)
     if (checkednewjersey === true &&
       (checkedstate === true ||
-        checkedcalifornia == true
-      || checkednewyork == true
-      || checkedvirginia == true
-      || checkedMaryland == true
-      || checkedPennsylvania == true) ) {
+        checkedcalifornia === true
+      || checkednewyork === true
+      || checkedvirginia === true
+      || checkedMaryland === true
+      || checkedPennsylvania === true) ) {
          
         setCheckedcalifornia(!checkedcalifornia);
         setCheckednewjersey(!checkednewjersey);
@@ -1087,11 +1001,11 @@ export default function CheckboxLabels(props) {
     setCheckednewyork(!checkednewyork)
     if (checkednewyork === true &&
       (checkedstate === true ||
-        checkedcalifornia == true
-      || checkednewjersey == true
-      || checkedvirginia == true
-      || checkedMaryland == true
-      || checkedPennsylvania == true) ) {
+        checkedcalifornia === true
+      || checkednewjersey === true
+      || checkedvirginia === true
+      || checkedMaryland === true
+      || checkedPennsylvania === true) ) {
          
         setCheckedcalifornia(!checkedcalifornia);
         setCheckednewjersey(!checkednewjersey);
@@ -1136,11 +1050,11 @@ export default function CheckboxLabels(props) {
     setCheckedvirginia(!checkedvirginia)
     if (checkedvirginia  === true &&
       (checkedstate === true ||
-        checkedcalifornia == true
-      || checkednewjersey == true
-      || checkednewyork == true
-      || checkedMaryland == true
-      || checkedPennsylvania == true) ) {
+        checkedcalifornia === true
+      || checkednewjersey === true
+      || checkednewyork === true
+      || checkedMaryland === true
+      || checkedPennsylvania === true) ) {
          
         setCheckedcalifornia(!checkedcalifornia);
         setCheckednewjersey(!checkednewjersey);
@@ -1184,11 +1098,11 @@ export default function CheckboxLabels(props) {
     setCheckedMaryland(!checkedMaryland)
     if (checkedMaryland   === true &&
       (checkedstate === true ||
-        checkedcalifornia == true
-      || checkednewjersey == true
-      || checkednewyork == true
-      || checkedvirginia == true
-      || checkedPennsylvania == true) ) {
+        checkedcalifornia === true
+      || checkednewjersey === true
+      || checkednewyork === true
+      || checkedvirginia === true
+      || checkedPennsylvania === true) ) {
          
         setCheckedcalifornia(!checkedcalifornia);
         setCheckednewjersey(!checkednewjersey);
@@ -1232,11 +1146,11 @@ export default function CheckboxLabels(props) {
     setCheckedPennsylvania(!checkedPennsylvania)
     if (checkedPennsylvania   === true &&
       (checkedstate === true ||
-        checkedcalifornia == true
-      || checkednewjersey == true
-      || checkednewyork == true
-      || checkedMaryland == true
-      || checkedvirginia == true) ) {
+        checkedcalifornia === true
+      || checkednewjersey === true
+      || checkednewyork === true
+      || checkedMaryland === true
+      || checkedvirginia === true) ) {
          
         setCheckedcalifornia(!checkedcalifornia);
         setCheckednewjersey(!checkednewjersey);
@@ -1285,9 +1199,9 @@ export default function CheckboxLabels(props) {
       console.log(!checkedgender)
       if (!checkedgender === true){
         console.log('enter')
-       if (!checkedMale == true
-        && !checkedFemale == true
-        && !checkedgenderOther == true) {
+       if (!checkedMale === true
+        && !checkedFemale === true
+        && !checkedgenderOther === true) {
         setForm({
           ...form,
           genderall: true,
@@ -1300,9 +1214,9 @@ export default function CheckboxLabels(props) {
         setCheckedgenderOther(!checkedgenderOther);
       }
     }
-    else  if (!checkedgender === false && !checkedMale == false
-      && !checkedFemale == false
-      && !checkedgenderOther == false) {
+    else  if (!checkedgender === false && !checkedMale === false
+      && !checkedFemale === false
+      && !checkedgenderOther === false) {
       setForm({
         ...form,
         genderall: false,
@@ -1358,8 +1272,8 @@ export default function CheckboxLabels(props) {
     setCheckedMale(!checkedMale)
     if (checkedMale   === true &&
       (checkedgender === true ||
-        checkedFemale == true
-      || checkedgenderOther == true
+        checkedFemale === true
+      || checkedgenderOther === true
      ) ) {
          
       setCheckedMale(!checkedMale); 
@@ -1399,8 +1313,8 @@ export default function CheckboxLabels(props) {
     setCheckedFemale(!checkedFemale)
     if (checkedFemale   === true &&
       (checkedgender === true ||
-        checkedMale == true
-      || checkedgenderOther == true
+        checkedMale === true
+      || checkedgenderOther === true
      ) ) {
          
       setCheckedMale(!checkedMale); 
@@ -1439,8 +1353,8 @@ export default function CheckboxLabels(props) {
     setCheckedgenderOther(!checkedgenderOther)
     if (checkedgenderOther   === true &&
       (checkedgender === true ||
-        checkedFemale == true
-      || checkedMale == true
+        checkedFemale === true
+      || checkedMale === true
      ) ) {
          
       setCheckedMale(!checkedMale); 

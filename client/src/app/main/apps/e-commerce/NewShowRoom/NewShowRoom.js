@@ -1,28 +1,24 @@
+import { Link, useParams } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import { states } from 'app/main/apps/e-commerce/Emails/helper.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm, useDeepCompareEffect } from '@fuse/hooks';
+import { useTheme } from '@material-ui/core/styles';
+import * as Actions from '../store/actions';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Button from '@material-ui/core/Button';
+import ConfirmShowroomDelete from './ConfirmShowroomDelete';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import { firestore, storage } from 'firebase';
-import { useForm, useDeepCompareEffect } from '@fuse/hooks';
-import Button from '@material-ui/core/Button';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import ConfirmShowroomDelete from './ConfirmShowroomDelete';
 import Icon from '@material-ui/core/Icon';
-import { useTheme } from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react';
+import reducer from '../store/reducers';
 import Tab from '@material-ui/core/Tab';
-import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import * as Actions from '../store/actions';
-import reducer from '../store/reducers';
-import { states } from 'app/main/apps/e-commerce/Emails/helper.js';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
-
 
 const useStyles = makeStyles({
   table: {
@@ -86,6 +82,7 @@ function NewShowRoom(props) {
     if (routeParams.showRoomtId === 'new') {
       setForm(null)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleChangeTab(event, value) {
@@ -93,30 +90,6 @@ function NewShowRoom(props) {
   }
   const handleClose = () => {
     setOpen(false);
-  };
-  const handleDelete = async () => {
-    try {
-
-      const queryshowRoom = await firestore()
-        .collection('showRooms')
-        .where('showRoomId', '==', Number(form.showRoomId))
-        .limit(1)
-        .get();
-
-      let result = queryshowRoom.docs[0].data();
-      result.id = queryshowRoom.docs[0].id;
-      await firestore().collection('showRooms').doc(result.id).delete();
-      dispatch(
-        MessageActions.showMessage({
-          message: 'showRoom deleted successfully'
-        })
-      );
-      props.history.push(
-        props.history.push(`/apps/e-commerce/showRooms`)
-      );
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const isFormValid = () => {
@@ -181,34 +154,6 @@ function NewShowRoom(props) {
     submitForm();
   }
 
-
-  // const submit = () => {
-
-  //   confirmAlert({
-  //     title: 'Confirm to submit',
-  //     message: 'Are you sure to do this.',
-  //     buttons: [
-  //       {
-  //         label: 'Yes',
-  //         onClick: () => handleDelete()
-  //       },
-  //       {
-  //         label: 'No',
-  //         //onClick: () => alert('Click No')
-  //       }
-  //     ]
-  //   });
-  // }
-
-  function canBeSubmitted() {
-    return (
-      form.locationName.length > 0 &&
-      form.locationAddress.length > 0 &&
-      form.State.length > 0 &&
-      form.City.length > 0 &&
-      form.zipCode.length > 0
-    );
-  }
 
   if (
     (!product.data ||

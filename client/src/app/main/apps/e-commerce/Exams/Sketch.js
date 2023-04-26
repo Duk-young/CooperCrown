@@ -27,6 +27,7 @@ const Sketch = (props) => {
 
   useEffect(() => {
     if (form?.sketch && saveableCanvas) saveableCanvas.loadSaveData(form?.sketch)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saveableCanvas])
 
   return (

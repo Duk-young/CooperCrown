@@ -1,23 +1,17 @@
+import { firestore } from 'firebase';
+import { useDispatch } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import DoctorsTableHead from './DoctorsTableHead';
+import FuseLoading from '@fuse/core/FuseLoading';
 import FuseScrollbars from '@fuse/core/FuseScrollbars';
-import _ from '@lodash';
-import Checkbox from '@material-ui/core/Checkbox';
-import Table from '@material-ui/core/Table';
-import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import FuseLoading from '@fuse/core/FuseLoading';
-import React, { useEffect, useState } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import * as Actions from '../store/actions';
-import DoctorsTableHead from './DoctorsTableHead';
-import { firestore } from 'firebase';
 
 function DoctorsTable(props) {
   const dispatch = useDispatch();

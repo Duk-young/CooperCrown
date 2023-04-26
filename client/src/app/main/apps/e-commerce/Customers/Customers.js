@@ -1,16 +1,13 @@
 import './App.mobile.css';
 import './Search.css';
 import './Themes.css';
+import { firestore } from 'firebase';
 import { useForm } from '@fuse/hooks';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { firestore } from 'firebase';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
-import DateFnsUtils from '@date-io/date-fns';
 import FusePageSimple from '@fuse/core/FusePageSimple';
-import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/Icon';
 import moment from 'moment';
 import Paper from '@material-ui/core/Paper';
 import React from 'react';
@@ -21,6 +18,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import {
@@ -28,15 +26,9 @@ import {
   Pagination,
   InstantSearch,
   SearchBox,
-  SortBy,
   HitsPerPage,
   Configure
 } from 'react-instantsearch-dom';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from '@material-ui/pickers';
-import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles((theme) => ({
   header: {

@@ -1,19 +1,8 @@
-import Checkbox from '@material-ui/core/Checkbox';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Tooltip from '@material-ui/core/Tooltip';
-import clsx from 'clsx';
-import React, { useState } from 'react';
 
 const rows = [
   {
@@ -53,12 +42,6 @@ const rows = [
   }
 ];
 
-const useStyles = makeStyles((theme) => ({
-  actionsButtonWrapper: {
-    background: theme.palette.background.paper
-  }
-}));
-
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -73,20 +56,6 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 function DoctorsTableHead(props) {
-
-  const [selectedDoctorsMenu, setselectedDoctorsMenu] = useState(null);
-
-  const createSortHandler = (property) => (event) => {
-    props.onRequestSort(event, property);
-  };
-
-  function openselectedDoctorsMenu(event) {
-    setselectedDoctorsMenu(event.currentTarget);
-  }
-
-  function closeselectedDoctorsMenu() {
-    setselectedDoctorsMenu(null);
-  }
 
   return (
     <TableHead>

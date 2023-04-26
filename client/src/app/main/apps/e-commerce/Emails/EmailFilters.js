@@ -1,23 +1,21 @@
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import { useForm } from '@fuse/hooks';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import ListItemText from '@material-ui/core/ListItemText';
-import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import * as Actions from '../store/actions';
+import { makeStyles } from '@material-ui/core/styles';
 import { states } from './helper'
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from '@fuse/hooks';
+import * as Actions from '../store/actions';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import CloseIcon from '@material-ui/icons/Close';
+import Dialog from '@material-ui/core/Dialog';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import React, { useEffect, useState } from 'react';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -57,7 +55,6 @@ export default function EmailFilters({ open, handleClose }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { form, handleChange, setForm, resetForm } = useForm(null);
-  const theme = useTheme();
   const products = useSelector(
     ({ eCommerceApp }) => eCommerceApp.products.data
   );
@@ -323,42 +320,49 @@ export default function EmailFilters({ open, handleClose }) {
     if (showroom || allShowrooms || !allShowrooms) {
       setForm({ ...form, showroom })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showroom, allShowrooms])
 
   useEffect(() => {
     if (stateAddress || allStates || !allStates) {
       setForm({ ...form, stateAddress })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stateAddress, allStates])
 
   useEffect(() => {
     if (gender || allGenders || !allGenders) {
       setForm({ ...form, gender })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gender, allGenders])
 
   useEffect(() => {
     if (orderType || allOrders || !allOrders) {
       setForm({ ...form, orderType })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderType, allOrders])
 
   useEffect(() => {
     if (ethnicity || allEthnicities || !allEthnicities) {
       setForm({ ...form, ethnicity })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ethnicity, allEthnicities])
 
   useEffect(() => {
     if (ageRange || allAgeRanges || !allAgeRanges) {
       setForm({ ...form, ageRange })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ageRange, allAgeRanges])
 
   useEffect(() => {
     if (form) {
       dispatch(Actions.getSelectedFilters(form))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form])
 
   return (

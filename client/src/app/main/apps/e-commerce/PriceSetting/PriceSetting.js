@@ -1,61 +1,23 @@
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import FuseLoading from '@fuse/core/FuseLoading';
-import FusePageCarded from '@fuse/core/FusePageCarded';
-import { useForm, useDeepCompareEffect } from '@fuse/hooks';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
+import { Link } from 'react-router-dom';
+import { useForm } from '@fuse/hooks';
+import { useSelector } from 'react-redux';
 import { useTheme } from '@material-ui/core/styles';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import FusePageCarded from '@fuse/core/FusePageCarded';
+import Icon from '@material-ui/core/Icon';
+import React, { useEffect, useState } from 'react';
+import reducer from '../store/reducers';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import * as Actions from '../store/actions';
-import reducer from '../store/reducers';
 
-const useStyles = makeStyles({
-    table: {
-        minWidth: 450
-    },
-    button: {
-        backgroundColor: '#f15a25',
-        color: '#fff',
-        '&:hover': {
-            backgroundColor: '#f47b51',
-            color: '#fff'
-        }
-    }
-});
 function Service(props) {
-    const dispatch = useDispatch();
-    const classes = useStyles();
     const product = useSelector(({ eCommerceApp }) => eCommerceApp.service);
     const theme = useTheme();
 
     const [tabValue, setTabValue] = useState(0);
-    const [isLoading, setisLoading] = useState(false);
-    const { form, handleChange, setForm } = useForm(null);
-
-    const routeParams = useParams();
-
-    //   useDeepCompareEffect(() => {
-    //     const updateProductState = async () => {
-    //       setisLoading(false);
-    //       const { serviceId } = routeParams;
-    //       if (serviceId === 'new') {
-    //         dispatch(Actions.newService());
-    //         setisLoading(true);
-    //       } else {
-    //         await dispatch(await Actions.getService(serviceId));
-    //         setisLoading(true);
-    //       }
-    //     };
-    //     updateProductState();
-    //   }, [dispatch, routeParams]);
+    const { form, setForm } = useForm(null);
 
     useEffect(() => {
         if (

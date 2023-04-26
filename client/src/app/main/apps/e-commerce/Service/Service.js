@@ -3,8 +3,6 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import { useForm, useDeepCompareEffect } from '@fuse/hooks';
 import Button from '@material-ui/core/Button';
-import { firestore, storage } from 'firebase';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Icon from '@material-ui/core/Icon';
 import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
@@ -20,40 +18,7 @@ import * as Actions from '../store/actions';
 import reducer from '../store/reducers';
 import ConfirmServiceDelete from './ConfirmServiceDelete';
 
-// const useStyles = makeStyles((theme) => ({
-//   productImageFeaturedStar: {
-//     position: 'absolute',
-//     top: 0,
-//     right: 0,
-//     color: orange[400],
-//     opacity: 0
-//   },
-//   productImageUpload: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut
-//   },
-//   productImageItem: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut,
-//     '&:hover': {
-//       '& $productImageFeaturedStar': {
-//         opacity: 0.8
-//       }
-//     },
-//     '&.featured': {
-//       pointerEvents: 'none',
-//       boxShadow: theme.shadows[3],
-//       '& $productImageFeaturedStar': {
-//         opacity: 1
-//       },
-//       '&:hover $productImageFeaturedStar': {
-//         opacity: 1
-//       }
-//     }
-//   }
-// }));
+
 const useStyles = makeStyles({
   table: {
     minWidth: 450
@@ -75,7 +40,6 @@ function Service(props) {
   const [open, setOpen] = useState(false);
 
   const [tabValue, setTabValue] = useState(0);
-  const [showModal, setShowModal] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -113,32 +77,6 @@ function Service(props) {
 
   function handleChangeTab(event, value) {
     setTabValue(value);
-  }
-  const handleDelete = async () => {
-    try {
-      const queryservices = await firestore()
-        .collection('services')
-        .where('serviceId', '==', Number(form.serviceId))
-        .limit(1)
-        .get();
-
-      let result = queryservices.docs[0].data();
-      result.id = queryservices.docs[0].id;
-      await firestore().collection('services').doc(result.id).delete();
-      dispatch(
-        MessageActions.showMessage({
-          message: 'Service deleted successfully'
-        })
-      );
-      props.history.push(
-        props.history.push(`/apps/e-commerce/services`)
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  function canBeSubmitted() {
-    return form.name.length > 0 && form.price.length > 0;
   }
 
   const isFormValid = () => {
