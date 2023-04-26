@@ -1,4 +1,3 @@
-import _ from '@lodash';
 import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';

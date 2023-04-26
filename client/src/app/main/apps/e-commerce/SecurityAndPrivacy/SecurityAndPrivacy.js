@@ -199,18 +199,6 @@ function SecurityAndPrivacy(props) {
     updatePassword();
   }
 
-  function canBeSubmitted() {
-    if (tabValue === 0) {
-      return (
-        form.newEmail &&
-        form.confrimEmail &&
-        form.newEmail.length > 0 &&
-        form.confrimEmail.length &&
-        form.newEmail === form.confrimEmail
-      );
-    }
-  }
-
   if (!isLoading) {
     return <FuseLoading />;
   }

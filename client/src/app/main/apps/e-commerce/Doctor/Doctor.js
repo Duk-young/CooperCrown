@@ -50,7 +50,7 @@ function Doctor(props) {
   const [showRooms, setShowRooms] = useState([]);
 
   const history = useHistory();
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue] = useState(0);
   const [isLoading, setisLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
   const [open, setOpen] = useState(false);
@@ -103,6 +103,7 @@ function Doctor(props) {
     };
     fetchDetails();
     fetchlocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

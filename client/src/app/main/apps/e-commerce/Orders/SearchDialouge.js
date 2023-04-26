@@ -18,7 +18,7 @@ import Paper from '@material-ui/core/Paper';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import { blue } from '@material-ui/core/colors';
-import Box from '@material-ui/core/Box';
+
 const searchClient = algoliasearch(
   '5AS4E06TDY',
   '42176bd827d90462ba9ccb9578eb43b2'

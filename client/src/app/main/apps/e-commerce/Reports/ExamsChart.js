@@ -1,11 +1,10 @@
 import { useSelector } from 'react-redux';
 import Widget2 from '../../dashboards/analytics/widgets/Widget2';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { firestore } from 'firebase/app';
 import FuseLoading from '@fuse/core/FuseLoading';
 
 const ExamsChart = () => {
-  const [chartDataSales, setChartDataSales] = useState(null);
 
   const widgets = useSelector(
     ({ analyticsDashboardApp }) => analyticsDashboardApp.widgets.data

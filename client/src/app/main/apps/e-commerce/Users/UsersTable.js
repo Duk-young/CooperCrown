@@ -1,36 +1,18 @@
-import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
-import Checkbox from '@material-ui/core/Checkbox';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import * as Actions from '../store/actions';
+import FuseLoading from '@fuse/core/FuseLoading';
+import FuseScrollbars from '@fuse/core/FuseScrollbars';
+import React, { useEffect, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import { useHistory } from 'react-router-dom';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import { withStyles } from '@material-ui/core/styles';
-import FuseLoading from '@fuse/core/FuseLoading';
-import { firestore } from 'firebase';
-import FormControl from '@material-ui/core/FormControl';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import * as Actions from '../store/actions';
-import moment from 'moment';
 import UsersTableHead from './UsersTableHead';
-const StyledTableCell = withStyles((theme) => ({
-  // head: {
-  //   backgroundColor: theme.palette.common.black,
-  //   color: theme.palette.common.white,
-  //   textAlign: 'center'
-  // },
-  body: {
-    fontSize: 14,
-    padding: 0,
-    textAlign: 'left',
-    width: '20%'
-  }
-}))(TableCell);
+
 function UsersTable(props) {
   const dispatch = useDispatch();
   const products = useSelector(({ eCommerceApp }) => eCommerceApp.users.data);
@@ -111,28 +93,6 @@ function UsersTable(props) {
     props.history.push(`/apps/e-commerce/user/${item.id}`);
   }
 
-  // function handleClick(ite m) {
-  //   props.history.push(`/apps/e-commerce/discount/${item.id}`);
-  // }
-  function handleCheck(event, id) {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  }
   const StyledTableCell = withStyles((theme) => ({
     head: {
       backgroundColor: theme.palette.common.black,
@@ -148,13 +108,6 @@ function UsersTable(props) {
     }
   }))(TableCell);
 
-  const StyledTableRow = withStyles((theme) => ({
-    root: {
-      '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover
-      }
-    }
-  }))(TableRow);
   function handleChangePage(event, value) {
     setPage(value);
   }
@@ -206,7 +159,6 @@ function UsersTable(props) {
                     selected={isSelected}
                     onClick={(event) => {
                       handleClick(n)
-                      { console.log(n.id) }
                     }}
 
                   >

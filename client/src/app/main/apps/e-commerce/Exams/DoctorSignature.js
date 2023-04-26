@@ -16,11 +16,12 @@ const useStyles = makeStyles((theme) => ({
 const DoctorSignature = (props) => {
   const { form, setForm, disabledState } = props;
   const [saveableCanvas, setSaveableCanvas] = useState();
-  const [selectedColour, setSelectedColour] = useState('#000000');
+  const [selectedColour] = useState('#000000');
   const classes = useStyles();
 
   useEffect(() => {
     if (form?.docSign && saveableCanvas) saveableCanvas.loadSaveData(form?.docSign)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saveableCanvas])
 
   return (

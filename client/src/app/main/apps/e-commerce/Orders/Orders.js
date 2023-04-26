@@ -1,83 +1,41 @@
-import React from 'react';
-import {
-  InstantSearch,
-  SearchBox,
-  Pagination,
-  HitsPerPage,
-  // connectSearchBox,
-  Configure
-} from 'react-instantsearch-dom';
-// import {
-//   MuiPickersUtilsProvider,
-//   KeyboardDatePicker
-// } from '@material-ui/pickers';
 import '../Customers/App.mobile.css';
 import '../Customers/Search.css';
 import '../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
+import { firestore } from 'firebase';
 import { Link } from 'react-router-dom';
+import { showMessage } from 'app/store/actions/fuse';
 import { useForm } from '@fuse/hooks';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { firestore } from 'firebase';
 import algoliasearch from 'algoliasearch/lite';
-import clsx from 'clsx';
-// import DateFnsUtils from '@date-io/date-fns';
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import FusePageSimple from '@fuse/core/FusePageSimple';
-// import Grid from '@material-ui/core/Grid';
-// import Icon from '@material-ui/core/Icon';
-import LabelImportantIcon from '@material-ui/icons/LabelImportant';
-import moment from 'moment';
-import reducer from '../store/reducers';
-// import SearchDialouge from './SearchDialouge';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
+import clsx from 'clsx';
+import firebaseService from 'app/services/firebaseService';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import FusePageSimple from '@fuse/core/FusePageSimple';
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
+import moment from 'moment';
+import React from 'react';
+import reducer from '../store/reducers';
+import Tab from '@material-ui/core/Tab';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import firebaseService from 'app/services/firebaseService';
-import { showMessage } from 'app/store/actions/fuse';
+import {
+  InstantSearch,
+  SearchBox,
+  Pagination,
+  HitsPerPage
+} from 'react-instantsearch-dom';
 
-// const color = '#fff';
-
-// const customMaterialTheme = createTheme({
-//   components: {
-//     MuiIconButton: {
-//       styleOverrides: {
-//         sizeMedium: {
-//           color
-//         }
-//       }
-//     },
-//     MuiOutlinedInput: {
-//       styleOverrides: {
-//         root: {
-//           color
-//         }
-//       }
-//     },
-//     MuiInputLabel: {
-//       styleOverrides: {
-//         root: {
-//           color
-//         }
-//       }
-//     },
-//     MuiSvgIcon: {
-//       root: {
-//         fill: '#fff'
-//       }
-//     }
-//   }
-// });
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -189,12 +147,14 @@ const CustomHits = connectHits(
             : setIsDataEmpty(false);
         }
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hits, value]);
 
     React.useEffect(() => {
       if (value !== 0) {
         setSelectAllData(false);
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     return (

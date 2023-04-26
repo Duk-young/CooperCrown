@@ -3,11 +3,6 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import { useForm, useDeepCompareEffect } from '@fuse/hooks';
 import Button from '@material-ui/core/Button';
-import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from '@material-ui/pickers';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import { firestore } from 'firebase';
 import FormControl from '@material-ui/core/FormControl';
@@ -143,6 +138,7 @@ function NewShowRoom(props) {
       setisLoading(false);
     };
     fetchlocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, product.data, setForm]);
 
   const handleDelete = async () => {
@@ -171,15 +167,6 @@ function NewShowRoom(props) {
   };
   function handleChangeTab(event, value) {
     setTabValue(value);
-  }
-
-  function canBeSubmitted() {
-    return (
-      form.username.length > 0 &&
-      form.password.length > 0 &&
-      form.confirmPassword.length > 0 &&
-      form.password === form.confirmPassword
-    );
   }
 
 

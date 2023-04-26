@@ -1,20 +1,20 @@
 import { firestore } from 'firebase';
+import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
+import { validateAgeRange, uniqueElements } from './helper'
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
-import emailjs from 'emailjs-com';
-import { makeStyles } from '@material-ui/core/styles';
-import FuseAnimate from '@fuse/core/FuseAnimate';
 import EmailFilters from './EmailFilters';
-import FusePageCarded from '@fuse/core/FusePageCarded';
+import emailjs from 'emailjs-com';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import FusePageCarded from '@fuse/core/FusePageCarded';
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import { useDispatch, useSelector } from 'react-redux';
-import { validateAgeRange, uniqueElements } from './helper'
 
 
 const useStyles = makeStyles({
@@ -35,7 +35,6 @@ function EmailTemplates(props) {
   const { form, handleChange, setForm } = useForm(null);
   const [disabledState, setDisabledState] = useState(true);
   const [customers, setCustomers] = useState([]);
-  const [open, setOpen] = useState(false);
   const [openFilters, setOpenFilters] = useState(false)
 
   const dispatch = useDispatch();
@@ -48,11 +47,6 @@ function EmailTemplates(props) {
   const handleFilter = () => {
     let modifiedCustomers = [];
     let isFilterFilled = false
-
-    {/*
-      * Update Filter to include filter by Order & Showroom
-    */}
-
 
     if (selectedFilters.ageRange && selectedFilters.ageRange.length !== 0) {
       isFilterFilled = true
@@ -73,7 +67,7 @@ function EmailTemplates(props) {
     if (selectedFilters.gender && selectedFilters.gender.length !== 0) {
       isFilterFilled = true
       selectedFilters.gender.forEach(filter => {
-        let filteredCustomers = customers.filter(customer => customer?.gender == filter)
+        let filteredCustomers = customers.filter(customer => customer?.gender === filter)
         modifiedCustomers = [...modifiedCustomers, ...filteredCustomers]
       });
     }

@@ -1,59 +1,23 @@
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import FuseLoading from '@fuse/core/FuseLoading';
-import { firestore, storage } from 'firebase';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import FusePageCarded from '@fuse/core/FusePageCarded';
-import { useForm, useDeepCompareEffect } from '@fuse/hooks';
+import { Link, useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm, useDeepCompareEffect } from '@fuse/hooks';
+import { useTheme } from '@material-ui/core/styles';
+import * as Actions from '../store/actions';
 import Button from '@material-ui/core/Button';
 import ConfirmDiscountDelete from './ConfirmDiscountDelete';
+import FuseAnimate from '@fuse/core/FuseAnimate';
+import FuseLoading from '@fuse/core/FuseLoading';
+import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
-import { useTheme } from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react';
+import reducer from '../store/reducers';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import * as Actions from '../store/actions';
-import reducer from '../store/reducers';
 
-// const useStyles = makeStyles((theme) => ({
-//   productImageFeaturedStar: {
-//     position: 'absolute',
-//     top: 0,
-//     right: 0,
-//     color: orange[400],
-//     opacity: 0
-//   },
-//   productImageUpload: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut
-//   },
-//   productImageItem: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut,
-//     '&:hover': {
-//       '& $productImageFeaturedStar': {
-//         opacity: 0.8
-//       }
-//     },
-//     '&.featured': {
-//       pointerEvents: 'none',
-//       boxShadow: theme.shadows[3],
-//       '& $productImageFeaturedStar': {
-//         opacity: 1
-//       },
-//       '&:hover $productImageFeaturedStar': {
-//         opacity: 1
-//       }
-//     }
-//   }
-// }));
 const useStyles = makeStyles({
   table: {
     minWidth: 450
@@ -75,7 +39,6 @@ function Discount(props) {
   const theme = useTheme();
 
   const [tabValue, setTabValue] = useState(0);
-  const [showModal, setShowModal] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
   const [errors, setErrors] = useState({});
@@ -113,30 +76,7 @@ function Discount(props) {
     setTabValue(value);
 
   }
-  const handleDelete = async () => {
-    try {
-      const queryDiscount = await firestore()
-        .collection('discounts')
-        .where('discountId', '==', routeParams.discountId)
-        .get();
-      let result = queryDiscount.docs[0].data();
-      result.id = queryDiscount.docs[0].id;
-      await firestore().collection('discounts').doc(result.id).delete();
-      dispatch(
-        MessageActions.showMessage({
-          message: 'Discount deleted successfully'
-        })
-      );
 
-      props.history.push('/apps/e-commerce/discounts');
-
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  function canBeSubmitted() {
-    return form.code.length > 0 && form.description.length > 0 && form.amount.length > 0;
-  }
   const handleClose = () => {
     setOpen(false);
   };

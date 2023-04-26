@@ -6,7 +6,6 @@ import FuseLoading from '@fuse/core/FuseLoading';
 
 const PaymentsChart = () => {
   const [chartDataSales, setChartDataSales] = useState(null);
-  const [insurancePayments, setInsurancePayments] = useState(null);
 
   const widgets = useSelector(
     ({ analyticsDashboardApp }) => analyticsDashboardApp.widgets.data
@@ -199,6 +198,7 @@ const PaymentsChart = () => {
               insurance.amount
             );
           });
+          break;
         default:
           break;
       }
@@ -254,6 +254,7 @@ const PaymentsChart = () => {
     };
 
     fetchPaymentDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!chartDataSales) return <FuseLoading />;

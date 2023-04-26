@@ -1,24 +1,24 @@
+import { firestore } from 'firebase';
+import { Link, useParams } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
+import { useForm } from '@fuse/hooks';
+import { useTheme } from '@material-ui/core/styles';
+import * as Actions from '../store/actions';
+import Button from '@material-ui/core/Button';
+import ConfirmContactDelete from './ConfirmContactDelete';
+import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import { useForm, useDeepCompareEffect } from '@fuse/hooks';
-import Button from '@material-ui/core/Button';
-import ConfirmContactDelete from './ConfirmContactDelete';
 import Icon from '@material-ui/core/Icon';
-import { useTheme } from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react';
+import reducer from '../store/reducers';
 import Tab from '@material-ui/core/Tab';
-import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import * as Actions from '../store/actions';
-import reducer from '../store/reducers';
-import { firestore } from 'firebase';
-import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 
 
 const useStyles = makeStyles({
@@ -69,6 +69,7 @@ function NewShowRoom(props) {
       setisLoading(false)
     }
     fetchDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   
@@ -175,7 +176,7 @@ function NewShowRoom(props) {
                   <img
                     className="w-32 sm:w-48 rounded"
                     src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={form?.type}
+                    alt={'Inventory'}
                   />
                 </FuseAnimate>
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
