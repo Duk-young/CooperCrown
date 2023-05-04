@@ -4,15 +4,16 @@ import '../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
 import { Link } from 'react-router-dom';
-import { showMessage } from 'app/store/actions/fuse';
+import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import clsx from 'clsx';
-import firebaseService from 'app/services/firebaseService';
 import FuseAnimate from '@fuse/core/FuseAnimate';
+import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageSimple from '@fuse/core/FusePageSimple';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import moment from 'moment';
@@ -33,7 +34,8 @@ import {
   InstantSearch,
   SearchBox,
   Pagination,
-  HitsPerPage
+  HitsPerPage,
+  Configure
 } from 'react-instantsearch-dom';
 
 
@@ -94,19 +96,15 @@ const CustomHits = connectHits(
     hits,
     props,
     value,
-    setIsDataEmpty,
     selected,
     setSelected,
-    data,
-    setData,
-    selectAllData,
     setSelectAllData
   }) => {
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
     const handleSelectAllClick = (event) => {
       if (event.target.checked) {
-        const newSelecteds = data.map((n) => n.orderId);
+        const newSelecteds = hits.map((n) => n.orderId);
         setSelected(newSelecteds);
         return;
       }
@@ -134,23 +132,6 @@ const CustomHits = connectHits(
     };
 
     React.useEffect(() => {
-      if (hits) {
-        if (value === 0 || selectAllData) {
-          setData(hits);
-        } else {
-          let modifiedArray = hits.filter(
-            (order) => order.orderStatus === statuses[value].label
-          );
-          setData(modifiedArray);
-          modifiedArray.length === 0
-            ? setIsDataEmpty(true)
-            : setIsDataEmpty(false);
-        }
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hits, value]);
-
-    React.useEffect(() => {
       if (value !== 0) {
         setSelectAllData(false);
       }
@@ -166,9 +147,9 @@ const CustomHits = connectHits(
               <StyledTableCell padding="checkbox">
                 <Checkbox
                   indeterminate={
-                    selected.length > 0 && selected.length < data.length
+                    selected.length > 0 && selected.length < hits.length
                   }
-                  checked={data.length > 0 && selected.length === data.length}
+                  checked={hits.length > 0 && selected.length === hits.length}
                   onChange={handleSelectAllClick}
                   style={{ color: '#fff' }}
                 />
@@ -184,7 +165,7 @@ const CustomHits = connectHits(
           </TableRow>
         </TableHead>
         <TableBody>
-          {data
+          {hits
             .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
             .map((hit) => {
               const isItemSelected = isSelected(hit.orderId);
@@ -201,25 +182,25 @@ const CustomHits = connectHits(
                       {(hit?.shipFrameToCustomerLogic ||
                         hit?.shipContactLensToCustomerLogic ||
                         hit?.shipOtherProductToCustomerLogic) && (
-                        <div style={{ width: '20px', height: '20px' }}>
-                          <LabelImportantIcon
-                            color="secondary"
-                            className="w-full h-full"
-                            style={{ color: 'green' }}
-                          />
-                        </div>
-                      )}
+                          <div style={{ width: '20px', height: '20px' }}>
+                            <LabelImportantIcon
+                              color="secondary"
+                              className="w-full h-full"
+                              style={{ color: 'green' }}
+                            />
+                          </div>
+                        )}
                       {(hit?.rushFrameOrder ||
                         hit?.rushContactLensOrder ||
                         hit?.rushOtherProductOrder) && (
-                        <div style={{ width: '20px', height: '20px' }}>
-                          <LabelImportantIcon
-                            color="secondary"
-                            className="w-full h-full"
-                            style={{ color: 'red' }}
-                          />
-                        </div>
-                      )}
+                          <div style={{ width: '20px', height: '20px' }}>
+                            <LabelImportantIcon
+                              color="secondary"
+                              className="w-full h-full"
+                              style={{ color: 'red' }}
+                            />
+                          </div>
+                        )}
                       {hit?.sendFrameToLab && (
                         <div style={{ width: '20px', height: '20px' }}>
                           <LabelImportantIcon
@@ -235,7 +216,7 @@ const CustomHits = connectHits(
                     <StyledTableCell padding="checkbox">
                       <Checkbox
                         checked={isItemSelected}
-                        // inputProps={{ 'aria-labelledby': labelId }}
+                      // inputProps={{ 'aria-labelledby': labelId }}
                       />
                     </StyledTableCell>
                   )}
@@ -247,7 +228,7 @@ const CustomHits = connectHits(
                         `/apps/e-commerce/orders/vieworder/${hit.orderId}`
                       );
                     }}>
-                    {hit?.customOrderId}
+                    {hit?.redoOrder ? `${hit?.customOrderId} R${hit?.redo}` : hit?.customOrderId}
                   </StyledTableCell>
                   <StyledTableCell
                     onClick={() => {
@@ -369,29 +350,56 @@ function TabPanel(props) {
 
 function Orders(props) {
   const classes = useStyles(props);
+  const dispatch = useDispatch();
   const { form, handleChange } = useForm(null);
   const [value, setValue] = React.useState(0);
   const [isDataEmpty, setIsDataEmpty] = React.useState(null);
   const [selected, setSelected] = React.useState([]);
-  const [data, setData] = React.useState([]);
   const [selectAllData, setSelectAllData] = React.useState(false);
+  const [isLoading, setisLoading] = React.useState(false);
 
   const updateStatus = async (order, status) => {
     const uuid = order[0]; // add loader then update the page with the new data
     try {
-      await firebaseService.firestoreDb
+      setisLoading(true)
+      const queryOrder = await firestore()
         .collection('orders')
-        .doc(uuid)
+        .where('orderId', '==', Number(uuid))
+        .limit(1)
+        .get();
+
+      let orderUuid = queryOrder.docs[0].id;
+
+      await firestore()
+        .collection('orders')
+        .doc(orderUuid)
         .update({ orderStatus: status });
-      showMessage({ message: 'status Updated' });
+      setSelected([])
+
+      setTimeout(() => {
+        searchClient.clearCache()
+        dispatch(
+          MessageActions.showMessage({
+            message: 'Order status updated successfully'
+          })
+        );
+        setisLoading(false)
+      }, 3000);
+
     } catch (error) {
       console.log(error);
     }
   };
 
+  // const handleRefresh = () => {
+  //   searchClient.clearCache()
+  //   setData([])
+  // };
+
   const handleTabChange = (_, newValue) => {
     setValue(newValue);
   };
+  if (isLoading) return <FuseLoading />;
 
   return (
     <FusePageSimple
@@ -435,6 +443,9 @@ function Orders(props) {
                   })}
                 </Tabs>
               </div>
+              <Configure
+                filters={value > 0 ? `orderStatus: '${statuses[value]?.label}'` : ''}
+              />
               <div className={classes.header}>
                 <div className="flex flex-col w-1/3">
                   <div className="date-picker w-full flex flex-row gap-10">
@@ -556,8 +567,6 @@ function Orders(props) {
                     <CustomHits
                       props={props}
                       value={value}
-                      data={data}
-                      setData={setData}
                       setIsDataEmpty={setIsDataEmpty}
                       selected={selected}
                       setSelected={setSelected}
@@ -572,14 +581,34 @@ function Orders(props) {
                 <div className="flex justify-center mt-8">
                   <Pagination />
                 </div>
+                {value === 3 && (
+                  <div className="flex justify-end mt-8 pr-20">
+                    <Button
+                      className={`whitespace-no-wrap mt-42 uppercase ${selected.length === 0 && 'opacity-75'
+                        }`}
+                      style={{
+                        backgroundColor: '#222',
+                        color: '#FFF'
+                      }}
+                      variant="contained"
+                      color="secondary"
+                      disabled={selected.length === 0}
+                      onClick={() => {
+                        props.history.push(
+                          `/apps/e-commerce/orders/redoorder/${selected[0]}`
+                        );
+                      }}>
+                      REDO
+                    </Button>
+                  </div>
+                )}
                 {value !== 0 &&
                   !isDataEmpty &&
                   value === statuses[value].value && (
                     <div className="flex justify-end mt-8 pr-20">
                       <Button
-                        className={`whitespace-no-wrap mt-42 uppercase ${
-                          selected.length === 0 && 'opacity-75'
-                        }`}
+                        className={`whitespace-no-wrap mt-42 uppercase ${selected.length === 0 && 'opacity-75'
+                          }`}
                         style={{
                           backgroundColor: '#222',
                           color: '#FFF'
@@ -588,9 +617,9 @@ function Orders(props) {
                         variant="contained"
                         disabled={selected.length === 0}
                         color="secondary"
-                        onClick={() =>
+                        onClick={() => {
                           updateStatus(selected, statuses[value + 1].label)
-                        }>
+                        }}>
                         <span className="hidden sm:flex">
                           {statuses[value].label !== 'cancelled'
                             ? statuses[value + 1].label

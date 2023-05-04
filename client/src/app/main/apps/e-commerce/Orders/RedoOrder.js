@@ -1,15 +1,13 @@
-import _ from '@lodash';
 import '../Customers/Search.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { firestore } from 'firebase';
 import { toast, Zoom } from 'react-toastify';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
-import ConfirmDelete from './DeleteOrder';
 import ContactsOrder from './OrderComponents/ContactsOrder';
 import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 import CustomerInfo from './OrderComponents/CustomerInfo';
@@ -18,7 +16,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import EditIcon from '@material-ui/icons/Edit';
 import EyeglassessOrder from './OrderComponents/EyeglassessOrder';
 import FormControl from '@material-ui/core/FormControl';
 import FuseAnimate from '@fuse/core/FuseAnimate';
@@ -30,49 +27,15 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import moment from 'moment';
-import OrderReceipt from './OrderReceipt';
 import OtherProductsOrder from './OrderComponents/OtherProductsOrder';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
-import Paper from '@material-ui/core/Paper';
 import React, { useState, useEffect } from 'react';
-import ReceiveOrderPayment from './ReceiveOrderPayment';
 import reducer from '../store/reducers';
 import Select from '@material-ui/core/Select';
 import ServicesOrder from './OrderComponents/ServicesOrder';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    textAlign: 'center',
-    textTransform: 'uppercase'
-  },
-  body: {
-    fontSize: 14,
-    padding: '10px',
-    textAlign: 'center'
-  }
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover
-    },
-    '&:hover': {
-      backgroundColor: 'lightyellow !important'
-    }
-  }
-}))(TableRow);
 
 const useStyles = makeStyles({
   button: {
@@ -92,7 +55,7 @@ const useStyles = makeStyles({
   }
 });
 
-function AddOrder(props) {
+function RedoOrder(props) {
   const [isLoading, setisLoading] = useState(true);
   const [customer, setCustomer] = useState(null);
   const [showroom, setShowroom] = useState([]);
@@ -100,133 +63,53 @@ function AddOrder(props) {
   const [eyeglasses, setEyeglasses] = useState([]);
   const [contactLenses, setContactLenses] = useState([]);
   const [medication, setMedication] = useState([]);
-  const [prevEyeglasses, setPrevEyeglasses] = useState([]);
   const [discounts, setDiscounts] = useState([]);
   const [payments, setPayments] = useState([]);
   const [otherProductInfo, setOtherProductInfo] = useState([]);
   const [prescription, setPrescription] = useState([]);
-  const [disabledState, setDisabledState] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [openOrderReceipt, setOpenOrderReceipt] = useState(false);
+  const [disabledState] = useState(false);
   const [contactLens, setContactLens] = useState([]);
   const [insurances, setInsurances] = useState([]);
   const [services, setServices] = useState([]);
   const [openAlert1, setOpenAlert1] = useState(false);
   const [lensTypeNames, setLensTypeNames] = useState(false);
-  const [editablePayment, setEditablePayment] = useState({});
-  const [orders, setOrders] = useState([]);
   const { form, handleChange, setForm } = useForm(null);
-  const [openDelete, setOpenDelete] = useState(false);
 
   const classes = useStyles();
 
   const routeParams = useParams();
   const dispatch = useDispatch();
 
-  const handleDeleteClose = () => {
-    setOpenDelete(false);
-  };
+
 
   const handleCloseAlert1 = () => {
     setOpenAlert1(false);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
-  const handleOrderReceiptClose = () => {
-    setOpenOrderReceipt(false);
-  };
+
 
   const onSubmit = async () => {
     if (form?.orderId) {
       setisLoading(true);
 
       try {
-        const ref = firestore().collection('orders').doc(form?.id);
-        let data = {
-          ...form,
-          eyeglasses: eyeglasses,
-          contactLenses: contactLenses,
-          medication: medication,
-          otherProductInfo: otherProductInfo
-        };
-
-        await ref.set(data);
-
-        if (eyeglasses.length) {
-          for (var i = 0; i < prevEyeglasses.length; i++) {
-            const queryFrame = await firestore()
-              .collection('frames')
-              .where('frameId', '==', Number(prevEyeglasses[i]?.frameId))
-              .limit(1)
-              .get();
-            let resultFrame = queryFrame.docs[0].data();
-            resultFrame.id = queryFrame.docs[0].id;
-            const ref = firestore().collection('frames').doc(resultFrame?.id);
-            let data = {
-              ...resultFrame,
-              quantity: resultFrame?.quantity + 1
-            };
-
-            await ref.set(data);
-          }
-
-          for (var j = 0; j < eyeglasses.length; j++) {
-            const queryFrame = await firestore()
-              .collection('frames')
-              .where('frameId', '==', Number(eyeglasses[j]?.frameId))
-              .limit(1)
-              .get();
-            let resultFrame = queryFrame.docs[0].data();
-            resultFrame.id = queryFrame.docs[0].id;
-            const ref = firestore().collection('frames').doc(resultFrame?.id);
-            let data = {
-              ...resultFrame,
-              quantity: resultFrame?.quantity - 1
-            };
-
-            await ref.set(data);
-          }
-        }
-
-        dispatch(
-          MessageActions.showMessage({
-            message: 'Order updated successfully'
-          })
-        );
-        props.history.push('/apps/e-commerce/orders');
-      } catch (error) {
-        throw error;
-      }
-      setisLoading(false);
-    } else {
-      setisLoading(true);
-
-      try {
         const dbConfig = (
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
+        let redoCount = form?.redo > 0 ? form?.redo + 1 : 1
 
+        await firestore().collection('orders').doc(form?.id).update({ redo: redoCount })
         await firestore()
           .collection('orders')
           .add({
             ...form,
+            redoOrder: true,
+            redo: redoCount,
             orderDate: firestore.Timestamp.fromDate(new Date()),
             orderDateString: moment(new Date()).format('MM/DD/YYYY'),
             orderId: dbConfig?.orderId + 1,
-            customOrderId: orders.length > 0 ?
-              moment(new Date()).format('YYMMDD') +
-              _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
-            customerId: customer?.customerId,
-            firstName: customer?.firstName,
-            lastName: customer?.lastName,
-            dob: customer?.dob ? customer?.dob : '',
-            gender: customer?.gender ? customer?.gender : '',
-            ethnicity: customer?.ethnicity ? customer?.ethnicity : '',
-            state: customer?.state ? customer?.state : '',
-            orderStatus: 'draft',
+            orderStatus: 'in progress',
             eyeglasses: eyeglasses,
             contactLenses: contactLenses,
             medication: medication,
@@ -278,7 +161,6 @@ function AddOrder(props) {
           .update({
             orderId: dbConfig?.orderId + 1,
             recentUpdated: dbConfig?.recentUpdated + 1,
-            customOrderId: orders.length > 0 ? dbConfig?.customOrderId + 1 : 1,
             insuranceClaimId: noOfInsuranceClaims > 0 ? dbConfig?.insuranceClaimId + noOfInsuranceClaims : dbConfig?.insuranceClaimId
           });
 
@@ -426,7 +308,6 @@ function AddOrder(props) {
 
     if (routeParams.orderId) {
       setisLoading(true);
-      setDisabledState(true);
       const fetchDetails = async () => {
         const queryOrder = await firestore()
           .collection('orders')
@@ -440,7 +321,6 @@ function AddOrder(props) {
         resultOrder.id = queryOrder.docs[0].id;
         setForm(resultOrder);
         setEyeglasses(resultOrder?.eyeglasses);
-        setPrevEyeglasses(resultOrder?.eyeglasses);
         setContactLenses(resultOrder?.contactLenses);
         setMedication(resultOrder?.medication);
         setOtherProductInfo(resultOrder?.otherProductInfo)
@@ -494,88 +374,6 @@ function AddOrder(props) {
         setisLoading(false);
       };
       fetchDetails();
-    } else {
-      setisLoading(true);
-
-      const fetchDetails = async () => {
-        if (
-          (newCustomer || routeParams?.customerId !== 'new')
-        ) {
-          queryCustomer = await firestore()
-            .collection('customers')
-            .where(
-              'customerId',
-              '==',
-              routeParams?.customerId === 'new'
-                ? newCustomer
-                : Number(routeParams?.customerId)
-            )
-            .limit(1)
-            .get();
-
-          const resultCustomer = queryCustomer.docs[0].data();
-          resultCustomer.dob =
-            resultCustomer.dob && resultCustomer.dob.toDate();
-          resultCustomer.id = queryCustomer.docs[0].id;
-          setCustomer(resultCustomer);
-
-          const queryPrescription = await firestore()
-            .collection('prescriptions')
-            .where('customerId', '==', newCustomer)
-            .get();
-
-          let resultPrescription = [];
-          queryPrescription.forEach((doc) => {
-            resultPrescription.push(doc.data());
-          });
-          let resultPrescriptionString = [];
-          resultPrescription.forEach((doc) => {
-            doc.prescriptionId = doc.prescriptionId.toString();
-            resultPrescriptionString.push(doc);
-          });
-          setPrescription(resultPrescriptionString);
-        }
-
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const startOfToday = firestore.Timestamp.fromDate(today);
-        const endOfToday = firestore.Timestamp.fromDate(new Date());
-
-        const queryOrders = await firestore()
-          .collection('orders')
-          .where('orderDate', '>=', startOfToday)
-          .where('orderDate', '<=', endOfToday)
-          .get();
-
-        let resultOrders = [];
-        queryOrders.forEach((doc) => {
-          resultOrders.push(doc.data());
-        });
-        setOrders(resultOrders);
-
-        const queryInsurance = await firestore()
-          .collection('insurances')
-          .where('customerId', '==', newCustomer)
-          .get();
-
-        let resultInsurance = [];
-        queryInsurance.forEach((doc) => {
-          resultInsurance.push(doc.data());
-        });
-        setInsurances(resultInsurance);
-
-        const queryServices = await firestore().collection('services').get();
-
-        let resultServices = [];
-        queryServices.forEach((doc) => {
-          resultServices.push(doc.data());
-        });
-        setServices(resultServices);
-
-        setisLoading(false);
-      };
-      fetchDetails();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newCustomer]);
@@ -612,7 +410,7 @@ function AddOrder(props) {
               </IconButton>
               <Typography className="text-16 sm:text-20 truncate text-center">
                 {routeParams.orderId
-                  ? `ORDER No. ${form?.customOrderId}`
+                  ? `REDO ORDER No. ${form?.customOrderId}`
                   : 'NEW ORDER'}
               </Typography>
             </div>
@@ -622,9 +420,6 @@ function AddOrder(props) {
                   id="date"
                   label="Enter Date"
                   type="date"
-                  defaultValue={
-                    moment(form?.orderDate).format('YYYY-MM-DD') ?? currentDate
-                  } // Update with info from customer
                   value={
                     moment(form?.orderDate).format('YYYY-MM-DD') ?? currentDate
                   }
@@ -639,10 +434,6 @@ function AddOrder(props) {
                     id="date"
                     label="Last Edited"
                     type="date"
-                    defaultValue={
-                      moment(form?.orderDate).format('YYYY-MM-DD') ??
-                      currentDate
-                    } // Update with info from customer
                     value={
                       moment(form?.orderDate).format('YYYY-MM-DD') ??
                       currentDate
@@ -673,41 +464,7 @@ function AddOrder(props) {
                   />
                 )}
               </div>
-              {routeParams.orderId && (
-                <div className="CTAs flex gap-10 w-1/3 justify-end">
-                  <Button
-                    style={{
-                      backgroundColor: '#000',
-                      color: '#fff',
-                      width: 'unset'
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      setOpenOrderReceipt(true);
-                    }}>
-                    PRINT TICKET
-                  </Button>
-                  <Button
-                    className="w-0"
-                    style={{
-                      backgroundColor: '#f15a25',
-                      color: '#fff',
-                      width: 'unset'
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      disabledState
-                        ? setDisabledState(false)
-                        : setDisabledState(true);
-                    }}>
-                    {disabledState ? 'EDIT' : 'SAVE'}
-                  </Button>
-                </div>
-              )}
             </div>
-
             <div>
               <Dialog
                 fullWidth
@@ -1062,125 +819,13 @@ function AddOrder(props) {
                     </FuseAnimate>
                   </div>
 
-                  {routeParams?.orderId && (
-                    <div className="payment-history flex flex-col p-16 sm:px-24">
-                      <FuseAnimate
-                        animation="transition.slideRightIn"
-                        delay={500}>
-                        <div className="py-8 border-1 border-black border-solid rounded-6">
-                          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                            <h1
-                              className="font-700"
-                              style={{ color: '#f15a25' }}>
-                              PAYMENT HISTORY
-                            </h1>
-                          </div>
-                          <ReceiveOrderPayment
-                            handleClose={handleClose}
-                            open={open}
-                            calculateBalance={handleBalance}
-                            payments={payments}
-                            setPayments={setPayments}
-                            editablePayment={editablePayment}
-                            setEditablePayment={setEditablePayment}
-                            orderId={routeParams?.orderId}
-                          />
-                          {routeParams?.orderId && (
-                            <div className="p-10">
-                              <Button
-                                className={classes.button}
-                                disabled={!disabledState}
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => {
-                                  setOpen(true);
-                                }}
-                                aria-label="add">
-                                Receive Payment
-                              </Button>
-                            </div>
-                          )}
-                          <div className="flex flex-col h-200">
-                            <TableContainer
-                              component={Paper}
-                              className="flex flex-col w-full overflow-scroll">
-                              <Table stickyHeader aria-label="customized table">
-                                <TableHead>
-                                  <TableRow>
-                                    <StyledTableCell>DATE</StyledTableCell>
-                                    <StyledTableCell>METHOD</StyledTableCell>
-                                    <StyledTableCell>MEMO</StyledTableCell>
-                                    <StyledTableCell>AMOUNT</StyledTableCell>
-                                    <StyledTableCell>OPTIONS</StyledTableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {payments
-                                    .sort((a, b) =>
-                                      a.orderPaymentId > b.orderPaymentId
-                                        ? -1
-                                        : 1
-                                    )
-                                    .map((hit, index) => (
-                                      <StyledTableRow key={hit.orderPaymentId}>
-                                        <StyledTableCell>
-                                          {moment(
-                                            hit?.paymentDate.toDate()
-                                          ).format('MM/DD/YYYY')}
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                          {hit?.paymentMode}
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                          {hit?.extraNotes}
-                                        </StyledTableCell>
-                                        <StyledTableCell className="whitespace-no-wrap">{`$ ${Number(
-                                          hit?.amount
-                                        ).toLocaleString()}`}</StyledTableCell>
-                                        <StyledTableCell>
-                                          <IconButton
-                                            onClick={() => {
-                                              setEditablePayment({ ...hit, index });
-                                              setOpen(true);
-                                            }}
-                                            aria-label="edit">
-                                            <EditIcon fontSize="small" />
-                                          </IconButton>
-                                        </StyledTableCell>
-                                      </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                              </Table>
-                            </TableContainer>
-                          </div>
-                          {routeParams?.orderId && (
-                            <div>
-                              <OrderReceipt
-                                mainForm={form}
-                                openOrderReceipt={openOrderReceipt}
-                                handleOrderReceiptClose={
-                                  handleOrderReceiptClose
-                                }
-                                customer={customer}
-                                eyeglasses={eyeglasses}
-                                contactLenses={contactLenses}
-                                medication={medication}
-                                payments={payments}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </FuseAnimate>
-                    </div>
-                  )}
-
                   <Button
                     className={classes.button}
                     disabled={disabledState}
                     variant="contained"
                     color="secondary"
                     onClick={() => {
-                      if (form?.locationName) {onSubmit()}
+                      if (form?.locationName) { onSubmit() }
                       else {
                         toast.error(
                           'Showroom is mandatory.',
@@ -1202,34 +847,6 @@ function AddOrder(props) {
                       ? 'Submit Order'
                       : 'SAVE'}
                   </Button>
-
-                  {routeParams?.orderId && (
-                    <>
-                      <ConfirmDelete
-                        open={openDelete}
-                        handleClose={handleDeleteClose}
-                        form={form}
-                        propssent={props}
-                      />
-                      <Button
-                        style={{
-                          backgroundColor: 'transparent',
-                          color: '#f47b51',
-                          width: 'unset'
-                        }}
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => {
-                          if (routeParams.customerId === 'new') {
-                            alert('No Data to delete');
-                          } else {
-                            setOpenDelete(true);
-                          }
-                        }}>
-                        delete
-                      </Button>
-                    </>
-                  )}
                 </>
               )}
             </div>
@@ -1241,4 +858,4 @@ function AddOrder(props) {
   );
 }
 
-export default withReducer('eCommerceApp', reducer)(AddOrder);
+export default withReducer('eCommerceApp', reducer)(RedoOrder);

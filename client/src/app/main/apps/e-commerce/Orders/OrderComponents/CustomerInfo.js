@@ -24,7 +24,17 @@ const useStyles = makeStyles({
 
 const CustomerInfo = (props) => {
   const classes = useStyles();
-  const { form, handleChange, customer, formatPhoneNumber, disabledState, setNewCustomer } = props;
+  const { form, handleChange, customer, disabledState, setNewCustomer } = props;
+
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      var intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return phoneNumberString;
+  }
 
   return (
     <div className="flex flex-row p-16 sm:p-24 w-full gap-20">
