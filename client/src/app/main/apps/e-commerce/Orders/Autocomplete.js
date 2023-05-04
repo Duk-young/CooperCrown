@@ -16,7 +16,7 @@ const CustomAutocomplete1 = (props) => {
     setForm,
     disabled
   } = props;
-  const [input, setInput] = useState(form[id] ? form[id] : '');
+  const [input, setInput] = useState(form[id] ?? '');
   return (
     <Autocomplete
       options={[...new Set(list?.map((item) => (item[id] ? item[id] : '')))]}
