@@ -16,7 +16,7 @@ function Widget5(props) {
       <div className="relative p-24 flex flex-row items-center justify-between">
         <div className="flex flex-col">
           <Typography className="h3 sm:h2">
-            Sales ( Order / Insurance Paymets )
+            Sales ( Order / Insurance )
           </Typography>
         </div>
 

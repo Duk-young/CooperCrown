@@ -192,7 +192,8 @@ export default function NewAppointmentDialog() {
           dob: form?.dob ? firestore.Timestamp.fromDate(form?.dob) : '',
           medicalHistory: form?.medicalHistory ? form?.medicalHistory : '',
           customerId: dbConfig?.customerId + 1,
-          recentUpdated: dbConfig?.recentUpdated + 1
+          recentUpdated: dbConfig?.recentUpdated + 1,
+          creationDate: firestore.Timestamp.fromDate(new Date())
         });
 
       await firestore()

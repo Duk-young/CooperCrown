@@ -222,7 +222,6 @@ const PaymentsChart = () => {
       inPayments.forEach((doc) => {
         insPayments.push(doc.data());
       });
-      console.log(insPayments);
 
       try {
         const filterData = await getOrderDataByFilter(
