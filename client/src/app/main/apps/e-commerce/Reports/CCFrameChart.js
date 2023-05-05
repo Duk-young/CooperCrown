@@ -28,7 +28,7 @@ const CCFrameChart = (props) => {
 
   if (!widget2 || !ccFrameData) return <FuseLoading />;
   return (
-    <div className="w-full p-10">
+    <div className="w-full p-4">
       <Widget2 title="CC Frame" data={ccFrameData} />
     </div>
   );

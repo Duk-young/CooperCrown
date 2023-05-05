@@ -25,8 +25,8 @@ const NewCustomersChart = (props) => {
 
   if (!widget2 || !data) return <FuseLoading />;
   return (
-    <div className="w-full p-10">
-      <Widget2 title="New Customers" data={data} />
+    <div className="w-full p-4">
+      <Widget2 title="New Customer" data={data} />
     </div>
   );
 };

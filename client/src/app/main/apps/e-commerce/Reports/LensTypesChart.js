@@ -50,14 +50,14 @@ const LensTypesChart = (props) => {
 
   if (!widget2 || !data) return <FuseLoading />;
   return (
-    <div className="w-full py-10">
+    <div className="w-full py-4">
       <div className="flex flex-row justify-between relative">
-        <div className="flex flex-col px-10 w-full">
+        <div className="flex flex-col px-4 w-full">
           <Widget2 title="Lens Types" data={data} />
 
         </div>
         <div className="absolute top-0 right-0">
-          <div className='flex flex-col min-w-160 pr-10'>
+          <div className='flex flex-col min-w-160 pr-4'>
             <CustomAutocomplete
               list={lensTypeNames}
               form={form}
