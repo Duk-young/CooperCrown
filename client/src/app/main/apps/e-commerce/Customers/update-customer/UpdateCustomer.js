@@ -184,7 +184,8 @@ function UpdateCustomer(props) {
             dob: dateOfBirth,
             dobString: moment(form?.dob).format('MM/DD/YYYY'),
             customerId: customerNo?.customerId + 1,
-            recentUpdated: customerNo?.recentUpdated + 1
+            recentUpdated: customerNo?.recentUpdated + 1,
+            creationDate: firestore.Timestamp.fromDate(new Date())
           });
 
         await firestore()

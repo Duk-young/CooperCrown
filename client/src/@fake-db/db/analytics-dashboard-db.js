@@ -137,11 +137,7 @@ const analyticsDashboardAppDB = {
           ],
           yAxes: [
             {
-              display: false,
-              ticks: {
-                min: 100,
-                max: 500
-              }
+              display: false
             }
           ]
         }
