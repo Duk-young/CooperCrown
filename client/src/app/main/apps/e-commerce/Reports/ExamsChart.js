@@ -23,7 +23,7 @@ const ExamsChart = (props) => {
 
   if (!widget2 || !chartData) return <FuseLoading />;
   return (
-    <div className="w-full p-10">
+    <div className="w-full p-4">
       <Widget2 title="Exams" data={chartData} />
     </div>
   );

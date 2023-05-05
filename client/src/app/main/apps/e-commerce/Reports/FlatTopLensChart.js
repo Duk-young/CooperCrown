@@ -28,7 +28,7 @@ const FlatTopLensChart = (props) => {
 
   if (!widget2 || !data) return <FuseLoading />;
   return (
-    <div className="w-full p-10">
+    <div className="w-full p-4">
       <Widget2 title="Flat Top Lens" data={data} />
     </div>
   );
