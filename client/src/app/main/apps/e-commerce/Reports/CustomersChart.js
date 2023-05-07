@@ -1,5 +1,3 @@
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import PieChart from './PieChart';
 import Select from '@material-ui/core/Select';
@@ -8,8 +6,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { useForm } from '@fuse/hooks';
 import FormControl from '@material-ui/core/FormControl';
 
-function CustomersChart(props) {  
-  const {orders} = props;
+function CustomersChart(props) {
+  const { orders } = props;
   const { form, handleChange } = useForm({});
   const [labels, setLabels] = useState([]);
   const [datasets, setDatasets] = useState([]);
@@ -104,47 +102,40 @@ function CustomersChart(props) {
 
 
 
-    return (
-      <FuseAnimate animation="transition.slideUpIn" delay={200}>
-        <div className="flex flex-col md:flex-row sm:p-8 container">
-          <div className="flex flex-col w-full">
-            <div className="flex flex-row justify-start">
-              <Typography
-                className="username text-16 whitespace-no-wrap self-center font-700 underline"
-                color="inherit">
-                Criteria
-              </Typography>
-              <FormControl className="ml-32 ">
-                <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="ethnicityId"
-                  defaultValue={form?.criteria}
-                  value={form?.criteria}
-                  name="criteria"
-                  onChange={(e) => {
-                    handleChange(e);
-                    setLabels([]);
-                    setDatasets([]);
-                    changeCriteria(e);
-                  }}
-                  autoWidth>
-                  <MenuItem value={'dob'}>Age</MenuItem>
-                  <MenuItem value={'gender'}>Gender</MenuItem>
-                  <MenuItem value={'ethnicity'}>Ethnicity</MenuItem>
-                  <MenuItem value={'state'}>State</MenuItem>
-                </Select>
-                <FormHelperText>Select from the list</FormHelperText>
-              </FormControl>
-            </div>
-            <PieChart
-              criteria={form?.criteria}
-              labels={labels}
-              datasets={datasets}
-            />
+  return (
+    <div className="w-full py-4">
+      <div className="flex flex-row justify-between relative">
+        <div className="flex flex-col px-4 w-full">
+          <PieChart labels={labels} datasets={datasets} />
+        </div>
+        <div className="absolute top-0 right-0">
+          <div className='flex flex-col min-w-160 pr-4'>
+            <FormControl className="ml-32 ">
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="ethnicityId"
+                defaultValue={form?.criteria}
+                value={form?.criteria}
+                name="criteria"
+                onChange={(e) => {
+                  handleChange(e);
+                  setLabels([]);
+                  setDatasets([]);
+                  changeCriteria(e);
+                }}
+                autoWidth>
+                <MenuItem value={'dob'}>Age</MenuItem>
+                <MenuItem value={'gender'}>Gender</MenuItem>
+                <MenuItem value={'ethnicity'}>Ethnicity</MenuItem>
+                <MenuItem value={'state'}>State</MenuItem>
+              </Select>
+              <FormHelperText>Select from the list</FormHelperText>
+            </FormControl>
           </div>
         </div>
-      </FuseAnimate>
-    );
+      </div>
+    </div>
+  );
 
 
 }

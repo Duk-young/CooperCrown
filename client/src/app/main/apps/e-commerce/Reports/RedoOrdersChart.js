@@ -19,6 +19,12 @@ const RedoOrdersChart = (props) => {
         if (order?.redoOrder) newData.datasets[0].data[month] += 1;
     });
 
+    const currentMonthValue = newData.datasets[0].data[new Date().getMonth()]
+    const prevMonthValue = newData.datasets[0].data[new Date().getMonth() - 1]
+    newData.conversion.value = currentMonthValue
+    newData.conversion.ofTarget = (currentMonthValue && prevMonthValue) ?
+      Math.floor(((currentMonthValue - prevMonthValue) / prevMonthValue) * 100) : 0
+
     setData(newData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders]);

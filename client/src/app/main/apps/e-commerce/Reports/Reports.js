@@ -1,38 +1,86 @@
 import { firestore } from 'firebase';
+import { makeStyles } from '@material-ui/core/styles';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from '@fuse/hooks';
 import * as Actions from '../../dashboards/analytics/store/actions';
+import Button from '@material-ui/core/Button';
 import CCFrameChart from './CCFrameChart';
-import CustomersChart from './CustomersChart';
-import ExamsChart from './ExamsChart';
-import FuseLoading from '@fuse/core/FuseLoading/FuseLoading';
-import PaymentsChart from './PaymentsChart';
-import React, { useEffect, useState } from 'react';
-import reducer from '../../dashboards/analytics/store/reducers';
-import SalesChartYearWise from './SalesChartYearWise';
-import withReducer from 'app/store/withReducer';
-import OtherFrameChart from './OtherFrameChart';
-import OwnFrameChart from './OwnFrameChart';
-import LensTypesChart from './LensTypesChart';
-import ProgressiveLensChart from './ProgressiveLensChart';
-import DistanceLensChart from './DistanceLensChart';
-import FlatTopLensChart from './FlatTopLensChart';
-import ReadingLensChart from './ReadingLensChart';
 import ContactLensChart from './ContactLensChart';
-import OtherProductsChart from './OtherProductsChart';
-import RedoOrdersChart from './RedoOrdersChart';
+import CustomersChart from './CustomersChart';
+import DateFnsUtils from '@date-io/date-fns';
+import DistanceLensChart from './DistanceLensChart';
+import ExamsChart from './ExamsChart';
+import FlatTopLensChart from './FlatTopLensChart';
+import FuseLoading from '@fuse/core/FuseLoading/FuseLoading';
+import Grid from '@material-ui/core/Grid';
+import LensTypesChart from './LensTypesChart';
 import NewCustomersChart from './NewCustomersChart';
+import OtherFrameChart from './OtherFrameChart';
+import OtherProductsChart from './OtherProductsChart';
+import OwnFrameChart from './OwnFrameChart';
+import PaymentsChart from './PaymentsChart';
+import ProgressiveLensChart from './ProgressiveLensChart';
+import React, { useEffect, useState } from 'react';
+import ReadingLensChart from './ReadingLensChart';
+import RedoOrdersChart from './RedoOrdersChart';
+import reducer from '../../dashboards/analytics/store/reducers';
+import RevisitsChart from './RevisitsChart';
+import SalesChartYearWise from './SalesChartYearWise';
+import SunglassesChart from './SunglassesChart';
+import TopDesignsTable from './TopDesignsTable';
+import withReducer from 'app/store/withReducer';
+
+const useStyles = makeStyles({
+  flexGrow: {
+    flex: '1'
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+});
 
 function AnalyticsDashboardApp() {
 
+  const classes = useStyles();
   const dispatch = useDispatch();
   const [exams, setExams] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [filteredExams, setFilteredExams] = useState([]);
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { form, handleChange, setForm } = useForm(null);
 
   const widgets = useSelector(
     ({ analyticsDashboardApp }) => analyticsDashboardApp.widgets.data
   );
+
+  const filterData = () => {
+    let newOrders = orders.filter((order) => {
+      const orderDate = order?.orderDate.toDate()
+      return orderDate >= form?.startDate && orderDate <= form?.endDate;
+    })
+    setFilteredOrders(newOrders)
+
+    let newExams = exams.filter((exam) => {
+      const examTime = exam?.examTime.toDate()
+      return examTime >= form?.startDate && examTime <= form?.endDate;
+    })
+    setFilteredExams(newExams)
+
+    let newCustomers = customers.filter((customer) => {
+      const creationDate = customer?.creationDate && customer?.creationDate.toDate()
+      return creationDate >= form?.startDate && creationDate <= form?.endDate;
+    })
+    setFilteredCustomers(newCustomers)
+  }
 
   useEffect(() => {
     dispatch(Actions.getWidgets());
@@ -46,6 +94,7 @@ function AnalyticsDashboardApp() {
         resultOrders.push(doc.data());
       });
       setOrders(resultOrders);
+      setFilteredOrders(resultOrders);
 
       const queryCustomers = await firestore().collection('customers').get();
       let resultCustomers = [];
@@ -53,6 +102,7 @@ function AnalyticsDashboardApp() {
         resultCustomers.push(doc.data());
       });
       setCustomers(resultCustomers);
+      setFilteredCustomers(resultCustomers)
 
       const queryExams = await firestore().collection('exams').get();
       let examsData = [];
@@ -60,6 +110,7 @@ function AnalyticsDashboardApp() {
         examsData.push(doc.data());
       });
       setExams(examsData)
+      setFilteredExams(examsData)
 
       setIsLoading(false)
     };
@@ -73,62 +124,131 @@ function AnalyticsDashboardApp() {
     <div className="w-full">
       <SalesChartYearWise orders={orders} />
       <PaymentsChart />
-      <div className='flex flex-row w-full'>
-        <div className='flex flex-row w-1/3'>
-          <CCFrameChart orders={orders} widget2={widgets?.widget2} />
+      <div className='flex flex-row justify-between items-center px-20'>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid container justifyContent="center">
+            <KeyboardDatePicker
+              label="Select Start Date"
+              margin="normal"
+              id="date-picker-dialog"
+              format="MM/dd/yyyy"
+              value={form?.startDate ?? new Date()}
+              onChange={(date) => {
+                handleChange({
+                  target: { name: 'startDate', value: date }
+                });
+              }}
+              KeyboardButtonProps={{
+                'aria-label': 'change date'
+              }}
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid container justifyContent="center">
+            <KeyboardDatePicker
+              label="Select End Date"
+              margin="normal"
+              id="date-picker-dialog"
+              format="MM/dd/yyyy"
+              value={form?.endDate ?? new Date()}
+              onChange={(date) => {
+                handleChange({
+                  target: { name: 'endDate', value: date }
+                });
+              }}
+              KeyboardButtonProps={{
+                'aria-label': 'change date'
+              }}
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
+        <div>
+          <Button
+            className={classes.button}
+            onClick={() => filterData()}
+            variant="contained"
+            color="secondary">
+            Filter
+          </Button>
         </div>
-        <div className='flex flex-row w-1/3'>
-          <OtherFrameChart orders={orders} widget2={widgets?.widget2} />
-        </div>
-        <div className='flex flex-row w-1/3'>
-          <OwnFrameChart orders={orders} widget2={widgets?.widget2} />
+        <div className='pl-4'>
+          <Button
+            onClick={() => {
+              setFilteredOrders(orders)
+              setFilteredExams(exams)
+              setFilteredCustomers(customers)
+              setForm({ startDate: new Date(), endDate: new Date() })
+            }}
+            variant="contained"
+            color="primary">
+            Clear
+          </Button>
         </div>
       </div>
       <div className='flex flex-row w-full'>
         <div className='flex flex-row w-1/3'>
-          <ExamsChart exams={exams} widget2={widgets?.widget2} />
+          <CCFrameChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
         <div className='flex flex-row w-1/3'>
-        <LensTypesChart orders={orders} widget2={widgets?.widget2} />
+          <OtherFrameChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
         <div className='flex flex-row w-1/3'>
-        <ProgressiveLensChart orders={orders} widget2={widgets?.widget2} />
+          <OwnFrameChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
       </div>
       <div className='flex flex-row w-full'>
         <div className='flex flex-row w-1/3'>
-        <DistanceLensChart orders={orders} widget2={widgets?.widget2} />
+          <ExamsChart exams={filteredExams} widget2={widgets?.widget2} />
         </div>
         <div className='flex flex-row w-1/3'>
-        <FlatTopLensChart orders={orders} widget2={widgets?.widget2} />
+          <LensTypesChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
         <div className='flex flex-row w-1/3'>
-        <ReadingLensChart orders={orders} widget2={widgets?.widget2} />
+          <ProgressiveLensChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
       </div>
       <div className='flex flex-row w-full'>
         <div className='flex flex-row w-1/3'>
-        <ContactLensChart orders={orders} widget2={widgets?.widget2} />
+          <DistanceLensChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
         <div className='flex flex-row w-1/3'>
-        <OtherProductsChart orders={orders} widget2={widgets?.widget2} />
+          <FlatTopLensChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
         <div className='flex flex-row w-1/3'>
-        <RedoOrdersChart orders={orders} widget2={widgets?.widget2} />
+          <ReadingLensChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
       </div>
       <div className='flex flex-row w-full'>
         <div className='flex flex-row w-1/3'>
-        <NewCustomersChart customers={customers} widget2={widgets?.widget2} />
+          <ContactLensChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
         <div className='flex flex-row w-1/3'>
-        <OtherProductsChart orders={orders} widget2={widgets?.widget2} />
+          <OtherProductsChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
         <div className='flex flex-row w-1/3'>
-        <RedoOrdersChart orders={orders} widget2={widgets?.widget2} />
+          <RedoOrdersChart orders={filteredOrders} widget2={widgets?.widget2} />
         </div>
       </div>
-      <CustomersChart orders={orders} />
+      <div className='flex flex-row w-full'>
+        <div className='flex flex-row w-1/3'>
+          <NewCustomersChart customers={filteredCustomers} widget2={widgets?.widget2} />
+        </div>
+        <div className='flex flex-row w-1/3'>
+          <SunglassesChart orders={filteredOrders} widget2={widgets?.widget2} />
+        </div>
+        <div className='flex flex-row w-1/3'>
+          <RevisitsChart orders={filteredOrders} widget2={widgets?.widget2} />
+        </div>
+      </div>
+      <div className='flex flex-row w-full'>
+        <div className='flex flex-row w-2/3'>
+          <CustomersChart orders={filteredOrders} />
+        </div>
+        <div className='flex flex-row w-1/3'>
+          <TopDesignsTable orders={filteredOrders} widget9={widgets?.widget9} />
+        </div>
+      </div>
     </div>
   );
 }
