@@ -4,7 +4,7 @@ import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
 function PieChart(props) {
-  const { criteria, labels, datasets } = props;
+  const { labels, datasets } = props;
 
   const options = {
     cutoutPercentage: 0,
@@ -24,11 +24,8 @@ function PieChart(props) {
     datasets !== [] && (
       <Paper className="w-full rounded-8 shadow-none border-1">
         <div className="flex items-center justify-between px-16 h-64 border-b-1">
-          <Typography className="text-16">
-            'Customers Graph based on {criteria === 'ethnicity' && 'Ethnicity'}
-            {criteria === 'gender' && 'Gender'}
-            {criteria === 'state' && 'State'}
-            {criteria === 'dob' && 'Age'}'
+          <Typography className="lg:text-16 text-14">
+            Customers Graph
           </Typography>
         </div>
         <div className="h-400 w-full p-32">

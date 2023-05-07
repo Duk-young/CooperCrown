@@ -521,7 +521,7 @@ const CustomerProfile = (props) => {
                                   );
                                 }}>
                                 <StyledTableCell>
-                                  {moment(row?.dateCreated.toDate()).format('MM/DD/YYYY')}
+                                  {row?.dateCreated && moment(row?.dateCreated.toDate()).format('MM/DD/YYYY')}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                   {row.insuranceCompany}

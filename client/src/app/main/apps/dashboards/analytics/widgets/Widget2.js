@@ -20,20 +20,22 @@ function Widget2(props) {
           </Typography>
         </div>
 
-        <div className="py-4 text-16 flex flex-row items-center">
-          <div className="flex flex-row items-center">
-            {props.data.conversion.ofTarget > 0 && (
-              <Icon className="text-green">trending_up</Icon>
-            )}
-            {props.data.conversion.ofTarget < 0 && (
-              <Icon className="text-red">trending_down</Icon>
-            )}
-            <Typography className="mx-4">
-              {props.data.conversion.ofTarget}%
-            </Typography>
+        {props.data.conversion.ofTarget !== 0 && (
+          <div className="py-4 text-16 flex flex-row items-center">
+            <div className="flex flex-row items-center">
+              {props.data.conversion.ofTarget > 0 && (
+                <Icon className="text-green">trending_up</Icon>
+              )}
+              {props.data.conversion.ofTarget < 0 && (
+                <Icon className="text-red">trending_down</Icon>
+              )}
+              <Typography className="mx-4">
+                {props.data.conversion.ofTarget}%
+              </Typography>
+            </div>
+            <Typography className="whitespace-no-wrap">of target</Typography>
           </div>
-          <Typography className="whitespace-no-wrap">of target</Typography>
-        </div>
+        )}
       </div>
 
       <div className="h-96 w-100-p">
