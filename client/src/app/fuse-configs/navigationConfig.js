@@ -17,30 +17,30 @@ const navigationConfig = [
     auth: authRoles.staff,
     icon: 'apps',
     children: [
-      {
-        id: 'dashboards',
-        title: 'Dashboards',
-        translate: 'DASHBOARDS',
-        auth: authRoles.staff,
-        type: 'collapse',
-        icon: 'dashboard',
-        children: [
-          {
-            id: 'analytics-dashboard',
-            title: 'Analytics',
-            auth: authRoles.staff,
-            type: 'item',
-            url: '/apps/dashboards/analytics'
-          },
-          {
-            id: 'project-dashboard',
-            title: 'Project',
-            auth: authRoles.staff,
-            type: 'item',
-            url: '/apps/dashboards/project'
-          }
-        ]
-      },
+      // {
+      //   id: 'dashboards',
+      //   title: 'Dashboards',
+      //   translate: 'DASHBOARDS',
+      //   auth: authRoles.staff,
+      //   type: 'collapse',
+      //   icon: 'dashboard',
+      //   children: [
+      //     {
+      //       id: 'analytics-dashboard',
+      //       title: 'Analytics',
+      //       auth: authRoles.staff,
+      //       type: 'item',
+      //       url: '/apps/dashboards/analytics'
+      //     },
+      //     {
+      //       id: 'project-dashboard',
+      //       title: 'Project',
+      //       auth: authRoles.staff,
+      //       type: 'item',
+      //       url: '/apps/dashboards/project'
+      //     }
+      //   ]
+      // },
       {
         id: 'reports',
         title: 'Dashboard',

@@ -38,7 +38,7 @@ const routes = [
   {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/apps/dashboards/analytics" />
+    component: () => <Redirect to="/apps/e-commerce/reports" />
   },
   {
     component: () => <Redirect to="/pages/errors/error-404" />

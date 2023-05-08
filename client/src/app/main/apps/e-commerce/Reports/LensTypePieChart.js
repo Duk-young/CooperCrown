@@ -8,7 +8,7 @@ import Widget8 from '../../dashboards/project/widgets/Widget8';
 import withReducer from 'app/store/withReducer';
 import OverviewDialog from './OverviewDialog';
 
-const FrameBrandPieChart = (props) => {
+const LensTypePieChart = (props) => {
 
   const { orders } = props;
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const FrameBrandPieChart = (props) => {
   useEffect(() => {
     if (!widgets) return
     let newData = JSON.parse(JSON.stringify(widgets?.widget8))
-    newData.title = 'Frame Brand'
+    newData.title = 'Lens Types'
     newData.mainChart.datasets[0].data = []
     newData.mainChart.labels = []
     newData.mainChart.options.legend.display = false
@@ -38,12 +38,12 @@ const FrameBrandPieChart = (props) => {
 
     orders.forEach((order) => {
       order.eyeglasses.map((pair) => {
-        if (pair?.frameId) {
-          const obj = framesData.find(row => row.title === pair?.frameModel);
+        if (pair?.lensTypeName) {
+          const obj = framesData.find(row => row.title === pair?.lensTypeName);
           if (obj) {
             obj.conversion++;
           } else {
-            framesData.push({ frameId: pair?.frameId, title: pair?.frameModel, clicks: pair?.frameColour, conversion: 1 })
+            framesData.push({ title: pair?.lensTypeName, clicks: pair?.lensType, conversion: 1 })
           }
           return null
         }
@@ -68,8 +68,8 @@ const FrameBrandPieChart = (props) => {
   return (
     <div className="w-full p-4">
       <Widget8 widget={data} customChart={true} setOpen={setOpen} />
-      <OverviewDialog title={'Frame Brands'} secondColumn={'COLOR'} thirdColumn={'PCS'} data={dialogData} open={open} handleClose={handleClose} />
+      <OverviewDialog title={'Lens Types'} secondColumn={'Type'} thirdColumn={'PCS'} data={dialogData} open={open} handleClose={handleClose} />
     </div>
   );
 };
-export default withReducer('projectDashboardApp', reducer)(FrameBrandPieChart);
+export default withReducer('projectDashboardApp', reducer)(LensTypePieChart);

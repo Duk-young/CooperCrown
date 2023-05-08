@@ -259,7 +259,7 @@ const PaymentsChart = () => {
   if (!chartDataSales) return <FuseLoading />;
   return (
     <div className="w-full py-10">
-      <Widget5 data={chartDataSales} />
+      <Widget5 data={chartDataSales} title={'Sales ( Order / Insurance )'} />
     </div>
   );
 };

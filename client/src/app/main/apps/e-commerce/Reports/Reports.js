@@ -32,6 +32,11 @@ import TopDesignsTable from './TopDesignsTable';
 import withReducer from 'app/store/withReducer';
 import GenderGraph from './GenderGraph';
 import FrameBrandPieChart from './FrameBrandPieChart';
+import FrameShapePieChart from './FrameShapePieChart';
+import FrameColorPieChart from './FrameColorPieChart';
+import LensTypePieChart from './LensTypePieChart';
+import SalesRatioPieChart from './SalesRatioPieChart';
+import OrderTimesChart from './OrderTimesChart';
 
 const useStyles = makeStyles({
   flexGrow: {
@@ -128,6 +133,7 @@ function Reports() {
     <div className="w-full">
       <SalesChartYearWise orders={orders} />
       <PaymentsChart />
+      <OrderTimesChart widget5={widgets?.widget5} orders={filteredOrders}/>
       <div className='flex flex-row justify-between items-center px-20'>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justifyContent="center">
@@ -251,10 +257,14 @@ function Reports() {
           <div className='flex flex-row'>
           <GenderGraph customers={customers} />
           </div>
+          <SalesRatioPieChart orders={filteredOrders} />
+          <LensTypePieChart orders={filteredOrders} />
         </div>
         <div className='flex flex-col w-1/3'>
           <TopDesignsTable orders={filteredOrders} widget9={widgets?.widget9} />
-          <FrameBrandPieChart orders={orders} />
+          <FrameBrandPieChart orders={filteredOrders} />
+          <FrameShapePieChart orders={filteredOrders} />
+          <FrameColorPieChart orders={filteredOrders} />
         </div>
       </div>
     </div>

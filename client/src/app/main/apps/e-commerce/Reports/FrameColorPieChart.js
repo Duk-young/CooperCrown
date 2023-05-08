@@ -8,7 +8,7 @@ import Widget8 from '../../dashboards/project/widgets/Widget8';
 import withReducer from 'app/store/withReducer';
 import OverviewDialog from './OverviewDialog';
 
-const FrameBrandPieChart = (props) => {
+const FrameColorPieChart = (props) => {
 
   const { orders } = props;
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const FrameBrandPieChart = (props) => {
   useEffect(() => {
     if (!widgets) return
     let newData = JSON.parse(JSON.stringify(widgets?.widget8))
-    newData.title = 'Frame Brand'
+    newData.title = 'Frame Color'
     newData.mainChart.datasets[0].data = []
     newData.mainChart.labels = []
     newData.mainChart.options.legend.display = false
@@ -39,7 +39,7 @@ const FrameBrandPieChart = (props) => {
     orders.forEach((order) => {
       order.eyeglasses.map((pair) => {
         if (pair?.frameId) {
-          const obj = framesData.find(row => row.title === pair?.frameModel);
+          const obj = framesData.find(row => row.clicks === pair?.frameColour);
           if (obj) {
             obj.conversion++;
           } else {
@@ -55,7 +55,7 @@ const FrameBrandPieChart = (props) => {
 
     framesData.forEach((frame) => {
       newData.mainChart.datasets[0].data.push(frame?.conversion)
-      newData.mainChart.labels.push(frame?.title)
+      newData.mainChart.labels.push(frame?.clicks)
     })
 
     setData(newData)
@@ -68,8 +68,8 @@ const FrameBrandPieChart = (props) => {
   return (
     <div className="w-full p-4">
       <Widget8 widget={data} customChart={true} setOpen={setOpen} />
-      <OverviewDialog title={'Frame Brands'} secondColumn={'COLOR'} thirdColumn={'PCS'} data={dialogData} open={open} handleClose={handleClose} />
+      <OverviewDialog title={'Frame Color'} secondColumn={'COLOR'} thirdColumn={'PCS'} data={dialogData} open={open} handleClose={handleClose} />
     </div>
   );
 };
-export default withReducer('projectDashboardApp', reducer)(FrameBrandPieChart);
+export default withReducer('projectDashboardApp', reducer)(FrameColorPieChart);
