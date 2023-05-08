@@ -9,7 +9,7 @@ function Widget8(props) {
       <div className="flex items-center justify-between px-16 h-64 border-b-1">
         <Typography className="text-16">{props.widget.title}</Typography>
       </div>
-      <div className="h-400 w-full p-32">
+      <div className="h-full w-full p-10">
         <Doughnut
           data={{
             labels: props.widget.mainChart.labels,
@@ -17,6 +17,19 @@ function Widget8(props) {
           }}
           options={props.widget.mainChart.options}
         />
+        {props?.customChart && (
+          <div className="px-16 flex flex-row items-center justify-center">
+            {props.widget.mainChart.labels.slice(0, 3).map((label, index) => (
+              <div key={label} className="px-16 flex flex-col items-center">
+                <Typography className="h4" color="textSecondary">
+                  {label}
+                </Typography>
+                <Typography className="h2 font-300 py-8">{Math.floor(props.widget.mainChart.datasets[0].data[index] /
+                  props.widget.mainChart.datasets[0].data.reduce((acc, curr) => acc + curr, 0) * 100)}%</Typography>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </Paper>
   );
