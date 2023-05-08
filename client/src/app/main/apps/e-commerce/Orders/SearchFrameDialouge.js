@@ -71,7 +71,8 @@ const CustomHits = connectHits(({ hits, form, setForm, handleClose }) => {
                       frameColour: hit?.colour,
                       frameRate: hit?.retailRate,
                       frameWsRate: hit?.ws,
-                      frameQuantity: hit?.quantity
+                      frameQuantity: hit?.quantity,
+                      frameShape: hit?.shape
                     });
                     handleClose();
                   } else {
@@ -231,7 +232,8 @@ function SimpleDialog(props) {
           frameColour: resultFrames?.colour,
           frameRate: resultFrames?.retailRate,
           frameWsRate: resultFrames?.ws,
-          frameQuantity: resultFrames?.quantity
+          frameQuantity: resultFrames?.quantity,
+          frameShape: resultFrames?.shape
         });
         handleClose();
       } else {

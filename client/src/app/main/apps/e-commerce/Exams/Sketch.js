@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 import CanvasDraw from 'react-canvas-draw';
-import Capture from './Capture.png';
+import Capture from './Capture.PNG';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';

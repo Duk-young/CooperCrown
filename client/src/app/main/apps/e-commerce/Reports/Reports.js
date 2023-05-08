@@ -30,6 +30,13 @@ import SalesChartYearWise from './SalesChartYearWise';
 import SunglassesChart from './SunglassesChart';
 import TopDesignsTable from './TopDesignsTable';
 import withReducer from 'app/store/withReducer';
+import GenderGraph from './GenderGraph';
+import FrameBrandPieChart from './FrameBrandPieChart';
+import FrameShapePieChart from './FrameShapePieChart';
+import FrameColorPieChart from './FrameColorPieChart';
+import LensTypePieChart from './LensTypePieChart';
+import SalesRatioPieChart from './SalesRatioPieChart';
+import OrderTimesChart from './OrderTimesChart';
 
 const useStyles = makeStyles({
   flexGrow: {
@@ -45,7 +52,7 @@ const useStyles = makeStyles({
   }
 });
 
-function AnalyticsDashboardApp() {
+function Reports() {
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -58,9 +65,12 @@ function AnalyticsDashboardApp() {
   const [isLoading, setIsLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
 
-  const widgets = useSelector(
-    ({ analyticsDashboardApp }) => analyticsDashboardApp.widgets.data
-  );
+  const widgets = useSelector(({ analyticsDashboardApp }) => analyticsDashboardApp.widgets.data);
+
+
+  useEffect(() => {
+    dispatch(Actions.getWidgets());
+  }, [dispatch])
 
   const filterData = () => {
     let newOrders = orders.filter((order) => {
@@ -83,7 +93,6 @@ function AnalyticsDashboardApp() {
   }
 
   useEffect(() => {
-    dispatch(Actions.getWidgets());
 
     const fetchDetails = async () => {
       setIsLoading(true)
@@ -115,7 +124,7 @@ function AnalyticsDashboardApp() {
       setIsLoading(false)
     };
     fetchDetails();
-  }, [dispatch]);
+  }, []);
 
   if (!widgets || isLoading) {
     return <FuseLoading />
@@ -124,6 +133,7 @@ function AnalyticsDashboardApp() {
     <div className="w-full">
       <SalesChartYearWise orders={orders} />
       <PaymentsChart />
+      <OrderTimesChart widget5={widgets?.widget5} orders={filteredOrders}/>
       <div className='flex flex-row justify-between items-center px-20'>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justifyContent="center">
@@ -242,11 +252,19 @@ function AnalyticsDashboardApp() {
         </div>
       </div>
       <div className='flex flex-row w-full'>
-        <div className='flex flex-row w-2/3'>
+        <div className='flex flex-col w-2/3'>
           <CustomersChart orders={filteredOrders} />
+          <div className='flex flex-row'>
+          <GenderGraph customers={customers} />
+          </div>
+          <SalesRatioPieChart orders={filteredOrders} />
+          <LensTypePieChart orders={filteredOrders} />
         </div>
-        <div className='flex flex-row w-1/3'>
+        <div className='flex flex-col w-1/3'>
           <TopDesignsTable orders={filteredOrders} widget9={widgets?.widget9} />
+          <FrameBrandPieChart orders={filteredOrders} />
+          <FrameShapePieChart orders={filteredOrders} />
+          <FrameColorPieChart orders={filteredOrders} />
         </div>
       </div>
     </div>
@@ -256,4 +274,4 @@ function AnalyticsDashboardApp() {
 export default withReducer(
   'analyticsDashboardApp',
   reducer
-)(AnalyticsDashboardApp);
+)(Reports);
