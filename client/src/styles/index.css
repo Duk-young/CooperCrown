@@ -140,6 +140,31 @@ h6,
   }
 }
 
+.thermal-paper {
+  width: 80mm
+}
+
+.font-7pt {
+  font-size: 9.30px;
+}
+
+.font-9pt {
+  font-size: 12px;
+}
+
+.font-12pt {
+  font-size: 16px;
+}
+
+.font-14pt {
+  font-size: 18.62px;
+}
+
+.border-box {
+  border: 1px solid black;
+  text-align: center;
+}
+
 form label {
   z-index: 99;
 }
