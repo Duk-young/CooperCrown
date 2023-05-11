@@ -1177,15 +1177,17 @@ function AddOrder(props) {
                             <div>
                               <OrderReceipt
                                 mainForm={form}
-                                openOrderReceipt={openOrderReceipt}
-                                handleOrderReceiptClose={
+                                open={openOrderReceipt}
+                                handleClose={
                                   handleOrderReceiptClose
                                 }
-                                customer={customer}
                                 eyeglasses={eyeglasses}
                                 contactLenses={contactLenses}
                                 medication={medication}
+                                otherProductInfo={otherProductInfo}
                                 payments={payments}
+                                handleTotal={handleTotal}
+                                handleBalance={handleBalance}
                               />
                               <ThermalReceipt
                                 mainForm={form}
