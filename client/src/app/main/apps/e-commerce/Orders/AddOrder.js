@@ -48,6 +48,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import ThermalReceipt from './ThermalReceipt';
+import OrderTicket from './OrderTicket';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -117,6 +119,8 @@ function AddOrder(props) {
   const [orders, setOrders] = useState([]);
   const { form, handleChange, setForm } = useForm(null);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openThermalReceipt, setOpenThermalReceipt] = useState(false);
+  const [openOrderTicket, setOpenOrderTicket] = useState(false);
 
   const classes = useStyles();
 
@@ -137,6 +141,14 @@ function AddOrder(props) {
 
   const handleOrderReceiptClose = () => {
     setOpenOrderReceipt(false);
+  };
+
+  const handleThermalReceiptClose = () => {
+    setOpenThermalReceipt(false);
+  };
+
+  const handleOrderTicketClose = () => {
+    setOpenOrderTicket(false);
   };
 
   const onSubmit = async () => {
@@ -697,12 +709,20 @@ function AddOrder(props) {
                     }}
                     variant="contained"
                     color="secondary"
-                    onClick={() => {
-                      disabledState
-                        ? setDisabledState(false)
-                        : setDisabledState(true);
-                    }}>
-                    {disabledState ? 'EDIT' : 'SAVE'}
+                    onClick={() => { setOpenThermalReceipt(true) }}>
+                    Thermal Receipt
+                  </Button>
+                  <Button
+                    className="w-0"
+                    style={{
+                      backgroundColor: '#f15a25',
+                      color: '#fff',
+                      width: 'unset'
+                    }}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => { setOpenOrderTicket(true) }}>
+                    Order Ticket
                   </Button>
                 </div>
               )}
@@ -1167,6 +1187,30 @@ function AddOrder(props) {
                                 medication={medication}
                                 payments={payments}
                               />
+                              <ThermalReceipt
+                                mainForm={form}
+                                open={openThermalReceipt}
+                                handleClose={
+                                  handleThermalReceiptClose
+                                }
+                                eyeglasses={eyeglasses}
+                                contactLenses={contactLenses}
+                                medication={medication}
+                                otherProductInfo={otherProductInfo}
+                                payments={payments}
+                                handleTotal={handleTotal}
+                                handleBalance={handleBalance}
+                              />
+                              <OrderTicket
+                                mainForm={form}
+                                customer={customer}
+                                open={openOrderTicket}
+                                handleClose={
+                                  handleOrderTicketClose
+                                }
+                                eyeglasses={eyeglasses}
+                                contactLenses={contactLenses}
+                              />
                             </div>
                           )}
                         </div>
@@ -1180,7 +1224,7 @@ function AddOrder(props) {
                     variant="contained"
                     color="secondary"
                     onClick={() => {
-                      if (form?.locationName) {onSubmit()}
+                      if (form?.locationName) { onSubmit() }
                       else {
                         toast.error(
                           'Showroom is mandatory.',

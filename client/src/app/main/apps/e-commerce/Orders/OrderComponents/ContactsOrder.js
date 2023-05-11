@@ -90,21 +90,12 @@ const ContactsOrder = (props) => {
   }, []);
 
   const fetchContactLensRate = () => {
-    let contactLensRate
+
     if (
-      selectedContactLens?.contactLensStyleOd ||
+      selectedContactLens?.contactLensStyleOd &&
       selectedContactLens?.contactLensStyleOs
     ) {
-      contactLens.map((row) => {
-        if (
-          row?.style === selectedContactLens?.contactLensStyleOd ||
-          selectedContactLens?.contactLensStyleOs
-        ) {
-          contactLensRate = +row?.price
-        }
-        return null;
-      });
-      return contactLensRate
+      return (+filteredContactLensOd[0]?.price || 0) + (+filteredContactLensOs[0]?.price || 0)
     } else {
       toast.error('Please select Contact Lens Style...', {
         position: 'top-center',
