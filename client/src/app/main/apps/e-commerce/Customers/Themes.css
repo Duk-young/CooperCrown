@@ -590,19 +590,7 @@ a[class^='ais-'] {
   background-color: white;
 }
 
-.page-header,
-.page-header-space {
-  height: 125px;
-}
 
-.page-header-space {
-  display: none;
-}
-
-.page-footer,
-.page-footer-space {
-  height: 190px;
-}
 
 .page-footer {
   position: fixed;
@@ -658,10 +646,7 @@ a[class^='ais-'] {
   .page-header-space {
     display: flex;
   }
-  .page-footer-space {
-    display: flex;
-    height: 190px;
-  }
+  
   .footercopy {
     color: white;
   }
