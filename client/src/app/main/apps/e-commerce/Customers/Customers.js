@@ -2,7 +2,9 @@ import './App.mobile.css';
 import './Search.css';
 import './Themes.css';
 import { firestore } from 'firebase';
+import { toast, Zoom } from 'react-toastify';
 import { useForm } from '@fuse/hooks';
+import { useSelector } from 'react-redux';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
@@ -54,6 +56,9 @@ const searchClient = algoliasearch(
 );
 
 const CustomHits = connectHits(({ hits, props }) => {
+
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
     var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
@@ -86,9 +91,22 @@ const CustomHits = connectHits(({ hits, props }) => {
             hover
             className="cursor-pointer"
             onClick={() => {
-              props.history.push(
-                `/apps/e-commerce/customers/profile/${hit.customerId}`
-              );
+              if (userData.userRole === 'admin' || userData?.customersView) {
+                props.history.push(
+                  `/apps/e-commerce/customers/profile/${hit.customerId}`
+                );
+              }else {
+                toast.error('You are not authorized', {
+                  position: 'top-center',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  transition: Zoom
+                });
+              }
             }}>
             <StyledTableCell component="th" scope="row">
               {hit.customerId}
@@ -163,6 +181,7 @@ const StyledDatePicker = withStyles((theme) => ({
 function Customers(props) {
   const classes = useStyles(props);
   const { form, handleChange } = useForm(null);
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   return (
     <FusePageSimple
@@ -250,62 +269,6 @@ function Customers(props) {
                           }}
                         />
                       </div>
-                      {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justifyContent="start">
-                          <KeyboardDatePicker
-                            label="Start Date"
-                            className="mt-0 bg-transparent"
-                            margin="normal"
-                            id="date-picker-dialog"
-                            format="MM/dd/yyyy"
-                            value={form?.start}
-                            InputLabelProps={{
-                              style: { color: 'white', marginLeft: 3 }
-                            }}
-                            InputProps={{
-                              inputProps: {
-                                style: { color: 'white', marginLeft: 3 }
-                              }
-                            }}
-                            onChange={(date) => {
-                              handleChange({
-                                target: { name: 'start', value: date }
-                              });
-                            }}
-                            KeyboardButtonProps={{
-                              'aria-label': 'change date'
-                            }}
-                          />
-                        </Grid>
-                      </MuiPickersUtilsProvider>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justifyContent="start">
-                          <KeyboardDatePicker
-                            label="End Date"
-                            className="mt-0 bg-transparent"
-                            margin="normal"
-                            id="date-picker-dialog"
-                            format="MM/dd/yyyy"
-                            value={form?.end}
-                            InputLabelProps={{
-                              style: { color: 'white', marginLeft: 3 }
-                            }}
-                            InputProps={{
-                              inputProps: {
-                                style: { color: 'white', marginLeft: 3 }
-                              }
-                            }}
-                            onChange={(date) => {
-                              handleChange({
-                                target: { name: 'end', value: date }
-                              });
-                            }}
-                            KeyboardButtonProps={{
-                              'aria-label': 'change date'
-                            }}
-                          />
-                        </Grid>
-                      </MuiPickersUtilsProvider> */}
                     </div>
                   </div>
                   <div className="flex flex-col w-1/3 border-1 headerSearch">
@@ -391,8 +354,22 @@ function Customers(props) {
                     <div className="">
                       <Button
                         className={classes.button}
-                        onClick={() =>
-                          props.history.push('/apps/e-commerce/create-customer')
+                        onClick={() => {
+                          if (userData.userRole === 'admin' || userData?.customersCreate) {
+                            props.history.push('/apps/e-commerce/create-customer')
+                          }else {
+                            toast.error('You are not authorized', {
+                              position: 'top-center',
+                              autoClose: 5000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              transition: Zoom
+                            });
+                          }
+                        }
                         }
                         // className="whitespace-no-wrap normal-case"
                         variant="contained"

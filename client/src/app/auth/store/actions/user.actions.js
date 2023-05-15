@@ -1,13 +1,13 @@
-import history from '@history';
 import _ from '@lodash';
-import auth0Service from 'app/services/auth0Service';
-import firebaseService from 'app/services/firebaseService';
-import jwtService from 'app/services/jwtService';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import * as FuseActions from 'app/store/actions/fuse';
-import * as Actions from 'app/store/actions';
-import firebase from 'firebase/app';
 import { authRoles } from 'app/auth';
+import * as Actions from 'app/store/actions';
+import * as FuseActions from 'app/store/actions/fuse';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import auth0Service from 'app/services/auth0Service';
+import firebase, { firestore } from 'firebase/app';
+import firebaseService from 'app/services/firebaseService';
+import history from '@history';
+import jwtService from 'app/services/jwtService';
 
 export const SET_USER_DATA = '[USER] SET DATA';
 export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
@@ -71,23 +71,25 @@ export function createUserSettingsFirebase(authUser) {
     firebase
       .auth()
       .currentUser.getIdTokenResult()
-      .then((idTokenResult) => {
+      .then(async(idTokenResult) => {
 
         if (idTokenResult.claims.Admin) {
           role = 'admin';
           /**
            * Merge with current Settings
            */
+          const firestoreDetails = (await firestore().collection('users').doc(authUser?.user?.uid || authUser.uid).get()).data()
           const user = _.merge({}, guestUser, {
-            uid: authUser.uid,
+            uid: authUser?.user?.uid || authUser.uid,
             from: 'firebase',
             role: [role],
             data: {
-              displayName: authUser.displayName,
-              email: authUser.email,
+              displayName: authUser?.user?.displayName || authUser.displayName,
+              email: authUser?.user?.email || authUser.email,
               settings: {
                 ...fuseDefaultSettings
-              }
+              },
+              firestoreDetails
             }
           });
           currentUser.updateProfile(user.data);
@@ -98,16 +100,18 @@ export function createUserSettingsFirebase(authUser) {
           /**
            * Merge with current Settings
            */
+          const firestoreDetails = (await firestore().collection('users').doc(authUser?.user?.uid || authUser.uid).get()).data()
           const user = _.merge({}, guestUser, {
-            uid: authUser.uid,
+            uid: authUser?.user?.uid || authUser.uid,
             from: 'firebase',
             role: [role],
             data: {
-              displayName: authUser.displayName,
-              email: authUser.email,
+              displayName: authUser?.user?.displayName || authUser.displayName,
+              email: authUser?.user?.email || authUser.email,
               settings: {
                 ...fuseDefaultSettings
-              }
+              },
+              firestoreDetails
             }
           });
           currentUser.updateProfile(user.data);

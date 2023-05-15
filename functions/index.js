@@ -47,6 +47,17 @@ exports.createUser = functions.https.onCall((data, context) => {
       return err;
     });
 });
+exports.deleteUser = functions.https.onCall((data, context) => {
+  return admin
+    .auth()
+    .deleteUser(data)
+    .then((res) => {
+      return res
+    })
+    .catch((err) => {
+      return err;
+    });
+});
 exports.addStaffRole = functions.https.onCall((data, context) => {
   return admin
     .auth()

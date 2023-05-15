@@ -10,41 +10,28 @@ const rows = [
     align: 'center',
     disablePadding: false,
     label: 'DATE',
-    sort: true,
-    width: 160
+    sort: true
   },
   {
     id: 'user-location',
     align: 'center',
     disablePadding: false,
     label: 'LOCATION',
-    sort: true,
-    width: 100
+    sort: true
   },
   {
     id: 'user-email',
     align: 'center',
     disablePadding: false,
     label: 'EMAIL',
-    sort: true,
-    width: 100
-  },
-
-  {
-    id: 'user-username',
-    align: 'center',
-    disablePadding: false,
-    label: 'USERNAME',
-    sort: true,
-    width: 100
+    sort: true
   },
   {
     id: 'user-role',
     align: 'center',
     disablePadding: false,
     label: 'ACCESS LEVEL',
-    sort: true,
-    width: 100
+    sort: true
   }
 ];
 
@@ -53,12 +40,11 @@ const StyledTableCell = withStyles((theme) => ({
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
     textAlign: 'center',
-    padding: 10,
-    width: '20%'
+    padding: 0
   },
   body: {
     fontSize: 14,
-    padding: 10
+    padding: 0
   }
 }))(TableCell);
 

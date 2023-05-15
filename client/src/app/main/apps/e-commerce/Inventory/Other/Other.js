@@ -9,8 +9,9 @@ import {
 } from 'react-instantsearch-dom';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
-import { Link } from 'react-router-dom';
 import { RefinementList } from 'react-instantsearch-dom';
+import { toast, Zoom } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
@@ -18,10 +19,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import EditIcon from '@material-ui/icons/Edit';
 import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -36,7 +34,8 @@ const searchClient = algoliasearch(
 );
 const VirtualRefinementList = connectRefinementList(() => null);
 
-const CustomHits = connectHits(({ hits }) => {
+const CustomHits = connectHits((props) => {
+  const {hits, userData, history} = props;
   const [images, setImages] = useState([]);
   const classes = useStyles();
   const handleClick = async (item) => {
@@ -54,15 +53,15 @@ const CustomHits = connectHits(({ hits }) => {
       <div className="flex flex-row">
         {images?.length
           ? images?.map((img, index) => (
-              <div className="mb-8 w-224 mr-6 ">
-                <img
-                  className="w-full border-grey-300 border-1 relative shadow-1 rounded-4"
-                  src={img.url}
-                  key={img.name}
-                  alt={''}
-                />
-              </div>
-            ))
+            <div className="mb-8 w-224 mr-6 ">
+              <img
+                className="w-full border-grey-300 border-1 relative shadow-1 rounded-4"
+                src={img.url}
+                key={img.name}
+                alt={''}
+              />
+            </div>
+          ))
           : 'No Pictures'}
       </div>
 
@@ -81,7 +80,6 @@ const CustomHits = connectHits(({ hits }) => {
               <StyledTableCell>SHAPE</StyledTableCell>
               <StyledTableCell>SIZE</StyledTableCell>
               <StyledTableCell>QTY</StyledTableCell>
-              <StyledTableCell>OPTIONS</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -93,7 +91,22 @@ const CustomHits = connectHits(({ hits }) => {
                   onClick={() => handleClick(hit.otherId)}
                   key={hit.otherId}
                   className="cursor-pointer">
-                  <StyledTableCell style={{ color: 'red' }}>
+                  <StyledTableCell onClick={() => {
+                    if (userData.userRole === 'admin' || userData?.inventoryView) {
+                      history.push(`/apps/inventory/viewother/${hit.otherId}`);
+                    }else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
+                  }} style={{ color: 'red' }}>
                     {`\xa0\xa0\xa0 ${hit.sku}`}
                   </StyledTableCell>
                   <StyledTableCell>{hit.brand}</StyledTableCell>
@@ -110,22 +123,6 @@ const CustomHits = connectHits(({ hits }) => {
                   </StyledTableCell>
                   <StyledTableCell>
                     {Number(hit.quantity).toLocaleString()}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <Link
-                      to={`/apps/inventory/viewother/${hit.otherId}`}
-                      className="btn btn-primary">
-                      <IconButton aria-label="edit">
-                        <PageviewOutlinedIcon fontSize="small" />
-                      </IconButton>
-                    </Link>
-                    <Link
-                      to={`/apps/inventory/addother/${hit.otherId}`}
-                      className="btn btn-primary">
-                      <IconButton aria-label="edit">
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </Link>
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -186,6 +183,7 @@ const Other = (props) => {
   const handleCloseFiltersDialog = () => {
     setOpenFiltersDialog(false);
   };
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   return (
     <div className="flex flex-col w-full ">
@@ -281,7 +279,20 @@ const Other = (props) => {
                   className={classes.orangeButton}
                   variant="contained"
                   onClick={() => {
-                    props.history.push('/apps/inventory/addother');
+                    if (userData.userRole === 'admin' || userData?.inventoryCreate) {
+                      props.history.push('/apps/inventory/addother');
+                    } else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
                   }}>
                   <Icon>add</Icon>
                   ADD NEW
@@ -354,7 +365,7 @@ const Other = (props) => {
               </Dialog>
             </div>
           </div>
-          <CustomHits props={props} />
+          <CustomHits props={props} userData={userData} history={props?.history} />
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>
             <div className="flex flex-1 justify-center pt-8">

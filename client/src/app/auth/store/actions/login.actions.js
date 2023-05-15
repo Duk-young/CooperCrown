@@ -1,8 +1,8 @@
-import firebaseService from 'app/services/firebaseService';
-import jwtService from 'app/services/jwtService';
+import { authRoles } from 'app/auth';
 import * as Actions from 'app/store/actions';
 import * as UserActions from './user.actions';
-import { authRoles } from 'app/auth';
+import firebaseService from 'app/services/firebaseService';
+import jwtService from 'app/services/jwtService';
 
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -39,13 +39,11 @@ export function submitLoginWithFireBase({ username, password }) {
     firebaseService.auth
       .signInWithEmailAndPassword(username, password)
       .then((user) => {
-        // dispatch(
-        //   UserActions.createUserSettingsFirebase({
-        //     ...response.user,
-        //     displayName,
-        //     email
-        //   })
-        // );
+        dispatch(
+          UserActions.createUserSettingsFirebase({
+            ...user
+          })
+        );
         dispatch(
           Actions.updateNavigationItem('Account-Setting', {
             title: 'Account Setting',

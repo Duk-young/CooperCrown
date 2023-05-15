@@ -1,6 +1,8 @@
 import { firestore } from 'firebase';
+import { toast, Zoom } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
@@ -79,6 +81,7 @@ const CustomerProfile = (props) => {
   const [showRooms, setShowRooms] = useState();
   const [disabledState, setDisabledState] = useState(true);
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   const handlePrescriptionReceiptClose = () => {
     setOpenPrescriptionReceipt(false);
@@ -345,10 +348,22 @@ const CustomerProfile = (props) => {
                     className={classes.button}
                     variant="contained"
                     color="secondary"
-                    onClick={() =>
-                      props.history.push(
-                        `/apps/e-commerce/customers/${customer?.customerId}`
-                      )
+                    onClick={() => {
+                      if (userData.userRole === 'admin' || userData?.customersEdit) {
+                        props.history.push(`/apps/e-commerce/customers/${customer?.customerId}`)
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
+                    }
                     }>
                     <EditIcon fontSize="small" />
                     EDIT

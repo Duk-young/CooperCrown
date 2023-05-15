@@ -1,7 +1,7 @@
 import { firestore, storage } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -58,9 +58,13 @@ function AddInsurance(props) {
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
   const [openCameraDialog, setOpenCameraDialog] = useState(false);
 
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+
   const handleCameraDilogClose = () => {
     setOpenCameraDialog(false);
   };
+
+  useEffect(() => {console.log('reduxuser', userData)}, [userData])
 
   useEffect(() => {
     if (routeParams.insuranceId) {

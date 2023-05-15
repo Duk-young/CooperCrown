@@ -1,7 +1,10 @@
 import { firestore } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
+import { toast, Zoom } from 'react-toastify';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
@@ -52,6 +55,7 @@ function ViewOther(props) {
   const { form, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
   const routeParams = useParams();
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   useEffect(() => {
     const id = routeParams.otherId;
@@ -306,6 +310,30 @@ function ViewOther(props) {
                       </div>
                     ))}
                   </div>
+                  <Button
+                    className={classes.orangeButton}
+                    variant="contained"
+                    style={{ minHeight: '60px', maxHeight: '60px' }}
+                    onClick={() => {
+                      if (userData.userRole === 'admin' || userData?.inventoryEdit) {
+                        props.history.push(
+                          `/apps/inventory/addother/${routeParams?.otherId}`
+                        );
+                      } else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
+                    }}>
+                    <Icon>edit</Icon> EDIT
+                  </Button>
                 </div>
               </div>
               <div className="w-full md:w-1/2 p-6">
