@@ -10,8 +10,9 @@ import {
 } from 'react-instantsearch-dom';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
-import { Link } from 'react-router-dom';
 import { RefinementList } from 'react-instantsearch-dom';
+import { toast, Zoom } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
@@ -19,13 +20,10 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import EditIcon from '@material-ui/icons/Edit';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import React, { useState, useEffect } from 'react';
 import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
@@ -41,7 +39,8 @@ const searchClient = algoliasearch(
 );
 const VirtualRefinementList = connectRefinementList(() => null);
 
-const CustomHits = connectHits(({ hits }) => {
+const CustomHits = connectHits((props) => {
+  const {hits, userData, history} = props;
   const [images, setImages] = useState([]);
   const classes = useStyles();
   const handleClick = async (item) => {
@@ -86,7 +85,6 @@ const CustomHits = connectHits(({ hits }) => {
               <StyledTableCell>SHAPE</StyledTableCell>
               <StyledTableCell>SIZE</StyledTableCell>
               <StyledTableCell>QTY</StyledTableCell>
-              <StyledTableCell>OPTIONS</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -100,7 +98,22 @@ const CustomHits = connectHits(({ hits }) => {
                   onClick={() => handleClick(hit.showRoomInventoryId)}
                   key={hit.showRoomInventoryId}
                   className="cursor-pointer">
-                  <StyledTableCell style={{ color: 'red' }}>
+                  <StyledTableCell onClick={() => {
+                    if (userData.userRole === 'admin' || userData?.inventoryView) {
+                      history.push(`/apps/inventory/viewshowroominventory/${hit.showRoomInventoryId}`);
+                    }else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
+                  }} style={{ color: 'red' }}>
                     {`\xa0\xa0\xa0 ${hit.sku}`}
                   </StyledTableCell>
                   <StyledTableCell>{hit.brand}</StyledTableCell>
@@ -116,22 +129,6 @@ const CustomHits = connectHits(({ hits }) => {
                     </div>
                   </StyledTableCell>
                   <StyledTableCell>{hit.quantity}</StyledTableCell>
-                  <StyledTableCell>
-                    <Link
-                      to={`/apps/inventory/viewshowroominventory/${hit.showRoomInventoryId}`}
-                      className="btn btn-primary">
-                      <IconButton aria-label="edit">
-                        <PageviewOutlinedIcon fontSize="small" />
-                      </IconButton>
-                    </Link>
-                    <Link
-                      to={`/apps/inventory/addshowroominventory/${hit.showRoomInventoryId}`}
-                      className="btn btn-primary">
-                      <IconButton aria-label="edit">
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </Link>
-                  </StyledTableCell>
                 </StyledTableRow>
               ))}
           </TableBody>
@@ -193,6 +190,7 @@ const ShowRoomInventory = (props) => {
   const handleCloseFiltersDialog = () => {
     setOpenFiltersDialog(false);
   };
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   useEffect(() => {
     const fetchShowRooms = async () => {
@@ -331,7 +329,20 @@ const ShowRoomInventory = (props) => {
                   }}
                   variant="contained"
                   onClick={() => {
-                    props.history.push('/apps/inventory/addshowroominventory');
+                    if (userData.userRole === 'admin' || userData?.inventoryCreate) {
+                      props.history.push('/apps/inventory/addshowroominventory');
+                    }else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
                   }}>
                   <Icon>add</Icon>
                   ADD NEW
@@ -404,7 +415,7 @@ const ShowRoomInventory = (props) => {
               </Dialog>
             </div>
           </div>
-          <CustomHits props={props} />
+          <CustomHits props={props}  userData={userData} history={props?.history}/>
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>
             <div className="flex flex-1 justify-center pt-8">

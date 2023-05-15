@@ -1,7 +1,8 @@
 import { firestore, storage } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
-import { useDispatch } from 'react-redux';
+import { toast, Zoom } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -57,6 +58,8 @@ function AddInsurance(props) {
   );
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
   const [openCameraDialog, setOpenCameraDialog] = useState(false);
+
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   const handleCameraDilogClose = () => {
     setOpenCameraDialog(false);
@@ -482,7 +485,22 @@ function AddInsurance(props) {
                     }}
                     variant="contained"
                     color="secondary"
-                    onClick={!form ? undefined : onSubmit}>
+                    onClick={() => {
+                      if ((userData.userRole === 'admin' || userData?.insuranceEdit) && onSubmit) {
+                        onsubmit()
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
+                    }}>
                     <Icon>save</Icon>
                     SAVE INSURANCE
                   </Button>
@@ -496,7 +514,22 @@ function AddInsurance(props) {
                         color: 'red'
                       }}
                       variant="outlined"
-                      onClick={handleDelete}>
+                      onClick={() => {
+                        if (userData.userRole === 'admin' || userData?.insuranceDelete) {
+                          handleDelete()
+                        }else {
+                          toast.error('You are not authorized', {
+                            position: 'top-center',
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            transition: Zoom
+                          });
+                        }
+                      }}>
                       <Icon>delete</Icon>
                       DELETE INSURANCE
                     </Button>

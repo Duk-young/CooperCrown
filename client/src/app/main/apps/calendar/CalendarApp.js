@@ -2,7 +2,7 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Actions from './store/actions';
 import * as ReactDOM from 'react-dom';
 import CalendarHeader from './CalendarHeader';
@@ -15,7 +15,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import reducer from './store/reducers';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import withReducer from 'app/store/withReducer';
-// import { useSelector } from 'react-redux';
 import { toast, Zoom } from 'react-toastify';
 
 moment.locale('ko', {
@@ -180,18 +179,23 @@ const useStyles = makeStyles((theme) => ({
 
 function CalendarApp(props) {
   const dispatch = useDispatch();
-  // const appointments = useSelector(
-  //   ({ calendarApp }) => calendarApp.events.entities
-  // );
+  const appointments = useSelector(
+    ({ calendarApp }) => calendarApp.events.entities
+  );
 
   const [events, setEvents] = useState([]);
   const [currentShowroom, setCurrentShowroom] = useState(null);
   const classes = useStyles(props);
   const headerEl = useRef(null);
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   useEffect(() => {
     dispatch(Actions.getEvents());
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log(appointments)
+  }, [appointments]);
 
   function moveEvent({ event, start, end }) {
     dispatch(
@@ -250,11 +254,10 @@ function CalendarApp(props) {
         }}
         // onNavigate={handleNavigate}
         onSelectEvent={(event) => {
-          dispatch(Actions.openEditEventDialog(event));
-        }}
-        onSelectSlot={(slotInfo) => {
-          if (!currentShowroom) {
-            toast.error('Please select showroom first', {
+          if (userData.userRole === 'admin' || userData?.appointmentsView) {
+            dispatch(Actions.openEditEventDialog(event));
+          } else {
+            toast.error('You are not authorized', {
               position: 'top-center',
               autoClose: 5000,
               hideProgressBar: false,
@@ -264,14 +267,41 @@ function CalendarApp(props) {
               progress: undefined,
               transition: Zoom
             });
+          }
+        }}
+        onSelectSlot={(slotInfo) => {
+          if (userData.userRole === 'admin' || userData?.appointmentsCreate) {
+            if (!currentShowroom) {
+              toast.error('Please select showroom first', {
+                position: 'top-center',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                transition: Zoom
+              });
+            } else {
+              dispatch(
+                Actions.openNewEventDialog({
+                  start: slotInfo.start,
+                  end: slotInfo.end,
+                  showRoomId: currentShowroom
+                })
+              );
+            }
           } else {
-            dispatch(
-              Actions.openNewEventDialog({
-                start: slotInfo.start,
-                end: slotInfo.end,
-                showRoomId: currentShowroom
-              })
-            );
+            toast.error('You are not authorized', {
+              position: 'top-center',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              transition: Zoom
+            });
           }
         }}
       />

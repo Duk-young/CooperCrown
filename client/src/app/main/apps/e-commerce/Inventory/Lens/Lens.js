@@ -1,15 +1,8 @@
-import {
-  InstantSearch,
-  Panel,
-  SearchBox,
-  HitsPerPage,
-  Pagination,
-  connectRefinementList,
-  ClearRefinements
-} from 'react-instantsearch-dom';
 import { connectHits } from 'react-instantsearch-dom';
-import { Link } from 'react-router-dom';
+import { InstantSearch, Panel, SearchBox, HitsPerPage, Pagination, connectRefinementList, ClearRefinements } from 'react-instantsearch-dom';
 import { RefinementList } from 'react-instantsearch-dom';
+import { toast, Zoom } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
@@ -17,10 +10,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import EditIcon from '@material-ui/icons/Edit';
 import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -35,7 +25,8 @@ const searchClient = algoliasearch(
 );
 const VirtualRefinementList = connectRefinementList(() => null);
 
-const CustomHits = connectHits(({ hits }) => {
+const CustomHits = connectHits((props) => {
+  const { hits, userData, history } = props;
   const classes = useStyles();
 
   return (
@@ -54,7 +45,6 @@ const CustomHits = connectHits(({ hits }) => {
               <StyledTableCell>SPHERE</StyledTableCell>
               <StyledTableCell>CYLINDER</StyledTableCell>
               <StyledTableCell>QTY</StyledTableCell>
-              <StyledTableCell>OPTIONS</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -65,7 +55,22 @@ const CustomHits = connectHits(({ hits }) => {
                   style={{ height: 10 }}
                   key={hit.lensId}
                   className="cursor-pointer">
-                  <StyledTableCell style={{ color: 'red' }}>
+                  <StyledTableCell onClick={() => {
+                    if (userData.userRole === 'admin' || userData?.inventoryView) {
+                      history.push(`/apps/inventory/viewlens/${hit.lensId}`);
+                    } else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
+                  }} style={{ color: 'red' }}>
                     {`\xa0\xa0\xa0 ${hit.sku}`}
                   </StyledTableCell>
                   <StyledTableCell>{hit.brand}</StyledTableCell>
@@ -74,18 +79,6 @@ const CustomHits = connectHits(({ hits }) => {
                   <StyledTableCell>{hit.sphere}</StyledTableCell>
                   <StyledTableCell>{hit.cylinder}</StyledTableCell>
                   <StyledTableCell>{hit.quantity}</StyledTableCell>
-                  <StyledTableCell>
-                    <Link to={`/apps/inventory/viewlens/${hit.lensId}`}>
-                      <IconButton aria-label="edit">
-                        <PageviewOutlinedIcon fontSize="small" />
-                      </IconButton>
-                    </Link>
-                    <Link to={`/apps/inventory/addlens/${hit.lensId}`}>
-                      <IconButton aria-label="edit">
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </Link>
-                  </StyledTableCell>
                 </StyledTableRow>
               ))}
           </TableBody>
@@ -102,7 +95,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
-    padding: 0
+    padding: 8
   }
 }))(TableCell);
 
@@ -145,6 +138,7 @@ const Lens = (props) => {
   const handleCloseFiltersDialog = () => {
     setOpenFiltersDialog(false);
   };
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   return (
     <div className="flex flex-col w-full ">
@@ -240,7 +234,20 @@ const Lens = (props) => {
                   className={classes.orangeButton}
                   variant="contained"
                   onClick={() => {
-                    props.history.push('/apps/inventory/addlens');
+                    if (userData.userRole === 'admin' || userData?.inventoryCreate) {
+                      props.history.push('/apps/inventory/addlens');
+                    } else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
                   }}>
                   <Icon>add</Icon>
                   ADD NEW
@@ -313,7 +320,7 @@ const Lens = (props) => {
               </Dialog>
             </div>
           </div>
-          <CustomHits props={props} />
+          <CustomHits props={props} userData={userData} history={props?.history} />
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>
             <div className="flex flex-1 justify-center pt-8">

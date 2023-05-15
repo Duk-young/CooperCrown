@@ -1,15 +1,15 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import { firestore } from 'firebase';
+import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import FuseLoading from '@fuse/core/FuseLoading';
+import Paper from '@material-ui/core/Paper';
+import React, { useEffect, useState, Fragment } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import FuseLoading from '@fuse/core/FuseLoading';
-import { firestore } from 'firebase';
-import { withRouter } from 'react-router';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -71,8 +71,7 @@ const OutOfStock = (props) => {
       setisLoading(true);
     };
     fetchData();
-    console.log(rows);
-  }, [rows]);
+  }, []);
   if (!isLoading) return <FuseLoading />;
   return !rows ? (
     <></>

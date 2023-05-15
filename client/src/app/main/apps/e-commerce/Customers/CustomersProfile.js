@@ -1,4 +1,6 @@
 import { firestore } from 'firebase';
+import { toast, Zoom } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
@@ -79,6 +81,7 @@ const CustomerProfile = (props) => {
   const [showRooms, setShowRooms] = useState();
   const [disabledState, setDisabledState] = useState(true);
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   const handlePrescriptionReceiptClose = () => {
     setOpenPrescriptionReceipt(false);
@@ -345,10 +348,22 @@ const CustomerProfile = (props) => {
                     className={classes.button}
                     variant="contained"
                     color="secondary"
-                    onClick={() =>
-                      props.history.push(
-                        `/apps/e-commerce/customers/${customer?.customerId}`
-                      )
+                    onClick={() => {
+                      if (userData.userRole === 'admin' || userData?.customersEdit) {
+                        props.history.push(`/apps/e-commerce/customers/${customer?.customerId}`)
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
+                    }
                     }>
                     <EditIcon fontSize="small" />
                     EDIT
@@ -484,9 +499,22 @@ const CustomerProfile = (props) => {
                     variant="contained"
                     color="secondary"
                     onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/customers/addinsurance/${customer?.customerId}`
-                      );
+                      if (userData.userRole === 'admin' || userData?.insuranceCreate) {
+                        props.history.push(
+                          `/apps/e-commerce/customers/addinsurance/${customer?.customerId}`
+                        );
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
                     }}>
                     + ADD NEW
                   </Button>
@@ -516,9 +544,22 @@ const CustomerProfile = (props) => {
                                 key={row.insuranceId}
                                 style={{ height: 10 }}
                                 onClick={() => {
-                                  props.history.push(
-                                    `/apps/e-commerce/customers/profile/editinsurance/${row?.insuranceId}`
-                                  );
+                                  if (userData.userRole === 'admin' || userData?.insuranceView) {
+                                    props.history.push(
+                                      `/apps/e-commerce/customers/profile/editinsurance/${row?.insuranceId}`
+                                    );
+                                  }else {
+                                    toast.error('You are not authorized', {
+                                      position: 'top-center',
+                                      autoClose: 5000,
+                                      hideProgressBar: false,
+                                      closeOnClick: true,
+                                      pauseOnHover: true,
+                                      draggable: true,
+                                      progress: undefined,
+                                      transition: Zoom
+                                    });
+                                  }
                                 }}>
                                 <StyledTableCell>
                                   {row?.dateCreated && moment(row?.dateCreated.toDate()).format('MM/DD/YYYY')}
@@ -893,9 +934,22 @@ const CustomerProfile = (props) => {
                     variant="contained"
                     color="secondary"
                     onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/customers/addExam/${customer?.customerId}`
-                      );
+                      if (userData.userRole === 'admin' || userData?.examsCreate) {
+                        props.history.push(
+                          `/apps/e-commerce/customers/addExam/${customer?.customerId}`
+                        );
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
                     }}>
                     + ADD NEW
                   </Button>
@@ -920,9 +974,22 @@ const CustomerProfile = (props) => {
                             .map((row) => (
                               <StyledTableRow
                               onClick={() => {
-                                props.history.push(
-                                  `/apps/e-commerce/customers/profile/viewexam/${row?.examId}`
-                                );
+                                if (userData.userRole === 'admin' || userData?.examsView) {
+                                  props.history.push(
+                                    `/apps/e-commerce/customers/profile/viewexam/${row?.examId}`
+                                  );
+                                }else {
+                                  toast.error('You are not authorized', {
+                                    position: 'top-center',
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    transition: Zoom
+                                  });
+                                }
                               }}
                                 key={row.examId}
                                 style={{ height: 10 }}>

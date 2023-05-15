@@ -31,6 +31,7 @@ function UsersHeader(props) {
     ({ eCommerceApp }) => eCommerceApp.users.searchText
   );
   const mainTheme = useSelector(({ fuse }) => fuse.settings.mainTheme);
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   return (
     <>
@@ -101,6 +102,7 @@ function UsersHeader(props) {
               to="/apps/e-commerce/user/new"
               className={classes.button}
               variant="contained"
+              disabled={userData.userRole === 'staff'}
               color="secondary">
               <span className="hidden sm:flex">Add New </span>
               <span className="flex sm:hidden">New</span>

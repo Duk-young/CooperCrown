@@ -1,8 +1,8 @@
-import firebaseService from 'app/services/firebaseService';
-import jwtService from 'app/services/jwtService';
+import { authRoles } from 'app/auth';
 import * as Actions from 'app/store/actions';
 import * as UserActions from './user.actions';
-import { authRoles } from 'app/auth';
+import firebaseService from 'app/services/firebaseService';
+import jwtService from 'app/services/jwtService';
 
 export const REGISTER_ERROR = 'REGISTER_ERROR';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -53,8 +53,9 @@ export function registerWithFirebase(model) {
               .collection('users')
               .doc(response.user.uid)
               .set({
+                ...model,
+                password: '',
                 Role: 'Admin',
-                email: email,
                 CompanyId: response.user.uid
               })
               .then(() => {
