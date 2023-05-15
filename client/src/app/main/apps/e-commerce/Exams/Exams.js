@@ -1,41 +1,41 @@
-import { useParams } from 'react-router-dom';
-import CustomAutocomplete from '../ReusableComponents/Autocomplete';
-import FusePageCarded from '@fuse/core/FusePageCarded';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import React, { useState, useEffect } from 'react';
 import { firestore } from 'firebase';
-import reducer from '../store/reducers';
-import Typography from '@material-ui/core/Typography';
-import withReducer from 'app/store/withReducer';
+import { makeStyles } from '@material-ui/core/styles';
+import { toast, Zoom } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from '@fuse/hooks';
+import { useParams } from 'react-router-dom';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import Assessment from './Assessment';
 import Button from '@material-ui/core/Button';
+import ChiefComplaints from './ChiefComplaints';
+import CustomAutocomplete from '../ReusableComponents/Autocomplete';
+import CustomerInfo from './CustomerInfo';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DoctorSignature from './DoctorSignature';
-import CustomerInfo from './CustomerInfo';
-import MedicalOcularHistory from './MedicalOcularHistory';
-import ChiefComplaints from './ChiefComplaints';
-import GlassesDetails from './GlassesDetails';
-import LensDetails from './LensDetails';
-import VisualAcuity from './VisualAcuity';
-import PupilsDetails from './PupilsDetails';
-import SlitLampExam from './SlitLampExam';
-import FundusExam from './FundusExam';
 import DilationDetails from './DilationDetails';
-import PeripheralRetina from './PeripheralRetina';
-import Assessment from './Assessment';
-import { useDispatch } from 'react-redux';
-import { useForm } from '@fuse/hooks';
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import SaveIcon from '@material-ui/icons/Save';
+import DoctorSignature from './DoctorSignature';
 import EditIcon from '@material-ui/icons/Edit';
-import TextField from '@material-ui/core/TextField';
+import FundusExam from './FundusExam';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { makeStyles } from '@material-ui/core/styles';
-import { toast, Zoom } from 'react-toastify';
+import FusePageCarded from '@fuse/core/FusePageCarded';
+import GlassesDetails from './GlassesDetails';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import LensDetails from './LensDetails';
+import MedicalOcularHistory from './MedicalOcularHistory';
+import PeripheralRetina from './PeripheralRetina';
+import PupilsDetails from './PupilsDetails';
+import React, { useState, useEffect } from 'react';
+import reducer from '../store/reducers';
+import SaveIcon from '@material-ui/icons/Save';
+import SlitLampExam from './SlitLampExam';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import VisualAcuity from './VisualAcuity';
+import withReducer from 'app/store/withReducer';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -60,6 +60,7 @@ function Exams(props) {
   const [doctors, setDoctors] = useState();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
@@ -74,8 +75,6 @@ function Exams(props) {
   const handleCloseAlert = () => {
     setOpenAlert(false);
   };
-
-  useEffect(() => { console.log('form changed', form) }, [form])
 
   useEffect(() => {
     setisLoading(true);
@@ -391,7 +390,22 @@ function Exams(props) {
                 <Button
                   variant="contained"
                   className={classes.button}
-                  onClick={() => setDisabledState(false)}
+                  onClick={() => {
+                    if (userData.userRole === 'admin' || userData?.examsEdit) {
+                      setDisabledState(false)
+                    }else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
+                  }}
                   color="secondary"
                   size="small"
                   startIcon={<EditIcon />}
@@ -414,6 +428,7 @@ function Exams(props) {
                 id="locationName"
                 freeSolo={false}
                 label="Select Showroom"
+                disabled={disabledState}
               />
             </div>
             <div className='flex flex-col w-1/2 ml-10'>
@@ -425,6 +440,7 @@ function Exams(props) {
                 id="fullName"
                 freeSolo={false}
                 label="Select Doctor"
+                disabled={disabledState}
               />
             </div>
 

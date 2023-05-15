@@ -4,7 +4,7 @@ import '../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
@@ -30,6 +30,7 @@ import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import { toast, Zoom } from 'react-toastify';
 import {
   InstantSearch,
   SearchBox,
@@ -98,7 +99,9 @@ const CustomHits = connectHits(
     value,
     selected,
     setSelected,
-    setSelectAllData
+    setSelectAllData,
+    userData,
+    history
   }) => {
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -224,33 +227,85 @@ const CustomHits = connectHits(
                     component="th"
                     scope="row"
                     onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                      );
+                      if (userData.userRole === 'admin' || userData?.ordersView) {
+                        props.history.push(
+                          `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                        );
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
                     }}>
                     {hit?.redoOrder ? `${hit?.customOrderId} R${hit?.redo}` : hit?.customOrderId}
                   </StyledTableCell>
                   <StyledTableCell
                     onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                      );
+                      if (userData.userRole === 'admin' || userData?.ordersView) {
+                        props.history.push(
+                          `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                        );
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
                     }}>
                     {moment(hit?.orderDate).format('MM/DD/YYYY')}
                   </StyledTableCell>
                   <StyledTableCell
                     onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                      );
+                      if (userData.userRole === 'admin' || userData?.ordersView) {
+                        props.history.push(
+                          `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                        );
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
                     }}>
                     {hit?.firstName}
                   </StyledTableCell>
                   <StyledTableCell
                     onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                      );
+                      if (userData.userRole === 'admin' || userData?.ordersView) {
+                        props.history.push(
+                          `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                        );
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
                     }}>
                     {hit?.lastName}
                   </StyledTableCell>
@@ -262,18 +317,44 @@ const CustomHits = connectHits(
                   </StyledTableCell>
                   <StyledTableCell
                     onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                      );
+                      if (userData.userRole === 'admin' || userData?.ordersView) {
+                        props.history.push(
+                          `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                        );
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
                     }}>
                     {hit?.locationName}
                   </StyledTableCell>
                   <StyledTableCell
                     className="capitalize"
                     onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/orders/vieworder/${hit.orderId}`
-                      );
+                      if (userData.userRole === 'admin' || userData?.ordersView) {
+                        props.history.push(
+                          `/apps/e-commerce/orders/vieworder/${hit.orderId}`
+                        );
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
                     }}>
                     {hit?.orderStatus}
                   </StyledTableCell>
@@ -357,6 +438,7 @@ function Orders(props) {
   const [selected, setSelected] = React.useState([]);
   const [selectAllData, setSelectAllData] = React.useState(false);
   const [isLoading, setisLoading] = React.useState(false);
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   const updateStatus = async (order, status) => {
     const uuid = order[0]; // add loader then update the page with the new data
@@ -545,16 +627,31 @@ function Orders(props) {
                 </div>
                 <div className="flex flex-row">
                   <FuseAnimate animation="transition.slideRightIn" delay={300}>
-                    <Link to={`/apps/e-commerce/orders/addorder/new`}>
-                      <Button
-                        // className="whitespace-no-wrap normal-case mt-42"
-                        className={classes.button}
-                        variant="contained"
-                        color="secondary">
-                        <span className="hidden sm:flex">+ Add New</span>
-                        <span className="flex sm:hidden">New</span>
-                      </Button>
-                    </Link>
+                    <Button
+                      onClick={() => {
+                        if (userData.userRole === 'admin' || userData?.ordersCreate) {
+                          props.history.push(
+                            `/apps/e-commerce/orders/addorder/new`
+                          );
+                        } else {
+                          toast.error('You are not authorized', {
+                            position: 'top-center',
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            transition: Zoom
+                          });
+                        }
+                      }}
+                      className={classes.button}
+                      variant="contained"
+                      color="secondary">
+                      <span className="hidden sm:flex">+ Add New</span>
+                      <span className="flex sm:hidden">New</span>
+                    </Button>
                   </FuseAnimate>
                 </div>
               </div>
@@ -572,6 +669,8 @@ function Orders(props) {
                       setSelected={setSelected}
                       selectAllData={selectAllData}
                       setSelectAllData={setSelectAllData}
+                      userData={userData}
+                      history={props?.history}
                     />
                   </TabPanel>
                 ))}

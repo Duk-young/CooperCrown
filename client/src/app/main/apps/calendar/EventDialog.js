@@ -2,6 +2,7 @@
 // import Switch from '@material-ui/core/Switch';
 import { DateTimePicker } from '@material-ui/pickers';
 import { firestore } from 'firebase';
+import { toast, Zoom } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import * as Actions from './store/actions';
@@ -30,9 +31,9 @@ const defaultFormState = {
 
 function EventDialog(props) {
   const dispatch = useDispatch();
-  const eventDialog = useSelector(
-    ({ calendarApp }) => calendarApp.events.eventDialog
-  );
+  const eventDialog = useSelector(({ calendarApp }) => calendarApp.events.eventDialog);
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+
   const { form, setForm } = useForm(defaultFormState);
   const start = moment(form.start, 'MM/DD/YYYY');
   const end = moment(form.end, 'MM/DD/YYYY');
@@ -229,14 +230,22 @@ function EventDialog(props) {
           </DialogActions>
         ) : (
           <DialogActions className="justify-between px-8 sm:px-16">
-            {/* <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              disabled={!canBeSubmitted()}>
-              Save
-            </Button> */}
-            <IconButton onClick={handleRemove}>
+            <IconButton onClick={() => {
+              if (userData.userRole === 'admin' || userData?.appointmentsDelete) {
+                handleRemove()
+              } else {
+                toast.error('You are not authorized', {
+                  position: 'top-center',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  transition: Zoom
+                });
+              }
+            }}>
               <Icon>delete</Icon>
             </IconButton>
           </DialogActions>

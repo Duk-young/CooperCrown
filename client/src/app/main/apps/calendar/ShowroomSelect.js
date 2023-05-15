@@ -13,6 +13,8 @@ export default function ShowroomSelect({ setEvents, setCurrentShowroom }) {
   );
   const { handleChange } = useForm(null);
   const [showRooms, setShowRooms] = useState([]);
+  const [selectedShowroom, setSelectedShowroom] = useState(null);
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -23,10 +25,19 @@ export default function ShowroomSelect({ setEvents, setCurrentShowroom }) {
         showroomdata.push(doc.data());
       });
       setShowRooms(showroomdata);
+      if(userData?.userRole === 'staff') {
+        let filteredEvents = appointments.filter(
+          (word) => word.showRoomId === userData?.showRoomId
+        );
+  
+        setEvents(filteredEvents);
+        setSelectedShowroom(userData?.showRoomId)
+        setCurrentShowroom(userData?.showRoomId)
+      }
     };
     fetchDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userData, appointments]);
 
   return !showRooms ? (
     <></>
@@ -36,6 +47,8 @@ export default function ShowroomSelect({ setEvents, setCurrentShowroom }) {
         <FormHelperText>Select Showroom</FormHelperText>
         <Select
           labelId="demo-simple-select-autowidth-label"
+          value={selectedShowroom ?? ''}
+          disabled={userData?.userRole === 'staff'}
           onChange={(e) => {
             handleChange(e);
 

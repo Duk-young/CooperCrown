@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { firestore } from 'firebase';
 import { toast, Zoom } from 'react-toastify';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
@@ -121,6 +121,7 @@ function AddOrder(props) {
   const [openDelete, setOpenDelete] = useState(false);
   const [openThermalReceipt, setOpenThermalReceipt] = useState(false);
   const [openOrderTicket, setOpenOrderTicket] = useState(false);
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   const classes = useStyles();
 
@@ -1219,10 +1220,9 @@ function AddOrder(props) {
                       </FuseAnimate>
                     </div>
                   )}
-
-                  <Button
+                  {disabledState === false && (
+                    <Button
                     className={classes.button}
-                    disabled={disabledState}
                     variant="contained"
                     color="secondary"
                     onClick={() => {
@@ -1248,6 +1248,32 @@ function AddOrder(props) {
                       ? 'Submit Order'
                       : 'SAVE'}
                   </Button>
+                  )}
+                  {disabledState === true && (
+                    <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      if (userData.userRole === 'admin' || userData?.ordersEdit) {
+                        setDisabledState(false)
+                      }else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
+                    }}
+                    aria-label="add">
+                    EDIT
+                  </Button>
+                  )}
 
                   {routeParams?.orderId && (
                     <>
@@ -1266,11 +1292,25 @@ function AddOrder(props) {
                         variant="contained"
                         color="secondary"
                         onClick={() => {
-                          if (routeParams.customerId === 'new') {
-                            alert('No Data to delete');
-                          } else {
-                            setOpenDelete(true);
+                          if (userData.userRole === 'admin' || userData?.ordersDelete) {
+                            if (routeParams.customerId === 'new') {
+                              alert('No Data to delete');
+                            } else {
+                              setOpenDelete(true);
+                            }
+                          }else {
+                            toast.error('You are not authorized', {
+                              position: 'top-center',
+                              autoClose: 5000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              transition: Zoom
+                            });
                           }
+                          
                         }}>
                         delete
                       </Button>
