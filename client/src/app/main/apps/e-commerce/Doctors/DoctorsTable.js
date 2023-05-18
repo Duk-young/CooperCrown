@@ -20,37 +20,31 @@ function DoctorsTable(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-
   useEffect(() => {
     const fetchDoctors = async () => {
       setisLoading(false);
       let doctorsData = []
       const queryDoctors = await firestore().collection('doctors').get()
       queryDoctors.forEach((doc) => {
-        doctorsData.push({...doc.data(), id: doc.id});
+        doctorsData.push({ ...doc.data(), id: doc.id });
       });
       setDoctors(doctorsData);
       setisLoading(true);
     };
     fetchDoctors();
   }, [dispatch]);
- 
-
-  
-
- 
 
   const StyledTableCell = withStyles((theme) => ({
     head: {
       backgroundColor: theme.palette.common.black,
       color: theme.palette.common.white,
       fontSize: 14,
-      padding: 5,
+      padding: 0,
       textAlign: 'center'
     },
     body: {
       fontSize: 14,
-      padding: 0,
+      padding: 8,
       textAlign: 'center',
       width: 'min-content'
     }
@@ -72,59 +66,33 @@ function DoctorsTable(props) {
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(event.target.value);
   }
+
   if (!isLoading) return <FuseLoading />;
+
   return (
     <div className="w-full flex flex-col">
       <FuseScrollbars className="flex-grow overflow-x-auto">
-        <Table className="min-w-xl" aria-labelledby="tableTitle">
-          <DoctorsTableHead
-            rowCount={doctors.length}
-          />
-
+        <Table aria-labelledby="tableTitle">
+          <DoctorsTableHead rowCount={doctors.length}/>
           <TableBody>
             {doctors
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((n) => {
-
                 return (
                   <StyledTableRow
-                    className="h-64 cursor-pointer"
-                    hover
-                    role="checkbox"
-
-                    tabIndex={-1}
-                    key={n.id}
-                    onClick={() => {
-                      props.history.push(
-                        `/apps/e-commerce/doctor/${n.id}`
-                      );
-                    }}>
-                    <StyledTableCell component="th" scope="row">
-                      {moment(n.date.toDate()).format('MM/DD/YYYY') }
-                    </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
-                      {n.fname} {n.lname}
-                    </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
-                      {n.location1}
-                    </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
-                      {n.location2}
-                    </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
-                      {n.location3}
-                    </StyledTableCell>
-
-
-                    
+                    hoverrole="checkbox" tabIndex={-1} key={n.id}
+                    onClick={() => { props.history.push(`/apps/e-commerce/doctor/${n.id}`); }}>
+                    <StyledTableCell component="th" scope="row">{moment(n.date.toDate()).format('MM/DD/YYYY')}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row">{n.fname} {n.lname}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row">{n.showrooms?.[0]?.locationName}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row">{n.showrooms?.[1]?.locationName}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row">{n.showrooms?.[2]?.locationName}</StyledTableCell>
                   </StyledTableRow>
                 );
               })}
           </TableBody>
         </Table>
-
       </FuseScrollbars>
-
       <TablePagination
         className="overflow-hidden"
         component="div"

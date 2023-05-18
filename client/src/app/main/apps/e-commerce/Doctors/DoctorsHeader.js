@@ -11,9 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as Actions from '../store/actions';
 const useStyles = makeStyles({
-  table: {
-    minWidth: 450
-  },
   button: {
     backgroundColor: '#f15a25',
     color: '#fff',

@@ -36,32 +36,11 @@ export const saveDoctor = (data) => async (dispatch) => {
         .doc('dbConfig')
         .get()
     ).data();
-    const queryloc1 = await firestore()
-      .collection('showRooms')
-      .where('showRoomId', '==', Number(data.showRoomId1))
-      .limit(1)
-      .get();
-    let result1 = queryloc1.docs[0].data();
-
-    const queryloc2 = await firestore()
-      .collection('showRooms')
-      .where('showRoomId', '==', Number(data.showRoomId2))
-      .limit(1)
-      .get();
-    let result2 = queryloc2.docs[0].data();
-
-    const queryloc3 = await firestore()
-      .collection('showRooms')
-      .where('showRoomId', '==', Number(data.showRoomId3))
-      .limit(1)
-      .get();
-    let result3 = queryloc3.docs[0].data();
 
     await firebaseService.firestoreDb
       .collection('doctors')
       .add({
-        ...data, date: today, location1: result1.locationName, location3: result3.locationName,
-        location2: result2.locationName, dob: firestore.Timestamp.fromDate(data?.dob),
+        ...data, date: today, dob: firestore.Timestamp.fromDate(data?.dob),
         dobString: moment(data?.dob).format('MM/DD/YYYY'), doctorId: dbConfig?.doctorId + 1,
         fullName: `${data?.fname} ${data?.lname}`
       });
@@ -100,9 +79,6 @@ export function newDoctor() {
     uid: FuseUtils.generateGUID(),
     date: '',
     doctorname: '',
-    location1: '',
-    location2: '',
-    location3: '',
     dob: '',
     dobstring: '',
     fname: '',

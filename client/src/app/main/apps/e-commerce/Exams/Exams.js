@@ -77,6 +77,13 @@ function Exams(props) {
   };
 
   useEffect(() => {
+    if (userData?.userRole === 'staff' && showRooms?.length > 0 && !form?.locationName) {
+      const userShowroom = showRooms.filter((location) => location?.showRoomId === userData?.showRoomId)
+      if (userShowroom?.length > 0) setForm({ ...form, locationName: userShowroom?.[0]?.locationName })
+    }
+  }, [userData, showRooms])
+
+  useEffect(() => {
     setisLoading(true);
     if (routeParams.customerId) {
       const id = routeParams.customerId;
@@ -104,7 +111,13 @@ function Exams(props) {
         queryDoctors.forEach((doc) => {
           doctorsData.push(doc.data());
         });
-        setDoctors(doctorsData);
+        if (userData?.userRole === 'staff' && doctorsData?.length > 0) {
+          setDoctors(doctorsData.filter((obj) => {
+            return obj.showrooms?.some((showroom) => showroom.showRoomId === userData?.showRoomId);
+          }))
+        } else {
+          setDoctors(doctorsData);
+        }
 
         setisLoading(false);
       };
@@ -149,7 +162,13 @@ function Exams(props) {
         queryDoctors.forEach((doc) => {
           doctorsData.push(doc.data());
         });
-        setDoctors(doctorsData);
+        if (userData?.userRole === 'staff' && doctorsData?.length > 0) {
+          setDoctors(doctorsData.filter((obj) => {
+            return obj.showrooms?.some((showroom) => showroom.showRoomId === userData?.showRoomId);
+          }))
+        } else {
+          setDoctors(doctorsData);
+        }
 
         setisLoading(false);
       };
@@ -480,7 +499,7 @@ function Exams(props) {
                 id="locationName"
                 freeSolo={false}
                 label="Select Showroom"
-                disabled={disabledState}
+                disabled={disabledState || userData?.userRole === 'staff'}
               />
             </div>
             <div className='flex flex-col w-1/2 ml-10'>

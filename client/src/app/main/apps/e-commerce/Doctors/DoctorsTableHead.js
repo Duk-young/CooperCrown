@@ -8,35 +8,35 @@ const rows = [
   {
     id: 'doctor-date',
     align: 'center',
-    disablePadding: false,
+    disablePadding: true,
     label: 'DATE',
     sort: true
   },
   {
     id: 'doctor-name',
     align: 'center',
-    disablePadding: false,
+    disablePadding: true,
     label: 'DOCTOR NAME',
     sort: true
   },
   {
     id: 'Location-Address1',
     align: 'center',
-    disablePadding: false,
+    disablePadding: true,
     label: 'Location 1',
     sort: true
   },
   {
     id: 'Location-Address2',
     align: 'center',
-    disablePadding: false,
+    disablePadding: true,
     label: 'Location 2',
     sort: true
   },
   {
     id: 'Location-Address3',
     align: 'center',
-    disablePadding: false,
+    disablePadding: true,
     label: 'Location 3',
     sort: true
   }
@@ -51,7 +51,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
-    padding: 10
+    padding: 8
   }
 }))(TableCell);
 
@@ -59,14 +59,12 @@ function DoctorsTableHead(props) {
 
   return (
     <TableHead>
-      <TableRow className="h-64">
-
+      <TableRow>
         {rows.map((row) => {
           return (
             <StyledTableCell
               key={row.id}
-              align={row.align}
-              padding={row.disablePadding ? 'none' : 'default'}>
+              align={row.align}>
               {row.label}
             </StyledTableCell>
           );
