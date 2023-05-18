@@ -189,6 +189,7 @@ function Exams(props) {
             showRoomId: checkShowroomId(form?.locationName),
             doctorId: checkDoctorId(form?.fullName)
           });
+        await checkAndUpdatePrescriptions()
 
         dispatch(
           MessageActions.showMessage({
@@ -255,7 +256,8 @@ function Exams(props) {
             eyeglassesVaOs: form?.egRxOsVa1 ? form?.egRxOsVa1 : '',
             prescriptionId: dbConfig?.prescriptionId + 1,
             customerId: customer.customerId,
-            prescriptionDate: firestore.Timestamp.fromDate(new Date())
+            prescriptionDate: firestore.Timestamp.fromDate(new Date()),
+            fromExamId: dbConfig?.examId + 1
           });
 
         await firestore()
@@ -279,7 +281,8 @@ function Exams(props) {
             contactLensModel: form?.clrxOdBrand ? form?.clrxOdBrand : '',
             prescriptionId: dbConfig?.prescriptionId + 2,
             customerId: customer.customerId,
-            prescriptionDate: firestore.Timestamp.fromDate(new Date())
+            prescriptionDate: firestore.Timestamp.fromDate(new Date()),
+            fromExamId: dbConfig?.examId + 1
           });
 
         await firestore()
@@ -300,6 +303,55 @@ function Exams(props) {
     }
     setisLoading(false);
   };
+
+  const checkAndUpdatePrescriptions = async () => {
+    const queryEgPrescription = await firestore()
+      .collection('prescriptions').where('fromExamId', '==', Number(routeParams?.examId))
+      .where('prescriptionType', '==', 'eyeglassesRx').limit(1).get();
+
+    if (!queryEgPrescription.empty) {
+      const egPrescriptionId = queryEgPrescription.docs[0].id
+      firestore().collection('prescriptions').doc(egPrescriptionId).update({
+        eyeglassesSphereOd: form?.egRxOdSphere ? form?.egRxOdSphere : '',
+        eyeglassesCylinderOd: form?.egRxOdCylinder ? form?.egRxOdCylinder : '',
+        eyeglassesAxisOd: form?.egRxOdAxis ? form?.egRxOdAxis : '',
+        eyeglassesAddOd: form?.egRxOdAdd ? form?.egRxOdAdd : '',
+        eyeglassesPrismOd: form?.egRxOdPrismBase ? form?.egRxOdPrismBase : '',
+        eyeglassesVaOd: form?.egRxOdVa1 ? form?.egRxOdVa1 : '',
+        eyeglassesSphereOs: form?.egRxOsSphere ? form?.egRxOsSphere : '',
+        eyeglassesCylinderOs: form?.egRxOsCylinder ? form?.egRxOsCylinder : '',
+        eyeglassesAxisOs: form?.egRxOsAxis ? form?.egRxOsAxis : '',
+        eyeglassesAddOs: form?.egRxOsAdd ? form?.egRxOsAdd : '',
+        eyeglassesPrismOs: form?.egRxOsPrismBase ? form?.egRxOsPrismBase : '',
+        eyeglassesVaOs: form?.egRxOsVa1 ? form?.egRxOsVa1 : '',
+        prescriptionDate: firestore.Timestamp.fromDate(new Date())
+      })
+    }
+
+    const queryClPrescription = await firestore()
+      .collection('prescriptions').where('fromExamId', '==', Number(routeParams?.examId))
+      .where('prescriptionType', '==', 'contactLensRx').limit(1).get();
+
+    if (!queryClPrescription.empty) {
+      const clPrescriptionId = queryClPrescription.docs[0].id
+      firestore().collection('prescriptions').doc(clPrescriptionId).update({
+        contactLensSphereOd: form?.clrxOdSphere ? form?.clrxOdSphere : '',
+        contactLensCylinderOd: form?.clrxOdCylinder ? form?.clrxOdCylinder : '',
+        contactLensAxisOd: form?.clrxOdAxis ? form?.clrxOdAxis : '',
+        contactLensDiaOd: form?.clrxOdDia ? form?.clrxOdDia : '',
+        contactLensBcOd: form?.clrxOdBc ? form?.clrxOdBc : '',
+        contactLensSphereOs: form?.clrxOsSphere ? form?.clrxOsSphere : '',
+        contactLensCylinderOs: form?.clrxOsCylinder ? form?.clrxOsCylinder : '',
+        contactLensAxisOs: form?.clrxOsAxis ? form?.clrxOsAxis : '',
+        contactLensDiaOs: form?.clrxOsDia ? form?.clrxOsDia : '',
+        contactLensBcOs: form?.clrxOsBc ? form?.clrxOsBc : '',
+        contactLensModel: form?.clrxOdBrand ? form?.clrxOdBrand : '',
+        prescriptionDate: firestore.Timestamp.fromDate(new Date())
+      })
+    }
+    return true
+
+  }
 
   const checkShowroomId = (value) => {
     const room = showRooms?.find((room) => room?.locationName === value);
@@ -379,7 +431,7 @@ function Exams(props) {
                 <Button
                   variant="contained"
                   className={classes.button}
-                  onClick={!form ? undefined : onSubmit}
+                  onClick={onSubmit}
                   color="secondary"
                   size="small"
                   startIcon={<SaveIcon />}
@@ -393,7 +445,7 @@ function Exams(props) {
                   onClick={() => {
                     if (userData.userRole === 'admin' || userData?.examsEdit) {
                       setDisabledState(false)
-                    }else {
+                    } else {
                       toast.error('You are not authorized', {
                         position: 'top-center',
                         autoClose: 5000,

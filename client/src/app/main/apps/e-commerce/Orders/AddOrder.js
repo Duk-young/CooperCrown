@@ -764,8 +764,7 @@ function AddOrder(props) {
           </div>
         }
         content={
-          showroom.length &&
-          discounts.length && (
+          showroom.length && (
             <div className="flex flex-col w-full">
               <CustomerInfo form={form} handleChange={handleChange} customer={customer}
                 disabledState={disabledState} setNewCustomer={setNewCustomer} />
