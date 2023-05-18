@@ -1,34 +1,32 @@
+import { firestore } from 'firebase';
+import { Link, useParams } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import { toast, Zoom } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { useForm } from '@fuse/hooks';
+import { useHistory } from 'react-router-dom';
+import { useTheme } from '@material-ui/core/styles';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import * as Actions from '../store/actions';
+import Button from '@material-ui/core/Button';
+import ConfirmDoctorDelete from './ConfirmDoctorDelete';
+import DateFnsUtils from '@date-io/date-fns';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import { useForm } from '@fuse/hooks';
-import Button from '@material-ui/core/Button';
-import ConfirmDoctorDelete from './ConfirmDoctorDelete';
-import { firestore } from 'firebase';
 import Icon from '@material-ui/core/Icon';
-import DateFnsUtils from '@date-io/date-fns';
-import { toast, Zoom } from 'react-toastify';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from '@material-ui/pickers';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import { useTheme } from '@material-ui/core/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import React, { useEffect, useState } from 'react';
+import reducer from '../store/reducers';
+import Select from '@material-ui/core/Select';
+import SimpleAccordion from './SimpleAccordion';
 import Tab from '@material-ui/core/Tab';
-import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
-import * as Actions from '../store/actions';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import reducer from '../store/reducers';
 
 const useStyles = makeStyles({
   table: {
@@ -44,25 +42,24 @@ const useStyles = makeStyles({
   }
 });
 function Doctor(props) {
-  const classes = useStyles();
-  const dispatch = useDispatch();
   const theme = useTheme();
-  const [showRooms, setShowRooms] = useState([]);
-
+  const classes = useStyles();
   const history = useHistory();
   const [tabValue] = useState(0);
-  const [isLoading, setisLoading] = useState(false);
-  const { form, handleChange, setForm } = useForm(null);
+  const dispatch = useDispatch();
+  const routeParams = useParams();
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
-
-  const routeParams = useParams();
-
- 
+  const [showRooms, setShowRooms] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
+  const { form, handleChange, setForm } = useForm(null);
+  const [disabledState, setDisabledState] = useState(false);
+  const [selectedShowroom, setSelectedShowroom] = useState(null);
 
   const handleClose = () => {
     setOpen(false);
   };
+
   useEffect(() => {
     setisLoading(true);
     const fetchDetails = async () => {
@@ -70,6 +67,7 @@ function Doctor(props) {
         setForm(null)
       } else if (routeParams?.doctorId) {
         setForm(null)
+        setDisabledState(true)
         const query = await firestore()
           .collection('doctors')
           .doc(routeParams?.doctorId)
@@ -150,9 +148,9 @@ function Doctor(props) {
       errs.doctoremail = 'Please enter email address'
     }
 
-    if (form?.showRoomId1 === form?.showRoomId2 || form?.showRoomId1 === form?.showRoomId3 || form?.showRoomId2 === form?.showRoomId3) {
-      errs.showroom = 'Duplicate values found'
-      toast.error('Please select different showrooms in each field', {
+    if (!form?.showrooms) {
+      errs.showroom = 'Please select atleast one showroom'
+      toast.error('Please select atleast one showroom', {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
@@ -195,19 +193,12 @@ function Doctor(props) {
     submitForm();
   }
 
-
-
-  if (
-    isLoading
-  ) {
-    return <FuseLoading />;
-  }
+  if (isLoading) return <FuseLoading />;
 
   return (
     <FusePageCarded
       header={
         (
-
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
@@ -291,6 +282,7 @@ function Doctor(props) {
                             error={errors.fname}
                             helperText={errors.fname}
                             fullwidth
+                            disabled={disabledState}
                           />
                           <TextField
                             className="w-1/2"
@@ -305,6 +297,7 @@ function Doctor(props) {
                             error={errors.address}
                             helperText={errors.address}
                             fullwidth
+                            disabled={disabledState}
                           />
                         </div>
                         <div className="flex flex-row p-6 mb-16 gap-10">
@@ -321,6 +314,7 @@ function Doctor(props) {
                             error={errors.lname}
                             helperText={errors.lname}
                             fullwidth
+                            disabled={disabledState}
                           />
                           <TextField
                             className="w-1/2"
@@ -335,6 +329,7 @@ function Doctor(props) {
                             error={errors.city}
                             helperText={errors.city}
                             fullwidth
+                            disabled={disabledState}
                           />
                         </div>
                         <div className="flex flex-row p-6 mb-16 gap-10">
@@ -357,8 +352,8 @@ function Doctor(props) {
                                 KeyboardButtonProps={{
                                   'aria-label': 'change date'
                                 }}
+                                disabled={disabledState}
                               />
-
                             </MuiPickersUtilsProvider>
                           </div>
                           <TextField
@@ -373,6 +368,7 @@ function Doctor(props) {
                             helperText={errors.State}
                             onChange={handleChange}
                             variant="outlined"
+                            disabled={disabledState}
                           />
                         </div>
                         <div className="flex flex-row p-6 mb-16 gap-10">
@@ -388,6 +384,7 @@ function Doctor(props) {
                             variant="outlined"
                             error={errors.gender}
                             helperText={errors.gender}
+                            disabled={disabledState}
                           />
                           <TextField
                             className="w-1/2"
@@ -401,6 +398,7 @@ function Doctor(props) {
                             error={errors.zipcode}
                             helperText={errors.zipcode}
                             variant="outlined"
+                            disabled={disabledState}
                           />
                         </div>
                         <div className="flex flex-row p-6 mb-16 gap-10">
@@ -416,6 +414,7 @@ function Doctor(props) {
                             variant="outlined"
                             error={errors.phone1}
                             helperText={errors.phone1}
+                            disabled={disabledState}
                           />
                           <TextField
                             className="w-1/2"
@@ -429,6 +428,7 @@ function Doctor(props) {
                             error={errors.doctoremail}
                             helperText={errors.doctoremail}
                             variant="outlined"
+                            disabled={disabledState}
                           />
                         </div>
                         <div className="flex flex-row p-6 mb-16 gap-10">
@@ -441,6 +441,7 @@ function Doctor(props) {
                             value={form?.phone2}
                             onChange={handleChange}
                             variant="outlined"
+                            disabled={disabledState}
                           />
                           <TextField
                             className="w-1/2"
@@ -451,6 +452,7 @@ function Doctor(props) {
                             value={form?.other}
                             onChange={handleChange}
                             variant="outlined"
+                            disabled={disabledState}
                           />
                         </div>
                       </div>
@@ -463,79 +465,94 @@ function Doctor(props) {
                       </h1>
                     </div>
                     <div className="flex flex-col justify-center p-16 sm:p-24 ">
-                      <FormControl>
-                        <Select
-                          labelId="demo-simple-select-autowidth-label"
-                          id="showRoomId1"
-                          value={form?.showRoomId1}
-                          name="showRoomId1"
-                          error={errors.showroom}
-                          onChange={handleChange}
-                          autoWidth>
-                          {showRooms.map((row) => (
-                            <MenuItem value={row?.showRoomId}>
-                              {row?.locationName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        <FormHelperText>Location 1</FormHelperText>
-                      </FormControl>
-                      <FormControl>
-                        <Select
-                          labelId="demo-simple-select-autowidth-label"
-                          id="showRoomId2"
-                          value={form?.showRoomId2}
-                          name="showRoomId2"
-                          error={errors.showroom}
-                          onChange={handleChange}
-                          autoWidth>
-                          {showRooms.map((row) => (
-                            <MenuItem value={row?.showRoomId}>
-                              {row?.locationName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        <FormHelperText>Location 2</FormHelperText>
-                      </FormControl>
-                      <FormControl>
-                        <Select
-                          labelId="demo-simple-select-autowidth-label"
-
-                          id="showRoomId3"
-                          value={form?.showRoomId3}
-                          name="showRoomId3"
-                          error={errors.showroom}
-                          onChange={handleChange}
-                          autoWidth>
-                          {showRooms.map((row) => (
-                            <MenuItem value={row?.showRoomId}>
-                              {row?.locationName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        <FormHelperText>Location 3</FormHelperText>
-                      </FormControl>
+                      <SimpleAccordion showrooms={form?.showrooms} form={form} setForm={setForm} disabled={disabledState} />
+                      <div className='flex flex-row justify-around w-full'>
+                        <div className='flex flex-col p-10 w-full'>
+                          <FormControl>
+                            <Select
+                              labelId="demo-simple-select-autowidth-label"
+                              onChange={(e) => setSelectedShowroom(e.target.value)}
+                              disabled={disabledState}
+                              autoWidth>
+                              {showRooms.map((row) => (
+                                <MenuItem value={row?.showRoomId}>
+                                  {row?.locationName}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            <FormHelperText>Select Showroom</FormHelperText>
+                          </FormControl>
+                        </div>
+                        <div className='flex flex-col p-10 w-full'>
+                          <Button
+                            style={{ padding: '10px 32px' }}
+                            variant="contained"
+                            disabled={!selectedShowroom}
+                            color="primary"
+                            onClick={() => {
+                              if (form?.showrooms?.length < 3 || !form?.showrooms) {
+                                let already = form?.showrooms && form?.showrooms.filter((showroom) => showroom.showRoomId === selectedShowroom)
+                                if (already?.length > 0) {
+                                  toast.error('Selected showroom already exists', {
+                                    position: 'top-center',
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    transition: Zoom
+                                  });
+                                } else {
+                                  setForm({ ...form, showrooms: [...(form?.showrooms || []), ...showRooms.filter((location) => location.showRoomId === selectedShowroom)] });
+                                }
+                              } else {
+                                toast.error('You can only add upto 3 locations.', {
+                                  position: 'top-center',
+                                  autoClose: 5000,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: true,
+                                  draggable: true,
+                                  progress: undefined,
+                                  transition: Zoom
+                                });
+                              }
+                            }}>
+                            Add Showroom
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </>
               )}
               <div className="flex flex-col" >
-                <Button
-                  style={{
-                    padding: '10px 32px'
-                  }}
-                  className={classes.button}
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleSubmit}>
-                  Save
-                </Button>
+                {!disabledState && (
+                  <Button
+                    style={{ padding: '10px 32px' }}
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleSubmit}>
+                    Save
+                  </Button>
+                )}
+                {disabledState && (
+                  <Button
+                    style={{ padding: '10px 32px' }}
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => setDisabledState(false)}>
+                    Edit
+                  </Button>
+                )}
               </div>
               {
                 routeParams.doctorId !== 'new' && (
                   <div className="flex flex-col">
                     <ConfirmDoctorDelete open={open} handleClose={handleClose} form={form} propssent={props} />
-
                     <Button
                       style={{
                         color: 'red',
