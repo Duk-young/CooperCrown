@@ -35,6 +35,8 @@ jobs:
       
     - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v0.4.2
+      with:
+          credentials_json: ${{ secrets.GCLOUD_AUTH }}
       
     - name: Configure Docker to use Google Cloud Container Registry
       run: gcloud auth configure-docker
