@@ -17,7 +17,6 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -25,14 +24,15 @@ import {
 } from '@material-ui/pickers';
 
 const AddAppointments = (props) => {
-  const [isLoading, setisLoading] = useState(true);
-  const [customer, setCustomer] = useState({});
-  const [appointments, setAppointments] = useState([]);
-  const [showRooms, setShowRooms] = useState([]);
-  const { form, handleChange, setForm } = useForm(null);
-  const routeParams = useParams();
-  const dispatch = useDispatch();
   const history = useHistory();
+  const dispatch = useDispatch();
+  const routeParams = useParams();
+  const [customer, setCustomer] = useState({});
+  const [showRooms, setShowRooms] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [isLoading, setisLoading] = useState(true);
+  const [appointments, setAppointments] = useState([]);
+  const { form, handleChange, setForm } = useForm(null);
 
   function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
@@ -78,11 +78,22 @@ const AddAppointments = (props) => {
       });
       setShowRooms(showroomdata);
 
+      const queryDoctors = await firestore().collection('doctors').get();
+      let doctorsData = [];
+      queryDoctors.forEach((doc) => {
+        doctorsData.push(doc.data());
+      });
+
       if (history?.location?.state?.start !== undefined) {
         setForm({
           start: history.location.state.start,
           showRoomId: history.location.state.showRoomId
         });
+        setDoctors(doctorsData.filter((obj) => {
+          return obj.showrooms?.some((showroom) => showroom.showRoomId === history.location.state.showRoomId);
+        }))
+      } else {
+        setDoctors(doctorsData);
       }
       setisLoading(false);
     };
@@ -110,12 +121,13 @@ const AddAppointments = (props) => {
           appointmentId: dbConfig?.appointmentId + 1,
           id: dbConfig?.appointmentId + 1,
           allDay: false,
-          title: `${customer.firstName} ${customer.lastName}`,
+          title: `${customer?.firstName} ${customer?.lastName}`,
           customerId: customer.customerId,
           medicalHistory: customer?.medicalHistory,
-          email: customer?.email ? customer?.email : '',
-          phone1: customer?.phone1 ? customer?.phone1 : '',
-          phone2: customer?.phone2 ? customer?.phone2 : ''
+          email: customer?.email ?? '',
+          phone1: customer?.phone1 ?? '',
+          phone2: customer?.phone2 ?? '',
+          doctorName: doctors?.filter((doc) => doc?.doctorId === form?.doctorId)?.[0]?.fullName || ''
         });
 
       await firestore()
@@ -196,24 +208,10 @@ const AddAppointments = (props) => {
                   'aria-label': 'change time'
                 }}
               />
-              <TextField
-                className="ml-10 content-center"
-                id="outlined-multiline-static"
-                label="Doctor"
-                value={form?.doctor}
-                onChange={handleChange}
-                name={'doctor'}
-                variant="outlined"
-              />
             </Grid>
           </MuiPickersUtilsProvider>
           <div className="flex flex-col w-full">
-            <div className="flex flex-row justify-start">
-              <Typography
-                className="username text-16 whitespace-no-wrap self-center font-700 underline pr-4"
-                color="inherit">
-                Appointment Duration
-              </Typography>
+            <div className="flex flex-row justify-around p-12">
               <FormControl>
                 <Select
                   labelId="demo-simple-select-autowidth-label"
@@ -230,17 +228,29 @@ const AddAppointments = (props) => {
                 </Select>
                 <FormHelperText>Select duration from the list</FormHelperText>
               </FormControl>
+              <FormControl>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="doctorId"
+                  value={form?.doctorId}
+                  name="doctorId"
+                  onChange={handleChange}
+                  autoWidth>
+                  {doctors.map((row) => (
+                    <MenuItem value={row?.doctorId}>
+                      {row?.fullName}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Select doctor from the list</FormHelperText>
+              </FormControl>
             </div>
-            <div className="flex flex-row justify-start">
-              <Typography
-                className="username text-16 whitespace-no-wrap self-center font-700 underline pr-4"
-                color="inherit">
-                Showroom
-              </Typography>
+            <div className="flex flex-row justify-center">
               <FormControl>
                 <Select
                   labelId="demo-simple-select-autowidth-label"
                   id="showRoomId"
+                  disabled
                   defaultValue={form?.showRoomId}
                   value={form?.showRoomId}
                   name="showRoomId"
@@ -252,7 +262,7 @@ const AddAppointments = (props) => {
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>Select Showroom from the list</FormHelperText>
+                <FormHelperText>Select showroom from the list</FormHelperText>
               </FormControl>
             </div>
           </div>

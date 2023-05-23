@@ -1,19 +1,20 @@
-import FuseAnimate from '@fuse/core/FuseAnimate';
+import { Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import clsx from 'clsx';
 import Icon from '@material-ui/core/Icon';
 import Input from '@material-ui/core/Input';
 import Paper from '@material-ui/core/Paper';
-import { useDispatch, useSelector } from 'react-redux';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import * as Actions from '../store/actions';
+import Typography from '@material-ui/core/Typography';
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 450
+const useStyles = makeStyles((theme) => ({
+  header: {
+    minHeight: 160,
+    background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+    color: theme.palette.primary.contrastText,
+    backgroundSize: 'cover',
+    backgroundColor: theme.palette.primary.dark
   },
   button: {
     backgroundColor: '#f15a25',
@@ -23,92 +24,56 @@ const useStyles = makeStyles({
       color: '#fff'
     }
   }
-});
-function ContactsHeader(props) {
+}));
+
+function ContactsHeader() {
   const classes = useStyles();
-  const mainTheme = useSelector(({ fuse }) => fuse.settings.mainTheme);
-  const dispatch = useDispatch();
-  const searchText = useSelector(
-    ({ eCommerceApp }) => eCommerceApp.contacts.searchText
-  );
+
   return (
-    <>
-      <div className="flex flex-col w-full items-center  sm:px-18 justify-start ">
-        <div className="flex-1 items-center">
-          <h3 className=" hidden font-700 ">H</h3>
-        </div>
-        <div className='flex w-full flex-1 items-center justify-start '>
-          <div className="flex-1 items-center">
-            <h3 className=" hidden font-700 ">H</h3>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col w-full items-center justify-center ">
-
-
-        <div className="flex items-center pb-10">
-
-
-          <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-            <Typography className="hidden sm:flex mx-0 font-500" variant="h4">
+    <div className="flex flex-col w-full">
+      <div className={clsx(classes.header)}>
+        <div className='flex flex-col h-full w-full'>
+          <div className='flex flex-row w-full justify-center'>
+            <Typography
+              className="flex uppercase"
+              style={{ fontSize: '3rem', fontWeight: 600 }}
+              variant="h6">
               CONTACT LENS
             </Typography>
-          </FuseAnimate>
-        </div>
-
-        <div className='flex flex-1 flex-row items-center justify-center mb-10'>
-
-        <ThemeProvider theme={mainTheme}>
-            <FuseAnimate animation="transition.slideDownIn" delay={300}>
+          </div>
+          <div className='flex flex-row w-full pt-32 pb-16'>
+            <div className='flex flex-col items-center w-1/3'></div>
+            <div className='flex flex-col items-center w-1/3'>
               <Paper
-                className="flex items-center w-full max-w-512 px-8 py-4 rounded-8"
+                className="flex items-center w-full px-8 py-4 rounded-8 bg-transparent border-1 border-white border-solid"
                 elevation={1}>
-                <Icon color="action">search</Icon>
-
+                <Icon style={{ color: 'orange' }}>search</Icon>
                 <Input
                   placeholder="Search"
-                  className="flex flex-1 mx-8"
+                  className="flex flex-1 mx-8 min-h-44 bg-transparent text-white"
                   disableUnderline
                   fullWidth
-                  value={searchText}
                   inputProps={{
                     'aria-label': 'Search'
                   }}
-                  onChange={(ev) => dispatch(Actions.setContactsSearchText(ev))}
                 />
               </Paper>
-            </FuseAnimate>
-          </ThemeProvider>
-
+            </div>
+            <div className='flex flex-col items-center justify-center w-1/3'>
+              <Button
+                className={classes.button}
+                component={Link}
+                to="/apps/e-commerce/contact/new"
+                variant="contained"
+                color="secondary">
+                <span className="hidden sm:flex">ADD NEW</span>
+                <span className="flex sm:hidden">ADD</span>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex flex-col w-full items-center justify-end pr-20">
-        <div className="flex-1 pl-30 items-center">
-          <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-        </div>
-        <div className='flex w-full flex-1 items-center justify-end pr-20 pb-10'>
-          <FuseAnimate animation="transition.slideRightIn" delay={300}>
-
-
-            <Button
-              component={Link}
-              to="/apps/e-commerce/contact/new"
-              className={classes.button}
-              variant="contained"
-              color="secondary">
-              <span className="hidden sm:flex">Add New </span>
-              <span className="flex sm:hidden">New</span>
-            </Button>
-
-          </FuseAnimate>
-        </div>
-      </div>
-
-
-
-
-
-    </>
+    </div>
   );
 }
 

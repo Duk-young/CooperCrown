@@ -197,26 +197,6 @@ function CalendarApp(props) {
     console.log(appointments)
   }, [appointments]);
 
-  function moveEvent({ event, start, end }) {
-    dispatch(
-      Actions.updateEvent({
-        ...event,
-        start,
-        end
-      })
-    );
-  }
-
-  function resizeEvent({ event, start, end }) {
-    delete event.type;
-    dispatch(
-      Actions.updateEvent({
-        ...event,
-        start,
-        end
-      })
-    );
-  }
 
   return (
     <div className={clsx(classes.root, 'flex flex-col flex-auto relative')}>
@@ -227,20 +207,15 @@ function CalendarApp(props) {
         min={new Date(1950, 0, 0, 8, 0, 0, 0)}
         localizer={localizer}
         events={events}
-        onEventDrop={moveEvent}
-        resizable
-        onEventResize={resizeEvent}
+        longPressThreshold={10}
         defaultView={Views.WEEK}
         defaultDate={new Date()}
         startAccessor="start"
         endAccessor="end"
-        views={{
-          month: true,
-          week: true
-        }}
+        views={{month: true,week: true}}
         step={15}
         timeslots={4}
-        showMultiDayTimes
+        // showMultiDayTimes
         components={{
           toolbar: (_props) => {
             return headerEl.current

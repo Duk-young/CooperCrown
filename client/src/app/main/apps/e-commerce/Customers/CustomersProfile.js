@@ -351,7 +351,7 @@ const CustomerProfile = (props) => {
                     onClick={() => {
                       if (userData.userRole === 'admin' || userData?.customersEdit) {
                         props.history.push(`/apps/e-commerce/customers/${customer?.customerId}`)
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -503,7 +503,7 @@ const CustomerProfile = (props) => {
                         props.history.push(
                           `/apps/e-commerce/customers/addinsurance/${customer?.customerId}`
                         );
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -548,7 +548,7 @@ const CustomerProfile = (props) => {
                                     props.history.push(
                                       `/apps/e-commerce/customers/profile/editinsurance/${row?.insuranceId}`
                                     );
-                                  }else {
+                                  } else {
                                     toast.error('You are not authorized', {
                                       position: 'top-center',
                                       autoClose: 5000,
@@ -690,24 +690,14 @@ const CustomerProfile = (props) => {
                                   onClick={() => {
                                     setSelectedPrescription(row);
                                     setOpenPrescriptionReceipt(true);
-                                    console.log(row);
                                   }}
                                   key={row.prescriptionId}
                                   style={{ height: 10 }}>
                                   <StyledTableCell
-                                    style={
-                                      row?.onRx
-                                        ? { color: 'red' }
-                                        : { color: 'black' }
-                                    }>
-                                    {row?.onRx ? (
-                                      <LabelImportantIcon color="secondary" />
-                                    ) : (
-                                      '\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
-                                    )}{' '}
-                                    {moment(
-                                      row?.prescriptionDate.toDate()
-                                    ).format('MM/DD/YYYY')}
+                                    onClick={() => { props.history.push(`/apps/e-commerce/customers/editRx/${row?.prescriptionId}`) }}
+                                    style={row?.onRx ? { color: 'red' } : { color: 'black' }}>
+                                    {row?.onRx ? (<LabelImportantIcon color="secondary" />) : ('\xa0\xa0\xa0\xa0\xa0\xa0\xa0')}{' '}
+                                    {moment(row?.prescriptionDate.toDate()).format('MM/DD/YYYY')}
                                   </StyledTableCell>
                                   <StyledTableCell
                                     style={
@@ -938,7 +928,7 @@ const CustomerProfile = (props) => {
                         props.history.push(
                           `/apps/e-commerce/customers/addExam/${customer?.customerId}`
                         );
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -973,24 +963,24 @@ const CustomerProfile = (props) => {
                             .sort((a, b) => (a.examId > b.examId ? -1 : 1))
                             .map((row) => (
                               <StyledTableRow
-                              onClick={() => {
-                                if (userData.userRole === 'admin' || userData?.examsView) {
-                                  props.history.push(
-                                    `/apps/e-commerce/customers/profile/viewexam/${row?.examId}`
-                                  );
-                                }else {
-                                  toast.error('You are not authorized', {
-                                    position: 'top-center',
-                                    autoClose: 5000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    transition: Zoom
-                                  });
-                                }
-                              }}
+                                onClick={() => {
+                                  if (userData.userRole === 'admin' || userData?.examsView) {
+                                    props.history.push(
+                                      `/apps/e-commerce/customers/profile/viewexam/${row?.examId}`
+                                    );
+                                  } else {
+                                    toast.error('You are not authorized', {
+                                      position: 'top-center',
+                                      autoClose: 5000,
+                                      hideProgressBar: false,
+                                      closeOnClick: true,
+                                      pauseOnHover: true,
+                                      draggable: true,
+                                      progress: undefined,
+                                      transition: Zoom
+                                    });
+                                  }
+                                }}
                                 key={row.examId}
                                 style={{ height: 10 }}>
                                 <StyledTableCell>
