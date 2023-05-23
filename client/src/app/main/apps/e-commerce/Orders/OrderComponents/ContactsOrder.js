@@ -6,7 +6,6 @@ import { withRouter } from 'react-router';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import CustomAutocomplete1 from '../Autocomplete';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FuseAnimate from '@fuse/core/FuseAnimate';
@@ -14,6 +13,7 @@ import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import moment from 'moment'
 import Paper from '@material-ui/core/Paper';
 import React, { useCallback, useState } from 'react';
 import Select from '@material-ui/core/Select';
@@ -95,9 +95,11 @@ const ContactsOrder = (props) => {
       selectedContactLens?.contactLensStyleOd &&
       selectedContactLens?.contactLensStyleOs
     ) {
-      return (+filteredContactLensOd[0]?.price || 0) + (+filteredContactLensOs[0]?.price || 0)
+      const clOdRate = +filteredContactLensOd[0]?.price || 0
+      const clOsRate = +filteredContactLensOs[0]?.price || 0
+      return { contactLensRate: clOdRate + clOsRate, clOdRate, clOsRate }
     } else {
-      toast.error('Please select Contact Lens Style...', {
+      toast.error('Please select Contact Lens Style for OD & OS...', {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
@@ -112,10 +114,10 @@ const ContactsOrder = (props) => {
   };
 
   const handleAddContactsLensToOrder = () => {
-    let contactLensRate = fetchContactLensRate();
+    let { contactLensRate, clOdRate, clOsRate } = fetchContactLensRate();
 
     if (contactLensRate) {
-      setContactLenses([...contactLenses, { ...selectedContactLens, contactLensRate }]);
+      setContactLenses([...contactLenses, { ...selectedContactLens, contactLensRate, clOdRate, clOsRate }]);
     } else {
       toast.error(
         'Contact Lens Rate is not calculated yet.',
@@ -134,12 +136,12 @@ const ContactsOrder = (props) => {
   };
 
   const filterOdContacts = (value, attribute) => {
-    let newContacts = filteredContactLensOd.filter((contact) => contact?.[attribute] === value )
+    let newContacts = filteredContactLensOd.filter((contact) => contact?.[attribute] === value)
     setFilteredContactLensOd(newContacts)
   }
 
   const filterOsContacts = (value, attribute) => {
-    let newContacts = filteredContactLensOs.filter((contact) => contact?.[attribute] === value )
+    let newContacts = filteredContactLensOs.filter((contact) => contact?.[attribute] === value)
     setFilteredContactLensOs(newContacts)
   }
 
@@ -159,19 +161,32 @@ const ContactsOrder = (props) => {
               <div className="flex flex-col p-8 flex-1 h-auto justify-between">
                 <div className="flex flex-row w-full">
                   <div className="flex flex-col px-10 w-1/2 ">
-                    <CustomAutocomplete1
-                      list={prescription.filter(
-                        (word) =>
-                          word.prescriptionType === 'contactLensRx'
-                      )}
-                      form={selectedContactLens}
-                      disabled={disabledState}
-                      setForm={setSelectedContactLens}
-                      handleChange={handleSelectedContactLensChange}
-                      id="prescriptionId"
-                      freeSolo={false}
-                      label="Select Prescription"
-                    />
+                    <FormControl>
+                      <InputLabel id="demo-simple-select-autowidth-label">
+                        Select Prescription
+                      </InputLabel>
+                      <Select
+                        disabled={disabledState}
+                        labelId="demo-simple-select-autowidth-label"
+                        value={selectedContactLens?.prescriptionId ?? ''}
+                        name="prescriptionId"
+                        onChange={(e) => {
+                          handleSelectedContactLensChange(e)
+                          setSelectedContactLens(
+                            prescription.filter(
+                              (word) =>
+                                word.prescriptionId === e.target.value
+                            )?.[0]
+                          )
+                        }}
+                      >
+                        {[...prescription.filter((word) => word.prescriptionType === 'contactLensRx')].map((row) => (
+                          <MenuItem value={row?.prescriptionId}>
+                            {row?.prescriptionDate ? moment(row?.prescriptionDate.toDate()).format('MM/DD/YYYY') : ''}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </div>
                 </div>
 
@@ -183,9 +198,7 @@ const ContactsOrder = (props) => {
                     <h3 className="text-center font-700">Sphere</h3>
                   </div>
                   <div className="p-8 h-auto w-80">
-                    <h3 className="text-center font-700">
-                      Cylinder
-                    </h3>
+                    <h3 className="text-center font-700">Cylinder</h3>
                   </div>
                   <div className="p-8 h-auto w-80">
                     <h3 className="text-center font-700">Axis</h3>
@@ -724,33 +737,46 @@ const ContactsOrder = (props) => {
                         hover
                         className="cursor-pointer">
                         <StyledTableCell>
-                          {(row?.contactLensStyleOd !== '' &&
-                            'OD') ||
-                            (row?.contactLensStyleOs !== '' &&
-                              'OS')}
+                          <div className="flex flex-col">
+                            <div>OD</div>
+                            <div>OS</div>
+                          </div>
                         </StyledTableCell>
                         <StyledTableCell>
-                          {row?.contactLensStyleOd ||
-                            row?.contactLensStyleOs}
+                          <div className="flex flex-col">
+                            <div>{row?.contactLensStyleOd}</div>
+                            <div>{row?.contactLensStyleOs}</div>
+                          </div>
                         </StyledTableCell>
                         <StyledTableCell>
-                          {row?.contactLensBrandOd ||
-                            row?.contactLensBrandOs}
+                          <div className="flex flex-col">
+                            <div>{row?.contactLensBrandOd}</div>
+                            <div>{row?.contactLensBrandOs}</div>
+                          </div>
                         </StyledTableCell>
                         <StyledTableCell>
-                          {row?.contactLensNameOd ||
-                            row?.contactLensNameOs}
+                          <div className="flex flex-col">
+                            <div>{row?.contactLensNameOd}</div>
+                            <div>{row?.contactLensNameOs}</div>
+                          </div>
                         </StyledTableCell>
                         <StyledTableCell>
-                          {row?.contactLensBaseCurveOd ||
-                            row?.contactLensBaseCurveOs}
+                          <div className="flex flex-col">
+                            <div>{row?.contactLensBaseCurveOd}</div>
+                            <div>{row?.contactLensBaseCurveOs}</div>
+                          </div>
                         </StyledTableCell>
                         <StyledTableCell>
-                          {row?.contactLensPackQtyOd ||
-                            row?.contactLensPackQtyOs}
+                          <div className="flex flex-col">
+                            <div>{row?.contactLensPackQtyOd}</div>
+                            <div>{row?.contactLensPackQtyOs}</div>
+                          </div>
                         </StyledTableCell>
                         <StyledTableCell>
-                          ${row?.contactLensRate}
+                          <div className="flex flex-col">
+                            <div>{row?.clOdRate}</div>
+                            <div>{row?.clOsRate}</div>
+                          </div>
                         </StyledTableCell>
                         <StyledTableCell>
                           <IconButton

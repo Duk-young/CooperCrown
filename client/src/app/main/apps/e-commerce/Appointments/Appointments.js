@@ -21,10 +21,10 @@ function Appointments() {
             className="normal-case flex items-center sm:mb-12"
             component={Link}
             role="button"
-            to="/apps/e-commerce/customers"
+            to="/apps/calendar"
             color="inherit">
             <Icon className="text-20">arrow_back</Icon>
-            <span className="mx-4">Customers</span>
+            <span className="mx-4">Appointments</span>
           </Typography>
           <div className="flex flex-row">
             <Icon className="text-20 mt-4">listalt</Icon>

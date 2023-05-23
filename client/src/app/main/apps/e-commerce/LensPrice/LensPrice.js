@@ -20,9 +20,7 @@ import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    height: 100,
-    minHeight: 100,
-    display: 'flex',
+    minHeight: 160,
     background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
     color: theme.palette.primary.contrastText,
     backgroundSize: 'cover',
@@ -95,43 +93,50 @@ function LensPrice(props) {
       content={
         <div className="flex flex-col w-full">
           <div className={clsx(classes.header)}>
-            <div className='flex justify-between w-full items-center'>
-              <div className='flex flex-row w-1/3 text-center'>
-                <AddLensTypeDialog open={open} handleClose={handleClose} />
-              </div>
-              <div className='flex flex-col justify-center items-center h-full w-1/3 text-center'>
-                <Typography className="hidden sm:flex mx-0 font-500 pb-10" variant="h4">
-                  LENS PRICE
+            <div className='flex flex-col h-full w-full'>
+              <div className='flex flex-row w-full justify-center'>
+                <Typography
+                  className="flex uppercase"
+                  style={{ fontSize: '3rem', fontWeight: 600 }}
+                  variant="h6">
+                  Lens Price
                 </Typography>
-                <Paper
-                  className="flex items-center w-full max-w-192 px-8 py-4 rounded-8"
-                  elevation={1}>
-                  <Icon color="action">search</Icon>
-                  <Input
-                    placeholder="Search"
-                    className="flex flex-1 mx-8"
-                    disableUnderline
-                    fullWidth
-                    inputProps={{
-                      'aria-label': 'Search'
-                    }}
-                  />
-                </Paper>
               </div>
-              <div className='flex flex-col justify-center items-center h-full w-1/3 text-center'>
-                <Button
-                  className={classes.button}
-                  onClick={() =>
-                    setOpen(true)
-                  }
-                  variant="contained"
-                  color="secondary">
-                  <span className="hidden sm:flex">ADD NEW</span>
-                  <span className="flex sm:hidden">ADD</span>
-                </Button>
+              <div className='flex flex-row w-full pt-32 pb-16'>
+                <div className='flex flex-col items-center w-1/3'></div>
+                <div className='flex flex-col items-center w-1/3'>
+                  <Paper
+                    className="flex items-center w-full px-8 py-4 rounded-8 bg-transparent border-1 border-white border-solid"
+                    elevation={1}>
+                    <Icon style={{ color: 'orange' }}>search</Icon>
+                    <Input
+                      placeholder="Search"
+                      className="flex flex-1 mx-8 min-h-44 bg-transparent text-white"
+                      disableUnderline
+                      fullWidth
+                      inputProps={{
+                        'aria-label': 'Search'
+                      }}
+                    />
+                  </Paper>
+                </div>
+                <div className='flex flex-col items-center justify-center w-1/3'>
+                  <Button
+                    className={classes.button}
+                    onClick={() =>
+                      setOpen(true)
+                    }
+                    variant="contained"
+                    color="secondary">
+                    <span className="hidden sm:flex">ADD NEW</span>
+                    <span className="flex sm:hidden">ADD</span>
+                  </Button>
+                </div>
               </div>
             </div>
+            <AddLensTypeDialog open={open} handleClose={handleClose} />
           </div>
+          
           <Table stickyHeader aria-label="customized table">
             <TableHead>
               <TableRow>

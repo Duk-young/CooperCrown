@@ -23,7 +23,8 @@ const CustomAutocomplete = (props) => {
     inputType,
     label,
     disabled,
-    customFunction
+    customFunction,
+    variant
   } = props;
   const [input, setInput] = useState(form ? form[id] : '');
   return (
@@ -55,7 +56,7 @@ const CustomAutocomplete = (props) => {
           }
         }}
         renderInput={(params) => (
-          <TextField {...params} label={label} type={inputType} variant='outlined'/>
+          <TextField {...params} label={label} type={inputType} variant={variant || 'outlined'} margin='normal'/>
         )}
       />
     </div>

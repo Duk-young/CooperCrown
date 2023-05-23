@@ -34,7 +34,7 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    minHeight: 100,
+    minHeight: 160,
     background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
     color: theme.palette.primary.contrastText,
     backgroundSize: 'cover',
@@ -95,7 +95,7 @@ const CustomHits = connectHits(({ hits, props }) => {
                 props.history.push(
                   `/apps/e-commerce/customers/profile/${hit.customerId}`
                 );
-              }else {
+              } else {
                 toast.error('You are not authorized', {
                   position: 'top-center',
                   autoClose: 5000,
@@ -195,11 +195,9 @@ function Customers(props) {
               <div className={clsx(classes.header)}>
                 <div className="flex flex-row p-4 w-full justify-center">
                   <Configure
-                    filters={`dob: ${
-                      form?.start ? form?.start.getTime() : -2208988800000
-                    } TO ${
-                      form?.end ? form?.end.getTime() : new Date().getTime()
-                    }`}
+                    filters={`dob: ${form?.start ? form?.start.getTime() : -2208988800000
+                      } TO ${form?.end ? form?.end.getTime() : new Date().getTime()
+                      }`}
                   />
                   <Typography
                     className="hidden sm:flex mx-0 sm:mx-12 uppercase"
@@ -310,46 +308,6 @@ function Customers(props) {
                           ]}
                         />
                       </div>
-                      {/* <h5>Sort By:</h5>
-                      <SortBy
-                        className="w-full"
-                        defaultRefinement="customers"
-                        items={[
-                          { value: 'customers', label: 'Recently Updated' },
-                          {
-                            value: 'customersFirstName',
-                            label: 'First Name (Asc)'
-                          },
-                          {
-                            value: 'customersFirstNameDesc',
-                            label: 'First Name (Desc)'
-                          },
-                          {
-                            value: 'customersLastName',
-                            label: 'Last Name (Asc)'
-                          },
-                          {
-                            value: 'customersLastNameDesc',
-                            label: 'Last Name (Desc)'
-                          },
-                          {
-                            value: 'customersDOB',
-                            label: 'Date of Birth (Asc)'
-                          },
-                          {
-                            value: 'customersDOBDesc',
-                            label: 'Date of Birth (Desc)'
-                          },
-                          {
-                            value: 'customersLastExam',
-                            label: 'Last Exam (Asc)'
-                          },
-                          {
-                            value: 'customersLastExamDesc',
-                            label: 'Last Exam (Desc)'
-                          }
-                        ]}
-                      /> */}
                     </div>
                     <div className="">
                       <Button
@@ -357,7 +315,7 @@ function Customers(props) {
                         onClick={() => {
                           if (userData.userRole === 'admin' || userData?.customersCreate) {
                             props.history.push('/apps/e-commerce/create-customer')
-                          }else {
+                          } else {
                             toast.error('You are not authorized', {
                               position: 'top-center',
                               autoClose: 5000,

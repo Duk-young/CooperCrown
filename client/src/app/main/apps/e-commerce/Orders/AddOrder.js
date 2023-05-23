@@ -534,7 +534,7 @@ function AddOrder(props) {
 
           const queryPrescription = await firestore()
             .collection('prescriptions')
-            .where('customerId', '==', newCustomer)
+            .where('customerId', '==', newCustomer || Number(routeParams?.customerId))
             .get();
 
           let resultPrescription = [];
