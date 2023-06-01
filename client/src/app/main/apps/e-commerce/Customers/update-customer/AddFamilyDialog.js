@@ -23,10 +23,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-const searchClient = algoliasearch(
-  '5AS4E06TDY',
-  '42176bd827d90462ba9ccb9578eb43b2'
-);
+const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const CustomHits = connectHits(
   ({ hits, mainForm, open, handleClose, setMainForm, setFamilyMembers }) => {

@@ -141,7 +141,7 @@ const ECommerceAppConfig = {
     },
     {
       path: '/apps/e-commerce/users',
-      component: React.lazy(() => import('./Users/Users1'))
+      component: React.lazy(() => import('./Users/Users'))
     },
 
     {

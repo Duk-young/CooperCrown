@@ -617,14 +617,6 @@ a[class^='ais-'] {
   padding: 0px 2px 1px;
 }
 
-
-
-
-
-.MuiFormControl-root {
-  border: 1px solid white;
-  border-radius: 10px;
-}
 .MuiIconButton-root {
   padding: 6px;
 }

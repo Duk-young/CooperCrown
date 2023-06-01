@@ -17,12 +17,12 @@ import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
+import clsx from 'clsx';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import Icon from '@material-ui/core/Icon';
 import MenuItem from '@material-ui/core/MenuItem';
 import React, { useState, useEffect } from 'react';
 import Select from '@material-ui/core/Select';
@@ -33,14 +33,12 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-const searchClient = algoliasearch(
-  '5AS4E06TDY',
-  '42176bd827d90462ba9ccb9578eb43b2'
-);
+const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
+
 const VirtualRefinementList = connectRefinementList(() => null);
 
 const CustomHits = connectHits((props) => {
-  const {hits, userData, history} = props;
+  const { hits, userData, history } = props;
   const [images, setImages] = useState([]);
   const classes = useStyles();
   const handleClick = async (item) => {
@@ -58,15 +56,15 @@ const CustomHits = connectHits((props) => {
       <div className="flex flex-row">
         {images?.length
           ? images?.map((img, index) => (
-              <div className="mb-8 w-224 mr-6 ">
-                <img
-                  className="w-full border-grey-300 border-1 relative shadow-1 rounded-4"
-                  src={img.url}
-                  key={img.name}
-                  alt={''}
-                />
-              </div>
-            ))
+            <div className="mb-8 w-224 mr-6 ">
+              <img
+                className="w-full border-grey-300 border-1 relative shadow-1 rounded-4"
+                src={img.url}
+                key={img.name}
+                alt={''}
+              />
+            </div>
+          ))
           : 'No Pictures'}
       </div>
 
@@ -101,7 +99,7 @@ const CustomHits = connectHits((props) => {
                   <StyledTableCell onClick={() => {
                     if (userData.userRole === 'admin' || userData?.inventoryView) {
                       history.push(`/apps/inventory/viewshowroominventory/${hit.showRoomInventoryId}`);
-                    }else {
+                    } else {
                       toast.error('You are not authorized', {
                         position: 'top-center',
                         autoClose: 5000,
@@ -145,7 +143,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
-    padding: 0
+    padding: 10
   }
 }))(TableCell);
 
@@ -157,7 +155,15 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+  tabHeader: {
+    background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+    color: theme.palette.primary.contrastText,
+    backgroundSize: 'cover',
+    backgroundColor: theme.palette.primary.dark,
+    padding: '10',
+    width: '100%'
+  },
   table: {
     minWidth: 900
   },
@@ -168,18 +174,8 @@ const useStyles = makeStyles({
       backgroundColor: '#f47b51',
       color: '#fff'
     }
-  },
-  transparentButton: {
-    backgroundColor: '#fff',
-    color: '#000000',
-    boxShadow: 'none',
-    fontSize: '20px',
-    '&:hover': {
-      backgroundColor: '#F5F5F5',
-      color: '#000000'
-    }
   }
-});
+}));
 
 const ShowRoomInventory = (props) => {
   const classes = useStyles();
@@ -220,12 +216,11 @@ const ShowRoomInventory = (props) => {
             setSearchState(state.refinementList);
           }
         }}>
-        <TableContainer className="flex flex-col w-full ">
-          <div className="flex flex-row">
-            <div className="flex flex-row flex-1 justify-around mt-10">
+        <div className={clsx(classes.tabHeader)}>
+          <div className="flex flex-row items-center">
+            <div className="flex flex-row flex-1 justify-around">
               <Button
-                className={classes.transparentButton}
-                style={{ minHeight: '50px', maxHeight: '50px' }}
+                color='secondary'
                 variant="contained"
                 onClick={() => {
                   setOpenFiltersDialog(true);
@@ -239,8 +234,7 @@ const ShowRoomInventory = (props) => {
                 FILTERS
               </Button>
               <Button
-                className={classes.transparentButton}
-                style={{ minHeight: '50px', maxHeight: '50px' }}
+                color='secondary'
                 variant="contained"
                 onClick={() => {
                   setSearchState({});
@@ -267,7 +261,7 @@ const ShowRoomInventory = (props) => {
                 attribute="material"
               />
             </div>
-            <div className="flex flex-col flex-1 my-10 inventorySearch">
+            <div className="flex flex-col flex-1 my-10 headerSearch">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for showroom inventory...'
@@ -297,15 +291,15 @@ const ShowRoomInventory = (props) => {
             <div className="flex flex-col flex-1 justify-center">
               <div className="flex w-full justify-around">
                 <FormControl>
-                  <FormHelperText className="md:flex hidden">
+                  <FormHelperText className="md:flex hidden" style={{ color: 'white' }}>
                     Select Showroom from the list
                   </FormHelperText>
-                  <FormHelperText className="md:hidden flex">
+                  <FormHelperText className="md:hidden flex" style={{ color: 'white' }}>
                     Select Showroom
                   </FormHelperText>
                   <Select
                     id="showRoomId"
-                    defaultValue={showRoomFilter}
+                    style={{ color: 'white' }}
                     value={showRoomFilter}
                     onChange={(e) => {
                       setShowRoomFilter(e.target.value);
@@ -331,7 +325,7 @@ const ShowRoomInventory = (props) => {
                   onClick={() => {
                     if (userData.userRole === 'admin' || userData?.inventoryCreate) {
                       props.history.push('/apps/inventory/addshowroominventory');
-                    }else {
+                    } else {
                       toast.error('You are not authorized', {
                         position: 'top-center',
                         autoClose: 5000,
@@ -344,78 +338,79 @@ const ShowRoomInventory = (props) => {
                       });
                     }
                   }}>
-                  <Icon>add</Icon>
                   ADD NEW
                 </Button>
               </div>
             </div>
           </div>
+        </div>
+        <div>
           <div>
-            <div>
-              <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={openFiltersDialog}
-                onClose={handleCloseFiltersDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description">
-                <DialogTitle id="alert-dialog-title">
-                  <h2>Select Filters!</h2>
-                </DialogTitle>
-                <DialogContent>
-                  <div className="flex flex-row justify-between refinementList">
-                    <div className="p-6">
-                      <Panel header="Brands">
-                        <RefinementList
-                          attribute="brand"
-                          limit={10}
-                          showMore={true}
-                          searchable={true}
-                          translations={{
-                            placeholder: 'Search for brands…'
-                          }}
-                        />
-                      </Panel>
-                    </div>
-                    <div className="p-6">
-                      <Panel header="Colour">
-                        <RefinementList
-                          attribute="colour"
-                          limit={10}
-                          showMore={true}
-                          searchable={true}
-                          translations={{
-                            placeholder: 'Search for colours…'
-                          }}
-                        />
-                      </Panel>
-                    </div>
-                    <div className="p-6">
-                      <Panel header="Material">
-                        <RefinementList
-                          attribute="material"
-                          limit={10}
-                          showMore={true}
-                          searchable={true}
-                          translations={{
-                            placeholder: 'Search for materials…'
-                          }}
-                        />
-                      </Panel>
-                    </div>
+            <Dialog
+              fullWidth
+              maxWidth="lg"
+              open={openFiltersDialog}
+              onClose={handleCloseFiltersDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description">
+              <DialogTitle id="alert-dialog-title">
+                <h2>Select Filters!</h2>
+              </DialogTitle>
+              <DialogContent>
+                <div className="flex flex-row justify-between refinementList">
+                  <div className="p-6">
+                    <Panel header="Brands">
+                      <RefinementList
+                        attribute="brand"
+                        limit={10}
+                        showMore={true}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for brands…'
+                        }}
+                      />
+                    </Panel>
                   </div>
-                  <div className="flex flex-row p-12 justify-center">
-                    <ClearRefinements
-                      translations={{
-                        reset: 'CLEAR ALL'
-                      }}
-                    />
+                  <div className="p-6">
+                    <Panel header="Colour">
+                      <RefinementList
+                        attribute="colour"
+                        limit={10}
+                        showMore={true}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for colours…'
+                        }}
+                      />
+                    </Panel>
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+                  <div className="p-6">
+                    <Panel header="Material">
+                      <RefinementList
+                        attribute="material"
+                        limit={10}
+                        showMore={true}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for materials…'
+                        }}
+                      />
+                    </Panel>
+                  </div>
+                </div>
+                <div className="flex flex-row p-12 justify-center">
+                  <ClearRefinements
+                    translations={{
+                      reset: 'CLEAR ALL'
+                    }}
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
-          <CustomHits props={props}  userData={userData} history={props?.history}/>
+        </div>
+        <TableContainer className="flex flex-col w-full ">
+          <CustomHits props={props} userData={userData} history={props?.history} />
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>
             <div className="flex flex-1 justify-center pt-8">

@@ -26,10 +26,8 @@ import { useState } from 'react';
 import Scanner from '../Inventory/Scanner';
 import '../Customers/Search.css';
 import Barcode from './images/barcode-icon.png';
-const searchClient = algoliasearch(
-  '5AS4E06TDY',
-  '42176bd827d90462ba9ccb9578eb43b2'
-);
+
+const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const CustomHits = connectHits(({ hits, form, setForm, handleClose }) => {
   return (
@@ -303,7 +301,7 @@ function SimpleDialog(props) {
             className="flex flex-col w-full p-20 rounded-32 shadow-20">
             <InstantSearch searchClient={searchClient} indexName="frames">
               <div className="flex flex-row">
-                <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12">
+                <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12 inventorySearch">
                   <SearchBox
                     translations={{
                       placeholder: 'Search for Frames...'

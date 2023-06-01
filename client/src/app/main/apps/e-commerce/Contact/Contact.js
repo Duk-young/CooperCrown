@@ -53,18 +53,15 @@ function NewShowRoom(props) {
   useEffect(() => {
     const fetchDetails = async () => {
       setisLoading(true)
-
       const queryContacts = await firestore()
-        .collection('contacts')
-        .get();
-
+      .collection('contacts')
+      .get();
+      
       let resultContacts = [];
-      queryContacts.forEach((doc) => {
-        resultContacts.push(doc.data());
-        if (routeParams.contactId === doc?.id) {
-          setForm({...doc.data(), id: doc.id})
-        }
-      });
+      queryContacts.forEach((doc) => resultContacts.push({...doc.data(), id:doc?.id}));
+      if (routeParams.contactId !== 'new') {
+        setForm(resultContacts?.filter((contact) => contact?.contactId === Number(routeParams?.contactId))?.[0])
+      }
       setAllContacts(resultContacts);
       setisLoading(false)
     }
@@ -72,7 +69,7 @@ function NewShowRoom(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
+
 
   function handleChangeTab(event, value) {
     setTabValue(value);
@@ -155,7 +152,7 @@ function NewShowRoom(props) {
         header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
       }}
       header={
-         (
+        (
           <div className="flex flex-1 w-full items-center justify-between">
             <div className="flex flex-col items-start max-w-full">
               <FuseAnimate animation="transition.slideRightIn" delay={300}>
@@ -209,7 +206,7 @@ function NewShowRoom(props) {
         </Tabs>
       }
       content={
-         (
+        (
           <div className="flex flex-col h-260  px-16 py-6 gap-20">
             <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">

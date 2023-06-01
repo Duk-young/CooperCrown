@@ -22,6 +22,7 @@ import routes from './fuse-configs/routesConfig';
 import store from './store';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'dotenv/config';
 
 const jss = create({
   ...jssPreset(),

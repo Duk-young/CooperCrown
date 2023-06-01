@@ -33,7 +33,7 @@ export const saveContact = (data) => async (dispatch) => {
       .collection('contacts')
       .add({ ...data, contactId: dbConfig?.contactId + 1 });
     await firebaseService.firestoreDb
-      .collection('dbCo nfig')
+      .collection('dbConfig')
       .doc('dbConfig')
       .update({
         contactId: dbConfig?.contactId + 1
