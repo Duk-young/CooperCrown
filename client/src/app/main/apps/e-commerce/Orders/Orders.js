@@ -68,10 +68,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const searchClient = algoliasearch(
-  '5AS4E06TDY',
-  '42176bd827d90462ba9ccb9578eb43b2'
-);
+const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 function a11yProps(index) {
   return {
@@ -231,7 +228,7 @@ const CustomHits = connectHits(
                         props.history.push(
                           `/apps/e-commerce/orders/vieworder/${hit.orderId}`
                         );
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -252,7 +249,7 @@ const CustomHits = connectHits(
                         props.history.push(
                           `/apps/e-commerce/orders/vieworder/${hit.orderId}`
                         );
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -273,7 +270,7 @@ const CustomHits = connectHits(
                         props.history.push(
                           `/apps/e-commerce/orders/vieworder/${hit.orderId}`
                         );
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -294,7 +291,7 @@ const CustomHits = connectHits(
                         props.history.push(
                           `/apps/e-commerce/orders/vieworder/${hit.orderId}`
                         );
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -321,7 +318,7 @@ const CustomHits = connectHits(
                         props.history.push(
                           `/apps/e-commerce/orders/vieworder/${hit.orderId}`
                         );
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -343,7 +340,7 @@ const CustomHits = connectHits(
                         props.history.push(
                           `/apps/e-commerce/orders/vieworder/${hit.orderId}`
                         );
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -676,11 +673,34 @@ function Orders(props) {
                 ))}
               </>
               <div className="flex flex-row justify-between">
-                <div className="flex"></div>
-                <div className="flex justify-center mt-8">
-                  <Pagination />
+                <div className="flex-1"></div>
+                <div className="flex-1 justify-center mt-8"><Pagination /></div>
+                <div className="flex-1"></div>
+              </div>
+              {value === 3 && (
+                <div className="flex justify-end mt-8 pr-20">
+                  <Button
+                    className={`whitespace-no-wrap mt-42 uppercase ${selected.length === 0 && 'opacity-75'
+                      }`}
+                    style={{
+                      backgroundColor: '#222',
+                      color: '#FFF'
+                    }}
+                    variant="contained"
+                    color="secondary"
+                    disabled={selected.length === 0}
+                    onClick={() => {
+                      props.history.push(
+                        `/apps/e-commerce/orders/redoorder/${selected[0]}`
+                      );
+                    }}>
+                    REDO
+                  </Button>
                 </div>
-                {value === 3 && (
+              )}
+              {value !== 0 &&
+                !isDataEmpty &&
+                value === statuses[value].value && (
                   <div className="flex justify-end mt-8 pr-20">
                     <Button
                       className={`whitespace-no-wrap mt-42 uppercase ${selected.length === 0 && 'opacity-75'
@@ -689,46 +709,22 @@ function Orders(props) {
                         backgroundColor: '#222',
                         color: '#FFF'
                       }}
+                      // className={classes.button}
                       variant="contained"
-                      color="secondary"
                       disabled={selected.length === 0}
+                      color="secondary"
                       onClick={() => {
-                        props.history.push(
-                          `/apps/e-commerce/orders/redoorder/${selected[0]}`
-                        );
+                        updateStatus(selected, statuses[value + 1].label)
                       }}>
-                      REDO
+                      <span className="hidden sm:flex">
+                        {statuses[value].label !== 'cancelled'
+                          ? statuses[value + 1].label
+                          : null}
+                      </span>
                     </Button>
+                    <button></button>
                   </div>
                 )}
-                {value !== 0 &&
-                  !isDataEmpty &&
-                  value === statuses[value].value && (
-                    <div className="flex justify-end mt-8 pr-20">
-                      <Button
-                        className={`whitespace-no-wrap mt-42 uppercase ${selected.length === 0 && 'opacity-75'
-                          }`}
-                        style={{
-                          backgroundColor: '#222',
-                          color: '#FFF'
-                        }}
-                        // className={classes.button}
-                        variant="contained"
-                        disabled={selected.length === 0}
-                        color="secondary"
-                        onClick={() => {
-                          updateStatus(selected, statuses[value + 1].label)
-                        }}>
-                        <span className="hidden sm:flex">
-                          {statuses[value].label !== 'cancelled'
-                            ? statuses[value + 1].label
-                            : null}
-                        </span>
-                      </Button>
-                      <button></button>
-                    </div>
-                  )}
-              </div>
             </InstantSearch>
           </TableContainer>
         </div>

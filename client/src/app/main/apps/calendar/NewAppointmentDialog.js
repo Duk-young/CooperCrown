@@ -45,10 +45,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-const searchClient = algoliasearch(
-  '5AS4E06TDY',
-  '42176bd827d90462ba9ccb9578eb43b2'
-);
+const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const CustomHits = connectHits(({ hits, form, closeComposeDialog }) => {
   const history = useHistory();
@@ -509,7 +506,7 @@ export default function NewAppointmentDialog() {
             className="flex flex-col w-full p-20 rounded-32 shadow-20">
             <InstantSearch searchClient={searchClient} indexName="customers">
               <div className="flex flex-row">
-                <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12">
+                <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12 inventorySearch">
                   <SearchBox
                     translations={{
                       placeholder: 'Searh for customers...'

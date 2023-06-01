@@ -7,10 +7,10 @@ import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
+import clsx from 'clsx';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Icon from '@material-ui/core/Icon';
 import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -19,10 +19,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-const searchClient = algoliasearch(
-  '5AS4E06TDY',
-  '42176bd827d90462ba9ccb9578eb43b2'
-);
+const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 const VirtualRefinementList = connectRefinementList(() => null);
 
 const CustomHits = connectHits((props) => {
@@ -95,7 +92,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
-    padding: 8
+    padding: 10
   }
 }))(TableCell);
 
@@ -107,7 +104,15 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+  tabHeader: {
+    background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+    color: theme.palette.primary.contrastText,
+    backgroundSize: 'cover',
+    backgroundColor: theme.palette.primary.dark,
+    padding: '10',
+    width: '100%'
+  },
   table: {
     minWidth: 900
   },
@@ -118,18 +123,8 @@ const useStyles = makeStyles({
       backgroundColor: '#f47b51',
       color: '#fff'
     }
-  },
-  transparentButton: {
-    backgroundColor: '#fff',
-    color: '#000000',
-    boxShadow: 'none',
-    fontSize: '20px',
-    '&:hover': {
-      backgroundColor: '#F5F5F5',
-      color: '#000000'
-    }
   }
-});
+}));
 
 const Lens = (props) => {
   const classes = useStyles();
@@ -155,12 +150,11 @@ const Lens = (props) => {
             setSearchState(state.refinementList);
           }
         }}>
-        <TableContainer className="flex flex-col w-full ">
-          <div className="flex flex-row">
-            <div className="flex flex-row flex-1 justify-around mt-10">
+          <div className={clsx(classes.tabHeader)}>
+          <div className="flex flex-row items-center">
+            <div className="flex flex-row flex-1 justify-around">
               <Button
-                className={classes.transparentButton}
-                style={{ minHeight: '50px', maxHeight: '50px' }}
+                color='secondary'
                 variant="contained"
                 onClick={() => {
                   setOpenFiltersDialog(true);
@@ -174,8 +168,7 @@ const Lens = (props) => {
                 FILTERS
               </Button>
               <Button
-                className={classes.transparentButton}
-                style={{ minHeight: '50px', maxHeight: '50px' }}
+                color='secondary'
                 variant="contained"
                 onClick={() => {
                   setSearchState({});
@@ -201,7 +194,7 @@ const Lens = (props) => {
                 attribute="lensType"
               />
             </div>
-            <div className="flex flex-col flex-1 my-10 inventorySearch">
+            <div className="flex flex-col flex-1 my-10 headerSearch">
               <SearchBox
                 translations={{
                   placeholder: 'Searh for lens...'
@@ -229,7 +222,7 @@ const Lens = (props) => {
               />
             </div>
             <div className="flex flex-col flex-1">
-              <div className="flex w-full justify-center mt-16">
+              <div className="flex w-full justify-center">
                 <Button
                   className={classes.orangeButton}
                   variant="contained"
@@ -249,11 +242,11 @@ const Lens = (props) => {
                       });
                     }
                   }}>
-                  <Icon>add</Icon>
                   ADD NEW
                 </Button>
               </div>
             </div>
+          </div>
           </div>
           <div>
             <div>
@@ -320,6 +313,7 @@ const Lens = (props) => {
               </Dialog>
             </div>
           </div>
+          <TableContainer className="flex flex-col w-full ">
           <CustomHits props={props} userData={userData} history={props?.history} />
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>

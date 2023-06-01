@@ -24,6 +24,7 @@
     "clsx": "1.1.0",
     "cross-fetch": "3.0.4",
     "date-fns": "2.11.1",
+    "dotenv": "^16.1.3",
     "emailjs-com": "^3.2.0",
     "firebase": "7.14.0",
     "firebase-admin": "^9.11.0",
@@ -136,7 +137,7 @@
   },
   "scripts": {
     "start": "yarn run tailwind &&  set PORT=3008 && react-scripts start",
-    "build": "CI=false && yarn run tailwind && yarn run purge-tailwind && cross-env GENERATE_SOURCEMAP=false && react-scripts build",
+    "build": "yarn run tailwind && yarn run purge-tailwind && cross-env GENERATE_SOURCEMAP=false && react-scripts build",
     "tailwind": "tailwind build ./src/styles/tailwind-config.css -c ./tailwind.config.js -o ./src/styles/tailwind.css",
     "purge-tailwind": "node ./purge-tailwindcss.js",
     "test": "react-scripts test --env=node",

@@ -43,10 +43,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const searchClient = algoliasearch(
-  '5AS4E06TDY',
-  '42176bd827d90462ba9ccb9578eb43b2'
-);
+const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const CustomHits = connectHits(({ hits, payments, props }) => {
   return (
@@ -214,9 +211,9 @@ function Insurance(props) {
               <div className="flex flex-col flex-1">
               </div>
               <div className="flex flex-col flex-1 border-1 text-center">
-                  <Typography className="flex mx-0 pb-6 font-500 justify-center" variant="h4">
-                    INSURANCE
-                  </Typography>
+                <Typography className="flex mx-0 pb-6 font-500 justify-center" variant="h4">
+                  INSURANCE
+                </Typography>
                 <SearchBox
                   translations={{
                     placeholder: 'Search for claims...'

@@ -8,11 +8,9 @@ export const SAVE_SERVICE = '[E-COMMERCE APP] SAVE SERVICE';
 
 export const getService = (params) => async (dispatch) => {
   try {
-    const response = await firebaseService.firestoreDb
-      .collection('services')
-      .doc(params)
-      .get();
-    const service = { id: response.id, ...response.data() };
+    const response = await firebaseService.firestoreDb.collection('services').where('serviceId', '==', Number(params)).limit(1).get();
+
+    const service = { id: response.docs[0].id, ...response.docs[0].data() };
     dispatch({
       type: GET_SERVICE,
       payload: service
@@ -34,7 +32,7 @@ export const saveService = (data) => async (dispatch) => {
       .collection('services')
       .add({ ...data, serviceId: dbConfig?.serviceId + 1 });
     await firebaseService.firestoreDb
-      .collection('dbCo nfig')
+      .collection('dbConfig')
       .doc('dbConfig')
       .update({
         serviceId: dbConfig?.serviceId + 1
@@ -52,7 +50,7 @@ export const deleteService = (data) => async (dispatch) => {
   delete data.description;
   delete data.price;
   try {
-    await firebaseService.firestoreDb.collection('services').delete(data);
+    await firebaseService.firestoreDb.collection('services').doc(data.id).delete()
     dispatch(Actions.getServices());
     dispatch(showMessage({ message: 'Service deleted' }));
   } catch (error) {
@@ -68,7 +66,7 @@ export const updateService = (data) => async (dispatch) => {
       .doc(uuid)
       .update(data);
     dispatch(Actions.getShowRooms());
-    dispatch(showMessage({ message: 'Service Update' }));
+    dispatch(showMessage({ message: 'Service Updated' }));
   } catch (error) {
     console.log(error);
   }
@@ -77,7 +75,7 @@ export function newService() {
   const data = {
     uid: FuseUtils.generateGUID(),
     name: '',
-    description:'',
+    description: '',
     price: ''
   };
   return {
