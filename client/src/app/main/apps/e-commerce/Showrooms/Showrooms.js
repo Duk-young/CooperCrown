@@ -3,7 +3,6 @@ import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import FusePageSimple from '@fuse/core/FusePageSimple';
-import moment from 'moment'
 import Paper from '@material-ui/core/Paper';
 import React from 'react';
 import reducer from '../store/reducers';
@@ -48,25 +47,27 @@ const CustomHits = connectHits(({ hits, props }) => {
     <Table stickyHeader aria-label="customized table">
       <TableHead>
         <TableRow>
-          <StyledTableCell>DATE</StyledTableCell>
-          <StyledTableCell>NAME</StyledTableCell>
-          <StyledTableCell>Location 1</StyledTableCell>
-          <StyledTableCell>Location 2</StyledTableCell>
-          <StyledTableCell>Location 3</StyledTableCell>
+          <StyledTableCell>LOCATION NAME</StyledTableCell>
+          <StyledTableCell>ADDRESS</StyledTableCell>
+          <StyledTableCell>CITY</StyledTableCell>
+          <StyledTableCell>STATE</StyledTableCell>
+          <StyledTableCell>ZIP CODE</StyledTableCell>
+          <StyledTableCell>PHONE</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {hits.sort((a, b) => (a.doctorId > b.doctorId ? -1 : 1)).map((hit) => (
+        {hits.sort((a, b) => (a.showRoomId > b.showRoomId ? -1 : 1)).map((hit) => (
           <StyledTableRow
             key={hit.objectID}
             hover
             className="cursor-pointer"
-            onClick={() => {props.history.push(`/apps/e-commerce/doctor/${hit?.objectID}`);}}>
-            <StyledTableCell>{hit?.date && moment(hit?.date).format('MM/DD/YYYY')}</StyledTableCell>
-            <StyledTableCell>{hit?.fname} {hit?.lname}</StyledTableCell>
-            <StyledTableCell>{hit?.showrooms?.[0]?.locationName}</StyledTableCell>
-            <StyledTableCell>{hit?.showrooms?.[1]?.locationName}</StyledTableCell>
-            <StyledTableCell>{hit?.showrooms?.[2]?.locationName}</StyledTableCell>
+            onClick={() => {props.history.push(`/apps/e-commerce/showRoom/${hit?.objectID}`);}}>
+            <StyledTableCell>{hit?.locationName}</StyledTableCell>
+            <StyledTableCell>{hit?.locationAddress}</StyledTableCell>
+            <StyledTableCell>{hit?.City}</StyledTableCell>
+            <StyledTableCell>{hit?.State}</StyledTableCell>
+            <StyledTableCell>{hit?.zipCode}</StyledTableCell>
+            <StyledTableCell>{hit?.phoneNo}</StyledTableCell>
           </StyledTableRow>
         ))}
       </TableBody>
@@ -98,7 +99,7 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-function Doctors(props) {
+function Showrooms(props) {
   const classes = useStyles(props);
 
   return (
@@ -107,7 +108,7 @@ function Doctors(props) {
         <div className="flex w-full">
           <InstantSearch
             searchClient={searchClient}
-            indexName="doctors"
+            indexName="showRooms"
             refresh>
             <div className="flex flex-col w-full">
               <div className={clsx(classes.header)}>
@@ -116,7 +117,7 @@ function Doctors(props) {
                     className="hidden sm:flex mx-0 sm:mx-12 uppercase"
                     style={{ fontSize: '3rem', fontWeight: 600 }}
                     variant="h6">
-                    DOCTORS
+                    SHOWROOMS
                   </Typography>
                 </div>
                 <div className="flex pt-32 pb-16 pl-8 items-center">
@@ -124,7 +125,7 @@ function Doctors(props) {
                   <div className="flex flex-col w-1/3 border-1 headerSearch">
                     <SearchBox
                       translations={{
-                        placeholder: 'Search for doctors...'
+                        placeholder: 'Search for showrooms...'
                       }}
                       submit={
                         <svg
@@ -164,7 +165,7 @@ function Doctors(props) {
                     <div className="">
                       <Button
                         className={classes.button}
-                        onClick={() => {props.history.push('/apps/e-commerce/doctor/new')}}
+                        onClick={() => {props.history.push('/apps/e-commerce/showRoom/new')}}
                         variant="contained"
                         color="secondary">
                         <span className="hidden sm:flex">ADD NEW</span>
@@ -194,4 +195,4 @@ function Doctors(props) {
   );
 }
 
-export default withReducer('eCommerceApp', reducer)(Doctors);
+export default withReducer('eCommerceApp', reducer)(Showrooms);

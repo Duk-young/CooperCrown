@@ -487,7 +487,7 @@ function AddInsurance(props) {
                     color="secondary"
                     onClick={() => {
                       if ((userData.userRole === 'admin' || userData?.insuranceEdit) && onSubmit) {
-                        onsubmit()
+                        onSubmit()
                       }else {
                         toast.error('You are not authorized', {
                           position: 'top-center',

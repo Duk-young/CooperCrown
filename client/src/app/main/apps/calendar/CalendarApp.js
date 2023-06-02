@@ -212,7 +212,7 @@ function CalendarApp(props) {
         defaultDate={new Date()}
         startAccessor="start"
         endAccessor="end"
-        views={{month: true,week: true}}
+        views={{ month: true, week: true }}
         step={15}
         timeslots={4}
         // showMultiDayTimes
@@ -289,18 +289,23 @@ function CalendarApp(props) {
 
 function Event({ event }) {
   return (
-    <span>
-      <strong>{`${event.start.toLocaleString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-      })} - ${event.end.toLocaleString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-      })} `}</strong>
-      {event?.title && event.title}
-    </span>
+    <div>
+      <span className='text-10 lg:text-12 hidden lg:flex' >
+        {`${event.start.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: false
+        })} - ${event.end.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: false
+        })} `}
+        {event?.title && event.title}
+      </span>
+      <span className='text-10 lg:text-12 lg:hidden flex' >
+        {event?.title && event.title}
+      </span>
+    </div>
   );
 }
 

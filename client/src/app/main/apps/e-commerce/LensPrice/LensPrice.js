@@ -64,6 +64,7 @@ const StyledTableRow = withStyles((theme) => ({
 function LensPrice(props) {
   const classes = useStyles(props);
   const [lensTypes, setLensTypes] = useState([]);
+  const [filteredLensTypes, setfilteredLensTypes] = useState([]);
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -81,6 +82,7 @@ function LensPrice(props) {
         lensTypes.push(row.replace(/"/g, ''));
       });
       setLensTypes(lensTypes);
+      setfilteredLensTypes(lensTypes);
     };
 
 
@@ -114,6 +116,15 @@ function LensPrice(props) {
                       className="flex flex-1 mx-8 min-h-44 bg-transparent text-white"
                       disableUnderline
                       fullWidth
+                      onChange={(e) => {
+                        const inputValue = e.target.value.toLowerCase()
+                        if (inputValue) {
+                          const newTypes = lensTypes.filter((type) => type.toLowerCase().includes(inputValue));
+                          setfilteredLensTypes(newTypes);
+                        } else {
+                          setfilteredLensTypes(lensTypes);
+                        }
+                      }}
                       inputProps={{
                         'aria-label': 'Search'
                       }}
@@ -136,7 +147,7 @@ function LensPrice(props) {
             </div>
             <AddLensTypeDialog open={open} handleClose={handleClose} />
           </div>
-          
+
           <Table stickyHeader aria-label="customized table">
             <TableHead>
               <TableRow>
@@ -144,7 +155,7 @@ function LensPrice(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {lensTypes.map((hit, index) => (
+              {filteredLensTypes.map((hit, index) => (
                 <StyledTableRow
                   key={index}
                   hover

@@ -15,11 +15,16 @@ import { Link } from 'react-router-dom';
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
+    fontSize: 14,
+    padding: 10,
+    textAlign: 'center'
   },
   body: {
     fontSize: 14,
-    padding: 0
+    padding: 10,
+    minWidth: 'min-content',
+    textAlign: 'center'
   }
 }))(TableCell);
 
@@ -66,6 +71,57 @@ const OrderHistory = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleTotal = (order) => {
+    const mainSum =
+      order?.eyeglasses.reduce((a, b) => b?.lensRate ? +a + +b.lensRate : a, 0) +
+      order?.eyeglasses.reduce((a, b) => b?.frameRate ? +a + +b.frameRate : a, 0) +
+      order?.medication.reduce((a, b) => +a + +b.price, 0) +
+      order?.contactLenses.reduce((a, b) => +a + +b.contactLensRate, 0) +
+      order?.otherProductInfo.reduce((a, b) => +a + +b.otherProductPrice, 0);
+
+    const frameVal = order?.eyeglasses.find(
+      (item) => item?.frameAdditionalPrice || item?.frameAdditionalPrice <= 0
+    );
+    const lensVal = order?.eyeglasses.find(
+      (item) => item?.lensAdditionalPrice || item?.lensAdditionalPrice <= 0
+    );
+
+    const otherProductVal = order?.otherProductInfo.find(
+      (item) =>
+        item?.otherProductAdditionalPrice ||
+        item?.otherProductAdditionalPrice <= 0
+    );
+
+    if (frameVal || lensVal || otherProductVal) {
+      return (
+        mainSum +
+        order?.eyeglasses.reduce((a, b) => b?.frameAdditionalPrice ? +a + +b.frameAdditionalPrice : a, 0) +
+        order?.eyeglasses.reduce((a, b) => b?.lensAdditionalPrice ? +a + +b.lensAdditionalPrice : a, 0) +
+        order?.otherProductInfo.reduce(
+          (a, b) => b?.otherProductAdditionalPrice ? +a + +b.otherProductAdditionalPrice : a,
+          0
+        )
+      );
+    } else {
+      return mainSum;
+    }
+  };
+
+  const handleBalance = (order) => {
+    const total = handleTotal(order);
+
+    const deductions =
+      (order?.discount ? +order?.discount : 0) +
+      (order?.insuranceCostOne ? +order?.insuranceCostOne : 0) +
+      (order?.insuranceCostTwo ? +order?.insuranceCostTwo : 0);
+
+    const payment = payments.filter(({ orderId }) => Number(orderId) === order?.orderId).reduce((a, b) => +a + +b.amount, 0);
+
+    const balance = total - deductions - payment;
+
+    return balance
+  };
+
   return !orders ? (
     <></>
   ) : (
@@ -77,9 +133,8 @@ const OrderHistory = (props) => {
           stickyHeader>
           <TableHead>
             <TableRow>
-              <StyledTableCell>DATE</StyledTableCell>
               <StyledTableCell>ORDER No</StyledTableCell>
-
+              <StyledTableCell>DATE</StyledTableCell>
               <StyledTableCell>AMOUNT</StyledTableCell>
               <StyledTableCell>INSURANCE</StyledTableCell>
               <StyledTableCell>PAID</StyledTableCell>
@@ -87,7 +142,7 @@ const OrderHistory = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders?.length &&
+            {orders?.length > 0 &&
               orders
                 .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
                 .map((row) => (
@@ -104,45 +159,21 @@ const OrderHistory = (props) => {
                     </StyledTableCell>
 
                     <StyledTableCell>
-                      {`$ ${(
-                        row?.eyeglasses.reduce((a, b) => +a + +b.lensRate, 0) +
-                        row?.eyeglasses.reduce((a, b) => +a + +b.frameRate, 0) +
-                        row?.medication.reduce((a, b) => +a + +b.price, 0) +
-                        row?.contactLenses.reduce(
-                          (a, b) => +a + +b.contactLensRate,
-                          0
-                        ) +
-                        (row?.additionalCost ? +row?.additionalCost : 0) -
-                        (row?.discount ? +row?.discount : 0)
-                      ).toLocaleString()}`}
+                      {`$ ${handleTotal(row).toLocaleString()}`}
                     </StyledTableCell>
                     <StyledTableCell>
-                      {row?.insuranceCost
-                        ? `$ ${(row?.insuranceCost).toLocaleString()}`
+                      {(row?.insuranceCostOne || row?.insuranceCostTwo)
+                        ? `$ ${(+row?.insuranceCostOne ?? 0 + +row?.insuranceCostTwo ?? 0).toLocaleString()}`
                         : '$0'}
                     </StyledTableCell>
                     <StyledTableCell>
                       {`$ ${payments
-                        .filter(({ orderId }) => orderId === row?.orderId)
+                        .filter(({ orderId }) => Number(orderId) === row?.orderId)
                         .reduce((a, b) => +a + +b.amount, 0)
                         .toLocaleString()}`}
                     </StyledTableCell>
                     <StyledTableCell>
-                      {`$ ${(
-                        row?.eyeglasses.reduce((a, b) => +a + +b.lensRate, 0) +
-                        row?.eyeglasses.reduce((a, b) => +a + +b.frameRate, 0) +
-                        row?.medication.reduce((a, b) => +a + +b.price, 0) +
-                        row?.contactLenses.reduce(
-                          (a, b) => +a + +b.contactLensRate,
-                          0
-                        ) +
-                        (row?.additionalCost ? +row?.additionalCost : 0) -
-                        (row?.discount ? +row?.discount : 0) -
-                        (row?.insuranceCost ? +row?.insuranceCost : 0) -
-                        payments
-                          .filter(({ orderId }) => orderId === row?.orderId)
-                          .reduce((a, b) => +a + +b.amount, 0)
-                      ).toLocaleString()}`}
+                      {`$ ${handleBalance(row)}`}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
