@@ -23,6 +23,9 @@ import store from './store';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'dotenv/config';
+import 'app/main/apps/e-commerce/Customers/Search.css'
+import 'app/main/apps/e-commerce/Customers/App.mobile.css'
+import 'app/main/apps/e-commerce/Customers/Themes.css'
 
 const jss = create({
   ...jssPreset(),

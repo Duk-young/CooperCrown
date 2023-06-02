@@ -122,6 +122,7 @@ export default function NewAppointmentDialog() {
   const [appointments, setAppointments] = useState([]);
   const [showRooms, setShowRooms] = useState([]);
   const [disabledState, setDisabledState] = useState(false);
+  const [doctors, setDoctors] = useState([]);
   const dispatch = useDispatch();
 
   const newAppointmentDialog = useSelector(
@@ -165,6 +166,18 @@ export default function NewAppointmentDialog() {
       });
       setShowRooms(showroomdata);
 
+      let doctorsData = [];
+      const queryDoctors = await firestore().collection('doctors').get();
+
+      queryDoctors.forEach((doc) => {
+        doctorsData.push(doc.data());
+      });
+      if (newAppointmentDialog?.data?.showRoomId && doctorsData?.length > 0) {
+        setDoctors(doctorsData.filter((obj) => {
+          return obj.showrooms?.some((showroom) => showroom.showRoomId === newAppointmentDialog?.data?.showRoomId);
+        }))
+      }else {setDoctors(doctorsData);}
+
       setError('');
     };
     fetchDetails();
@@ -201,7 +214,8 @@ export default function NewAppointmentDialog() {
             moment(form?.start).add(form?.duration, 'm').toDate()
           ),
           appointmentId: dbConfig?.appointmentId + 1,
-          doctor: form?.doctor ? form?.doctor : '',
+          doctor: form?.doctorId ? doctors.filter((doc) => doc?.doctorId === form?.doctorId)?.[0]?.fullName : '',
+          doctorId: form?.doctorId ? form?.doctorId : '',
           id: dbConfig?.appointmentId + 1,
           allDay: false,
           title: `${form.firstName} ${form.lastName}`,
@@ -337,15 +351,22 @@ export default function NewAppointmentDialog() {
           </div>
           <div className="flex flex-row w-full p-6">
             <div className="flex flex-col w-1/2">
-              <TextField
-                className="content-center"
-                id="outlined-multiline-static"
-                label="Doctor"
-                value={form?.doctor}
-                onChange={handleChange}
-                name={'doctor'}
-                variant="outlined"
-              />
+              <FormControl>
+                <FormHelperText>Select doctor from the list</FormHelperText>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="doctorId"
+                  value={form?.doctorId}
+                  name="doctorId"
+                  onChange={handleChange}
+                  autoWidth>
+                  {doctors.map((row) => (
+                    <MenuItem value={row?.doctorId}>
+                      {row?.fullName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
             <div className="flex flex-col w-1/2 pl-2">
               <FormControl>
@@ -353,8 +374,8 @@ export default function NewAppointmentDialog() {
                 <Select
                   labelId="demo-simple-select-autowidth-label"
                   id="showRoomId"
-                  defaultValue={form?.showRoomId}
                   value={form?.showRoomId}
+                  disabled
                   name="showRoomId"
                   onChange={handleChange}
                   autoWidth>

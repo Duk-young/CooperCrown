@@ -372,20 +372,23 @@ function Doctor(props) {
                           />
                         </div>
                         <div className="flex flex-row p-6 mb-16 gap-10">
-                          <TextField
-                            className="w-1/2"
-                            required
-                            label="Gender"
-                            id="user-Gender"
-                            name="Gender"
-                            type="text"
-                            value={form?.Gender}
-                            onChange={handleChange}
-                            variant="outlined"
-                            error={errors.gender}
-                            helperText={errors.gender}
-                            disabled={disabledState}
-                          />
+                          <FormControl className="w-1/2">
+                            <FormHelperText>Gender</FormHelperText>
+                            <Select
+                              labelId="demo-simple-select-autowidth-label"
+                              id="user-Gender"
+                              value={form?.Gender ?? ''}
+                              name="Gender"
+                              onChange={handleChange}
+                              error={errors.gender}
+                              helperText={errors.gender}
+                              disabled={disabledState}
+                              autoWidth>
+                              <MenuItem value={'Male'}>Male</MenuItem>
+                              <MenuItem value={'Female'}>Female</MenuItem>
+                              <MenuItem value={'Other'}>Other</MenuItem>
+                            </Select>
+                          </FormControl>
                           <TextField
                             className="w-1/2"
                             required
@@ -450,6 +453,30 @@ function Doctor(props) {
                             name="other"
                             type="text"
                             value={form?.other}
+                            onChange={handleChange}
+                            variant="outlined"
+                            disabled={disabledState}
+                          />
+                        </div>
+                        <div className="flex flex-row p-6 mb-16 gap-10">
+                          <TextField
+                            className="w-1/2"
+                            label="LIC #"
+                            id="licNo"
+                            name="licNo"
+                            type="text"
+                            value={form?.licNo}
+                            onChange={handleChange}
+                            variant="outlined"
+                            disabled={disabledState}
+                          />
+                          <TextField
+                            className="w-1/2"
+                            label="NPI #"
+                            id="npiNo"
+                            name="npiNo"
+                            type="text"
+                            value={form?.npiNo}
                             onChange={handleChange}
                             variant="outlined"
                             disabled={disabledState}

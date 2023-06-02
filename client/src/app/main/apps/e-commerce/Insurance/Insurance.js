@@ -1,16 +1,12 @@
-import '../Customers/App.mobile.css';
-import '../Customers/Search.css';
-import '../Customers/Themes.css';
-import { connectHits } from 'react-instantsearch-dom';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { firestore } from 'firebase';
-import { Link, useParams } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
+import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
-import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageSimple from '@fuse/core/FusePageSimple';
-import moment from 'moment';
+import FuseLoading from '@fuse/core/FuseLoading';
+import { Link } from 'react-router-dom';
+import moment from 'moment'
 import Paper from '@material-ui/core/Paper';
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
@@ -19,27 +15,33 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import Typography from '@material-ui/core/Typography';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import {
+  connectHits,
+  Pagination,
   InstantSearch,
   SearchBox,
-  SortBy,
   HitsPerPage,
-  Pagination
+  SortBy
 } from 'react-instantsearch-dom';
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    paddingTop: 3,
-    height: 110,
-    minHeight: 110,
-    display: 'flex',
+    minHeight: 160,
     background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
     color: theme.palette.primary.contrastText,
     backgroundSize: 'cover',
     backgroundColor: theme.palette.primary.dark
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
   }
 }));
 
@@ -151,6 +153,7 @@ const CustomHits = connectHits(({ hits, payments, props }) => {
   );
 });
 
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -159,8 +162,8 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: 14,
-    textAlign: 'center',
     padding: 10,
+    textAlign: 'center'
   }
 }))(TableCell);
 
@@ -176,10 +179,9 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 function Insurance(props) {
-  const [isLoading, setisLoading] = useState(true);
-  const [payments, setPayments] = useState([]);
-  const routeParams = useParams();
   const classes = useStyles(props);
+  const [isLoading, setisLoading] = useState(true);
+  const [payments, setPayments] = useState(true);
 
   useEffect(() => {
     setisLoading(true);
@@ -197,114 +199,99 @@ function Insurance(props) {
     };
 
     fetchData();
-  }, [routeParams.insuranceClaimId]);
+  }, []);
   if (isLoading) return <FuseLoading />;
+
 
   return (
     <FusePageSimple
       content={
-        <div className="flex flex-col w-full ">
+        <div className="flex w-full">
           <InstantSearch
             searchClient={searchClient}
-            indexName="insuranceClaims">
-            <div className={clsx(classes.header)}>
-              <div className="flex flex-col flex-1">
-              </div>
-              <div className="flex flex-col flex-1 border-1 text-center">
-                <Typography className="flex mx-0 pb-6 font-500 justify-center" variant="h4">
-                  INSURANCE
-                </Typography>
-                <SearchBox
-                  translations={{
-                    placeholder: 'Search for claims...'
-                  }}
-                  submit={
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 18 18">
-                      <g
-                        fill="none"
-                        fillRule="evenodd"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="1.67"
-                        transform="translate(1 1)">
-                        <circle cx="7.11" cy="7.11" r="7.11" />
-                        <path d="M16 16l-3.87-3.87" />
-                      </g>
-                    </svg>
-                  }
-                  reset={false}
-                />
-              </div>
-              <div className="flex flex-row flex-1">
-                <div className="w-1/3"></div>
-                <div className="flex flex-col justify-center items-center h-full w-1/3">
-                  <h5>Sort By:</h5>
-                  <SortBy
-                    className="w-full"
-                    defaultRefinement="insuranceClaims"
-                    items={[
-                      { value: 'insuranceClaims', label: 'By Date' },
-                      {
-                        value: 'insuranceClaimsIdAsc',
-                        label: 'ID (Asc)'
-                      },
-                      {
-                        value: 'insuranceClaimsIdAsc',
-                        label: 'ID (Desc)'
-                      },
-                      {
-                        value: 'insuranceClaimsOrderAsc',
-                        label: 'Order ID (Asc)'
-                      },
-                      {
-                        value: 'insuranceClaimsOrderDesc',
-                        label: 'Order ID (Desc)'
-                      },
-                      {
-                        value: 'insuranceClaimAmountAsc',
-                        label: 'Claim Amount (Asc)'
-                      },
-                      {
-                        value: 'insuranceClaimAmountDesc',
-                        label: 'Claim Amount (Desc)'
+            indexName="insuranceClaims"
+            refresh>
+            <div className="flex flex-col w-full">
+              <div className={clsx(classes.header)}>
+                <div className="flex flex-row p-4 w-full justify-center">
+                  <Typography
+                    className="hidden sm:flex mx-0 sm:mx-12 uppercase"
+                    style={{ fontSize: '3rem', fontWeight: 600 }}
+                    variant="h6">
+                    INSURANCE CLAIMS
+                  </Typography>
+                </div>
+                <div className="flex pt-32 pb-16 pl-8 items-center">
+                  <div className="flex flex-col w-1/3 mt-0 px-12"></div>
+                  <div className="flex flex-col w-1/3 border-1 headerSearch">
+                    <SearchBox
+                      translations={{
+                        placeholder: 'Search for claims...'
+                      }}
+                      submit={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 18 18">
+                          <g
+                            fill="none"
+                            fillRule="evenodd"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.67"
+                            transform="translate(1 1)">
+                            <circle cx="7.11" cy="7.11" r="7.11" />
+                            <path d="M16 16l-3.87-3.87" />
+                          </g>
+                        </svg>
                       }
-                      // ,
-                      // {
-                      //   value: 'customersLastExam',
-                      //   label: 'Last Exam (Asc)'
-                      // },
-                      // {
-                      //   value: 'customersLastExamDesc',
-                      //   label: 'Last Exam (Desc)'
-                      // }
+                      reset={false}
+                    />
+                  </div>
+                  <div className="flex flex-row w-1/3 justify-around items-center">
+                    <div className="flex flex-col w-1/3 ">
+                      <div className="flex flex-row self-center items-center h-full flex-1">
+                        <h5>Sort:</h5>
+                        <SortBy
+                          className="w-full"
+                          defaultRefinement="insuranceClaims"
+                          items={[
+                            { value: 'insuranceClaims', label: 'By Date' },
+                            // { value: 'insuranceClaimsIdAsc', label: 'ID (Asc)' },
+                            // { value: 'insuranceClaimsIdAsc', label: 'ID (Desc)' },
+                            { value: 'insuranceClaimsOrderAsc', label: 'Order ID (Asc)' },
+                            { value: 'insuranceClaimsOrderDesc', label: 'Order ID (Desc)' },
+                            { value: 'insuranceClaimAmountAsc', label: 'Amount (Asc)' },
+                            { value: 'insuranceClaimAmountDesc', label: 'Amount (Desc)' }
+                          ]}
+                        />
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <TableContainer
+                stickyHeader
+                component={Paper}
+                className="flex flex-col w-full overflow-scroll">
+                <CustomHits payments={payments} props={props} />
+              </TableContainer>
+              <div className="flex flex-row justify-center">
+                <div className="flex flex-1"></div>
+                <div className="flex flex-1 justify-center mt-8"><Pagination /></div>
+                <div className="flex flex-1 justify-center mt-8">
+                  <HitsPerPage
+                    defaultRefinement={50}
+                    items={[
+                      { value: 50, label: 'Show 50' },
+                      { value: 100, label: 'Show 100' },
+                      { value: 200, label: 'Show 200' }
                     ]}
                   />
                 </div>
-                <div className="w-1/3"></div>
-              </div>
-            </div>
-            <TableContainer component={Paper} className="flex flex-col w-full">
-              <CustomHits payments={payments} props={props} />
-            </TableContainer>
-            <div className="flex flex-row justify-center">
-              <div className="flex flex-1"></div>
-              <div className="flex flex-1 justify-center mt-8">
-                <Pagination />
-              </div>
-              <div className="flex flex-1 justify-center mt-8">
-                <HitsPerPage
-                  defaultRefinement={50}
-                  items={[
-                    { value: 50, label: 'Show 50' },
-                    { value: 100, label: 'Show 100' },
-                    { value: 200, label: 'Show 200' }
-                  ]}
-                />
               </div>
             </div>
           </InstantSearch>

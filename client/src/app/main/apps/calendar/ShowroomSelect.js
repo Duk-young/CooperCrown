@@ -58,6 +58,7 @@ export default function ShowroomSelect({ setEvents, setCurrentShowroom }) {
 
             setEvents(filteredEvents);
             setCurrentShowroom(e?.target?.value)
+            setSelectedShowroom(e?.target?.value)
           }}
           autoWidth>
           {showRooms.map((row) => (
