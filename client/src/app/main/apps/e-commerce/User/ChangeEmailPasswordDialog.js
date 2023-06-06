@@ -27,9 +27,9 @@ const useStyles = makeStyles({
 const ChangeEmailPasswordDialog = (props) => {
 
     const dispatch = useDispatch();
-    const { open, handleClose, changeType, uid, setisLoading } = props;
+    const { open, handleClose, changeType, uid, setisLoading, mainForm, setMainForm } = props;
     const [emailErrors, setEmailErrors] = useState({});
-    const { form, handleChange } = useForm(null);
+    const { form, handleChange, setForm } = useForm(null);
     const [passwordErrors, setPasswordErrors] = useState({});
     const classes = useStyles();
 
@@ -51,16 +51,8 @@ const ChangeEmailPasswordDialog = (props) => {
         if (changeType === 'password') {
             const passwordErrs = {};
 
-            if (!form?.password) {
-                passwordErrs.oldPassword = "Please enter old password";
-            }
-
             if (!form?.newPassword) {
                 passwordErrs.newPassword = "Please enter new password";
-            }
-
-            if (form?.newPassword && form?.newPassword === form?.password) {
-                passwordErrs.newPassword = "old password cannot be used as new password";
             }
 
             if (form?.confrimPassword !== form?.newPassword) {
@@ -94,16 +86,30 @@ const ChangeEmailPasswordDialog = (props) => {
             setisLoading(true)
             const updateUserEmailPassword = firebaseService.functions.httpsCallable('updateUserEmailPassword');
             if (changeType === 'email') {
-                const userRecord = await updateUserEmailPassword({ uid, email: form?.newEmail })
-                await firebaseService.firestoreDb.collection('users').doc(userRecord.data.user.uid).update({ email: form?.newEmail })
+                const res = await updateUserEmailPassword({ uid, email: form?.newEmail })
+                console.log('formmmmm', res)
+                if (res?.data?.errorInfo) {
+                    dispatch(MessageActions.showMessage({ message: res?.data?.errorInfo?.message }));
+                    setisLoading(false)
+                    return 
+                }
+                await firebaseService.firestoreDb.collection('users').doc(uid).update({ email: form?.newEmail })
 
                 dispatch(MessageActions.showMessage({ message: 'Email changed successfully' }));
             } else if (changeType === 'password') {
-                await updateUserEmailPassword({ uid, password: form?.newPassword })
+                const res2 = await updateUserEmailPassword({ uid, password: form?.newPassword })
+                console.log('formmmmm', res2)
+                if (res2?.data?.errorInfo) {
+                    dispatch(MessageActions.showMessage({ message: res2?.data?.errorInfo?.message }));
+                    setisLoading(false)
+                    return 
+                }
 
                 dispatch(MessageActions.showMessage({ message: 'Password changed successfully' }));
             }
+            setMainForm({...mainForm, email: form?.newEmail})
             setisLoading(false)
+            handleClose()
 
         } catch (error) {
             dispatch(MessageActions.showMessage({ message: error.message }));
@@ -118,7 +124,10 @@ const ChangeEmailPasswordDialog = (props) => {
                 fullWidth
                 maxWidth="sm"
                 open={open}
-                onClose={handleClose}
+                onClose={() => {
+                    handleClose()
+                    setForm(null)
+                }}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description">
                 {changeType === 'email' && (

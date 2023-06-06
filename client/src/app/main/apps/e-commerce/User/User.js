@@ -301,7 +301,7 @@ function NewShowRoom(props) {
                 Change Email
               </Button>
               <Button
-                style={{ width: '190px'}}
+                style={{ width: '190px' }}
                 className={classes.button}
                 variant="contained"
                 color="secondary"
@@ -345,7 +345,8 @@ function NewShowRoom(props) {
                       <div className="flex flex-col justify-center p-16 sm:p-24 ">
                         <div className="flex flex-row p-6 mb-16 gap-10">
                           <div className="w-1/2">
-                          <ChangeEmailPasswordDialog open={open} handleClose={handleClose} changeType={changeType} uid={routeParams?.userId} setisLoading={setisLoading} />
+                            <ChangeEmailPasswordDialog open={open} handleClose={handleClose} changeType={changeType}
+                              uid={routeParams?.userId} setisLoading={setisLoading} mainForm={form} setMainForm={setForm} />
                             <FormControl variant='outlined' className='w-full' error={errors.showRoomId}>
                               <InputLabel id="demo-simple-select-outlined-label">Showroom</InputLabel>
                               <Select
