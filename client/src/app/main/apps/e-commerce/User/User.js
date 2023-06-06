@@ -30,6 +30,7 @@ import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import ChangeEmailPasswordDialog from './ChangeEmailPasswordDialog';
 
 const useStyles = makeStyles({
   table: {
@@ -38,6 +39,8 @@ const useStyles = makeStyles({
   button: {
     backgroundColor: '#f15a25',
     color: '#fff',
+    marginLeft: '4px',
+    marginRight: '4px',
     '&:hover': {
       backgroundColor: '#f47b51',
       color: '#fff'
@@ -54,6 +57,8 @@ function NewShowRoom(props) {
   const [errors, setErrors] = useState({});
   const [tabValue, setTabValue] = useState(0);
   const [isLoading, setisLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [changeType, setChangeType] = useState(null);
   const { form, handleChange, setForm } = useForm(null);
   const routeParams = useParams()
 
@@ -88,6 +93,8 @@ function NewShowRoom(props) {
   function handleChangeTab(event, value) {
     setTabValue(value);
   }
+
+  const handleClose = () => setOpen(false)
 
 
   const isFormValid = () => {
@@ -220,7 +227,7 @@ function NewShowRoom(props) {
       dispatch(MessageActions.showMessage({ message: 'User deleted successfully' }));
       setisLoading(false)
       props.history.push('/apps/e-commerce/users');
-      
+
     } catch (error) {
       dispatch(MessageActions.showMessage({ message: error.message }));
       console.log('Error while deleting a user is:', error)
@@ -266,13 +273,13 @@ function NewShowRoom(props) {
                   <img
                     className="w-32 sm:w-48 rounded"
                     src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={form.username}
+                    alt={''}
                   />
                 </FuseAnimate>
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                     <Typography className="text-16 sm:text-20 truncate">
-                      {form.username ? form.username : 'New User'}
+                      {form?.email ? form.email : 'New User'}
                     </Typography>
                   </FuseAnimate>
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
@@ -280,6 +287,30 @@ function NewShowRoom(props) {
                   </FuseAnimate>
                 </div>
               </div>
+            </div>
+            <div className='flex flex-row justify-between'>
+              <Button
+                style={{ width: '190px' }}
+                className={classes.button}
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  setChangeType('email')
+                  setOpen(true)
+                }}>
+                Change Email
+              </Button>
+              <Button
+                style={{ width: '190px' }}
+                className={classes.button}
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  setChangeType('password')
+                  setOpen(true)
+                }}>
+                Change Password
+              </Button>
             </div>
           </div>
         )
@@ -314,6 +345,8 @@ function NewShowRoom(props) {
                       <div className="flex flex-col justify-center p-16 sm:p-24 ">
                         <div className="flex flex-row p-6 mb-16 gap-10">
                           <div className="w-1/2">
+                            <ChangeEmailPasswordDialog open={open} handleClose={handleClose} changeType={changeType}
+                              uid={routeParams?.userId} setisLoading={setisLoading} mainForm={form} setMainForm={setForm} />
                             <FormControl variant='outlined' className='w-full' error={errors.showRoomId}>
                               <InputLabel id="demo-simple-select-outlined-label">Showroom</InputLabel>
                               <Select

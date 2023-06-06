@@ -1,7 +1,6 @@
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { firestore } from 'firebase';
 import algoliasearch from 'algoliasearch/lite';
-import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import FusePageSimple from '@fuse/core/FusePageSimple';
 import FuseLoading from '@fuse/core/FuseLoading';

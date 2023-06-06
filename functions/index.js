@@ -58,6 +58,25 @@ exports.deleteUser = functions.https.onCall((data, context) => {
       return err;
     });
 });
+exports.updateUserEmailPassword = functions.https.onCall((data, context) => {
+  if (data?.email) {
+    return admin.auth().updateUser(data?.uid, { email: data.email })
+      .then((res) => {
+        return res
+      })
+      .catch((err) => {
+        return err;
+      });
+  } else if (data?.password) {
+    return admin.auth().updateUser(data?.uid, { password: data.password })
+      .then((res) => {
+        return res
+      })
+      .catch((err) => {
+        return err;
+      });
+  }
+});
 exports.addStaffRole = functions.https.onCall((data, context) => {
   return admin
     .auth()
