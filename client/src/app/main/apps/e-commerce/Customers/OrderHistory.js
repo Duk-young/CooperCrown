@@ -150,7 +150,7 @@ const OrderHistory = (props) => {
                     <StyledTableCell component="th" scope="row">
                       <Link
                         to={`/apps/e-commerce/orders/vieworder/${row.orderId}`}>
-                        <h3 className="text-black">{row?.orderId}</h3>
+                        <h3 className="text-black">{row?.customOrderId}</h3>
                       </Link>
                     </StyledTableCell>
                     <StyledTableCell>
