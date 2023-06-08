@@ -37,6 +37,7 @@ import FrameColorPieChart from './FrameColorPieChart';
 import LensTypePieChart from './LensTypePieChart';
 import SalesRatioPieChart from './SalesRatioPieChart';
 import OrderTimesChart from './OrderTimesChart';
+import CustomData from './CustomData';
 
 const useStyles = makeStyles({
   flexGrow: {
@@ -62,6 +63,7 @@ function Reports() {
   const [filteredExams, setFilteredExams] = useState([]);
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const [showrooms, setShowrooms] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
 
@@ -120,6 +122,13 @@ function Reports() {
       });
       setExams(examsData)
       setFilteredExams(examsData)
+
+      const queryShowrooms = await firestore().collection('showRooms').get();
+      let showroomsData = [];
+      queryShowrooms.forEach((doc) => {
+        showroomsData.push(doc.data());
+      });
+      setShowrooms(showroomsData)
 
       setIsLoading(false)
     };
@@ -266,6 +275,9 @@ function Reports() {
           <FrameShapePieChart orders={filteredOrders} />
           <FrameColorPieChart orders={filteredOrders} />
         </div>
+      </div>
+      <div className='flex flex-row w-full'>
+        <CustomData orders={orders} customers={customers} showrooms={showrooms} exams ={exams}/>
       </div>
     </div>
   );

@@ -541,7 +541,7 @@ function Orders(props) {
                       }}
                       InputProps={{
                         inputProps: {
-                          style: { color: 'white' }
+                          style: { color: 'white', fontSize: '10px' }
                         }
                       }}
                       onChange={(e) => {
@@ -568,7 +568,7 @@ function Orders(props) {
                       }}
                       InputProps={{
                         inputProps: {
-                          style: { color: 'white' }
+                          style: { color: 'white', fontSize: '10px' }
                         }
                       }}
                       onChange={(e) => {

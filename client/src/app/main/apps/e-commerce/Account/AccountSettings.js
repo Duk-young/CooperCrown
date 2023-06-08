@@ -1,104 +1,81 @@
-import FuseAnimate from '@fuse/core/FuseAnimate';
-import FuseLoading from '@fuse/core/FuseLoading';
-import FusePageCarded from '@fuse/core/FusePageCarded';
-import { useForm, useDeepCompareEffect } from '@fuse/hooks';
-// import _ from '@lodash';
+import { firestore } from 'firebase';
+import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
+import { useForm } from '@fuse/hooks';
+import { useParams } from 'react-router-dom';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
-
-import Icon from '@material-ui/core/Icon';
-import { useTheme } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
+import clsx from 'clsx';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FuseLoading from '@fuse/core/FuseLoading/FuseLoading';
+import FusePageCarded from '@fuse/core/FusePageCarded';
+import MenuItem from '@material-ui/core/MenuItem';
+import React, { useEffect, useState } from 'react';
+import reducer from '../store/reducers';
+import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import * as Actions from '../store/actions';
-import reducer from '../store/reducers';
 
-// const useStyles = makeStyles((theme) => ({
-//   productImageFeaturedStar: {
-//     position: 'absolute',
-//     top: 0,
-//     right: 0,
-//     color: orange[400],
-//     opacity: 0
-//   },
-//   productImageUpload: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut
-//   },
-//   productImageItem: {
-//     transitionProperty: 'box-shadow',
-//     transitionDuration: theme.transitions.duration.short,
-//     transitionTimingFunction: theme.transitions.easing.easeInOut,
-//     '&:hover': {
-//       '& $productImageFeaturedStar': {
-//         opacity: 0.8
-//       }
-//     },
-//     '&.featured': {
-//       pointerEvents: 'none',
-//       boxShadow: theme.shadows[3],
-//       '& $productImageFeaturedStar': {
-//         opacity: 1
-//       },
-//       '&:hover $productImageFeaturedStar': {
-//         opacity: 1
-//       }
-//     }
-//   }
-// }));
+const useStyles = makeStyles((theme) => ({
+  header: {
+    minHeight: 160,
+    background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+    color: theme.palette.primary.contrastText,
+    backgroundSize: 'cover',
+    backgroundColor: theme.palette.primary.dark
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  }
+}));
 
 function AccountSettings(props) {
-  const dispatch = useDispatch();
-  const account = useSelector(({ eCommerceApp }) => eCommerceApp.account);
-  const theme = useTheme();
 
-  // const classes = useStyles(props);
-  const [tabValue, setTabValue] = useState(0);
+  const dispatch = useDispatch();
+  const routeParams = useParams();
+  const classes = useStyles(props);
   const [isLoading, setisLoading] = useState(false);
+  const [showrooms, setShowrooms] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
 
-  const routeParams = useParams();
-
-  useDeepCompareEffect(() => {
-    const updateAccountState = async () => {
-      setisLoading(false);
-      const { uid } = routeParams;
-      await dispatch(await Actions.getAccount(uid));
-      setisLoading(true);
-    };
-    updateAccountState();
-  }, [dispatch, routeParams]);
-
   useEffect(() => {
-    if (
-      (account.data && !form) ||
-      (account.data && form && account.data.id !== form.id)
-    ) {
-      setForm(account.data);
+    const fetchDetails = async () => {
+      setisLoading(true)
+
+      const queryUser = (await firestore().collection('users').doc(routeParams?.uid).get()).data()
+      setForm(queryUser)
+
+      let showroomData = [];
+      const queryShowrooms = await firestore()
+        .collection('showRooms')
+        .get();
+
+      queryShowrooms.forEach((doc) => {
+        showroomData.push(doc.data());
+      });
+      setShowrooms(showroomData);
+
+      setisLoading(false);
     }
-  }, [form, account.data, setForm]);
+    fetchDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  function handleChangeTab(event, value) {
-    setTabValue(value);
+  const onSubmit = async () => {
+    setisLoading(true)
+    await firestore().collection('users').doc(routeParams?.uid).update(form)
+    dispatch(MessageActions.showMessage({ message: 'User updated successfully' }));
+    setisLoading(false)
   }
 
-  function canBeSubmitted() {
-    return form.email && form.email.length > 0;
-  }
-
-  if (
-    (!account.data || (account.data && routeParams.uid !== account.data.id)) &&
-    routeParams.uid !== 'new' &&
-    !isLoading
-  ) {
-    return <FuseLoading />;
-  }
+  if (isLoading) return <FuseLoading />
 
   return (
     <FusePageCarded
@@ -108,155 +85,218 @@ function AccountSettings(props) {
       }}
       header={
         form && (
-          <div className="flex flex-1 w-full items-center justify-between">
-            <div className="flex flex-col items-start max-w-full">
-              <FuseAnimate animation="transition.slideRightIn" delay={300}>
+          <div className="flex flex-col w-full">
+            <div className={clsx(classes.header)}>
+              <div className="flex flex-col p-4 w-full justify-center items-center">
                 <Typography
-                  className="normal-case flex items-center sm:mb-12"
-                  component={Link}
-                  role="button"
-                  to="/"
-                  color="inherit">
-                  <Icon className="text-20">
-                    {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
-                  </Icon>
-                  <span className="mx-4">Home</span>
+                  className="hidden sm:flex mx-0 sm:mx-12 uppercase"
+                  style={{ fontSize: '3rem', fontWeight: 600 }}
+                  variant="h6">
+                  ACCOUNTS SETTING
                 </Typography>
-              </FuseAnimate>
-
-              <div className="flex items-center max-w-full">
-                <FuseAnimate animation="transition.expandIn" delay={300}>
-                  <img
-                    className="w-32 sm:w-48 rounded"
-                    src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={form.email}
-                  />
-                </FuseAnimate>
-                <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
-                  <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                    <Typography className="text-16 sm:text-20 truncate">
-                      {form.email ? form.email : 'Accounts'}
-                    </Typography>
-                  </FuseAnimate>
-                  <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                    <Typography variant="caption">Accounts Detail</Typography>
-                  </FuseAnimate>
+                <Typography
+                  className="hidden sm:flex mx-0 sm:mx-12"
+                  style={{ fontSize: '1.5rem', fontWeight: 600 }}
+                  variant="h6">
+                  {form?.email ?? ''}
+                </Typography>
+              </div>
+              <div className="flex pl-8 items-center">
+                <div className="flex flex-col w-1/3"></div>
+                <div className="flex flex-col w-1/3"></div>
+                <div className="flex flex-row w-1/3 justify-end mr-16 items-center">
+                  <div>
+                    <Button
+                      className={classes.button}
+                      onClick={onSubmit}
+                      variant="contained"
+                      color="secondary">
+                      <span className="hidden sm:flex">SAVE DETAILS</span>
+                      <span className="flex sm:hidden">SAVE</span>
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
-            <FuseAnimate animation="transition.slideRightIn" delay={300}>
-              <Button
-                className="whitespace-no-wrap normal-case"
-                variant="contained"
-                color="secondary"
-                disabled={!canBeSubmitted()}
-                onClick={async () => {
-                  setisLoading(false);
-                  await dispatch(await Actions.updateAccount(form));
-                  props.history.push('/');
-                  setisLoading(true);
-                }}>
-                Save
-              </Button>
-            </FuseAnimate>
           </div>
         )
-      }
-      contentToolbar={
-        <Tabs
-          value={tabValue}
-          onChange={handleChangeTab}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="auto"
-          classes={{ root: 'w-full h-64' }}>
-          <Tab className="h-64 normal-case" label="Accounts Setting" />
-        </Tabs>
       }
       content={
         form && (
           <div className="p-16 sm:p-24 ">
- <div className="flex flex-col h-260  px-16 py-6">
-
-            {tabValue === 0 && (
+            <div className="flex flex-col h-260  px-16 py-6">
 
               <div>
                 <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
-                      <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                        <h1 className="font-700" style={{ color: '#f15a25' }}>
-                          ACCOUNT INFO
-                        </h1>
+                  <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                    <h1 className="font-700" style={{ color: '#f15a25' }}>
+                      ACCOUNT INFO
+                    </h1>
+                  </div>
+                  <div>
+                    <div className="flex flex-col justify-center p-16 sm:p-24 ">
+                      <div className="flex flex-row p-6 mb-16 gap-10">
+                        <TextField
+                          className="w-1/2"
+                          required
+                          label="Showroom"
+                          id="showroom"
+                          disabled
+                          type="text"
+                          value={(showrooms?.length > 0 && showrooms.find(room => room.showRoomId === form?.showRoomId)?.locationName) ?? ''}
+                          variant="outlined"
+                        />
+                        <TextField
+                          className="w-1/2"
+                          required
+                          label="State"
+                          id="user-State"
+                          name="State"
+                          type="text"
+                          value={form?.State ?? ''}
+                          onChange={handleChange}
+                          variant="outlined"
+                        />
                       </div>
-                      <div className="flex flex-col justify-center p-16 sm:p-24 ">
-
-                <TextField
-                  className="mt-8 mb-16"
-                  error={form.email === ''}
-                  required
-                  label="Email"
-                  autoFocus
-                  id="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-
-                <TextField
-                  className="mt-8 mb-16"
-                  id="username"
-                  required
-                  name="username"
-                  onChange={handleChange}
-                  label="Username"
-                  type="text"
-                  value={form.username}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8 mb-16"
-                  required
-                  label="Language"
-                  type="text"
-                  id="language"
-                  name="language"
-                  value={form.language}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8 mb-16"
-                  required
-                  label="Time Zone"
-                  id="timeZone"
-                  type="text"
-                  name="timeZone"
-                  value={form.timeZone}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
-                <TextField
-                  className="mt-8 mb-16"
-                  required
-                  label="Other"
-                  id="other"
-                  type="text"
-                  name="other"
-                  value={form.other}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                />
+                      <div className="flex flex-row p-6 mb-16 gap-10">
+                        <TextField
+                          className="w-1/2"
+                          required
+                          label="First Name"
+                          id="user-fname"
+                          name="fname"
+                          type="text"
+                          value={form?.fname ?? ''}
+                          onChange={handleChange}
+                          variant="outlined"
+                          fullwidth
+                        />
+                        <TextField
+                          className="w-1/2"
+                          required
+                          label="Last Name"
+                          id="user-lname"
+                          name="lname"
+                          type="text"
+                          value={form?.lname ?? ''}
+                          onChange={handleChange}
+                          variant="outlined"
+                          fullwidth
+                        />
+                      </div>
+                      <div className="flex flex-row p-6 mb-16 gap-10">
+                        <TextField
+                          className="w-1/2"
+                          required
+                          id="user-address"
+                          name="address"
+                          onChange={handleChange}
+                          label="Address"
+                          type="address"
+                          value={form?.address ?? ''}
+                          variant="outlined"
+                          fullwidth
+                        />
+                        <TextField
+                          className="w-1/2"
+                          required
+                          label="City"
+                          id="user-city"
+                          name="city"
+                          type="text"
+                          value={form?.city ?? ''}
+                          onChange={handleChange}
+                          variant="outlined"
+                          fullwidth
+                        />
+                      </div>
+                      <div className="flex flex-row p-6 mb-16 gap-10">
+                        <div className="flex flex-row flex-wrap w-1/2">
+                          <TextField
+                            id="date"
+                            required
+                            label="Date Of Birth"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                            value={form?.dob ?? ''}
+                            variant='outlined'
+                            fullWidth
+                            onChange={(e) => {
+                              handleChange({
+                                target: {
+                                  name: 'dob',
+                                  value: e.target.value
+                                }
+                              });
+                            }}
+                          />
+                        </div>
+                        <FormControl className="w-1/2">
+                          <FormHelperText>Gender</FormHelperText>
+                          <Select
+                            labelId="demo-simple-select-autowidth-label"
+                            id="user-Gender"
+                            value={form?.Gender ?? ''}
+                            name="Gender"
+                            onChange={handleChange}
+                            autoWidth>
+                            <MenuItem value={'Male'}>Male</MenuItem>
+                            <MenuItem value={'Female'}>Female</MenuItem>
+                            <MenuItem value={'Other'}>Other</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </div>
+                      <div className="flex flex-row p-6 mb-16 gap-10">
+                        <TextField
+                          className="w-1/2"
+                          required
+                          label="Phone 1"
+                          id="user-phone1"
+                          name="phone1"
+                          type="phone"
+                          value={form?.phone1 ?? ''}
+                          onChange={handleChange}
+                          variant="outlined"
+                        />
+                        <TextField
+                          className="w-1/2"
+                          required
+                          label="Zip Code"
+                          id="user-zipcode"
+                          name="zipcode"
+                          type="Number"
+                          value={form?.zipcode ?? ''}
+                          onChange={handleChange}
+                          variant="outlined"
+                        />
+                      </div>
+                      <div className="flex flex-row p-6 mb-16 gap-10">
+                        <TextField
+                          className="w-1/2"
+                          label="Phone 2"
+                          id="user-phone2"
+                          name="phone2"
+                          type="phone"
+                          value={form?.phone2 ?? ''}
+                          onChange={handleChange}
+                          variant="outlined"
+                        />
+                        <TextField
+                          className="w-1/2"
+                          label="Other"
+                          id="user-other"
+                          name="other"
+                          type="text"
+                          value={form?.other ?? ''}
+                          onChange={handleChange}
+                          variant="outlined"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              </div>
-              </div>
-            )}
-          </div>
+            </div>
           </div>
         )
       }

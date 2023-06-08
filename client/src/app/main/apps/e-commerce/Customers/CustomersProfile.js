@@ -462,11 +462,18 @@ const CustomerProfile = (props) => {
                         .sort((a, b) => (a.customerId > b.customerId ? -1 : 1))
                         .map((row) => (
                           <StyledTableRow
+                            className=' cursor-pointer'
                             key={row.customerId}
                             style={{ height: 10 }}>
-                            <StyledTableCell>{row?.customerId}</StyledTableCell>
-                            <StyledTableCell>{row?.firstName}</StyledTableCell>
-                            <StyledTableCell>{row?.lastName}</StyledTableCell>
+                            <StyledTableCell onClick={() => props.history.push(`/apps/e-commerce/customers/profile/${row?.customerId}`)}>
+                              {row?.customerId}
+                            </StyledTableCell>
+                            <StyledTableCell onClick={() => props.history.push(`/apps/e-commerce/customers/profile/${row?.customerId}`)}>
+                              {row?.firstName}
+                            </StyledTableCell>
+                            <StyledTableCell onClick={() => props.history.push(`/apps/e-commerce/customers/profile/${row?.customerId}`)}>
+                              {row?.lastName}
+                            </StyledTableCell>
                             <StyledTableCell>
                               {moment(row.dob.toDate()).format('MM/DD/YYYY')}
                             </StyledTableCell>
