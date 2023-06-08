@@ -32,64 +32,66 @@ const Sketch = (props) => {
 
   return (
     <div>
-        <div className="relative">
-          <div className="flex flex-row justify-around">
-            <div className="flex-1 flex flex-row ">
-              <FormControl className="ml-32 ">
-                <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="ethnicityId"
-                  defaultValue={selectedColour}
-                  value={selectedColour}
-                  onChange={(e) => {
-                    setSelectedColour(e.target.value);
-                  }}
-                  autoWidth>
-                  <MenuItem value={'Black'}>Black</MenuItem>
-                  <MenuItem value={'Red'}>Red</MenuItem>
-                  <MenuItem value={'Green'}>Green</MenuItem>
-                  <MenuItem value={'Blue'}>Blue</MenuItem>
-                </Select>
-                <FormHelperText>Color</FormHelperText>
-              </FormControl>
-            </div>
-            <div className="flex-1 flex flex-row ">
-              <TextField
-                className="ml-4"
-                size="small"
-                id="outlined-multiline-static"
-                label="Brush Radius"
-                value={form?.brushRadius || 1}
+      <div className="relative">
+        <div className="flex flex-row justify-around">
+          <div className="flex-1 flex flex-row ">
+            <FormControl className="ml-32 ">
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="ethnicityId"
+                defaultValue={selectedColour}
+                value={selectedColour}
                 onChange={(e) => {
-                  setForm({ ...form, brushRadius: e.target.value });
+                  setSelectedColour(e.target.value);
                 }}
-                name={'brushRadius'}
-                variant="outlined"
-                type="number"
-              />
-            </div>
+                autoWidth>
+                <MenuItem value={'Black'}>Black</MenuItem>
+                <MenuItem value={'Red'}>Red</MenuItem>
+                <MenuItem value={'Green'}>Green</MenuItem>
+                <MenuItem value={'Blue'}>Blue</MenuItem>
+              </Select>
+              <FormHelperText>Color</FormHelperText>
+            </FormControl>
           </div>
-          <CanvasDraw
-            ref={(canvasDraw) => setSaveableCanvas(canvasDraw)}
-            imgSrc={Capture}
-            brushRadius={form?.brushRadius ? form?.brushRadius : 1}
-            brushColor={selectedColour}
-            onChange={() => {
-              setForm({ ...form, sketch: saveableCanvas.getSaveData() });
-            }}
-            lazyRadius="0"
-            disabled={disabledState}
-          />
-          <Fab
-            onClick={() => {
-              saveableCanvas.eraseAll();
-            }}
-            color="secondary"
-            disabled={disabledState}
-            className={classes.fab}>
-            Reset
-          </Fab>
+          <div className="flex-1 flex flex-row ">
+            <TextField
+              className="ml-4"
+              size="small"
+              id="outlined-multiline-static"
+              label="Brush Radius"
+              value={form?.brushRadius || 1}
+              onChange={(e) => {
+                setForm({ ...form, brushRadius: e.target.value });
+              }}
+              name={'brushRadius'}
+              variant="outlined"
+              type="number"
+            />
+          </div>
         </div>
+        <CanvasDraw
+          ref={(canvasDraw) => setSaveableCanvas(canvasDraw)}
+          imgSrc={Capture}
+          brushRadius={form?.brushRadius ? form?.brushRadius : 1}
+          brushColor={selectedColour}
+          onChange={() => {
+            setForm({ ...form, sketch: saveableCanvas.getSaveData() });
+          }}
+          lazyRadius="0"
+          disabled={disabledState}
+          canvasWidth={750}
+          canvasHeight={400}
+        />
+        <Fab
+          onClick={() => {
+            saveableCanvas.eraseAll();
+          }}
+          color="secondary"
+          disabled={disabledState}
+          className={classes.fab}>
+          Reset
+        </Fab>
+      </div>
     </div>
   );
 };

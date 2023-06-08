@@ -206,12 +206,11 @@ function Customers(props) {
                 <div className="flex pt-32 pb-16 pl-8 items-center">
                   <div className="flex flex-col w-1/3 mt-0 px-12">
                     <div className="flex flex-row justify-around gap-8">
-                      <div className="date-picker w-full flex gap-10">
+                      <div className="w-full flex gap-10">
                         <StyledDatePicker
                           id="date"
                           label="Start Date"
                           type="date"
-                          defaultValue={form?.start} // Update with info from customer
                           value={form?.start}
                           variant="outlined"
                           style={{ border: 'none' }}
@@ -221,7 +220,7 @@ function Customers(props) {
                           }}
                           InputProps={{
                             inputProps: {
-                              style: { color: 'white' }
+                              style: { color: 'white', fontSize: '10px' }
                             }
                           }}
                           onChange={(e) => {
@@ -239,7 +238,6 @@ function Customers(props) {
                           id="date"
                           label="End Date"
                           type="date"
-                          defaultValue={form?.end} // Update with info from customer
                           value={form?.end}
                           variant="outlined"
                           style={{ border: 'none' }}
@@ -249,7 +247,7 @@ function Customers(props) {
                           }}
                           InputProps={{
                             inputProps: {
-                              style: { color: 'white' }
+                              style: { color: 'white', fontSize: '10px' }
                             }
                           }}
                           onChange={(e) => {
