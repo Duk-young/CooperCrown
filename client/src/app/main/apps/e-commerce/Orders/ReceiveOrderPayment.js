@@ -37,7 +37,11 @@ export default function ReceiveOrderPayment(props) {
     editablePayment,
     setPayments,
     setEditablePayment,
-    orderId
+    orderId,
+    customOrderId,
+    firstName,
+    lastName,
+    locationName
   } = props;
   const classes = useStyles();
   const { form, handleChange, setForm } = useForm(null);
@@ -62,7 +66,7 @@ export default function ReceiveOrderPayment(props) {
         let resultEditPayment = queryEditPayment.docs[0].data();
         resultEditPayment.id = queryEditPayment.docs[0].id;
 
-        const ref = await firestore()
+        const ref = firestore()
           .collection('orderPayments')
           .doc(resultEditPayment.id);
         await ref.set(form);
@@ -92,7 +96,11 @@ export default function ReceiveOrderPayment(props) {
             ...form,
             paymentDate: firestore.Timestamp.fromDate(new Date()),
             orderPaymentId: dbConfig?.orderPaymentId + 1,
-            orderId: orderId
+            orderId: orderId,
+            customOrderId,
+            firstName,
+            lastName,
+            locationName
           });
 
         await firestore()

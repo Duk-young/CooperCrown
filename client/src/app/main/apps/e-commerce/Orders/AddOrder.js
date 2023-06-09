@@ -256,12 +256,14 @@ function AddOrder(props) {
               insuranceClaimId: dbConfig?.insuranceClaimId + 1,
               orderId: dbConfig?.orderId + 1,
               customerId: customer?.customerId,
-              firstName: customer?.firstName,
-              lastName: customer?.lastName,
+              firstName: customer?.firstName ?? '',
+              lastName: customer?.lastName ?? '',
               insuranceCompany: insuranceComp1?.insuranceCompany,
               policyNo: insuranceComp1?.policyNo,
               insuranceCost: Number(form?.insuranceCostOne),
-              claimStatus: 'Unclaimed'
+              claimStatus: 'Unclaimed',
+              customOrderId: orders.length > 0 ? moment(new Date()).format('YYMMDD') +
+                _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
             });
 
           if (form?.insuranceCostTwo > 0) {
@@ -274,12 +276,14 @@ function AddOrder(props) {
                 insuranceClaimId: dbConfig?.insuranceClaimId + 2,
                 orderId: dbConfig?.orderId + 1,
                 customerId: customer?.customerId,
-                firstName: customer?.firstName,
-                lastName: customer?.lastName,
+                firstName: customer?.firstName ?? '',
+                lastName: customer?.lastName ?? '',
                 insuranceCompany: insuranceComp2?.insuranceCompany,
                 policyNo: insuranceComp2?.policyNo,
                 insuranceCost: Number(form?.insuranceCostTwo),
-                claimStatus: 'Unclaimed'
+                claimStatus: 'Unclaimed',
+                customOrderId: orders.length > 0 ? moment(new Date()).format('YYMMDD') +
+                _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
               });
           }
         }
@@ -1104,6 +1108,10 @@ function AddOrder(props) {
                             editablePayment={editablePayment}
                             setEditablePayment={setEditablePayment}
                             orderId={routeParams?.orderId}
+                            customOrderId={form?.customOrderId}
+                            firstName={customer?.firstName}
+                            lastName={customer?.lastName}
+                            locationName={form?.locationName}
                           />
                           {routeParams?.orderId && (
                             <div className="p-10">
@@ -1221,15 +1229,43 @@ function AddOrder(props) {
                   )}
                   {disabledState === false && (
                     <Button
-                    className={classes.button}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      if (form?.locationName) { onSubmit() }
-                      else {
-                        toast.error(
-                          'Showroom is mandatory.',
-                          {
+                      className={classes.button}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        if (form?.locationName) { onSubmit() }
+                        else {
+                          toast.error(
+                            'Showroom is mandatory.',
+                            {
+                              position: 'top-center',
+                              autoClose: 5000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              transition: Zoom
+                            }
+                          );
+                        }
+                      }}
+                      aria-label="add">
+                      {routeParams?.customerId === 'new'
+                        ? 'Submit Order'
+                        : 'SAVE'}
+                    </Button>
+                  )}
+                  {disabledState === true && (
+                    <Button
+                      className={classes.button}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        if (userData.userRole === 'admin' || userData?.ordersEdit) {
+                          setDisabledState(false)
+                        } else {
+                          toast.error('You are not authorized', {
                             position: 'top-center',
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -1238,40 +1274,12 @@ function AddOrder(props) {
                             draggable: true,
                             progress: undefined,
                             transition: Zoom
-                          }
-                        );
-                      }
-                    }}
-                    aria-label="add">
-                    {routeParams?.customerId === 'new'
-                      ? 'Submit Order'
-                      : 'SAVE'}
-                  </Button>
-                  )}
-                  {disabledState === true && (
-                    <Button
-                    className={classes.button}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      if (userData.userRole === 'admin' || userData?.ordersEdit) {
-                        setDisabledState(false)
-                      }else {
-                        toast.error('You are not authorized', {
-                          position: 'top-center',
-                          autoClose: 5000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          transition: Zoom
-                        });
-                      }
-                    }}
-                    aria-label="add">
-                    EDIT
-                  </Button>
+                          });
+                        }
+                      }}
+                      aria-label="add">
+                      EDIT
+                    </Button>
                   )}
 
                   {routeParams?.orderId && (
@@ -1297,7 +1305,7 @@ function AddOrder(props) {
                             } else {
                               setOpenDelete(true);
                             }
-                          }else {
+                          } else {
                             toast.error('You are not authorized', {
                               position: 'top-center',
                               autoClose: 5000,
@@ -1309,7 +1317,7 @@ function AddOrder(props) {
                               transition: Zoom
                             });
                           }
-                          
+
                         }}>
                         delete
                       </Button>

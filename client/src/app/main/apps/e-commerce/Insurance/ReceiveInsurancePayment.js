@@ -90,7 +90,11 @@ export default function ReceiveInsurancePayment(props) {
             ...form,
             paymentDate: firestore.Timestamp.fromDate(new Date()),
             insurancePaymentId: dbConfig?.insurancePaymentId + 1,
-            insuranceClaimId: claim?.insuranceClaimId
+            insuranceClaimId: claim?.insuranceClaimId,
+            firstName: claim?.firstName,
+            lastName: claim?.lastName,
+            locationName: claim?.locationName,
+            customOrderId: claim?.customOrderId
           });
 
         await firestore()

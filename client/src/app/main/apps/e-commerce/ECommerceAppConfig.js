@@ -19,6 +19,10 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Emails/EmailFilters'))
     },
     {
+      path: '/apps/e-commerce/paymentreport',
+      component: React.lazy(() => import('./PaymentReport/PaymentReport'))
+    },
+    {
       path: '/apps/e-commerce/insurances/viewclaim/:insuranceClaimId',
       component: React.lazy(() => import('./Insurance/InsuranceClaim'))
     },
