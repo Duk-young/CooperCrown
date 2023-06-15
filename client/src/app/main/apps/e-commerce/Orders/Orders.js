@@ -65,6 +65,11 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#f47b51',
       color: '#fff'
     }
+  },
+  root: {
+    '& .MuiTab-root': {
+      minWidth: '100px'
+    }
   }
 }));
 
@@ -513,7 +518,7 @@ function Orders(props) {
                         wrapped
                         label={status.label.toUpperCase()}
                         style={{
-                          // minWidth: '100px',
+                          maxWidth: '100px',
                           fontSize: '1.2rem'
                         }}
                         {...a11yProps(status.value)}
@@ -646,7 +651,7 @@ function Orders(props) {
                       className={classes.button}
                       variant="contained"
                       color="secondary">
-                      <span className="hidden sm:flex">+ Add New</span>
+                      <span className="hidden sm:flex">Add New</span>
                       <span className="flex sm:hidden">New</span>
                     </Button>
                   </FuseAnimate>
@@ -677,10 +682,10 @@ function Orders(props) {
                 <div className="flex-1 justify-center mt-8"><Pagination /></div>
                 <div className="flex-1"></div>
               </div>
-              {value === 3 && (
-                <div className="flex justify-end mt-8 pr-20">
+              <div className='flex flex-row justify-end gap-10 px-10'>
+              {value === 7 && (
                   <Button
-                    className={`whitespace-no-wrap mt-42 uppercase ${selected.length === 0 && 'opacity-75'
+                    className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
                       }`}
                     style={{
                       backgroundColor: '#222',
@@ -688,7 +693,7 @@ function Orders(props) {
                     }}
                     variant="contained"
                     color="secondary"
-                    disabled={selected.length === 0}
+                    disabled={selected.length === 0 || selected.length > 1}
                     onClick={() => {
                       props.history.push(
                         `/apps/e-commerce/orders/redoorder/${selected[0]}`
@@ -696,14 +701,46 @@ function Orders(props) {
                     }}>
                     REDO
                   </Button>
-                </div>
               )}
-              {value !== 0 &&
+              {value === 3 && (
+                  <Button
+                    className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
+                      }`}
+                    style={{
+                      backgroundColor: '#222',
+                      color: '#FFF'
+                    }}
+                    variant="contained"
+                    color="secondary"
+                    disabled={selected.length === 0 || selected.length > 1}
+                    onClick={() => {
+                      updateStatus(selected, statuses[5].label)
+                    }}>
+                    TO SHOWROOM
+                  </Button>
+              )}
+              {value === 4 && (
+                  <Button
+                    className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
+                      }`}
+                    style={{
+                      backgroundColor: '#222',
+                      color: '#FFF'
+                    }}
+                    variant="contained"
+                    color="secondary"
+                    disabled={selected.length === 0 || selected.length > 1}
+                    onClick={() => {
+                      updateStatus(selected, statuses[3].label)
+                    }}>
+                    IN PROGRESS
+                  </Button>
+              )}
+              {(value !== 0 && value !== 4 && value !== 8) &&
                 !isDataEmpty &&
                 value === statuses[value].value && (
-                  <div className="flex justify-end mt-8 pr-20">
                     <Button
-                      className={`whitespace-no-wrap mt-42 uppercase ${selected.length === 0 && 'opacity-75'
+                      className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
                         }`}
                       style={{
                         backgroundColor: '#222',
@@ -711,7 +748,7 @@ function Orders(props) {
                       }}
                       // className={classes.button}
                       variant="contained"
-                      disabled={selected.length === 0}
+                      disabled={selected.length === 0 || selected.length > 1}
                       color="secondary"
                       onClick={() => {
                         updateStatus(selected, statuses[value + 1].label)
@@ -722,9 +759,8 @@ function Orders(props) {
                           : null}
                       </span>
                     </Button>
-                    <button></button>
-                  </div>
                 )}
+              </div>
             </InstantSearch>
           </TableContainer>
         </div>

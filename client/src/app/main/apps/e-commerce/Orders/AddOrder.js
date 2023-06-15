@@ -50,6 +50,7 @@ import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import ThermalReceipt from './ThermalReceipt';
 import OrderTicket from './OrderTicket';
+import PickupReceipt from './OrderComponents/PickupReceipt';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -121,6 +122,7 @@ function AddOrder(props) {
   const [openDelete, setOpenDelete] = useState(false);
   const [openThermalReceipt, setOpenThermalReceipt] = useState(false);
   const [openOrderTicket, setOpenOrderTicket] = useState(false);
+  const [openPickupReceipt, setOpenPickupReceipt] = useState(false);
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   const classes = useStyles();
@@ -150,6 +152,9 @@ function AddOrder(props) {
 
   const handleOrderTicketClose = () => {
     setOpenOrderTicket(false);
+  };
+  const handlePickupReceiptClose = () => {
+    setOpenPickupReceipt(false);
   };
 
   const onSubmit = async () => {
@@ -283,7 +288,7 @@ function AddOrder(props) {
                 insuranceCost: Number(form?.insuranceCostTwo),
                 claimStatus: 'Unclaimed',
                 customOrderId: orders.length > 0 ? moment(new Date()).format('YYMMDD') +
-                _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
+                  _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
               });
           }
         }
@@ -633,7 +638,7 @@ function AddOrder(props) {
                   : 'NEW ORDER'}
               </Typography>
             </div>
-            <div className="order-header-content flex justify-between items-center p-16 sm:p-24">
+            <div className="order-header-content flex justify-between items-center p-2">
               <div className="date-picker w-1/3 flex gap-10">
                 <TextField
                   id="date"
@@ -691,44 +696,95 @@ function AddOrder(props) {
                 )}
               </div>
               {routeParams.orderId && (
-                <div className="CTAs flex gap-10 w-1/3 justify-end">
-                  <Button
-                    style={{
-                      backgroundColor: '#000',
-                      color: '#fff',
-                      width: 'unset'
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      setOpenOrderReceipt(true);
-                    }}>
-                    PRINT TICKET
-                  </Button>
-                  <Button
-                    className="w-0"
-                    style={{
-                      backgroundColor: '#f15a25',
-                      color: '#fff',
-                      width: 'unset'
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => { setOpenThermalReceipt(true) }}>
-                    Thermal Receipt
-                  </Button>
-                  <Button
-                    className="w-0"
-                    style={{
-                      backgroundColor: '#f15a25',
-                      color: '#fff',
-                      width: 'unset'
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => { setOpenOrderTicket(true) }}>
-                    Order Ticket
-                  </Button>
+                <div className='flex flex-col w-1/3'>
+                  <FormControl className='w-2/3' variant="outlined">
+                    <InputLabel id="demo-simple-select-autowidth-label" color='white'>
+                      Select an option:
+                    </InputLabel>
+                    <Select
+                      disabled={!disabledState}
+                      labelId="demo-simple-select-autowidth-label"
+                      onChange={(e) => {
+                        switch (e.target.value) {
+                          case 1:
+                            setOpenOrderReceipt(true)
+                            break;
+                          case 2:
+                            setOpenThermalReceipt(true)
+                            break;
+                          case 3:
+                            setOpenOrderTicket(true)
+                            break;
+                          case 4:
+                            setOpenPickupReceipt(true)
+                            break;
+
+                          default:
+                            break;
+                        }
+                      }}>
+                      <MenuItem value={1}>{'Print Letter Ticket'}</MenuItem>
+                      <MenuItem value={2}>{'Print Thermal Receipt'}</MenuItem>
+                      <MenuItem value={3}>{'Print Order Ticket'}</MenuItem>
+                      <MenuItem value={4} disabled={form?.orderStatus !== 'pick up ready' && form?.orderStatus !== 'completed'}>{'Order Pickup'}</MenuItem>
+
+                    </Select>
+                  </FormControl>
+
+                  {/* <div className="CTAs flex gap-10 w-full justify-end">
+                    <Button
+                      className="w-0"
+                      style={{
+                        backgroundColor: '#f15a25',
+                        color: '#fff',
+                        width: '190px'
+                      }}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => { setOpenThermalReceipt(true) }}>
+                      Thermal
+                    </Button>
+                    <Button
+                      className="w-0"
+                      style={{
+                        backgroundColor: '#f15a25',
+                        color: '#fff',
+                        width: '190px'
+                      }}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => { setOpenOrderTicket(true) }}>
+                      Order
+                    </Button>
+                  </div>
+                  <div className="CTAs flex gap-10 w-full justify-end pt-8">
+                    <Button
+                      className="w-0"
+                      style={{
+                        backgroundColor: '#f15a25',
+                        color: '#fff',
+                        width: '190px'
+                      }}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        setOpenOrderReceipt(true);
+                      }}>
+                      PRINT
+                    </Button>
+                    <Button
+                      className="w-0"
+                      style={{
+                        backgroundColor: '#f15a25',
+                        color: '#fff',
+                        width: '190px'
+                      }}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => { setOpenThermalReceipt(true) }}>
+                      Thermal
+                    </Button>
+                  </div> */}
                 </div>
               )}
             </div>
@@ -1186,9 +1242,7 @@ function AddOrder(props) {
                               <OrderReceipt
                                 mainForm={form}
                                 open={openOrderReceipt}
-                                handleClose={
-                                  handleOrderReceiptClose
-                                }
+                                handleClose={handleOrderReceiptClose}
                                 eyeglasses={eyeglasses}
                                 contactLenses={contactLenses}
                                 medication={medication}
@@ -1200,9 +1254,7 @@ function AddOrder(props) {
                               <ThermalReceipt
                                 mainForm={form}
                                 open={openThermalReceipt}
-                                handleClose={
-                                  handleThermalReceiptClose
-                                }
+                                handleClose={handleThermalReceiptClose}
                                 eyeglasses={eyeglasses}
                                 contactLenses={contactLenses}
                                 medication={medication}
@@ -1215,9 +1267,15 @@ function AddOrder(props) {
                                 mainForm={form}
                                 customer={customer}
                                 open={openOrderTicket}
-                                handleClose={
-                                  handleOrderTicketClose
-                                }
+                                handleClose={handleOrderTicketClose}
+                                eyeglasses={eyeglasses}
+                                contactLenses={contactLenses}
+                              />
+                              <PickupReceipt
+                                mainForm={form}
+                                setMainForm={setForm}
+                                open={openPickupReceipt}
+                                handleClose={handlePickupReceiptClose}
                                 eyeglasses={eyeglasses}
                                 contactLenses={contactLenses}
                               />

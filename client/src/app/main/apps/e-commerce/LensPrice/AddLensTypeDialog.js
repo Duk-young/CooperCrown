@@ -31,132 +31,15 @@ export default function AddLensTypeDialog(props) {
   const { form, handleChange } = useForm(null);
   const dispatch = useDispatch();
 
-  const newTable = [
-    {
-      id: 10
-    },
-    {
-      id: 9.75
-    },
-    {
-      id: 9.5
-    },
-    {
-      id: 9.25
-    },
-    {
-      id: 9
-    },
-    {
-      id: 8.75
-    },
-    {
-      id: 8.5
-    },
-    {
-      id: 8.25
-    },
-    {
-      id: 8
-    },
-    {
-      id: 7.75
-    },
-    {
-      id: 7.5
-    },
-    {
-      id: 7.25
-    },
-    {
-      id: 7
-    },
-    {
-      id: 6.75
-    },
-    {
-      id: 6.5
-    },
-    {
-      id: 6.25
-    },
-    {
-      id: 6
-    },
-    {
-      id: 5.75
-    },
-    {
-      id: 5.5
-    },
-    {
-      id: 5.25
-    },
-    {
-      id: 5
-    },
-    {
-      id: 4.75
-    },
-    {
-      id: 4.5
-    },
-    {
-      id: 4.25
-    },
-    {
-      id: 4
-    },
-    {
-      id: 3.75
-    },
-    {
-      id: 3.5
-    },
-    {
-      id: 3.25
-    },
-    {
-      id: 3
-    },
-    {
-      id: 2.75
-    },
-    {
-      id: 2.5
-    },
-    {
-      id: 2.25
-    },
-    {
-      id: 2
-    },
-    {
-      id: 1.75
-    },
-    {
-      id: 1.5
-    },
-    {
-      id: 1.25
-    },
-    {
-      id: 1
-    },
-    {
-      id: 0.75
-    },
-    {
-      id: 0.5
-    },
-    {
-      id: 0.25
-    },
-    {
-      id: 0
-    }
-  ];
+  const generateNewTableValues = () => {
+    let newTable = [];
 
+for (let i = -15; i <= 15; i += 0.25) {
+  newTable.push({ id: i.toFixed(2) });
+}
+
+return newTable
+  }
   const onSubmit = async () => {
     try {
       await firestore()
@@ -165,7 +48,7 @@ export default function AddLensTypeDialog(props) {
         .update({ [form?.lensType]: {
           prismPrice: form?.prismPrice,
           outOfRangePrice: form?.outOfRangePrice,
-          rows: newTable
+          rows: generateNewTableValues()
         } });
 
       handleClose();

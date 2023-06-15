@@ -1,13 +1,7 @@
 import { firestore } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
-import { validateAgeRange, uniqueElements } from './helper'
-import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
-import EmailFilters from './EmailFilters';
-import emailjs from 'emailjs-com';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import React, { useState, useEffect } from 'react';
@@ -31,108 +25,11 @@ const useStyles = makeStyles({
   }
 });
 
-function EmailTemplates(props) {
+function EmailTemplates() {
+
+  const classes = useStyles();
   const { form, handleChange, setForm } = useForm(null);
   const [disabledState, setDisabledState] = useState(true);
-  const [customers, setCustomers] = useState([]);
-  const [openFilters, setOpenFilters] = useState(false)
-
-  const dispatch = useDispatch();
-  const classes = useStyles();
-
-  const selectedFilters = useSelector(
-    ({ eCommerceApp }) => eCommerceApp.emails.selectedFilters
-  );
-
-  const handleFilter = () => {
-    let modifiedCustomers = [];
-    let isFilterFilled = false
-
-    if (selectedFilters.ageRange && selectedFilters.ageRange.length !== 0) {
-      isFilterFilled = true
-
-      const data = validateAgeRange(selectedFilters, customers);
-
-      modifiedCustomers = [...modifiedCustomers, ...data]
-    }
-
-    if (selectedFilters.stateAddress && selectedFilters.stateAddress.length !== 0) {
-      isFilterFilled = true
-      selectedFilters.stateAddress.forEach(filter => {
-        let filteredCustomers = customers.filter(customer => filter.includes(customer?.state))
-        modifiedCustomers = [...modifiedCustomers, ...filteredCustomers]
-      });
-    }
-
-    if (selectedFilters.gender && selectedFilters.gender.length !== 0) {
-      isFilterFilled = true
-      selectedFilters.gender.forEach(filter => {
-        let filteredCustomers = customers.filter(customer => customer?.gender === filter)
-        modifiedCustomers = [...modifiedCustomers, ...filteredCustomers]
-      });
-    }
-
-    if (selectedFilters.ethnicity && selectedFilters.ethnicity.length !== 0) {
-      isFilterFilled = true
-      selectedFilters.ethnicity.forEach(filter => {
-        let filteredCustomers = customers.filter(customer => customer?.ethnicity === filter)
-        modifiedCustomers = [...modifiedCustomers, ...filteredCustomers]
-      });
-    }
-
-    if (selectedFilters.zipCode && selectedFilters.zipCode !== "") {
-      isFilterFilled = true
-      let filteredCustomers = customers.filter(customer => customer?.zipCode === selectedFilters.zipCode)
-      modifiedCustomers = [...modifiedCustomers, ...filteredCustomers]
-    }
-
-    return { modifiedCustomers, isFilterFilled };
-  }
-
-  const sendNotificationEmail = (customers) => {
-    customers.map((row) => {
-      if (row?.email) {
-        emailjs
-          .send(
-            'service_yul7h3c',
-            'template_k68omtc',
-            {
-              name: `${row?.firstName} ${row?.lastName}`,
-              from_name: 'Cooper Crown',
-              message: form?.specialMessage,
-              receiver: row?.email
-            },
-            'bYFxhbkbmnFQsUvjC'
-          )
-          .then((error) => {
-            console.log(error);
-          });
-      }
-      return null;
-    });
-    dispatch(
-      MessageActions.showMessage({
-        message: 'Emails Sent Successfully!'
-      })
-    );
-  }
-
-  const sendEventEmail = async () => {
-    const { modifiedCustomers, isFilterFilled } = handleFilter();
-    const uniqueCustomers = uniqueElements(modifiedCustomers);
-
-    if (isFilterFilled) {
-      return dispatch(
-        MessageActions.showMessage({
-          message: 'No Data Returned for Filtered Options'
-        })
-      );
-    } else if (!isFilterFilled) {
-      return sendNotificationEmail(customers)
-    } else {
-      return sendNotificationEmail(uniqueCustomers)
-    }
-  };
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -143,31 +40,11 @@ function EmailTemplates(props) {
           .get()
       ).data();
       setForm(queryTemplates.templates);
-      const queryCustomers = await firestore().collection('customers').get();
-      let resultCustomers = [];
-      queryCustomers.forEach((doc) => {
-        resultCustomers.push(doc.data());
-      });
-      setCustomers(resultCustomers);
     };
     fetchTemplates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-  // const onSubmit = async () => {
-  //   await firestore()
-  //     .collection('emailTemplates')
-  //     .doc('emailTemplates')
-  //     .update({ templates: form });
-
-  //   dispatch(
-  //     MessageActions.showMessage({
-  //       message: 'Templates Updated Successfully!'
-  //     })
-  //   );
-  // };
+ 
 
   return (
     <FusePageCarded
@@ -221,22 +98,6 @@ function EmailTemplates(props) {
       content={
         form && (
           <div className="flex flex-col w-full p-12 gap-12">
-
-            {/* <div className="flex flex-row pr-40 justify-end">
-                {disabledState && (
-                  <Button
-                  className={classes.button}
-                  variant="contained"
-                  color="secondary"
-                    onClick={() => {
-                      setDisabledState(false);
-                    }}
-                    >
-                    Edit
-                  </Button>
-                )}
-                <br></br>
-              </div> */}
             <div className="flex flex-col h-full pt-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                 <h1 className="font-700" style={{ color: '#f15a25' }}>
@@ -337,17 +198,6 @@ function EmailTemplates(props) {
             </div>
             <div className="flex flex-col h-full pt-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row items-center border-b-1 border-black border-solid">
-                <div className='justify-left relative left-20'>
-                  {/* <EmailFilters open={open} handleClose={handleClose} /> */}
-                  <Button
-                    color="primary"
-                    style={{ color: '#f15a25' }}
-                    onClick={() => setOpenFilters(true)}>
-                    <FilterListIcon /> {' '}
-                    <p style={{ marginLeft: '5px' }}>FILTER</p>
-                  </Button>
-                  <EmailFilters open={openFilters} handleClose={() => setOpenFilters(false)} />
-                </div>
                 <h1 className="font-700 flex-1 text-center" style={{ color: '#f15a25', marginRight: '75px' }}>
                   Sale/Event Message
                 </h1>
@@ -370,55 +220,7 @@ function EmailTemplates(props) {
                   disableUnderline: true,
                 }}
               />
-              <div className='p-10'>
-                <Button
-                  disabled={!disabledState}
-                  className={classes.button}
-                  variant="contained"
-                  color="secondary"
-                  fullWidth
-                  style={{ padding: '2rem 1rem' }}
-                  onClick={sendEventEmail}>
-                  <p style={{ marginLeft: '5px' }}>Send Email</p>
-                </Button>
-
-              </div>
             </div>
-            {/* <div className="flex flex-row w-full ">
-              <div className="flex flex-row w-2/3 justify-around"></div>
-              <div className="flex flex-row w-1/3 justify-around">
-                {disabledState && (
-                  <Fab
-                    className="ml-20"
-                    onClick={() => {
-                      setDisabledState(false);
-                    }}
-                    color="secondary">
-                    <Icon>edit</Icon>
-                  </Fab>
-                )}
-                {!disabledState && (
-                  <Fab
-                    className="ml-20"
-                    onClick={() => {
-                      onSubmit();
-                      setDisabledState(true);
-                    }}
-                    color="secondary">
-                    <Icon>save</Icon>
-                  </Fab>
-                )}
-                {disabledState && (
-                  <Button
-                    className="ml-20"
-                    onClick={sendEventEmail}
-                    variant="contained"
-                    color="secondary">
-                    Send Event Email
-                  </Button>
-                )}
-              </div>
-            </div> */}
           </div>
         )
       }

@@ -104,8 +104,8 @@ const EyeglassessOrder = (props) => {
         selectedFrame?.eyeglassesCylinderOd
       ) {
         lensPrices[selectedFrame?.lensTypeName].rows.map((row) => {
-          if (row?.id === Number(selectedFrame?.eyeglassesSphereOd)) {
-            if (row[selectedFrame?.eyeglassesCylinderOd]) {
+          if (row?.id === Number(selectedFrame?.eyeglassesSphereOd).toFixed(2)) {
+            if (row[Number(selectedFrame?.eyeglassesCylinderOd).toFixed(2)]) {
               lensRate = +row[selectedFrame?.eyeglassesCylinderOd]
             } else {
               toast.error('Selected Lens Rate is not available...', {

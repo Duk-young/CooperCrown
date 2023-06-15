@@ -1,10 +1,12 @@
-
 import { firestore } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { toast, Zoom } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
 import CustomAutocomplete from '../ReusableComponents/Autocomplete';
+import firebaseService from 'app/services/firebaseService';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseLoading from '@fuse/core/FuseLoading';
@@ -31,9 +33,11 @@ const useStyles = makeStyles({
 
 const CustomData = (props) => {
 
-    const { orders, customers, showrooms, exams } = props;
-    const [isLoading, setisLoading] = useState(false);
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const [templates, setTemplates] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
+    const { orders, customers, showrooms, exams } = props;
     const [lensTypeNames, setLensTypeNames] = useState([]);
     const { form, handleChange, setForm } = useForm({
         lensTypeName: "ALL",
@@ -87,6 +91,10 @@ const CustomData = (props) => {
                 lensTypeNames.push({ lensTypeName: row.replace(/"/g, '') });
             });
             setLensTypeNames(lensTypeNames)
+
+            const queryTemplates = (await firestore().collection('emailTemplates').doc('emailTemplates').get()).data();
+            setTemplates(queryTemplates.templates);
+
             setisLoading(false)
         }
 
@@ -95,7 +103,7 @@ const CustomData = (props) => {
     }, [])
 
 
-    const filterData = () => {
+    const filterData = (sendEmails) => {
         let filteredCustomers = JSON.parse(JSON.stringify(customers))
         if (form?.ageRange !== 'ALL') {
             filteredCustomers = filteredCustomers.filter(customer => isCustomerWithinAgeRange(customer, form?.ageRange));
@@ -125,7 +133,54 @@ const CustomData = (props) => {
             filteredCustomers = filteredCustomers.filter(customer => orders.filter((order) => order?.customerId === customer?.customerId).some((order) => order?.eyeglasses?.some((eyeglass) => eyeglass?.lensTypeName === form?.lensTypeName)));
         }
 
-        downloadExcel(filteredCustomers.sort((a, b) => (a.customerId < b.customerId ? -1 : 1)))
+        if (sendEmails) {
+            return filteredCustomers.sort((a, b) => (a.customerId < b.customerId ? -1 : 1))
+        } else {
+            downloadExcel(filteredCustomers.sort((a, b) => (a.customerId < b.customerId ? -1 : 1)))
+        }
+    }
+
+    const sendEventEmail = async () => {
+        console.log('formmmmm', templates?.specialMessage)
+
+        const customersToSendEmails = filterData(true)
+        let allEmails = []
+        if (customersToSendEmails?.length > 0) {
+            customersToSendEmails.forEach((customer) => allEmails.push(customer?.email))
+        } else {
+            toast.error('No-one to send email.', {
+                position: 'top-center',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                transition: Zoom
+            });
+            return;
+        }
+        setisLoading(true)
+        if (!firebaseService.auth) {
+            console.warn(
+                "Firebase Service didn't initialize, check your configuration"
+            );
+
+            return () => false;
+        }
+        try {
+            const sendEventEmail = firebaseService.functions.httpsCallable('sendEventEmail');
+            const res = await sendEventEmail({ allEmails, message: templates?.specialMessage })
+
+            console.log('Result from sendEventEmail is', res)
+            dispatch(MessageActions.showMessage({ message: 'Emails sent successfully' }));
+            setisLoading(false)
+
+        } catch (error) {
+            dispatch(MessageActions.showMessage({ message: error.message }));
+            console.log('Error while sending event emails is:', error)
+        }
+
     }
 
     const isCustomerWithinAgeRange = (customer, ageRange) => {
@@ -413,13 +468,22 @@ const CustomData = (props) => {
                             </Select>
                         </FormControl>
                     </div>
-                    <Button
-                        className={classes.button}
-                        onClick={() => filterData()}
-                        variant="contained"
-                        color="secondary">
-                        Filter and Download
-                    </Button>
+                    <div className='flex flex-row gap-10 justify-around'>
+                        <Button
+                            className={classes.button}
+                            onClick={() => filterData()}
+                            variant="contained"
+                            color="secondary">
+                            Filter and Download
+                        </Button>
+                        <Button
+                            className={classes.button}
+                            onClick={() => sendEventEmail()}
+                            variant="contained"
+                            color="secondary">
+                            Send Event Email
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>

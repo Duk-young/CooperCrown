@@ -20,6 +20,7 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import { useForm } from '@fuse/hooks';
+import ExcelFileReader from './ExcelFileReader';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -42,7 +43,12 @@ const useStyles = makeStyles((theme) =>
         backgroundColor: '#f47b51',
         color: '#fff'
       }
-    }
+    },
+    verticalText: {
+      writingMode: 'vertical-lr', // Vertical writing mode from right to left
+      textOrientation: 'mixed', // Rotate the characters upright
+      whiteSpace: 'nowrap', // Prevent line breaks
+    },
   })
 );
 
@@ -89,11 +95,13 @@ function Lens(props) {
     await firestore()
       .collection('lensPrice')
       .doc('lensPrice')
-      .update({ [lensType]: {
-        prismPrice: form?.prismPrice,
-        outOfRangePrice: form?.outOfRangePrice,
-        rows
-      } });
+      .update({
+        [lensType]: {
+          prismPrice: form?.prismPrice,
+          outOfRangePrice: form?.outOfRangePrice,
+          rows
+        }
+      });
 
     dispatch(
       MessageActions.showMessage({
@@ -129,11 +137,13 @@ function Lens(props) {
     await firestore()
       .collection('lensPrice')
       .doc('lensPrice')
-      .update({ [lensType]: {
-        prismPrice: form?.prismPrice,
-        outOfRangePrice: form?.outOfRangePrice,
-        rows
-      } });
+      .update({
+        [lensType]: {
+          prismPrice: form?.prismPrice,
+          outOfRangePrice: form?.outOfRangePrice,
+          rows
+        }
+      });
 
     dispatch(
       MessageActions.showMessage({
@@ -151,11 +161,13 @@ function Lens(props) {
     await firestore()
       .collection('lensPrice')
       .doc('lensPrice')
-      .set({...rest, [lensName]: {
-        prismPrice: form?.prismPrice,
-        outOfRangePrice: form?.outOfRangePrice,
-        rows
-      }});
+      .set({
+        ...rest, [lensName]: {
+          prismPrice: form?.prismPrice,
+          outOfRangePrice: form?.outOfRangePrice,
+          rows
+        }
+      });
 
     dispatch(
       MessageActions.showMessage({
@@ -168,6 +180,27 @@ function Lens(props) {
       `/apps/e-commerce/viewlens/${lensName}`
     );
   };
+
+  const saveUploadedRates = async(rows) => {
+    await firestore()
+      .collection('lensPrice')
+      .doc('lensPrice')
+      .update({
+        [lensType]: {
+          prismPrice: form?.prismPrice,
+          outOfRangePrice: form?.outOfRangePrice,
+          rows
+        }
+      });
+
+      setRows(rows)
+
+    dispatch(
+      MessageActions.showMessage({
+        message: 'Prices Uploaded Successfully'
+      })
+    );
+  }
 
   if (isLoading) return (
     <FuseLoading />
@@ -225,6 +258,7 @@ function Lens(props) {
                     </Button>
                   </div>
                 )}
+                <ExcelFileReader saveUploadedRates={saveUploadedRates}/>
                 <CustomAlert
                   open={openAlert}
                   setOpen={setOpenAlert}
@@ -247,16 +281,16 @@ function Lens(props) {
                 endAdornment: (
                   <InputAdornment position="end">
                     {
-                      disabledNameState && 
+                      disabledNameState &&
                       <IconButton variant="outlined" color="default" onClick={() => setDisabledNameState(false)}>
-                      <EditIcon />
-                    </IconButton>
+                        <EditIcon />
+                      </IconButton>
                     }
                     {
-                      !disabledNameState && 
+                      !disabledNameState &&
                       <IconButton variant="outlined" color="default" onClick={handleLensNameChange}>
-                      <SaveIcon />
-                    </IconButton>
+                        <SaveIcon />
+                      </IconButton>
                     }
                   </InputAdornment>
                 ),
@@ -275,16 +309,16 @@ function Lens(props) {
                 endAdornment: (
                   <InputAdornment position="end">
                     {
-                      disabledPrismPriceState && 
+                      disabledPrismPriceState &&
                       <IconButton variant="outlined" color="default" onClick={() => setDisabledPrismPriceState(false)}>
-                      <EditIcon />
-                    </IconButton>
+                        <EditIcon />
+                      </IconButton>
                     }
                     {
-                      !disabledPrismPriceState && 
+                      !disabledPrismPriceState &&
                       <IconButton variant="outlined" color="default" onClick={handleExtraPricesChange}>
-                      <SaveIcon />
-                    </IconButton>
+                        <SaveIcon />
+                      </IconButton>
                     }
                   </InputAdornment>
                 ),
@@ -302,16 +336,16 @@ function Lens(props) {
                 endAdornment: (
                   <InputAdornment position="end">
                     {
-                      disabledOutRangeState && 
+                      disabledOutRangeState &&
                       <IconButton variant="outlined" color="default" onClick={() => setDisabledOutRangeState(false)}>
-                      <EditIcon />
-                    </IconButton>
+                        <EditIcon />
+                      </IconButton>
                     }
                     {
-                      !disabledOutRangeState && 
+                      !disabledOutRangeState &&
                       <IconButton variant="outlined" color="default" onClick={handleExtraPricesChange}>
-                      <SaveIcon />
-                    </IconButton>
+                        <SaveIcon />
+                      </IconButton>
                     }
                   </InputAdornment>
                 ),
@@ -322,10 +356,20 @@ function Lens(props) {
               name='outOfRangePrice'
               variant="outlined"
             />
-            <div>
-            </div>
           </div>
-          <TableGrid disabledState={disabledState} rows={rows} setRows={setRows} />
+          <div className='flex flex-row justify-center'>
+            <Typography className="text-20 font-700 text-center">
+              Cylinder
+            </Typography>
+          </div>
+          <div className='flex flex-row w-full items-center'>
+            <div className={classes.verticalText}>
+            <Typography className="text-20 font-700 text-center">
+              Sphere
+            </Typography>
+            </div>
+            <TableGrid disabledState={disabledState} rows={rows} setRows={setRows} />
+          </div>
         </div>
       }
       innerScroll

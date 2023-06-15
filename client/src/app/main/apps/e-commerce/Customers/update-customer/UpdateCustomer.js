@@ -1,14 +1,14 @@
-// import Joi from 'joi-browser';
+import '../Search.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { firestore } from 'firebase';
-import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
+import { useParams } from 'react-router-dom';
 import { useTheme } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import CustomAlert from '../../ReusableComponents/CustomAlert';
-import emailjs from 'emailjs-com';
+import firebaseService from 'app/services/firebaseService';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
@@ -20,7 +20,6 @@ import reducer from '../../store/reducers';
 import Typography from '@material-ui/core/Typography';
 import UpdateCustomerForm from './UpdateCustomerForm';
 import withReducer from 'app/store/withReducer';
-import '../Search.css';
 
 function UpdateCustomer(props) {
   const [error] = useState(null);
@@ -201,21 +200,24 @@ function UpdateCustomer(props) {
           })
         );
 
-        emailjs
-          .send(
-            'service_yul7h3c',
-            'template_k68omtc',
-            {
-              name: `${form?.firstName} ${form?.lastName}`,
-              from_name: 'Cooper Crown',
-              message: templates?.newCustomer,
-              receiver: form?.email
-            },
-            'bYFxhbkbmnFQsUvjC'
-          )
-          .then((error) => {
-            console.log(error);
-          });
+        if (!firebaseService.auth) {
+            console.warn(
+                "Firebase Service didn't initialize, check your configuration"
+            );
+
+            return () => false;
+        }
+        try {
+            const sendEmail = firebaseService.functions.httpsCallable('sendEmail');
+            const res = await sendEmail({ customers:[{email:form?.email, firstName: form?.firstName, lastName: form?.lastName}], message: templates?.newCustomer })
+
+            console.log('Result from sendEmail is', res)
+            dispatch(MessageActions.showMessage({ message: 'Welcome email sent successfully' }));
+
+        } catch (error) {
+            dispatch(MessageActions.showMessage({ message: error.message }));
+            console.log('Error while sending welcome email is:', error)
+        }
 
         props.history.push(
           `/apps/e-commerce/customers/profile/${customerNo?.customerId + 1}`
