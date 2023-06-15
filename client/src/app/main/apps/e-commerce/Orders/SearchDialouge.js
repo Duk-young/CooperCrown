@@ -184,7 +184,6 @@ export default function SearchDialouge({ type, title, setCustomer }) {
     setSelectedValue(value);
   };
 
-  console.log({ open });
 
   return (
     <>

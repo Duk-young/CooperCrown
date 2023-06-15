@@ -77,6 +77,78 @@ exports.updateUserEmailPassword = functions.https.onCall((data, context) => {
       });
   }
 });
+exports.sendEmail = functions.https.onCall((data, context) => {
+  try {
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.NODEMAILER_EMAIL,
+        pass: process.env.NODEMAILER_PASSWORD,
+      },
+    });
+
+    if (data?.customers?.length > 0) {
+      data?.customers.map((customer) => {
+        const mailOptions = {
+          from: process.env.NODEMAILER_EMAIL,
+          to: customer?.email,
+          subject: "New Message from Cooper Crown",
+          html: `<h2>Hi ${customer?.firstName} ${customer?.lastName}, </h2>
+    <p>${data?.message} </p>
+     <h3>Best Wishes</h3> 
+     <h3>Cooper Crown</h3>`,
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log(error);
+          }
+        });
+      })
+    }
+
+    return "Emails sent successfully."
+
+  } catch (error) {
+    return error
+  }
+});
+exports.sendEventEmail = functions.https.onCall((data, context) => {
+  try {
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.NODEMAILER_EMAIL,
+        pass: process.env.NODEMAILER_PASSWORD,
+      },
+    });
+
+
+    const mailOptions = {
+      from: process.env.NODEMAILER_EMAIL,
+      to: data?.allEmails,
+      subject: "New Message from Cooper Crown",
+      html: `<h2>Dear Customer, </h2>
+    <p>${data?.message} </p>
+     <h3>Best Wishes</h3> 
+     <h3>Cooper Crown</h3>`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+
+    return "Emails sent successfully."
+
+  } catch (error) {
+    return error
+  }
+});
 exports.addStaffRole = functions.https.onCall((data, context) => {
   return admin
     .auth()
@@ -129,13 +201,13 @@ exports.birthdayMessageFunction = functions.pubsub
           port: 465,
           secure: true,
           auth: {
-            user: "ali43093@gmail.com",
-            pass: "prckrpcolhrxldek",
+            user: process.env.NODEMAILER_EMAIL,
+            pass: process.env.NODEMAILER_PASSWORD,
           },
         });
 
         const mailOptions = {
-          from: `ali43093@gmail.com`,
+          from: process.env.NODEMAILER_EMAIL,
           to: row?.email,
           subject: "New Message from Cooper Crown",
           html: `<h2>Hi ${row?.firstName} ${row?.lastName}, </h2>
@@ -185,13 +257,13 @@ exports.examExpiry = functions.pubsub
           port: 465,
           secure: true,
           auth: {
-            user: "ali43093@gmail.com",
-            pass: "prckrpcolhrxldek",
+            user: process.env.NODEMAILER_EMAIL,
+            pass: process.env.NODEMAILER_PASSWORD,
           },
         });
 
         const mailOptions = {
-          from: `ali43093@gmail.com`,
+          from: process.env.NODEMAILER_EMAIL,
           to: row?.email,
           subject: "New Message from Cooper Crown",
           html: `<h2>Hi Mr. ${row?.lastName} , </h2>

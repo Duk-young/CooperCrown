@@ -309,6 +309,27 @@ function ViewFrame(props) {
       querySubtractedStocks.forEach((doc) => {
         resultSubtractedStocks.push(doc.data());
       });
+
+
+      let resultOrders = [];
+
+      const queryOrders = await firestore().collection('orders').get()
+      queryOrders.forEach((doc) => { resultOrders.push(doc.data()); });
+      resultOrders.forEach((order) => {
+        if (order.eyeglasses.length > 0) {
+          let frameSaleRecord = { orderId: order?.orderId, customOrderId: order?.customOrderId, subtractStockDate: order?.orderDate, subtractStockQty: 0, recordType: 'Sale from order' }
+          order.eyeglasses.map((pair) => {
+            if (pair?.frameId === Number(id)) {
+              frameSaleRecord.subtractStockQty++
+            }
+            return true
+          })
+          if (frameSaleRecord?.subtractStockQty > 0) resultSubtractedStocks.push(frameSaleRecord)
+        }
+      })
+
+
+
       setSubtractedStocks(resultSubtractedStocks);
 
       setisLoading(false);
@@ -562,7 +583,7 @@ function ViewFrame(props) {
                         props.history.push(
                           `/apps/inventory/addframes/${routeParams?.frameId}`
                         );
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -999,6 +1020,7 @@ function ViewFrame(props) {
                         <TableHead>
                           <TableRow>
                             <StyledTableCell>DATE</StyledTableCell>
+                            <StyledTableCell>ORDER ID</StyledTableCell>
                             <StyledTableCell>QUANTITY</StyledTableCell>
                             <StyledTableCell>MEMO</StyledTableCell>
                             <StyledTableCell>OPTIONS</StyledTableCell>
@@ -1010,27 +1032,33 @@ function ViewFrame(props) {
                               a.subtractStockId > b.subtractStockId ? -1 : 1
                             )
                             .map((row, index) => (
-                              <StyledTableRow key={row.restockId}>
-                                <StyledTableCell>
-                                  {' '}
-                                  {moment(
-                                    row.subtractStockDate.toDate()
-                                  ).format('MM/DD/YYYY')}
+                              <StyledTableRow key={index}>
+                                <StyledTableCell>{' '}{moment(row.subtractStockDate.toDate()).format('MM/DD/YYYY')}</StyledTableCell>
+                                <StyledTableCell onClick={() => { props.history.push(`/apps/e-commerce/orders/vieworder/${row?.orderId}`) }}>
+                                  {row?.customOrderId}
                                 </StyledTableCell>
-
-                                <StyledTableCell>
-                                  {row?.subtractStockQty}
-                                </StyledTableCell>
-                                <StyledTableCell>
-                                  {row?.subtractStockMemo}
-                                </StyledTableCell>
+                                <StyledTableCell>{row?.subtractStockQty}</StyledTableCell>
+                                <StyledTableCell>{row?.subtractStockMemo ?? row?.recordType}</StyledTableCell>
 
                                 <StyledTableCell>
                                   <IconButton
                                     onClick={() => {
-                                      setSubtractStock({ ...row, row });
-                                      subtractedStocks.splice(index, 1);
-                                      seteditSubtractStockState(true);
+                                      if (row?.recordType === 'Sale from order') {
+                                        toast.error('Order sale cannot be edited.', {
+                                          position: 'top-center',
+                                          autoClose: 5000,
+                                          hideProgressBar: false,
+                                          closeOnClick: true,
+                                          pauseOnHover: true,
+                                          draggable: true,
+                                          progress: undefined,
+                                          transition: Zoom
+                                        });
+                                      } else {
+                                        setSubtractStock({ ...row, row });
+                                        subtractedStocks.splice(index, 1);
+                                        seteditSubtractStockState(true);
+                                      }
                                     }}>
                                     <Icon>edit</Icon>
                                   </IconButton>

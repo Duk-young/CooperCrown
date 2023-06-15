@@ -87,7 +87,8 @@ const AddAppointments = (props) => {
       if (history?.location?.state?.start !== undefined) {
         setForm({
           start: history.location.state.start,
-          showRoomId: history.location.state.showRoomId
+          showRoomId: history.location.state.showRoomId,
+          duration: 30
         });
         setDoctors(doctorsData.filter((obj) => {
           return obj.showrooms?.some((showroom) => showroom.showRoomId === history.location.state.showRoomId);
@@ -123,7 +124,7 @@ const AddAppointments = (props) => {
           allDay: false,
           title: `${customer?.firstName} ${customer?.lastName}`,
           customerId: customer.customerId,
-          medicalHistory: customer?.medicalHistory,
+          medicalHistory: customer?.medicalHistory ?? '',
           email: customer?.email ?? '',
           phone1: customer?.phone1 ?? '',
           phone2: customer?.phone2 ?? '',
@@ -134,7 +135,7 @@ const AddAppointments = (props) => {
         .collection('customers')
         .doc(customer?.id)
         .update({
-          medicalHistory: customer?.medicalHistory,
+          medicalHistory: customer?.medicalHistory ?? '',
           recentUpdated: dbConfig?.recentUpdated + 1
         });
 

@@ -113,16 +113,16 @@ export default function OrderTicket(props) {
                         <p className='font-7pt text-center'>OD</p>
                       </div>
                       <div className="w-1/6 border-box">
-                        <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesSphereOd}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesSphereOd)) ? Number(eyeglasses[0]?.eyeglassesSphereOd).toFixed(2) : eyeglasses[0]?.eyeglassesSphereOd}</p>
                       </div>
                       <div className="w-1/6 border-box">
-                        <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesCylinderOd}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesCylinderOd)) ? Number(eyeglasses[0]?.eyeglassesCylinderOd).toFixed(2) : eyeglasses[0]?.eyeglassesCylinderOd}</p>
                       </div>
                       <div className="w-1/6 border-box">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesAxisOd}</p>
                       </div>
                       <div className="w-1/6 border-box">
-                        <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesAddOd}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesAddOd)) ? Number(eyeglasses[0]?.eyeglassesAddOd).toFixed(2) : eyeglasses[0]?.eyeglassesAddOd}</p>
                       </div>
                       <div className="w-2/6 border-box">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesPrismOd}</p>
@@ -133,16 +133,16 @@ export default function OrderTicket(props) {
                         <p className='font-7pt text-center'>OD</p>
                       </div>
                       <div className="w-1/6 border-box">
-                        <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesSphereOs}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesSphereOs)) ? Number(eyeglasses[0]?.eyeglassesSphereOs).toFixed(2) : eyeglasses[0]?.eyeglassesSphereOs}</p>
                       </div>
                       <div className="w-1/6 border-box">
-                        <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesCylinderOs}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesCylinderOs)) ? Number(eyeglasses[0]?.eyeglassesCylinderOs).toFixed(2) : eyeglasses[0]?.eyeglassesCylinderOs}</p>
                       </div>
                       <div className="w-1/6 border-box">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesAxisOs}</p>
                       </div>
                       <div className="w-1/6 border-box">
-                        <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesAddOs}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesAddOs)) ? Number(eyeglasses[0]?.eyeglassesAddOs).toFixed(2) : eyeglasses[0]?.eyeglassesAddOs}</p>
                       </div>
                       <div className="w-2/6 border-box">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesPrismOs}</p>
@@ -249,16 +249,16 @@ export default function OrderTicket(props) {
                         <p className='font-7pt text-center'>OD</p>
                       </div>
                       <div className="w-1/4 border-box">
-                        <p className='font-7pt text-center'>{contactLenses[0]?.contactLensSphereOd}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensSphereOd)) ? Number(contactLenses[0]?.contactLensSphereOd).toFixed(2) : contactLenses[0]?.contactLensSphereOd}</p>
                       </div>
                       <div className="w-1/4 border-box">
-                        <p className='font-7pt text-center'>{contactLenses[0]?.contactLensCylinderOd}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensCylinderOd)) ? Number(contactLenses[0]?.contactLensCylinderOd).toFixed(2) : contactLenses[0]?.contactLensCylinderOd}</p>
                       </div>
                       <div className="w-1/4 border-box">
                         <p className='font-7pt text-center'>{contactLenses[0]?.contactLensAxisOd}</p>
                       </div>
                       <div className="w-1/4 border-box">
-                        <p className='font-7pt text-center'>{contactLenses[0]?.contactLensAddOd}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensAddOd)) ? Number(contactLenses[0]?.contactLensAddOd).toFixed(2) : contactLenses[0]?.contactLensAddOd}</p>
                       </div>
                     </div>
                     <div className="flex flex-row w-full border-collapse px-20">
@@ -266,16 +266,16 @@ export default function OrderTicket(props) {
                         <p className='font-7pt text-center'>OS</p>
                       </div>
                       <div className="w-1/4 border-box">
-                        <p className='font-7pt text-center'>{contactLenses[0]?.contactLensSphereOs}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensSphereOs)) ? Number(contactLenses[0]?.contactLensSphereOs).toFixed(2) : contactLenses[0]?.contactLensSphereOs}</p>
                       </div>
                       <div className="w-1/4 border-box">
-                        <p className='font-7pt text-center'>{contactLenses[0]?.contactLensCylinderOs}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensCylinderOs)) ? Number(contactLenses[0]?.contactLensCylinderOs).toFixed(2) : contactLenses[0]?.contactLensCylinderOs}</p>
                       </div>
                       <div className="w-1/4 border-box">
                         <p className='font-7pt text-center'>{contactLenses[0]?.contactLensAxisOs}</p>
                       </div>
                       <div className="w-1/4 border-box">
-                        <p className='font-7pt text-center'>{contactLenses[0]?.contactLensAddOs}</p>
+                        <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensAddOs)) ? Number(contactLenses[0]?.contactLensAddOs).toFixed(2) : contactLenses[0]?.contactLensAddOs}</p>
                       </div>
                     </div>
 

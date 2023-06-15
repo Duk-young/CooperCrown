@@ -143,7 +143,8 @@ export default function NewAppointmentDialog() {
           start: moment(
             newAppointmentDialog.data.start,
             'MM/DD/YYYY, h:mm:ss a'
-          ).toDate()
+          ).toDate(),
+          duration: 30 
         });
       }
 

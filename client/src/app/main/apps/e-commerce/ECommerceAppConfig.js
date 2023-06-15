@@ -15,10 +15,6 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Emails/EmailTemplates'))
     },
     {
-      path: '/apps/e-commerce/emailtemplates/filter',
-      component: React.lazy(() => import('./Emails/EmailFilters'))
-    },
-    {
       path: '/apps/e-commerce/paymentreport',
       component: React.lazy(() => import('./PaymentReport/PaymentReport'))
     },
