@@ -161,6 +161,14 @@ const navigationConfig = [
             exact: true
           },
           {
+            id: 'paymentReport',
+            title: 'Payment Report',
+            type: 'item',
+            auth: authRoles.staff,
+            url: '/apps/e-commerce/paymentreport',
+            exact: true
+          },
+          {
             id: 'priceSetting',
             title: 'Price Setting',
             type: 'collapse',
