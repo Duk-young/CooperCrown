@@ -496,7 +496,7 @@ const allAgeRanges = ["ALL", "90+", "85-89", "80-84", "75-79", "70-74", "65-69",
 const allEthnicities = ["ALL", 'White / Caucasian', 'Black / African American', 'Hispanic / Latino', 'Asian', 'Asian / India & Pakistan',
     'American Indian & Alaska Native', 'Native Hawaiian & Other Pacific Islander', 'Others']
 
-const allStates = [
+export const allStates = [
     {
         state: 'ALL',
         abbreviation: 'ALL'

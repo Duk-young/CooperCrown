@@ -198,7 +198,7 @@ const Frames = (props) => {
           <div className="flex flex-row items-center">
             <div className="flex flex-row flex-1 justify-around">
               <Button
-                color='secondary'
+                className=' bg-white'
                 variant="contained"
                 onClick={() => {
                   setOpenFiltersDialog(true);
@@ -212,7 +212,7 @@ const Frames = (props) => {
                 FILTERS
               </Button>
               <Button
-                color='secondary'
+                className=' bg-white'
                 variant="contained"
                 onClick={() => {
                   setSearchState({});
@@ -265,7 +265,15 @@ const Frames = (props) => {
                 reset={false}
               />
             </div>
-            <div className=' flex flex-row flex-1 justify-center'>
+            <div className='flex flex-row flex-1 justify-around'>
+              <HitsPerPage
+                defaultRefinement={50}
+                items={[
+                  { value: 50, label: 'Show 50' },
+                  { value: 100, label: 'Show 100' },
+                  { value: 200, label: 'Show 200' }
+                ]}
+              />
               <Button
                 className={classes.orangeButton}
                 variant="contained"
@@ -358,20 +366,7 @@ const Frames = (props) => {
         <TableContainer className="flex flex-col w-full ">
           <CustomHits props={props} userData={userData} history={props?.history} />
           <div className="flex flex-row justify-center">
-            <div className="flex flex-1"></div>
-            <div className="flex flex-1 justify-center pt-8">
-              <Pagination showLast={true} />
-            </div>
-            <div className="flex flex-1 justify-center pt-8">
-              <HitsPerPage
-                defaultRefinement={50}
-                items={[
-                  { value: 50, label: 'Show 50' },
-                  { value: 100, label: 'Show 100' },
-                  { value: 200, label: 'Show 200' }
-                ]}
-              />
-            </div>
+            <Pagination showLast={true} />
           </div>
         </TableContainer>
       </InstantSearch>

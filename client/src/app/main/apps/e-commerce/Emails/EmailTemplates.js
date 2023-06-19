@@ -2,7 +2,7 @@ import { firestore } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { useForm } from '@fuse/hooks';
 import Button from '@material-ui/core/Button';
-import FuseAnimate from '@fuse/core/FuseAnimate';
+import clsx from 'clsx';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
@@ -11,9 +11,14 @@ import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 450
+const useStyles = makeStyles((theme) => ({
+  header: {
+    width: '100%',
+    minHeight: 160,
+    background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+    color: theme.palette.primary.contrastText,
+    backgroundSize: 'cover',
+    backgroundColor: theme.palette.primary.dark
   },
   button: {
     backgroundColor: '#f15a25',
@@ -23,7 +28,7 @@ const useStyles = makeStyles({
       color: '#fff'
     }
   }
-});
+}));
 
 function EmailTemplates() {
 
@@ -44,56 +49,35 @@ function EmailTemplates() {
     fetchTemplates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
- 
+
 
   return (
     <FusePageCarded
       header={
-        <>
-          <div className="flex flex-col w-full items-center  sm:px-18 justify-start">
-            <div className="flex-1 items-center">
-              <h3 className=" hidden font-700 ">H</h3>
-            </div>
-            <div className='flex w-full flex-1 items-center justify-start '>
-              <div className="flex-1 items-center">
-                <h3 className=" hidden font-700 ">H</h3>
-              </div>
-            </div>
+        <div className={clsx(classes.header)}>
+          <div className='flex flex-col justify-center items-center'>
+            <Typography
+              className="flex mx-0 sm:mx-12 uppercase"
+              style={{ fontSize: '3rem', fontWeight: 600 }}
+              variant="h6">
+              EMAIL TEMPLATE
+            </Typography>
           </div>
-          <div className="flex flex-col w-full items-center justify-center">
-            <div className="flex items-center">
-              <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                <Typography className="hidden sm:flex mx-0 sm:mx-12 font-500 text-center" variant="h4">
-                  EMAIL TEMPLATE
-                </Typography>
-              </FuseAnimate>
-            </div>
-            <div className="flex flex-1 flex-row items-center justify-center pb-10">
-              <h3 className=" hidden font-700 ">Hidden</h3>
-            </div>
+          <div className='flex flex-row justify-end mr-20 items-end'>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                disabledState ? setDisabledState(false) : setDisabledState(true)
+              }}
+            >
+              {disabledState
+                ? (<span className="sm:flex">edit</span>)
+                : (<span className="sm:flex">save</span>)}
+            </Button>
           </div>
-          <div className="flex flex-col w-full items-center justify-end pr-20">
-            <div className="flex-1 pl-30 items-center">
-              <h3 className="ml-40 hidden font-700 ">Hidden</h3>
-            </div>
-            <div className='flex w-full flex-1 items-center justify-end pr-20 pb-10'>
-              <FuseAnimate animation="transition.slideRightIn" delay={300}>
-                <Button
-                  className={classes.button}
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    disabledState ? setDisabledState(false) : setDisabledState(true)
-                  }}
-                >
-                  {disabledState
-                    ? (<span className="sm:flex">edit</span>)
-                    : (<span className="sm:flex">save</span>)}
-                </Button>
-              </FuseAnimate>
-            </div>
-          </div>
-        </>
+        </div>
       }
       content={
         form && (

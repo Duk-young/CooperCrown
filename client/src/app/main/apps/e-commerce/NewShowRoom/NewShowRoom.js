@@ -8,14 +8,11 @@ import * as Actions from '../store/actions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import ConfirmShowroomDelete from './ConfirmShowroomDelete';
-import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
 import React, { useEffect, useState } from 'react';
 import reducer from '../store/reducers';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
@@ -39,7 +36,6 @@ function NewShowRoom(props) {
   const dispatch = useDispatch();
   const product = useSelector(({ eCommerceApp }) => eCommerceApp.product);
   const theme = useTheme();
-  const [tabValue, setTabValue] = useState(0);
   const [isLoading, setisLoading] = useState(false);
   const [errors, setErrors] = useState({})
   const { form, handleChange, setForm } = useForm(null);
@@ -85,9 +81,6 @@ function NewShowRoom(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleChangeTab(event, value) {
-    setTabValue(value);
-  }
   const handleClose = () => {
     setOpen(false);
   };
@@ -168,57 +161,31 @@ function NewShowRoom(props) {
     <FusePageCarded
       header={
         form && (
-          <div className="flex flex-1 w-full items-center justify-between">
-            <div className="flex flex-col items-start max-w-full">
-              <FuseAnimate animation="transition.slideRightIn" delay={300}>
-                <Typography
-                  className="normal-case flex items-center sm:mb-12"
-                  component={Link}
-                  role="button"
-                  to="/apps/e-commerce/showRooms"
-                  color="inherit">
-                  <Icon className="text-20">
-                    {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
-                  </Icon>
-                  <span className="mx-4">Showrooms</span>
-                </Typography>
-              </FuseAnimate>
-
-              <div className="flex items-center max-w-full">
-                <FuseAnimate animation="transition.expandIn" delay={300}>
-                  <img
-                    className="w-32 sm:w-48 rounded"
-                    src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={form.locationName}
-                  />
-                </FuseAnimate>
-                <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
-                  <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                    <Typography className="text-16 sm:text-20 truncate">
-                      {form.locationName ? form.locationName : 'New Showroom'}
-                    </Typography>
-                  </FuseAnimate>
-                  <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                    <Typography variant="caption">Showroom Detail</Typography>
-                  </FuseAnimate>
-                </div>
-              </div>
+          <div className='flex flex-row justify-center w-full'>
+            <div className='flex flex-row justify-start w-1/4'>
+              <Typography
+                className="normal-case flex sm:mb-12"
+                component={Link}
+                role="button"
+                to="/apps/e-commerce/showRooms"
+                color="inherit">
+                <Icon className="text-20">
+                  {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
+                </Icon>
+                <span className="mx-4">Showrooms</span>
+              </Typography>
             </div>
-
+            <div className='flex flex-row justify-center w-2/4'>
+              <Typography
+                className="flex mx-0 sm:mx-12 uppercase"
+                style={{ fontSize: '3rem', fontWeight: 600 }}
+                variant="h6">
+                {form.locationName ? form.locationName : 'New Showroom'}
+              </Typography>
+            </div>
+            <div className='flex flex-row justify-start w-1/4'></div>
           </div>
         )
-      }
-      contentToolbar={
-        <Tabs
-          value={tabValue}
-          onChange={handleChangeTab}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="auto"
-          classes={{ root: 'w-full h-64' }}>
-          <Tab className="h-64 normal-case" label={`${routeParams.showRoomtId !== 'new' ? 'Edit' : 'New'} Showroom`} />
-        </Tabs>
       }
       content={
         form && (
@@ -231,135 +198,132 @@ function NewShowRoom(props) {
                   </h1>
                 </div>
                 <div className="p-16 sm:p-24  ">
-                  {tabValue === 0 && (
-                    <div>
-                      <TextField
-                        className="mt-8 "
-                        required
-                        label="Location Name"
-                        autoFocus
-                        id="locationName"
-                        name="locationName"
-                        value={form.locationName}
-                        onChange={handleChange}
-                        variant="outlined"
-                        error={errors.locationName}
-                        helperText={errors.locationName}
-                        fullWidth
-                      />
+                  <div>
+                    <TextField
+                      className="mt-8 "
+                      required
+                      label="Location Name"
+                      autoFocus
+                      id="locationName"
+                      name="locationName"
+                      value={form.locationName}
+                      onChange={handleChange}
+                      variant="outlined"
+                      error={errors.locationName}
+                      helperText={errors.locationName}
+                      fullWidth
+                    />
 
-                      <TextField
-                        className="mt-8 "
-                        required
-                        id="locationAddress"
-                        name="locationAddress"
-                        onChange={handleChange}
-                        label="Location Address"
-                        type="text"
-                        value={form.locationAddress}
-                        multiline
-                        rows={5}
-                        variant="outlined"
-                        error={errors.locationAddress}
-                        helperText={errors.locationAddress}
-                        fullWidth
-                      />
-                      <TextField
-                        className="mt-8 "
-                        required
-                        label="City"
-                        type="text"
-                        id="City"
-                        name="City"
-                        value={form.City}
-                        onChange={handleChange}
-                        variant="outlined"
-                        error={errors.city}
-                        helperText={errors.city}
-                        fullWidth
-                      />
-                      <Autocomplete
-                        {...defaultStates}
-                        id="stateId"
-                        value={form?.State}
-                        fullWidth
-                        getOptionSelected={(option, value) => option.name === value}
-                        inputValue={state}
-                        onInputChange={(e, value) => setState(value)}
-                        name="state"
-                        onChange={(_, value) =>
-                          handleChange({
-                            target: { value: value?.name, name: 'State' }
-                          })
-                        }
-                        renderInput={(params) => (
-                          <TextField {...params} label="State" margin="normal" variant='outlined' />
-                        )}
-                      />
-                      <TextField
-                        className="mt-8  pr-4"
-                        required
-                        label="Phone No.1"
-                        id="phoneNo"
-                        name="phoneNo"
-                        value={form.phoneNo}
-                        onChange={handleChange}
-                        variant="outlined"
-                        error={errors.phoneNo}
-                        helperText={errors.phoneNo}
-                        fullWidth
-                      />
-                      <TextField
-                        className="mt-8  pr-4"
-                        // required
-                        label="Phone No.2"
-                        id="phoneNo1"
-                        name="phoneNo2"
-                        value={form.phoneNo2}
-                        onChange={handleChange}
-                        variant="outlined"
-                        fullWidth
-                      />
-                      <TextField
-                        className="mt-8 "
-                        required
-                        label="Email"
-                        id="email"
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        variant="outlined"
-                        error={errors.email}
-                        helperText={errors.email}
-                        fullWidth
-                      />
-                      <TextField
-                        className="mt-8 "
-                        required
-                        label="Zip Code"
-                        id="zipCode"
-                        type="number"
-                        name="zipCode"
-                        value={form.zipCode}
-                        onChange={handleChange}
-                        variant="outlined"
-                        error={errors.zipCode}
-                        helperText={errors.zipCode}
-                        fullWidth
-                      />
-                      <TextField
-                        className="mt-8 "
-                        label="Other "
-                        id="other1"
-                        name="other1"
-                        value={form.other1}
-                        onChange={handleChange}
-                        variant="outlined"
-                        fullWidth
-                      />
-
-                    </div>
-                  )}
+                    <TextField
+                      className="mt-8 "
+                      required
+                      id="locationAddress"
+                      name="locationAddress"
+                      onChange={handleChange}
+                      label="Location Address"
+                      type="text"
+                      value={form.locationAddress}
+                      multiline
+                      rows={5}
+                      variant="outlined"
+                      error={errors.locationAddress}
+                      helperText={errors.locationAddress}
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 "
+                      required
+                      label="City"
+                      type="text"
+                      id="City"
+                      name="City"
+                      value={form.City}
+                      onChange={handleChange}
+                      variant="outlined"
+                      error={errors.city}
+                      helperText={errors.city}
+                      fullWidth
+                    />
+                    <Autocomplete
+                      {...defaultStates}
+                      id="stateId"
+                      value={form?.State}
+                      fullWidth
+                      getOptionSelected={(option, value) => option.name === value}
+                      inputValue={state}
+                      onInputChange={(e, value) => setState(value)}
+                      name="state"
+                      onChange={(_, value) =>
+                        handleChange({
+                          target: { value: value?.name, name: 'State' }
+                        })
+                      }
+                      renderInput={(params) => (
+                        <TextField {...params} label="State" margin="normal" variant='outlined' />
+                      )}
+                    />
+                    <TextField
+                      className="mt-8  pr-4"
+                      required
+                      label="Phone No.1"
+                      id="phoneNo"
+                      name="phoneNo"
+                      value={form.phoneNo}
+                      onChange={handleChange}
+                      variant="outlined"
+                      error={errors.phoneNo}
+                      helperText={errors.phoneNo}
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8  pr-4"
+                      // required
+                      label="Phone No.2"
+                      id="phoneNo1"
+                      name="phoneNo2"
+                      value={form.phoneNo2}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 "
+                      required
+                      label="Email"
+                      id="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      variant="outlined"
+                      error={errors.email}
+                      helperText={errors.email}
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 "
+                      required
+                      label="Zip Code"
+                      id="zipCode"
+                      type="number"
+                      name="zipCode"
+                      value={form.zipCode}
+                      onChange={handleChange}
+                      variant="outlined"
+                      error={errors.zipCode}
+                      helperText={errors.zipCode}
+                      fullWidth
+                    />
+                    <TextField
+                      className="mt-8 "
+                      label="Other "
+                      id="other1"
+                      name="other1"
+                      value={form.other1}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </div>
                 </div>
                 <br></br>
               </div>

@@ -150,11 +150,11 @@ const Lens = (props) => {
             setSearchState(state.refinementList);
           }
         }}>
-          <div className={clsx(classes.tabHeader)}>
+        <div className={clsx(classes.tabHeader)}>
           <div className="flex flex-row items-center">
             <div className="flex flex-row flex-1 justify-around">
               <Button
-                color='secondary'
+                className=' bg-white'
                 variant="contained"
                 onClick={() => {
                   setOpenFiltersDialog(true);
@@ -168,7 +168,7 @@ const Lens = (props) => {
                 FILTERS
               </Button>
               <Button
-                color='secondary'
+                className=' bg-white'
                 variant="contained"
                 onClick={() => {
                   setSearchState({});
@@ -222,7 +222,15 @@ const Lens = (props) => {
               />
             </div>
             <div className="flex flex-col flex-1">
-              <div className="flex w-full justify-center">
+              <div className="flex w-full justify-around">
+                <HitsPerPage
+                  defaultRefinement={50}
+                  items={[
+                    { value: 50, label: 'Show 50' },
+                    { value: 100, label: 'Show 100' },
+                    { value: 200, label: 'Show 200' }
+                  ]}
+                />
                 <Button
                   className={classes.orangeButton}
                   variant="contained"
@@ -247,89 +255,76 @@ const Lens = (props) => {
               </div>
             </div>
           </div>
-          </div>
+        </div>
+        <div>
           <div>
-            <div>
-              <Dialog
-                fullWidth
-                maxWidth="lg"
-                open={openFiltersDialog}
-                onClose={handleCloseFiltersDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description">
-                <DialogTitle id="alert-dialog-title">
-                  <h2>Select Filters!</h2>
-                </DialogTitle>
-                <DialogContent>
-                  <div className="flex flex-row justify-between refinementList">
-                    <div className="p-6">
-                      <Panel header="Brands">
-                        <RefinementList
-                          attribute="brand"
-                          limit={10}
-                          showMore={true}
-                          searchable={true}
-                          translations={{
-                            placeholder: 'Search for brands…'
-                          }}
-                        />
-                      </Panel>
-                    </div>
-                    <div className="p-6">
-                      <Panel header="Color">
-                        <RefinementList
-                          attribute="colour"
-                          limit={10}
-                          showMore={true}
-                          searchable={true}
-                          translations={{
-                            placeholder: 'Search for colours…'
-                          }}
-                        />
-                      </Panel>
-                    </div>
-                    <div className="p-6">
-                      <Panel header="Lens Type">
-                        <RefinementList
-                          attribute="lensType"
-                          limit={10}
-                          showMore={true}
-                          searchable={true}
-                          translations={{
-                            placeholder: 'Search for lens type…'
-                          }}
-                        />
-                      </Panel>
-                    </div>
+            <Dialog
+              fullWidth
+              maxWidth="lg"
+              open={openFiltersDialog}
+              onClose={handleCloseFiltersDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description">
+              <DialogTitle id="alert-dialog-title">
+                <h2>Select Filters!</h2>
+              </DialogTitle>
+              <DialogContent>
+                <div className="flex flex-row justify-between refinementList">
+                  <div className="p-6">
+                    <Panel header="Brands">
+                      <RefinementList
+                        attribute="brand"
+                        limit={10}
+                        showMore={true}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for brands…'
+                        }}
+                      />
+                    </Panel>
                   </div>
-                  <div className="flex flex-row p-12 justify-center">
-                    <ClearRefinements
-                      translations={{
-                        reset: 'CLEAR ALL'
-                      }}
-                    />
+                  <div className="p-6">
+                    <Panel header="Color">
+                      <RefinementList
+                        attribute="colour"
+                        limit={10}
+                        showMore={true}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for colours…'
+                        }}
+                      />
+                    </Panel>
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+                  <div className="p-6">
+                    <Panel header="Lens Type">
+                      <RefinementList
+                        attribute="lensType"
+                        limit={10}
+                        showMore={true}
+                        searchable={true}
+                        translations={{
+                          placeholder: 'Search for lens type…'
+                        }}
+                      />
+                    </Panel>
+                  </div>
+                </div>
+                <div className="flex flex-row p-12 justify-center">
+                  <ClearRefinements
+                    translations={{
+                      reset: 'CLEAR ALL'
+                    }}
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
-          <TableContainer className="flex flex-col w-full ">
+        </div>
+        <TableContainer className="flex flex-col w-full ">
           <CustomHits props={props} userData={userData} history={props?.history} />
           <div className="flex flex-row justify-center">
-            <div className="flex flex-1"></div>
-            <div className="flex flex-1 justify-center pt-8">
-              <Pagination showLast={true} />
-            </div>
-            <div className="flex flex-1 justify-center pt-8">
-              <HitsPerPage
-                defaultRefinement={50}
-                items={[
-                  { value: 50, label: 'Show 50' },
-                  { value: 100, label: 'Show 100' },
-                  { value: 200, label: 'Show 200' }
-                ]}
-              />
-            </div>
+            <Pagination showLast={true} />
           </div>
         </TableContainer>
       </InstantSearch>

@@ -51,6 +51,28 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
+const StyledDatePicker = withStyles((theme) => ({
+  root: {
+    '& label.Mui-focused': {
+      color: 'white'
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'yellow'
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white'
+      },
+      '&:hover fieldset': {
+        borderColor: 'white'
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'yellow'
+      }
+    }
+  }
+}))(TextField);
+
 const useStyles = makeStyles({
   table: {
     minWidth: 450
@@ -215,9 +237,47 @@ const CustomerProfile = (props) => {
           <div className="flex flex-row w-full px-10 justify-center">
             <div className="flex flex-row">
               <Typography className="text-16 pl-8 sm:text-20 truncate">
-                ID: {customer?.customerId}
+                CUSTOMER ID: {customer?.customerId}
               </Typography>
             </div>
+          </div>
+          <div className="date-picker w-full flex flex-row gap-10 justify-start p-10">
+            <StyledDatePicker
+              id="date"
+              label="Creation Date"
+              type="date"
+              variant="outlined"
+              style={{ border: 'none' }}
+              value={customer?.creationDate ? moment(customer?.creationDate.toDate()).format('YYYY-MM-DD') : ''}
+              InputLabelProps={{
+                shrink: true,
+                style: { color: 'white' }
+              }}
+              InputProps={{
+                inputProps: {
+                  style: { color: 'white', fontSize: '10px' }
+                }
+              }}
+              disabled={true}
+            />
+            <StyledDatePicker
+              id="date"
+              label="Last Edited"
+              type="date"
+              variant="outlined"
+              style={{ border: 'none' }}
+              value={customer?.editDate ? moment(customer?.editDate.toDate()).format('YYYY-MM-DD') : ''}
+              InputLabelProps={{
+                shrink: true,
+                style: { color: 'white' }
+              }}
+              InputProps={{
+                inputProps: {
+                  style: { color: 'white', fontSize: '10px' }
+                }
+              }}
+              disabled={true}
+            />
           </div>
         </div>
       }
@@ -232,10 +292,10 @@ const CustomerProfile = (props) => {
                   </h2>
                 </div>
                 <div className="flex flex-row w-full">
-                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-t-1 border-b-1 border-r-1">
-                    <h3 className="pl-6 font-700 bg-grey-200">Customer Id:</h3>
+                  <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                    <h3 className="pl-6 font-700 bg-grey-200">Customer ID:</h3>
                   </div>
-                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-t-1 border-b-1">
+                  <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
                     <h3 className="pl-6 bg-grey-200">{customer.customerId}</h3>
                   </div>
                 </div>
@@ -371,8 +431,8 @@ const CustomerProfile = (props) => {
                 </div>
               </div>
             </div>
-            <div className="note ml-10 w-1/2 h-auto  ">
-              <div className="py-4 border-1 border-black border-solid rounded-6 h-full">
+            <div className="note ml-10 w-1/2 h-auto">
+              <div className="py-4 border-1 border-black border-solid rounded-6 h-full relative">
                 <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                   <h2 className="font-700" style={{ color: '#f15a25' }}>
                     NOTE
@@ -381,7 +441,7 @@ const CustomerProfile = (props) => {
                 <div className="relative">
                   <div className="flex w-full">
                     <TextField
-                      className="my-10 p-2"
+                      className="p-2"
                       disabled={disabledState}
                       inputProps={{ style: { fontSize: 20, lineHeight: 1 } }}
                       InputLabelProps={{ style: { fontSize: 16 } }}
@@ -393,42 +453,41 @@ const CustomerProfile = (props) => {
                         setCustomer({ ...customer, memos: e.target.value });
                       }}
                       multiline
-                      rows={13}
+                      minRows={13}
                       variant="standard"
                       fullWidth
                     />
                   </div>
-
-                  {disabledState && (
-                    <div className="flex flex-col p-2 mt-10">
-                      <Button
-                        className={classes.button}
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => {
-                          setDisabledState(false);
-                        }}>
-                        <EditIcon fontSize="small" />
-                        EDIT
-                      </Button>
-                    </div>
-                  )}
-                  {!disabledState && (
-                    <div className="flex flex-col p-2">
-                      <Button
-                        className={classes.button}
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => {
-                          setDisabledState(true);
-                          onMemosChange();
-                        }}>
-                        <Icon>save</Icon>
-                        SAVE
-                      </Button>
-                    </div>
-                  )}
                 </div>
+                {disabledState && (
+                  <div className="flex flex-col w-full p-2 absolute bottom-0 mb-6">
+                    <Button
+                      className={classes.button}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        setDisabledState(false);
+                      }}>
+                      <EditIcon fontSize="small" />
+                      EDIT
+                    </Button>
+                  </div>
+                )}
+                {!disabledState && (
+                  <div className="flex flex-col w-full p-2 absolute bottom-0 mb-6">
+                    <Button
+                      className={classes.button}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        setDisabledState(true);
+                        onMemosChange();
+                      }}>
+                      <Icon>save</Icon>
+                      SAVE
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

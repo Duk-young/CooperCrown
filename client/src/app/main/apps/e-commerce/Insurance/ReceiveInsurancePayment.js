@@ -161,7 +161,7 @@ export default function ReceiveInsurancePayment(props) {
                 autoWidth>
                 <MenuItem value={'Cash'}>Cash</MenuItem>
                 <MenuItem value={'Credit Card'}>Credit Card</MenuItem>
-                <MenuItem value={'Cheque'}>Cheque</MenuItem>
+                <MenuItem value={'Check'}>Check</MenuItem>
                 <MenuItem value={'Store Credit / Gift Card'}>
                   Store Credit / Gift Card
                 </MenuItem>

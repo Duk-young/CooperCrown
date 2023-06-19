@@ -111,8 +111,7 @@ function AccountSettings(props) {
                       onClick={onSubmit}
                       variant="contained"
                       color="secondary">
-                      <span className="hidden sm:flex">SAVE DETAILS</span>
-                      <span className="flex sm:hidden">SAVE</span>
+                      <span className="flex">SAVE</span>
                     </Button>
                   </div>
                 </div>

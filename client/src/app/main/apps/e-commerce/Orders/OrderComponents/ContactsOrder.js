@@ -223,6 +223,7 @@ const ContactsOrder = (props) => {
                       onChange={handleSelectedContactLensChange}
                       disabled={disabledState}
                       name={'contactLensSphereOd'}
+                      type='number'
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -239,6 +240,7 @@ const ContactsOrder = (props) => {
                       onChange={handleSelectedContactLensChange}
                       disabled={disabledState}
                       name={'contactLensCylinderOd'}
+                      type='number'
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -255,6 +257,7 @@ const ContactsOrder = (props) => {
                       disabled={disabledState}
                       onChange={handleSelectedContactLensChange}
                       name={'contactLensAxisOd'}
+                      type='number'
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -271,6 +274,7 @@ const ContactsOrder = (props) => {
                       value={selectedContactLens?.contactLensAddOd ?? ''}
                       onChange={handleSelectedContactLensChange}
                       name={'contactLensAddOd'}
+                      type='number'
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -308,6 +312,7 @@ const ContactsOrder = (props) => {
                       value={selectedContactLens?.contactLensSphereOs ?? ''}
                       onChange={handleSelectedContactLensChange}
                       name={'contactLensSphereOs'}
+                      type='number'
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -324,6 +329,7 @@ const ContactsOrder = (props) => {
                       value={selectedContactLens?.contactLensCylinderOs ?? ''}
                       onChange={handleSelectedContactLensChange}
                       name={'contactLensCylinderOs'}
+                      type='number'
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -340,6 +346,7 @@ const ContactsOrder = (props) => {
                       value={selectedContactLens?.contactLensAxisOs ?? ''}
                       onChange={handleSelectedContactLensChange}
                       name={'contactLensAxisOs'}
+                      type='number'
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -356,6 +363,7 @@ const ContactsOrder = (props) => {
                       value={selectedContactLens?.contactLensAddOs ?? ''}
                       onChange={handleSelectedContactLensChange}
                       name={'contactLensAddOs'}
+                      type='number'
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }

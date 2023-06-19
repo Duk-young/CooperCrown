@@ -148,7 +148,8 @@ function UpdateCustomer(props) {
         let data = {
           ...form,
           dob: firestore.Timestamp.fromDate(form?.dob),
-          dobString: moment(form?.dob).format('MM/DD/YYYY')
+          dobString: moment(form?.dob).format('MM/DD/YYYY'),
+          editDate: firestore.Timestamp.fromDate(new Date())
         };
         delete data.id;
         await ref.set(data);
@@ -184,7 +185,8 @@ function UpdateCustomer(props) {
             dobString: moment(form?.dob).format('MM/DD/YYYY'),
             customerId: customerNo?.customerId + 1,
             recentUpdated: customerNo?.recentUpdated + 1,
-            creationDate: firestore.Timestamp.fromDate(new Date())
+            creationDate: firestore.Timestamp.fromDate(new Date()),
+            editDate: firestore.Timestamp.fromDate(new Date())
           });
 
         await firestore()
@@ -272,9 +274,6 @@ function UpdateCustomer(props) {
                       {form?.customerId ? 'Update ' : 'New '}
                       Customer
                     </Typography>
-                  </FuseAnimate>
-                  <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                    <Typography variant="caption">Customer Detail</Typography>
                   </FuseAnimate>
                 </div>
               </div>
