@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[1],
     minHeight: 0,
-    borderRadius: '8px 8px 0 0'
+    // borderRadius: '8px 8px 0 0'
   },
   toolbar: {
     height: toolbarHeight,

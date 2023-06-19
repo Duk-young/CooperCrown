@@ -103,7 +103,8 @@ function Contacts(props) {
   const classes = useStyles(props);
 
   return (
-    <FusePageSimple
+    <div className='overflow-hidden'>
+      <FusePageSimple
       content={
         <div className="flex w-full">
           <InstantSearch
@@ -178,7 +179,7 @@ function Contacts(props) {
               <TableContainer
                 stickyHeader
                 component={Paper}
-                className="flex flex-col w-full overflow-scroll">
+                className="flex flex-col w-full overflow-hidden">
                 <CustomHits props={props} />
               </TableContainer>
               <div className="flex flex-row justify-center">
@@ -190,8 +191,9 @@ function Contacts(props) {
           </InstantSearch>
         </div>
       }
-      innerScroll
+      innerScroll={false}
     />
+    </div>
   );
 }
 

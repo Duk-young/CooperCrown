@@ -6,14 +6,11 @@ import { useTheme } from '@material-ui/core/styles';
 import * as Actions from '../store/actions';
 import Button from '@material-ui/core/Button';
 import ConfirmDiscountDelete from './ConfirmDiscountDelete';
-import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
 import React, { useEffect, useState } from 'react';
 import reducer from '../store/reducers';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
@@ -37,8 +34,6 @@ function Discount(props) {
   const [open, setOpen] = useState(false);
   const product = useSelector(({ eCommerceApp }) => eCommerceApp.discount);
   const theme = useTheme();
-
-  const [tabValue, setTabValue] = useState(0);
   const [isLoading, setisLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
   const [errors, setErrors] = useState({});
@@ -72,10 +67,6 @@ function Discount(props) {
     }
   }, [form, product.data, setForm]);
 
-  function handleChangeTab(event, value) {
-    setTabValue(value);
-
-  }
 
   const handleClose = () => {
     setOpen(false);
@@ -138,76 +129,31 @@ function Discount(props) {
     <FusePageCarded
       header={
         form && (
-          <div className="flex flex-1 w-full items-center justify-between">
-            <div className="flex flex-col items-start max-w-full">
-              <FuseAnimate animation="transition.slideRightIn" delay={300}>
-                <Typography
-                  className="normal-case flex items-center sm:mb-12"
-                  component={Link}
-                  role="button"
-                  to="/apps/e-commerce/discounts"
-                  color="inherit">
-                  <Icon className="text-20">
-                    {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
-                  </Icon>
-                  <span className="mx-4">Discount</span>
-                </Typography>
-              </FuseAnimate>
-
-              <div className="flex items-center max-w-full">
-                <FuseAnimate animation="transition.expandIn" delay={300}>
-                  <img
-                    className="w-32 sm:w-48 rounded"
-                    src="assets/images/ecommerce/product-image-placeholder.png"
-                    alt={form.code}
-                  />
-                </FuseAnimate>
-                <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
-                  <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                    <Typography className="text-16 sm:text-20 truncate">
-                      {form.code ? form.code : 'New Discount'}
-                    </Typography>
-                  </FuseAnimate>
-                  <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                    <Typography variant="caption">Discount Detail</Typography>
-                  </FuseAnimate>
-                </div>
-              </div>
+          <div className='flex flex-row justify-center w-full'>
+            <div className='flex flex-row justify-start w-1/3'>
+              <Typography
+                className="normal-case flex sm:mb-12"
+                component={Link}
+                role="button"
+                to="/apps/e-commerce/discounts"
+                color="inherit">
+                <Icon className="text-20">
+                  {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
+                </Icon>
+                <span className="mx-4">Discount</span>
+              </Typography>
             </div>
-            {/* <FuseAnimate animation="transition.slideRightIn" delay={300}>
-              <Button
-                className="whitespace-no-wrap normal-case"
-                variant="contained"
-                color="secondary"
-                disabled={!canBeSubmitted()}
-                onClick={async () => {
-                  if (routeParams.discountId === 'new') {
-                    setisLoading(false);
-                    await dispatch(await Actions.saveDiscount(form));
-                    setisLoading(true);
-                  } else {
-                    setisLoading(false);
-                    await dispatch(await Actions.updateDiscount(form));
-                    setisLoading(true);
-                  }
-                }}>
-                Save
-              </Button>
-            </FuseAnimate> */}
+            <div className='flex flex-row justify-center w-1/3'>
+              <Typography
+                className="flex mx-0 sm:mx-12 uppercase"
+                style={{ fontSize: '3rem', fontWeight: 600 }}
+                variant="h6">
+                {form.code ? form.code : 'New Discount'}
+              </Typography>
+            </div>
+            <div className='flex flex-row justify-start w-1/3'></div>
           </div>
         )
-      }
-      contentToolbar={
-        <Tabs
-          value={tabValue}
-          onChange={handleChangeTab}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="auto"
-          classes={{ root: 'w-full h-64' }}>
-          <Tab className="h-64 normal-case" label="New Discount" />
-        </Tabs>
       }
       content={
         form && (
@@ -215,52 +161,50 @@ function Discount(props) {
             <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
                 <h1 className="font-700" style={{ color: '#f15a25' }}>
-                  Detail
+                  DETAIL
                 </h1>
               </div>
               <div className="p-16 sm:p-24 ">
-                {tabValue === 0 && (
-                  <div>
-                    <TextField
-                      className="mt-8 mb-16"
-                      required
-                      label="Name"
-                      id="discount-code"
-                      name="code"
-                      value={form.code}
-                      onChange={handleChange}
-                      variant="outlined"
-                      error={errors.code}
-                      helperText={errors.code}
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 mb-16"
-                      label="Description"
-                      id="discount-description"
-                      name="description"
-                      type="text"
-                      value={form.description}
-                      onChange={handleChange}
-                      variant="outlined"
-                      fullWidth
-                    />
-                    <TextField
-                      className="mt-8 mb-16"
-                      required
-                      id="discount-amount"
-                      name="amount"
-                      onChange={handleChange}
-                      label="Price"
-                      type="Number"
-                      value={form.amount}
-                      variant="outlined"
-                      error={errors.amount}
-                      helperText={errors.amount}
-                      fullWidth
-                    />
-                  </div>
-                )}
+                <div>
+                  <TextField
+                    className="mt-8 mb-16"
+                    required
+                    label="Name"
+                    id="discount-code"
+                    name="code"
+                    value={form.code}
+                    onChange={handleChange}
+                    variant="outlined"
+                    error={errors.code}
+                    helperText={errors.code}
+                    fullWidth
+                  />
+                  <TextField
+                    className="mt-8 mb-16"
+                    label="Description"
+                    id="discount-description"
+                    name="description"
+                    type="text"
+                    value={form.description}
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <TextField
+                    className="mt-8 mb-16"
+                    required
+                    id="discount-amount"
+                    name="amount"
+                    onChange={handleChange}
+                    label="Price"
+                    type="Number"
+                    value={form.amount}
+                    variant="outlined"
+                    error={errors.amount}
+                    helperText={errors.amount}
+                    fullWidth
+                  />
+                </div>
               </div>
               <br></br>
 

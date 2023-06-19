@@ -1,10 +1,11 @@
-import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { firestore } from 'firebase';
+import { Link } from 'react-router-dom';
+import { useForm } from '@fuse/hooks';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import clsx from 'clsx';
-import FusePageSimple from '@fuse/core/FusePageSimple';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Link } from 'react-router-dom';
+import FusePageSimple from '@fuse/core/FusePageSimple';
 import moment from 'moment'
 import Paper from '@material-ui/core/Paper';
 import React, { useState, useEffect } from 'react';
@@ -15,6 +16,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
 import {
@@ -23,7 +25,8 @@ import {
   InstantSearch,
   SearchBox,
   HitsPerPage,
-  SortBy
+  SortBy,
+  Configure
 } from 'react-instantsearch-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,6 +46,28 @@ const useStyles = makeStyles((theme) => ({
     }
   }
 }));
+
+const StyledDatePicker = withStyles((theme) => ({
+  root: {
+    '& label.Mui-focused': {
+      color: 'white'
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'yellow'
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white'
+      },
+      '&:hover fieldset': {
+        borderColor: 'white'
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'yellow'
+      }
+    }
+  }
+}))(TextField);
 
 const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
@@ -181,6 +206,13 @@ function Insurance(props) {
   const classes = useStyles(props);
   const [isLoading, setisLoading] = useState(true);
   const [payments, setPayments] = useState(true);
+  const { form, handleChange } = useForm(null);
+
+  useEffect(() => {
+    console.log(typeof form?.start)
+  
+  }, [form])
+  
 
   useEffect(() => {
     setisLoading(true);
@@ -213,15 +245,63 @@ function Insurance(props) {
             <div className="flex flex-col w-full">
               <div className={clsx(classes.header)}>
                 <div className="flex flex-row p-4 w-full justify-center">
+                  <Configure
+                    filters={`orderDate: ${form?.start ? new Date(form?.start).getTime() : -2208988800000
+                      } TO ${form?.end ? new Date(form?.end).getTime() : new Date().getTime()
+                      }`}
+                  />
                   <Typography
                     className="hidden sm:flex mx-0 sm:mx-12 uppercase"
                     style={{ fontSize: '3rem', fontWeight: 600 }}
                     variant="h6">
-                    INSURANCE CLAIMS
+                    INSURANCE
                   </Typography>
                 </div>
                 <div className="flex pt-32 pb-16 pl-8 items-center">
-                  <div className="flex flex-col w-1/3 mt-0 px-12"></div>
+                  <div className="flex flex-col w-1/3 mt-0 px-12">
+                    <div className="flex flex-row justify-around gap-8">
+                      <div className="w-full flex gap-10">
+                        <StyledDatePicker
+                          id="date"
+                          label="Start Date"
+                          type="date"
+                          value={form?.start}
+                          variant="outlined"
+                          style={{ border: 'none' }}
+                          name='start'
+                          InputLabelProps={{
+                            shrink: true,
+                            style: { color: 'white' }
+                          }}
+                          InputProps={{
+                            inputProps: {
+                              style: { color: 'white', fontSize: '10px' }
+                            }
+                          }}
+                          onChange={handleChange}
+                        />
+                        <StyledDatePicker
+                          id="date"
+                          label="End Date"
+                          type="date"
+                          value={form?.end}
+                          name='end'
+                          variant="outlined"
+                          style={{ border: 'none' }}
+                          InputLabelProps={{
+                            shrink: true,
+                            style: { color: 'white' }
+                          }}
+                          InputProps={{
+                            inputProps: {
+                              style: { color: 'white', fontSize: '10px' }
+                            }
+                          }}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <div className="flex flex-col w-1/3 border-1 headerSearch">
                     <SearchBox
                       translations={{
@@ -250,24 +330,30 @@ function Insurance(props) {
                     />
                   </div>
                   <div className="flex flex-row w-1/3 justify-around items-center">
-                    <div className="flex flex-col w-1/3 ">
-                      <div className="flex flex-row self-center items-center h-full flex-1">
-                        <h5>Sort:</h5>
-                        <SortBy
-                          className="w-full"
-                          defaultRefinement="insuranceClaims"
-                          items={[
-                            { value: 'insuranceClaims', label: 'By Date' },
-                            // { value: 'insuranceClaimsIdAsc', label: 'ID (Asc)' },
-                            // { value: 'insuranceClaimsIdAsc', label: 'ID (Desc)' },
-                            { value: 'insuranceClaimsOrderAsc', label: 'Order ID (Asc)' },
-                            { value: 'insuranceClaimsOrderDesc', label: 'Order ID (Desc)' },
-                            { value: 'insuranceClaimAmountAsc', label: 'Amount (Asc)' },
-                            { value: 'insuranceClaimAmountDesc', label: 'Amount (Desc)' }
-                          ]}
-                        />
-                      </div>
-
+                    <div>
+                      <HitsPerPage
+                        defaultRefinement={50}
+                        items={[
+                          { value: 50, label: 'Show 50' },
+                          { value: 100, label: 'Show 100' },
+                          { value: 200, label: 'Show 200' }
+                        ]}
+                      />
+                    </div>
+                    <div>
+                      <SortBy
+                        className="w-full"
+                        defaultRefinement="insuranceClaims"
+                        items={[
+                          { value: 'insuranceClaims', label: 'By Date' },
+                          // { value: 'insuranceClaimsIdAsc', label: 'ID (Asc)' },
+                          // { value: 'insuranceClaimsIdAsc', label: 'ID (Desc)' },
+                          { value: 'insuranceClaimsOrderAsc', label: 'Order ID (Asc)' },
+                          { value: 'insuranceClaimsOrderDesc', label: 'Order ID (Desc)' },
+                          { value: 'insuranceClaimAmountAsc', label: 'Amount (Asc)' },
+                          { value: 'insuranceClaimAmountDesc', label: 'Amount (Desc)' }
+                        ]}
+                      />
                     </div>
                   </div>
                 </div>
@@ -279,18 +365,7 @@ function Insurance(props) {
                 <CustomHits payments={payments} props={props} />
               </TableContainer>
               <div className="flex flex-row justify-center">
-                <div className="flex flex-1"></div>
-                <div className="flex flex-1 justify-center mt-8"><Pagination /></div>
-                <div className="flex flex-1 justify-center mt-8">
-                  <HitsPerPage
-                    defaultRefinement={50}
-                    items={[
-                      { value: 50, label: 'Show 50' },
-                      { value: 100, label: 'Show 100' },
-                      { value: 200, label: 'Show 200' }
-                    ]}
-                  />
-                </div>
+                <Pagination />
               </div>
             </div>
           </InstantSearch>

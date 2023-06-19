@@ -312,6 +312,7 @@ const EyeglassessOrder = (props) => {
                             onChange={handleSelectedFrameChange}
                             disabled={disabledState}
                             name={'eyeglassesSphereOd'}
+                            type='number'
                             InputProps={{
                               inputProps: {
                                 style: { textAlign: 'center' }
@@ -328,6 +329,7 @@ const EyeglassessOrder = (props) => {
                             onChange={handleSelectedFrameChange}
                             disabled={disabledState}
                             name={'eyeglassesCylinderOd'}
+                            type='number'
                             InputProps={{
                               inputProps: {
                                 style: { textAlign: 'center' }
@@ -344,6 +346,7 @@ const EyeglassessOrder = (props) => {
                             disabled={disabledState}
                             onChange={handleSelectedFrameChange}
                             name={'eyeglassesAxisOd'}
+                            type='number'
                             InputProps={{
                               inputProps: {
                                 style: { textAlign: 'center' }
@@ -360,6 +363,7 @@ const EyeglassessOrder = (props) => {
                             value={selectedFrame?.eyeglassesAddOd ?? ''}
                             onChange={handleSelectedFrameChange}
                             name={'eyeglassesAddOd'}
+                            type='number'
                             InputProps={{
                               inputProps: {
                                 style: { textAlign: 'center' }
@@ -399,6 +403,7 @@ const EyeglassessOrder = (props) => {
                             value={selectedFrame?.eyeglassesSphereOs ?? ''}
                             onChange={handleSelectedFrameChange}
                             name={'eyeglassesSphereOs'}
+                            type='number'
                             InputProps={{
                               inputProps: {
                                 style: { textAlign: 'center' }
@@ -415,6 +420,7 @@ const EyeglassessOrder = (props) => {
                             value={selectedFrame?.eyeglassesCylinderOs ?? ''}
                             onChange={handleSelectedFrameChange}
                             name={'eyeglassesCylinderOs'}
+                            type='number'
                             InputProps={{
                               inputProps: {
                                 style: { textAlign: 'center' }
@@ -431,6 +437,7 @@ const EyeglassessOrder = (props) => {
                             value={selectedFrame?.eyeglassesAxisOs ?? ''}
                             onChange={handleSelectedFrameChange}
                             name={'eyeglassesAxisOs'}
+                            type='number'
                             InputProps={{
                               inputProps: {
                                 style: { textAlign: 'center' }
@@ -447,6 +454,7 @@ const EyeglassessOrder = (props) => {
                             value={selectedFrame?.eyeglassesAddOs ?? ''}
                             onChange={handleSelectedFrameChange}
                             name={'eyeglassesAddOs'}
+                            type='number'
                             InputProps={{
                               inputProps: {
                                 style: { textAlign: 'center' }
@@ -512,6 +520,7 @@ const EyeglassessOrder = (props) => {
                               onChange={handleSelectedFrameChange}
                               disabled={disabledState}
                               name={'pdOuDistance'}
+                              type='number'
                               InputProps={{
                                 inputProps: {
                                   style: { textAlign: 'center' }
@@ -528,6 +537,7 @@ const EyeglassessOrder = (props) => {
                               onChange={handleSelectedFrameChange}
                               disabled={disabledState}
                               name={'pdOdDistance'}
+                              type='number'
                               InputProps={{
                                 inputProps: {
                                   style: { textAlign: 'center' }
@@ -544,6 +554,7 @@ const EyeglassessOrder = (props) => {
                               disabled={disabledState}
                               onChange={handleSelectedFrameChange}
                               name={'pdOsDistance'}
+                              type='number'
                               InputProps={{
                                 inputProps: {
                                   style: { textAlign: 'center' }
@@ -567,6 +578,7 @@ const EyeglassessOrder = (props) => {
                               onChange={handleSelectedFrameChange}
                               disabled={disabledState}
                               name={'pdOuNear'}
+                              type='number'
                               InputProps={{
                                 inputProps: {
                                   style: { textAlign: 'center' }
@@ -583,6 +595,7 @@ const EyeglassessOrder = (props) => {
                               onChange={handleSelectedFrameChange}
                               disabled={disabledState}
                               name={'pdOdNear'}
+                              type='number'
                               InputProps={{
                                 inputProps: {
                                   style: { textAlign: 'center' }
@@ -599,6 +612,7 @@ const EyeglassessOrder = (props) => {
                               disabled={disabledState}
                               onChange={handleSelectedFrameChange}
                               name={'pdOsNear'}
+                              type='number'
                               InputProps={{
                                 inputProps: {
                                   style: { textAlign: 'center' }

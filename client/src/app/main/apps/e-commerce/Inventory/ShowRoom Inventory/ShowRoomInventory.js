@@ -220,7 +220,7 @@ const ShowRoomInventory = (props) => {
           <div className="flex flex-row items-center">
             <div className="flex flex-row flex-1 justify-around">
               <Button
-                color='secondary'
+                className=' bg-white'
                 variant="contained"
                 onClick={() => {
                   setOpenFiltersDialog(true);
@@ -234,7 +234,7 @@ const ShowRoomInventory = (props) => {
                 FILTERS
               </Button>
               <Button
-                color='secondary'
+                className=' bg-white'
                 variant="contained"
                 onClick={() => {
                   setSearchState({});

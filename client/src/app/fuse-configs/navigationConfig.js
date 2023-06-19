@@ -42,31 +42,13 @@ const navigationConfig = [
       //   ]
       // },
       {
-        id: 'reports',
-        title: 'Dashboard',
-        translate: 'Dashboard',
+        id: 'calendar',
+        title: 'Calendar',
+        translate: 'Appointments',
         type: 'item',
         auth: authRoles.staff,
-        icon: 'assessment',
-        url: '/apps/e-commerce/reports'
-      },
-      {
-        id: 'orders',
-        title: 'Orders',
-        translate: 'Orders',
-        auth: authRoles.staff,
-        type: 'item',
-        icon: 'description',
-        url: '/apps/e-commerce/orders'
-      },
-      {
-        id: 'inventory',
-        title: 'Inventory',
-        translate: 'Inventory',
-        auth: authRoles.staff,
-        type: 'item',
-        icon: 'category',
-        url: '/apps/inventory'
+        icon: 'today',
+        url: '/apps/calendar'
       },
       {
         id: 'customers',
@@ -78,6 +60,15 @@ const navigationConfig = [
         url: '/apps/e-commerce/customers'
       },
       {
+        id: 'orders',
+        title: 'Orders',
+        translate: 'Orders',
+        auth: authRoles.staff,
+        type: 'item',
+        icon: 'description',
+        url: '/apps/e-commerce/orders'
+      },
+      {
         id: 'insurance',
         title: 'insurance',
         translate: 'Insurance',
@@ -87,13 +78,31 @@ const navigationConfig = [
         url: '/apps/e-commerce/insurance'
       },
       {
-        id: 'calendar',
-        title: 'Calendar',
-        translate: 'Appointments',
+        id: 'inventory',
+        title: 'Inventory',
+        translate: 'Inventory',
+        auth: authRoles.staff,
+        type: 'item',
+        icon: 'category',
+        url: '/apps/inventory'
+      },
+      {
+        id: 'paymentReport',
+        title: 'Payment Report',
+        translate: 'Payment Report',
+        auth: authRoles.staff,
+        type: 'item',
+        icon: 'category',
+        url: '/apps/e-commerce/paymentreport'
+      },
+      {
+        id: 'reports',
+        title: 'Dashboard',
+        translate: 'Dashboard',
         type: 'item',
         auth: authRoles.staff,
-        icon: 'today',
-        url: '/apps/calendar'
+        icon: 'assessment',
+        url: '/apps/e-commerce/reports'
       },
       {
         id: 'Setting',
@@ -158,14 +167,6 @@ const navigationConfig = [
             type: 'item',
             auth: authRoles.staff,
             url: '/apps/e-commerce/emailtemplates',
-            exact: true
-          },
-          {
-            id: 'paymentReport',
-            title: 'Payment Report',
-            type: 'item',
-            auth: authRoles.staff,
-            url: '/apps/e-commerce/paymentreport',
             exact: true
           },
           {

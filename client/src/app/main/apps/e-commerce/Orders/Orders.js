@@ -394,6 +394,18 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
+const StyledTab = withStyles((theme) => ({
+  root: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: '1rem',
+    '&$selected': {
+      color: '#f15a25', // Custom color for the selected tab
+    },
+  },
+  selected: {},
+}))(Tab);
+
 const StyledDatePicker = withStyles((theme) => ({
   root: {
     '& label.Mui-focused': {
@@ -512,7 +524,7 @@ function Orders(props) {
                   aria-label="simple tabs example">
                   {statuses.map((status, index) => {
                     return (
-                      <Tab
+                      <StyledTab
                         key={index}
                         className="p-0"
                         wrapped
@@ -683,7 +695,7 @@ function Orders(props) {
                 <div className="flex-1"></div>
               </div>
               <div className='flex flex-row justify-end gap-10 px-10'>
-              {value === 7 && (
+                {value === 7 && (
                   <Button
                     className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
                       }`}
@@ -701,8 +713,8 @@ function Orders(props) {
                     }}>
                     REDO
                   </Button>
-              )}
-              {value === 3 && (
+                )}
+                {value === 3 && (
                   <Button
                     className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
                       }`}
@@ -718,8 +730,8 @@ function Orders(props) {
                     }}>
                     TO SHOWROOM
                   </Button>
-              )}
-              {value === 4 && (
+                )}
+                {value === 4 && (
                   <Button
                     className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
                       }`}
@@ -735,10 +747,10 @@ function Orders(props) {
                     }}>
                     IN PROGRESS
                   </Button>
-              )}
-              {(value !== 0 && value !== 4 && value !== 8) &&
-                !isDataEmpty &&
-                value === statuses[value].value && (
+                )}
+                {(value !== 0 && value !== 4 && value !== 8) &&
+                  !isDataEmpty &&
+                  value === statuses[value].value && (
                     <Button
                       className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
                         }`}
@@ -759,7 +771,7 @@ function Orders(props) {
                           : null}
                       </span>
                     </Button>
-                )}
+                  )}
               </div>
             </InstantSearch>
           </TableContainer>

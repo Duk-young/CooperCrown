@@ -1,5 +1,5 @@
 import { firestore } from 'firebase';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { toast, Zoom } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
@@ -17,7 +17,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DilationDetails from './DilationDetails';
 import DoctorSignature from './DoctorSignature';
-import EditIcon from '@material-ui/icons/Edit';
 import FundusExam from './FundusExam';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
@@ -26,11 +25,11 @@ import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import LensDetails from './LensDetails';
 import MedicalOcularHistory from './MedicalOcularHistory';
+import moment from 'moment';
 import PeripheralRetina from './PeripheralRetina';
 import PupilsDetails from './PupilsDetails';
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
-import SaveIcon from '@material-ui/icons/Save';
 import SlitLampExam from './SlitLampExam';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -48,6 +47,28 @@ const useStyles = makeStyles((theme) => ({
     }
   }
 }));
+
+const StyledDatePicker = withStyles((theme) => ({
+  root: {
+    '& label.Mui-focused': {
+      color: 'white'
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'yellow'
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white'
+      },
+      '&:hover fieldset': {
+        borderColor: 'white'
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'yellow'
+      }
+    }
+  }
+}))(TextField);
 
 function Exams(props) {
   const routeParams = useParams();
@@ -207,7 +228,8 @@ function Exams(props) {
             email: customer?.email ? customer?.email : '',
             lastName: customer?.lastName ? customer?.lastName : '',
             showRoomId: checkShowroomId(form?.locationName),
-            doctorId: checkDoctorId(form?.fullName)
+            doctorId: checkDoctorId(form?.fullName),
+            editDate: firestore.Timestamp.fromDate(new Date())
           });
         await checkAndUpdatePrescriptions()
 
@@ -232,7 +254,9 @@ function Exams(props) {
             email: customer?.email ? customer?.email : '',
             lastName: customer?.lastName ? customer?.lastName : '',
             showRoomId: checkShowroomId(form?.locationName),
-            doctorId: checkDoctorId(form?.fullName)
+            doctorId: checkDoctorId(form?.fullName),
+            creationDate: firestore.Timestamp.fromDate(new Date()),
+            editDate: firestore.Timestamp.fromDate(new Date())
           });
 
         await firestore()
@@ -391,8 +415,8 @@ function Exams(props) {
   return (
     <FusePageCarded
       header={
-        <div className='flex flex-row w-full'>
-          <div className='w-1/2'>
+        <div className='flex flex-row w-full h-128'>
+          <div className='w-1/3'>
             <IconButton
               onClick={() => {
                 if ((!form && !disabledState) || (disabledState)) {
@@ -404,14 +428,44 @@ function Exams(props) {
               <Icon className="text-20">arrow_back</Icon>
               <span className="mx-4 text-12">Customer's Profile</span>
             </IconButton>
-
-            <div className="flex flex-row">
-              <Icon className="text-20 mt-4">listalt</Icon>
-              <Typography className="text-16 pl-16 sm:text-20 truncate">
-                Exam's Details
-              </Typography>
+            <div className="date-picker w-full flex flex-row gap-10 justify-start p-10">
+              <StyledDatePicker
+                id="date"
+                label="Creation Date"
+                type="date"
+                variant="outlined"
+                style={{ border: 'none' }}
+                value={form?.creationDate ? moment(form?.creationDate.toDate()).format('YYYY-MM-DD') : ''}
+                InputLabelProps={{
+                  shrink: true,
+                  style: { color: 'white' }
+                }}
+                InputProps={{
+                  inputProps: {
+                    style: { color: 'white', fontSize: '10px' }
+                  }
+                }}
+                disabled={true}
+              />
+              <StyledDatePicker
+                id="date"
+                label="Last Edited"
+                type="date"
+                variant="outlined"
+                style={{ border: 'none' }}
+                value={form?.editDate ? moment(form?.editDate.toDate()).format('YYYY-MM-DD') : ''}
+                InputLabelProps={{
+                  shrink: true,
+                  style: { color: 'white' }
+                }}
+                InputProps={{
+                  inputProps: {
+                    style: { color: 'white', fontSize: '10px' }
+                  }
+                }}
+                disabled={true}
+              />
             </div>
-
             <div>
               <Dialog
                 fullWidth
@@ -445,7 +499,15 @@ function Exams(props) {
               </Dialog>
             </div>
           </div>
-          <div className='flex flex-row w-1/2 justify-end pr-8'>
+          <div className='flex flex-row justify-center w-1/3'>
+            <Typography
+              className="flex mx-0 sm:mx-12 uppercase"
+              style={{ fontSize: '3rem', fontWeight: 600 }}
+              variant="h6">
+              {form?.examId ? 'VIEW EXAM' : 'NEW EXAM'}
+            </Typography>
+          </div>
+          <div className='flex flex-row w-1/3 justify-end pr-8'>
             <div className='flex flex-col self-center'>
               {!disabledState &&
                 <Button
@@ -454,9 +516,8 @@ function Exams(props) {
                   onClick={onSubmit}
                   color="secondary"
                   size="small"
-                  startIcon={<SaveIcon />}
                 >
-                  Save Exam
+                  Save
                 </Button>}
               {disabledState &&
                 <Button
@@ -480,9 +541,8 @@ function Exams(props) {
                   }}
                   color="secondary"
                   size="small"
-                  startIcon={<EditIcon />}
                 >
-                  Edit Exam
+                  Edit
                 </Button>}
             </div>
           </div>

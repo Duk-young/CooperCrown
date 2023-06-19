@@ -160,11 +160,11 @@ function PaymentReport(props) {
         const formattedArray = filteredPayments.map(obj => ({
             ...obj,
             dateString: obj.paymentDate.toDate().toLocaleDateString('en-US', {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
             }),
-          }));
+        }));
 
         const columnIds = ['Payment Date', 'Order No', 'First Name', 'Last Name', 'Amount', 'Payment Method', 'Payment Type', 'Location']
         const columns = ['dateString', 'customOrderId', 'firstName', 'lastName', 'amount', 'paymentMode', 'paymentType', 'locationName']
@@ -273,7 +273,7 @@ function PaymentReport(props) {
                                                             || (payment?.firstName && payment?.firstName.toLowerCase().includes(inputValue))
                                                             || (payment?.lastName && payment?.lastName.toLowerCase().includes(inputValue))
                                                             || (payment?.amount && payment?.amount.includes(inputValue))
-                                                            || (payment?.paymentMode && payment?.paymentMode.toLowerCase().includes(inputValue)) 
+                                                            || (payment?.paymentMode && payment?.paymentMode.toLowerCase().includes(inputValue))
                                                             || (payment?.paymentType && payment?.paymentType.toLowerCase().includes(inputValue))) {
                                                             newPayments.push(payment)
                                                         }
@@ -296,7 +296,7 @@ function PaymentReport(props) {
                                     <div>
                                         <Button
                                             className={classes.button}
-                                            style={{ width: '150px' }}
+                                            style={{ width: '100px' }}
                                             onClick={() => filterData()}
                                             variant="contained"
                                             color="secondary">
@@ -306,7 +306,7 @@ function PaymentReport(props) {
                                     <div className='pl-4'>
                                         <Button
                                             className={classes.button}
-                                            style={{ width: '150px' }}
+                                            style={{ width: '100px' }}
                                             onClick={() => downloadExcel(filteredPayments)}
                                             variant="contained"
                                             color="primary">
@@ -321,7 +321,8 @@ function PaymentReport(props) {
                     <div className='flex flex-row w-full justify-between p-16 items-center'>
                         <div className='flex flex-row w-3/4'>
                             <TextField
-                                style={{ width: '100px' }}
+                                disabled={true}
+                                style={{ width: '120px' }}
                                 label="Cash Total"
                                 variant="outlined"
                                 size="small"
@@ -335,7 +336,8 @@ function PaymentReport(props) {
                                 }, 0)}`}
                             />
                             <TextField
-                                style={{ width: '100px' }}
+                                disabled={true}
+                                style={{ width: '120px' }}
                                 label="Credit Total"
                                 variant="outlined"
                                 size="small"
@@ -349,13 +351,14 @@ function PaymentReport(props) {
                                 }, 0)}`}
                             />
                             <TextField
-                                style={{ width: '100px' }}
+                                disabled={true}
+                                style={{ width: '120px' }}
                                 label="Check Total"
                                 variant="outlined"
                                 size="small"
                                 className="px-12"
                                 value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
-                                    if (currentValue?.paymentMode === 'Cheque') {
+                                    if (currentValue?.paymentMode === 'Check') {
                                         return accumulator + +currentValue?.amount;
                                     } else {
                                         return accumulator;
@@ -363,7 +366,8 @@ function PaymentReport(props) {
                                 }, 0)}`}
                             />
                             <TextField
-                                style={{ width: '100px' }}
+                                disabled={true}
+                                style={{ width: '120px' }}
                                 label="Insurance Total"
                                 variant="outlined"
                                 size="small"
@@ -377,7 +381,8 @@ function PaymentReport(props) {
                                 }, 0)}`}
                             />
                             <TextField
-                                style={{ width: '100px' }}
+                                disabled={true}
+                                style={{ width: '120px' }}
                                 label="Gift Total"
                                 variant="outlined"
                                 size="small"
@@ -425,8 +430,6 @@ function PaymentReport(props) {
                                     <StyledTableCell>{hit?.paymentMode}</StyledTableCell>
                                     <StyledTableCell>{hit?.paymentType === 'order' ? "Order" : 'Insurance'}</StyledTableCell>
                                     <StyledTableCell>{hit?.locationName}</StyledTableCell>
-                                    <StyledTableCell>
-                                    </StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>

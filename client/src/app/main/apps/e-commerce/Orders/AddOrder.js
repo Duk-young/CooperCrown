@@ -723,7 +723,7 @@ function AddOrder(props) {
                             break;
                         }
                       }}>
-                      <MenuItem value={1}>{'Print Letter Ticket'}</MenuItem>
+                      <MenuItem value={1}>{'Print Letter Receipt'}</MenuItem>
                       <MenuItem value={2}>{'Print Thermal Receipt'}</MenuItem>
                       <MenuItem value={3}>{'Print Order Ticket'}</MenuItem>
                       <MenuItem value={4} disabled={form?.orderStatus !== 'pick up ready' && form?.orderStatus !== 'completed'}>{'Order Pickup'}</MenuItem>
