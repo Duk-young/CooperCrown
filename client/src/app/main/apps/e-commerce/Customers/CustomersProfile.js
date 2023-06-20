@@ -670,10 +670,8 @@ const CustomerProfile = (props) => {
                 </div>
                 <PrescriptionReceipt
                   mainForm={selectedPrescription}
-                  openPrescriptionReceipt={openPrescriptionReceipt}
-                  handlePrescriptionReceiptClose={
-                    handlePrescriptionReceiptClose
-                  }
+                  open={openPrescriptionReceipt}
+                  handleClose={handlePrescriptionReceiptClose}
                   customer={customer}
                 />
 
