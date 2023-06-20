@@ -16,6 +16,7 @@ import reducer from '../../dashboards/project/store/reducers';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import withReducer from 'app/store/withReducer';
+import moment from 'moment';
 
 const useStyles = makeStyles({
     flexGrow: {
@@ -186,7 +187,7 @@ const CustomData = (props) => {
     const isCustomerWithinAgeRange = (customer, ageRange) => {
         if (!customer?.dob) return false
         const today = new Date();
-        const birthDate = customer?.dob.toDate();
+        const birthDate = moment(customer?.dob).toDate();
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDiff = today.getMonth() - birthDate.getMonth();
         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {

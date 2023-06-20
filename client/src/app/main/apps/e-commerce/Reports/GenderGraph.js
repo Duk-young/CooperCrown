@@ -72,7 +72,7 @@ const GenderGraph = (props) => {
         };
 
         customers.forEach((customer) => {
-            const dob = customer?.dob ? customer?.dob.toDate() : 0;
+            const dob = customer?.dob ? customer?.dob : 0;
             if (dob) {
                 if (customer?.gender === 'Male') {
                     data.datasets[0].data[getAgeIndex(dob)] += 1;

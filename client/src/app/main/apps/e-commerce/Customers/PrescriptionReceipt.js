@@ -1,533 +1,90 @@
-import './Themes.css';
-
+import '../Customers/Themes.css';
+import { firestore } from 'firebase';
 import { useReactToPrint } from 'react-to-print';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
 import logo from './images/logo.JPG';
-import moment from 'moment';
+import moment from 'moment'
+import CanvasDraw from 'react-canvas-draw';
 import PropTypes from 'prop-types';
-import React, { useRef, useEffect } from 'react';
-import { Mailer } from 'nodemailer-react';
-// const nodemailer = window.require('nodemailer');
+import React, { useEffect, useState, useRef } from 'react';
+import DocSig from '../Exams/DocSig.PNG'
 
 export default function PrescriptionReceipt(props) {
-  const {
-    mainForm,
-    openPrescriptionReceipt,
-    handlePrescriptionReceiptClose,
-    customer
-  } = props;
+  const { mainForm, open, handleClose, customer } = props;
 
-  useEffect(() => {}, [mainForm]);
+  // const [templates, setTemplates] = useState([]);
+  const [showroom, setShowroom] = useState(false);
+  const [doctor, setDoctor] = useState(false);
+  const [saveableCanvas, setSaveableCanvas] = useState();
 
-  const componentRef = useRef();
+  const prescriptionReceipt = useRef();
   const handlePrint = useReactToPrint({
-    content: () => componentRef.current
+    content: () => prescriptionReceipt.current
   });
 
-  const transport = {
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: 'ali43093@gmail.com',
-      pass: 'prckrpcolhrxldek'
+  function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      var intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
     }
-  };
+    return phoneNumberString;
+  }
 
-  const defaults = {
-    from: 'ali43093@gmail.com'
-  };
+  useEffect(() => {
+    const fetchDetails = async () => {
+      // const queryTemplates = (
+      //   await firestore()
+      //     .collection('emailTemplates')
+      //     .doc('emailTemplates')
+      //     .get()
+      // ).data();
+      // const terms = queryTemplates?.templates?.terms
+      //   ? queryTemplates?.templates?.terms.split('<br>')
+      //   : '';
+      // setTemplates(terms.length ? terms : []);
 
-  const WelcomeEmail = () => ({
-    subject: `👋 Abbas`,
-    body: (
-      <div>
-        <p>Hello Abbas!</p>
-        <p>Hope you'll enjoy the package!</p>
-      </div>
-    )
-  });
+      if (!mainForm?.showRoomId || !mainForm?.doctorId) return
+      const queryShowroom = await firestore()
+        .collection('showRooms')
+        .where('showRoomId', '==', mainForm?.showRoomId)
+        .limit(1)
+        .get();
+      let resultShowRoom = queryShowroom.docs[0].data();
+      resultShowRoom.id = queryShowroom.docs[0].id;
 
-  const PasswordEmail = '';
-  const ReminderEmail = '';
+      setShowroom(resultShowRoom);
+      const queryDoctor = await firestore()
+        .collection('doctors')
+        .where('doctorId', '==', mainForm?.doctorId)
+        .limit(1)
+        .get();
+      let resultDoctor = queryDoctor.docs[0].data();
+      resultDoctor.id = queryDoctor.docs[0].id;
 
-  const mailer = Mailer(
-    { transport, defaults },
-    { WelcomeEmail, PasswordEmail, ReminderEmail }
-  );
+      setDoctor(resultDoctor);
+    };
+    fetchDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mainForm]);
 
-  // const handleEmail = () => {
-  //   let transporter = Mailer.createTransport({
-  //     host: 'smtp.gmail.com',
-  //     port: 465,
-  //     secure: true,
-  //     auth: {
-  //       user: 'ali43093@gmail.com',
-  //       pass: 'prckrpcolhrxldek'
-  //     }
-  //   });
-
-  //   const mailOptions = {
-  //     from: `ali43093@gmail.com`,
-  //     to: customer?.email,
-  //     subject: 'New Message from Cooper Crown',
-  //     html: `<h2>Hi ${customer?.lastName} , </h2>
-  //   <p>Below is your prescription details: </p>
-  //   {mainForm?.prescriptionType === 'eyeglassesRx' && (
-  //     <div className="p-16 sm:p-24 w-full">
-  //       <h1 className="underline p-10">Eyeglasses Rx</h1>
-  //       <div className="flex flex-row px-20">
-  //         <div className="p-8 h-auto flex-1">
-  //           <h3 className="text-center font-700"></h3>
-  //         </div>
-  //         <div className="p-8 h-auto flex-1">
-  //           <h3 className="text-center font-700">Sphere</h3>
-  //         </div>
-  //         <div className="p-8 h-auto flex-1">
-  //           <h3 className="text-center font-700">Cylinder</h3>
-  //         </div>
-  //         <div className="p-8 h-auto flex-1">
-  //           <h3 className="text-center font-700">Axis</h3>
-  //         </div>
-  //         <div className="p-8 h-auto flex-1">
-  //           <h3 className="text-center font-700">Add</h3>
-  //         </div>
-  //         <div className="p-8 h-auto flex-1">
-  //           <h3 className="text-center font-700">Prism</h3>
-  //         </div>
-  //         <div className="p-8 h-auto flex-1">
-  //           <h3 className="text-center font-700">VA</h3>
-  //         </div>
-  //       </div>
-  //       <div className="flex flex-row px-20">
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center font-700">OD</h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesSphereOd}
-  //           </h3>{' '}
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesCylinderOd}
-  //           </h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesAxisOd}
-  //           </h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesAddOd}
-  //           </h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesPrismOd}
-  //           </h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesVaOd}
-  //           </h3>
-  //         </div>
-  //       </div>
-
-  //       <div className="flex flex-row px-20">
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center font-700">OS</h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesSphereOs}
-  //           </h3>{' '}
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesCylinderOs}
-  //           </h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesAxisOs}
-  //           </h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesAddOs}
-  //           </h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesPrismOs}
-  //           </h3>
-  //         </div>
-  //         <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-  //           <h3 className="text-center">
-  //             {mainForm?.eyeglassesVaOs}
-  //           </h3>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   )}
-  //    <h3>Best Wishes</h3>
-  //    <h3>Cooper Crown</h3>`
-  //   };
-  //   transporter.sendMail(mailOptions, (error, info) => {
-  //     if (error) {
-  //       console.log(error);
-  //     }
-  //   });
-  // };
+  useEffect(() => {
+    if (mainForm?.docSign && saveableCanvas) saveableCanvas.loadSaveData(mainForm?.docSign)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [saveableCanvas])
 
   return (
     <Dialog
       maxWidth="md"
       fullWidth
-      onClose={handlePrescriptionReceiptClose}
+      onClose={handleClose}
       aria-labelledby="simple-dialog-title"
-      open={openPrescriptionReceipt}>
-      <div>
-        <div ref={componentRef}>
-          <div className="page-footer flex-col p-20">
-            <p>
-              In the State of New Jersey contact Lens prescriptions expire after
-              one year. By signing below you agree that we are not responsible
-              for errors when prescriptions are filled elsewhere and or after
-              the expiration date. Theft, unauthorized possession, including the
-              alteration or forgery of this form, are crimes punishable by law.
-              <br />
-              Some prescriptions may expire sooner than one year depending on
-              the medical judgement of the examining optomestrist.
-            </p>
-            <div className="flex flex-row justify-end pr-10">
-              <div className="flex flex-row border-b-2 border-black w-136">
-                X
-              </div>
-            </div>
-            <div className="flex flex-row justify-end pr-10">
-              <div className="flex flex-row border-b-2 border-white w-128 pt-10">
-                Dr.
-              </div>
-            </div>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <td>
-                  {/* <!--place holder for the fixed-position header--> */}
-                  <div className="page-header-space"></div>
-                </td>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>
-                  {/* <!--*** CONTENT GOES HERE ***--> */}
-                  <div className="page-header flex flex-row w-full">
-                    <div className="w-1/3 border-b-1 border-black ">
-                      {' '}
-                      <h2>{new Date().toDateString()}</h2>{' '}
-                    </div>
-                    <div className="flex flex-row justify-center pt-2 w-1/3 border-b-1 border-black ">
-                      <div className="w-128 h-w-128">
-                        <img src={logo} alt="" />
-                      </div>
-                    </div>
-                    <div className="flex flex-col w-1/3 border-b-1 border-black ">
-                      <h2 className=" text-right">225 Broad Ave. Ste 206</h2>
-                      <h2 className=" text-right">Palisades Park NJ 07650</h2>
-                      <h2 className=" text-right">Phone: 201-585-1337</h2>
-                      <h3 className=" text-right">
-                        Email: coopercrwnnj@gmail.com
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="flex flex-col w-full px-20 pb-10">
-                    {/* <h2>{`Customer ID: ${customer?.customerId} `}</h2> */}
-                    <h2>{`${customer?.firstName} ${customer?.lastName} `}</h2>
-                    <h2>{customer?.address}</h2>
-                    <h2>{`${customer?.state} ${customer?.zipCode} `}</h2>
-                    {/* <h2>{`Phone 1: ${formatPhoneNumber(
-                      customer?.phone1
-                    )} `}</h2> */}
-                    {/* <h2>{`Phone 2: ${formatPhoneNumber(
-                      customer?.phone2
-                    )} `}</h2> */}
-                    {/* <h2>{`Email: ${customer?.email} `}</h2> */}
-                    <h2>
-                      {`Prescription Date: ${
-                        mainForm?.prescriptionDate
-                          ? moment(mainForm?.prescriptionDate.toDate()).format(
-                              'MM/DD/YYYY'
-                            )
-                          : ''
-                      }`}{' '}
-                    </h2>
-                  </div>
-
-                  {mainForm?.prescriptionType === 'eyeglassesRx' && (
-                    <div className="p-16 sm:p-24 w-full">
-                      <h1 className="underline p-10">Eyeglasses Rx</h1>
-                      <div className="flex flex-row px-20">
-                        <div className="p-8 h-auto flex-1"></div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">Sphere</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">Cylinder</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">Axis</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">Add</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">Prism</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">VA</h3>
-                        </div>
-                      </div>
-                      <div className="flex flex-row px-20">
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center font-700">OD</h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesSphereOd}
-                          </h3>{' '}
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesCylinderOd}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesAxisOd}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesAddOd}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesPrismOd}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesVaOd}
-                          </h3>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-row px-20">
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center font-700">OS</h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesSphereOs}
-                          </h3>{' '}
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesCylinderOs}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesAxisOs}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesAddOs}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesPrismOs}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.eyeglassesVaOs}
-                          </h3>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {mainForm?.prescriptionType === 'contactLensRx' && (
-                    <div className="p-16 sm:p-24 w-full">
-                      <h1 className="underline p-10">Contact Lens Rx</h1>
-                      <div className="flex flex-row px-20">
-                        <div className="p-8 h-auto flex-1"></div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">Sphere</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">Cylinder</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">Axis</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">Add</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">DIA</h3>
-                        </div>
-                        <div className="p-8 h-auto flex-1">
-                          <h3 className="text-center font-700">BC</h3>
-                        </div>
-                      </div>
-                      <div className="flex flex-row px-20">
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center font-700">OD</h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensSphereOd}
-                          </h3>{' '}
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensCylinderOd}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensAxisOd}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensAddOd}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensDiaOd}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensBcOd}
-                          </h3>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-row px-20">
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center font-700">OS</h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensSphereOs}
-                          </h3>{' '}
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensCylinderOs}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensAxisOs}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensAddOs}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensDiaOs}
-                          </h3>
-                        </div>
-                        <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                          <h3 className="text-center">
-                            {mainForm?.contactLensBcOs}
-                          </h3>
-                        </div>
-                      </div>
-                      <div className="flex flex-row px-20 justify-around mt-10">
-                        <div>
-                          <span className="underline font-700">Company:</span>
-                          <span className="ml-10">
-                            {mainForm?.contactLensCompany}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="underline font-700">Model:</span>
-                          <span className="ml-10">
-                            {mainForm?.contactLensModel}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="underline font-700">Modality:</span>
-                          <span className="ml-10">
-                            {mainForm?.contactLensModality}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex flex-row justify-end p-44">
-                    <h3 className="underline font-700">Expiration Date:</h3>
-
-                    <h3 className="underline font-700 ml-6">
-                      {mainForm?.prescriptionDate
-                        ? moment(
-                            mainForm?.prescriptionDate
-                              .toDate()
-                              .setFullYear(
-                                mainForm?.prescriptionDate
-                                  .toDate()
-                                  .getFullYear() + 1
-                              )
-                          ).format('MM/DD/YYYY')
-                        : ''}
-                    </h3>
-                  </div>
-
-                  <div className="footercopy">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit, sed do eiusmod tempor incididunt ut labore et dolore
-                    magna aliqua.
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-
-            <tfoot>
-              <tr>
-                <td>
-                  {/* <!--place holder for the fixed-position footer--> */}
-                  <div className="page-footer-space"></div>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <div className="flex flex-row justify-center">
+      open={open}>
+      <div className='flex flex-col w-full'>
+        <div className='flex flex-row justify-center'>
           <Fab
             onClick={handlePrint}
             variant="extended"
@@ -536,18 +93,416 @@ export default function PrescriptionReceipt(props) {
             <AddIcon />
             Print
           </Fab>
-          <Fab
-            onClick={() => {
-              mailer.send('WelcomeEmail', {
-                to: `${customer?.email}`
-              });
-            }}
-            variant="extended"
-            color="primary"
-            aria-label="add">
-            <AddIcon />
-            Send Email
-          </Fab>
+        </div>
+
+        <div ref={prescriptionReceipt}>
+          <table className='w-full'>
+            <tbody className='w-full'>
+              <div class="flex flex-col justify-center items-center w-full px-20 h-full">
+                <div class="w-full">
+                  <div className='flex flex-col w-full justify-center p-10 h-full'>
+                    <p className='font-13pt text-center font-700'>cooper crown</p>
+                    <div className="mx-auto w-40">
+                      <img src={logo} alt="" />
+                    </div>
+                    <p className=' pt-4 font-13pt text-center font-700'>
+                      {mainForm?.prescriptionType === 'eyeglassesRx' && 'EYEGLASSES RX'}
+                      {mainForm?.prescriptionType === 'contactLensRx' && 'Contact Lens RX'}
+                    </p>
+                    <div className='flex flex-row justify-between px-60'>
+                      <p className=' pt-4 font-10pt text-center font-700'>Exam Date: {mainForm?.prescriptionDate ? moment(mainForm?.prescriptionDate.toDate()).format('MM/DD/YYYY') : ''}</p>
+                      <p className=' pt-4 font-10pt text-center font-700'>Expiry Date: {mainForm?.prescriptionDate ? moment(mainForm?.prescriptionDate.toDate()).add(1, 'year').format('MM/DD/YYYY') : ''}</p>
+                    </div>
+                    <div className='w-full h-2 bg-black my-4'></div>
+                    <div className="flex p-16 flex-row w-full my-10">
+                      <div className="customer-info w-1/2 h-auto">
+                        <div className="py-4 border-1 border-black border-solid rounded-6">
+                          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                            <h2 className="font-700" style={{ color: '#f15a25' }}>
+                              CUSTOMER INFO
+                            </h2>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700 ">ID:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6 ">{customer.customerId}</h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700">Name:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6">{`${customer?.firstName} ${customer.lastName}`}</h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700 ">
+                                DOB:
+                              </h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6 ">
+                                {customer?.dob.toDateString()}
+                              </h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700">Sex:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6">{customer?.gender}</h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700">Address:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6">{customer?.address}</h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700 ">City:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6 ">{customer?.city}</h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700">State:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6">{customer?.state}</h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700 ">Zip-Code:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6 ">{customer?.zipCode}</h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700">Phone 1:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6">
+                                {formatPhoneNumber(customer?.phone1)}
+                              </h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700 ">Phone 2:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6 ">
+                                {formatPhoneNumber(customer?.phone2)}
+                              </h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-b-1 border-r-1">
+                              <h3 className="pl-6 font-700">Email:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
+                              <h3 className="pl-6">{customer?.email}</h3>
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full">
+                            <div className="flex flex-col md:w-1/4 w-1/3 border-black border-r-1">
+                              <h3 className="pl-6 font-700 ">Other:</h3>
+                            </div>
+                            <div className="flex flex-col md:w-3/4 w-2/3">
+                              <h3 className="pl-6 ">{customer?.other}</h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="note ml-10 w-1/2 h-auto">
+                        <div className="py-4 border-1 border-black border-solid rounded-6 h-full relative">
+                          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                            <h2 className="font-700" style={{ color: '#f15a25' }}>
+                              NOTE
+                            </h2>
+                          </div>
+                          <div className="relative">
+                            <div className="flex w-full p-8">
+                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tempus finibus mauris, eu semper mauris placerat sed. Aliquam erat volutpat. Nulla tincidunt semper justo, id posuere mi commodo a. Maecenas tincidunt orci sed sapien tincidunt, sed finibus elit scelerisque. Sed nec augue eget sapien convallis tincidunt ut at libero.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {mainForm?.prescriptionType === 'eyeglassesRx' && (
+                      <div className="w-full my-16">
+                        <div className="flex flex-row px-32">
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">SUBJ RX</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Sphere</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Cylinder</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Axis</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Prism/Base</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">VA</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Add</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">VA</h3>
+                          </div>
+                        </div>
+                        <div className="flex flex-row px-20">
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center font-700">OD</h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesSphereOd}
+                            </h3>{' '}
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesCylinderOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesAxisOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesPrismOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              20 / {mainForm?.eyeglassesVaOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesAddOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              20 / {mainForm?.eyeglassesVaOd2}
+                            </h3>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-row px-20">
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center font-700">OS</h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesSphereOs}
+                            </h3>{' '}
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesCylinderOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesAxisOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesPrismOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              20 / {mainForm?.eyeglassesVaOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.eyeglassesAddOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              20 / {mainForm?.eyeglassesVaOs2}
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {mainForm?.prescriptionType === 'contactLensRx' && (
+                      <div className="p-16 sm:p-24 w-full">
+                        <div className="flex flex-row px-20">
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">CL RX</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Sphere</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Cylinder</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Axis</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">BC</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">DIA</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Brand</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Model</h3>
+                          </div>
+                        </div>
+                        <div className="flex flex-row px-20">
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center font-700">OD</h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensSphereOd}
+                            </h3>{' '}
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensCylinderOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensAxisOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensBcOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensDiaOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensBrandOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensModelOd}
+                            </h3>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-row px-20">
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center font-700">OS</h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensSphereOs}
+                            </h3>{' '}
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensCylinderOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensAxisOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensBcOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensDiaOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensBrandOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensModelOs}
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className='flex flex-col w-full px-32'>
+                      <p className='font-10pt font-700'>State : {doctor?.licState}</p>
+                      <p className='font-10pt font-700'>Licence No. : {doctor?.licNo}</p>
+                      <p className='font-10pt font-700'>NPI No. : {doctor?.npiNo}</p>
+                      <p className='font-10pt font-700'>Electronically Signed By : Dr. {doctor?.fname} {doctor?.lname}</p>
+                      <p className='font-10pt font-700'>Date : {moment().format('MM/DD/YYYY')}</p>
+                    </div>
+                    <div className='flex'>
+                        <CanvasDraw
+                          ref={(canvasDraw) => setSaveableCanvas(canvasDraw)}
+                          brushRadius={1}
+                          disabled={true}
+                          brushColor={'#000000'}
+                          imgSrc={DocSig}
+                          lazyRadius="0"
+                          canvasWidth={300}
+                          canvasHeight={300}
+                        />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tbody>
+
+            <tfoot>
+              <div class="page-footer-space"></div>
+            </tfoot>
+          </table>
+          <div className='print-footer flex flex-col px-12'>
+            <div className='w-full h-2 border-b-1 border-black border-dotted my-8'></div>
+            <div class="flex flex-col justify-center items-center w-full">
+              <p className='font-10pt font-700 text-center'>{showroom?.locationName} {showroom?.City} {showroom?.State}</p>
+              <p className='font-10pt font-700 text-center'>Phone: {showroom?.phoneNo} / {showroom?.email}</p>
+              <p className='font-10pt font-700 text-center'>www.coopercwn.com</p>
+            </div>
+          </div>
         </div>
       </div>
     </Dialog>

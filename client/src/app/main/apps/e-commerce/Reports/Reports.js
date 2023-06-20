@@ -109,11 +109,17 @@ function Reports() {
 
       const queryCustomers = await firestore().collection('customers').get();
       let resultCustomers = [];
+      let resultCustomerswithDob = [];
       queryCustomers.forEach((doc) => {
         resultCustomers.push(doc.data());
       });
-      setCustomers(resultCustomers);
-      setFilteredCustomers(resultCustomers)
+      
+      resultCustomers.forEach((doc) => {
+        resultCustomerswithDob.push({...doc, dob: doc?.dob && doc.dob.toDate()});
+      });
+
+      setCustomers(resultCustomerswithDob);
+      setFilteredCustomers(resultCustomerswithDob)
 
       const queryExams = await firestore().collection('exams').get();
       let examsData = [];

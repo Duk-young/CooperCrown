@@ -283,25 +283,26 @@ function Exams(props) {
           .add({
             prescriptionType: 'eyeglassesRx',
             eyeglassesSphereOd: form?.egRxOdSphere ? form?.egRxOdSphere : '',
-            eyeglassesCylinderOd: form?.egRxOdCylinder
-              ? form?.egRxOdCylinder
-              : '',
+            eyeglassesCylinderOd: form?.egRxOdCylinder ? form?.egRxOdCylinder : '',
             eyeglassesAxisOd: form?.egRxOdAxis ? form?.egRxOdAxis : '',
             eyeglassesAddOd: form?.egRxOdAdd ? form?.egRxOdAdd : '',
             eyeglassesPrismOd: form?.egRxOdPrismBase ? form?.egRxOdPrismBase : '',
             eyeglassesVaOd: form?.egRxOdVa1 ? form?.egRxOdVa1 : '',
+            eyeglassesVaOd2: form?.egRxOdVa2 ? form?.egRxOdVa2 : '',
             eyeglassesSphereOs: form?.egRxOsSphere ? form?.egRxOsSphere : '',
-            eyeglassesCylinderOs: form?.egRxOsCylinder
-              ? form?.egRxOsCylinder
-              : '',
+            eyeglassesCylinderOs: form?.egRxOsCylinder ? form?.egRxOsCylinder : '',
             eyeglassesAxisOs: form?.egRxOsAxis ? form?.egRxOsAxis : '',
             eyeglassesAddOs: form?.egRxOsAdd ? form?.egRxOsAdd : '',
             eyeglassesPrismOs: form?.egRxOsPrismBase ? form?.egRxOsPrismBase : '',
             eyeglassesVaOs: form?.egRxOsVa1 ? form?.egRxOsVa1 : '',
+            eyeglassesVaOs2: form?.egRxOsVa2 ? form?.egRxOsVa2 : '',
             prescriptionId: dbConfig?.prescriptionId + 1,
             customerId: customer.customerId,
             prescriptionDate: firestore.Timestamp.fromDate(new Date()),
-            fromExamId: dbConfig?.examId + 1
+            fromExamId: dbConfig?.examId + 1,
+            showRoomId: checkShowroomId(form?.locationName),
+            doctorId: checkDoctorId(form?.fullName),
+            docSign: form?.docSign
           });
 
         await firestore()
@@ -309,24 +310,26 @@ function Exams(props) {
           .add({
             prescriptionType: 'contactLensRx',
             contactLensSphereOd: form?.clrxOdSphere ? form?.clrxOdSphere : '',
-            contactLensCylinderOd: form?.clrxOdCylinder
-              ? form?.clrxOdCylinder
-              : '',
+            contactLensCylinderOd: form?.clrxOdCylinder ? form?.clrxOdCylinder : '',
             contactLensAxisOd: form?.clrxOdAxis ? form?.clrxOdAxis : '',
             contactLensDiaOd: form?.clrxOdDia ? form?.clrxOdDia : '',
             contactLensBcOd: form?.clrxOdBc ? form?.clrxOdBc : '',
             contactLensSphereOs: form?.clrxOsSphere ? form?.clrxOsSphere : '',
-            contactLensCylinderOs: form?.clrxOsCylinder
-              ? form?.clrxOsCylinder
-              : '',
+            contactLensCylinderOs: form?.clrxOsCylinder ? form?.clrxOsCylinder : '',
             contactLensAxisOs: form?.clrxOsAxis ? form?.clrxOsAxis : '',
             contactLensDiaOs: form?.clrxOsDia ? form?.clrxOsDia : '',
             contactLensBcOs: form?.clrxOsBc ? form?.clrxOsBc : '',
-            contactLensModel: form?.clrxOdBrand ? form?.clrxOdBrand : '',
+            contactLensModelOd: form?.clrxOdModel ? form?.clrxOdModel : '',
+            contactLensModelOs: form?.clrxOsModel ? form?.clrxOsModel : '',
+            contactLensBrandOd: form?.clrxOdBrand ? form?.clrxOdBrand : '',
+            contactLensBrandOs: form?.clrxOsBrand ? form?.clrxOsBrand : '',
             prescriptionId: dbConfig?.prescriptionId + 2,
             customerId: customer.customerId,
             prescriptionDate: firestore.Timestamp.fromDate(new Date()),
-            fromExamId: dbConfig?.examId + 1
+            fromExamId: dbConfig?.examId + 1,
+            showRoomId: checkShowroomId(form?.locationName),
+            doctorId: checkDoctorId(form?.fullName),
+            docSign: form?.docSign
           });
 
         await firestore()
@@ -362,13 +365,18 @@ function Exams(props) {
         eyeglassesAddOd: form?.egRxOdAdd ? form?.egRxOdAdd : '',
         eyeglassesPrismOd: form?.egRxOdPrismBase ? form?.egRxOdPrismBase : '',
         eyeglassesVaOd: form?.egRxOdVa1 ? form?.egRxOdVa1 : '',
+        eyeglassesVaOd2: form?.egRxOdVa2 ? form?.egRxOdVa2 : '',
         eyeglassesSphereOs: form?.egRxOsSphere ? form?.egRxOsSphere : '',
         eyeglassesCylinderOs: form?.egRxOsCylinder ? form?.egRxOsCylinder : '',
         eyeglassesAxisOs: form?.egRxOsAxis ? form?.egRxOsAxis : '',
         eyeglassesAddOs: form?.egRxOsAdd ? form?.egRxOsAdd : '',
         eyeglassesPrismOs: form?.egRxOsPrismBase ? form?.egRxOsPrismBase : '',
         eyeglassesVaOs: form?.egRxOsVa1 ? form?.egRxOsVa1 : '',
-        prescriptionDate: firestore.Timestamp.fromDate(new Date())
+        eyeglassesVaOs2: form?.egRxOsVa2 ? form?.egRxOsVa2 : '',
+        prescriptionDate: firestore.Timestamp.fromDate(new Date()),
+        showRoomId: checkShowroomId(form?.locationName),
+        doctorId: checkDoctorId(form?.fullName),
+        docSign: form?.docSign
       })
     }
 
@@ -389,8 +397,14 @@ function Exams(props) {
         contactLensAxisOs: form?.clrxOsAxis ? form?.clrxOsAxis : '',
         contactLensDiaOs: form?.clrxOsDia ? form?.clrxOsDia : '',
         contactLensBcOs: form?.clrxOsBc ? form?.clrxOsBc : '',
-        contactLensModel: form?.clrxOdBrand ? form?.clrxOdBrand : '',
-        prescriptionDate: firestore.Timestamp.fromDate(new Date())
+        contactLensModelOd: form?.clrxOdModel ? form?.clrxOdModel : '',
+        contactLensModelOs: form?.clrxOsModel ? form?.clrxOsModel : '',
+        contactLensBrandOd: form?.clrxOdBrand ? form?.clrxOdBrand : '',
+        contactLensBrandOs: form?.clrxOsBrand ? form?.clrxOsBrand : '',
+        prescriptionDate: firestore.Timestamp.fromDate(new Date()),
+        showRoomId: checkShowroomId(form?.locationName),
+        doctorId: checkDoctorId(form?.fullName),
+        docSign: form?.docSign
       })
     }
     return true
