@@ -215,6 +215,19 @@ function Exams(props) {
       });
       return true
     }
+    if (!form?.docSign) {
+      toast.error('Doctor sign is mandatory', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Zoom
+      });
+      return true
+    }
     setisLoading(true);
     try {
       if (form?.id) {
@@ -314,11 +327,13 @@ function Exams(props) {
             contactLensAxisOd: form?.clrxOdAxis ? form?.clrxOdAxis : '',
             contactLensDiaOd: form?.clrxOdDia ? form?.clrxOdDia : '',
             contactLensBcOd: form?.clrxOdBc ? form?.clrxOdBc : '',
+            contactLensAddOd: form?.clrxOdAdd ? form?.clrxOdAdd : '',
             contactLensSphereOs: form?.clrxOsSphere ? form?.clrxOsSphere : '',
             contactLensCylinderOs: form?.clrxOsCylinder ? form?.clrxOsCylinder : '',
             contactLensAxisOs: form?.clrxOsAxis ? form?.clrxOsAxis : '',
             contactLensDiaOs: form?.clrxOsDia ? form?.clrxOsDia : '',
             contactLensBcOs: form?.clrxOsBc ? form?.clrxOsBc : '',
+            contactLensAddOs: form?.clrxOsAdd ? form?.clrxOsAdd : '',
             contactLensModelOd: form?.clrxOdModel ? form?.clrxOdModel : '',
             contactLensModelOs: form?.clrxOsModel ? form?.clrxOsModel : '',
             contactLensBrandOd: form?.clrxOdBrand ? form?.clrxOdBrand : '',
@@ -392,11 +407,13 @@ function Exams(props) {
         contactLensAxisOd: form?.clrxOdAxis ? form?.clrxOdAxis : '',
         contactLensDiaOd: form?.clrxOdDia ? form?.clrxOdDia : '',
         contactLensBcOd: form?.clrxOdBc ? form?.clrxOdBc : '',
+        contactLensAddOd: form?.clrxOdAdd ? form?.clrxOdAdd : '',
         contactLensSphereOs: form?.clrxOsSphere ? form?.clrxOsSphere : '',
         contactLensCylinderOs: form?.clrxOsCylinder ? form?.clrxOsCylinder : '',
         contactLensAxisOs: form?.clrxOsAxis ? form?.clrxOsAxis : '',
         contactLensDiaOs: form?.clrxOsDia ? form?.clrxOsDia : '',
         contactLensBcOs: form?.clrxOsBc ? form?.clrxOsBc : '',
+        contactLensAddOs: form?.clrxOsAdd ? form?.clrxOsAdd : '',
         contactLensModelOd: form?.clrxOdModel ? form?.clrxOdModel : '',
         contactLensModelOs: form?.clrxOsModel ? form?.clrxOsModel : '',
         contactLensBrandOd: form?.clrxOdBrand ? form?.clrxOdBrand : '',
@@ -409,6 +426,28 @@ function Exams(props) {
     }
     return true
 
+  }
+
+  const handleDelete = async () => {
+    setisLoading(true)
+    await firestore().collection('exams').doc(form?.id).delete()
+    const queryPrescriptions = await firestore().collection('prescriptions').where('fromExamId', '==', Number(routeParams?.examId)).get()
+    if (!queryPrescriptions.empty) {
+      queryPrescriptions.forEach(async (pres) => {
+        let id = pres.id
+        await firestore().collection('prescriptions').doc(id).delete()
+      })
+    }
+
+    dispatch(
+      MessageActions.showMessage({
+        message: 'Exam deleted successfully'
+      })
+    );
+
+    props.history.push(`/apps/e-commerce/customers/profile/${customer?.customerId}`);
+
+    setisLoading(false)
   }
 
   const checkShowroomId = (value) => {
@@ -521,7 +560,7 @@ function Exams(props) {
               {form?.examId ? 'VIEW EXAM' : 'NEW EXAM'}
             </Typography>
           </div>
-          <div className='flex flex-row w-1/3 justify-end pr-8'>
+          <div className='flex flex-row w-1/3 justify-end pr-8 gap-10'>
             <div className='flex flex-col self-center'>
               {!disabledState &&
                 <Button
@@ -559,6 +598,34 @@ function Exams(props) {
                   Edit
                 </Button>}
             </div>
+            {disabledState &&
+              <div className='flex flex-col self-center'>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={() => {
+                    if (userData.userRole === 'admin' || userData?.examsDelete) {
+                      handleDelete()
+                    } else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
+                  }}
+                  color="secondary"
+                  size="small"
+                >
+                  Delete
+                </Button>
+              </div>
+            }
           </div>
         </div>
       }
@@ -597,7 +664,7 @@ function Exams(props) {
           <ChiefComplaints form={form} handleChange={handleChange} disabledState={disabledState} />
           <GlassesDetails form={form} handleChange={handleChange} disabledState={disabledState} />
           <LensDetails form={form} handleChange={handleChange} disabledState={disabledState} />
-          <VisualAcuity form={form} handleChange={handleChange} disabledState={disabledState} />
+          <VisualAcuity form={form} setForm={setForm} handleChange={handleChange} disabledState={disabledState} />
           <PupilsDetails form={form} handleChange={handleChange} disabledState={disabledState} />
           <SlitLampExam form={form} handleChange={handleChange} disabledState={disabledState} setForm={setForm} />
           <FundusExam form={form} handleChange={handleChange} disabledState={disabledState} setForm={setForm} />

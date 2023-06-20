@@ -923,7 +923,10 @@ const CustomerProfile = (props) => {
                                         ? { color: 'red' }
                                         : { color: 'black' }
                                     }>
-                                    {row?.contactLensModel}
+                                    <div className="flex flex-col">
+                                      <div>{row.contactLensModelOd}</div>
+                                      <div>{row.contactLensModelOs}</div>
+                                    </div>
                                   </StyledTableCell>
                                 </StyledTableRow>
                               ))}

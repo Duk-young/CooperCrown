@@ -47,7 +47,11 @@ export default function PrescriptionReceipt(props) {
       //   : '';
       // setTemplates(terms.length ? terms : []);
 
-      if (!mainForm?.showRoomId || !mainForm?.doctorId) return
+      if (!mainForm?.showRoomId || !mainForm?.doctorId) {
+        setShowroom(null)
+        setDoctor(null)
+        return true
+      }
       const queryShowroom = await firestore()
         .collection('showRooms')
         .where('showRoomId', '==', mainForm?.showRoomId)
@@ -371,6 +375,9 @@ export default function PrescriptionReceipt(props) {
                             <h3 className="text-center font-700">Axis</h3>
                           </div>
                           <div className="p-8 h-auto flex-1">
+                            <h3 className="text-center font-700">Add</h3>
+                          </div>
+                          <div className="p-8 h-auto flex-1">
                             <h3 className="text-center font-700">BC</h3>
                           </div>
                           <div className="p-8 h-auto flex-1">
@@ -400,6 +407,11 @@ export default function PrescriptionReceipt(props) {
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
                               {mainForm?.contactLensAxisOd}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensAddOd}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -441,6 +453,11 @@ export default function PrescriptionReceipt(props) {
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
                               {mainForm?.contactLensAxisOs}
+                            </h3>
+                          </div>
+                          <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                            <h3 className="text-center">
+                              {mainForm?.contactLensAddOs}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
