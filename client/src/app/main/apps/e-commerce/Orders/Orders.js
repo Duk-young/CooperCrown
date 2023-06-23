@@ -3,7 +3,9 @@ import '../Customers/Search.css';
 import '../Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
+import { IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { toast, Zoom } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
@@ -15,9 +17,10 @@ import clsx from 'clsx';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageSimple from '@fuse/core/FusePageSimple';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
 import reducer from '../store/reducers';
 import Tab from '@material-ui/core/Tab';
 import Table from '@material-ui/core/Table';
@@ -30,7 +33,6 @@ import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import { toast, Zoom } from 'react-toastify';
 import {
   InstantSearch,
   SearchBox,
@@ -106,6 +108,7 @@ const CustomHits = connectHits(
     history
   }) => {
     const isSelected = (name) => selected.indexOf(name) !== -1;
+    const [balances, setBalances] = useState({})
 
     const handleSelectAllClick = (event) => {
       if (event.target.checked) {
@@ -114,6 +117,66 @@ const CustomHits = connectHits(
         return;
       }
       setSelected([]);
+    };
+
+    const handleTotal = (row) => {
+      const mainSum =
+        row?.eyeglasses.reduce((a, b) => b?.lensRate ? +a + +b.lensRate : a, 0) +
+        row?.eyeglasses.reduce((a, b) => b?.frameRate ? +a + +b.frameRate : a, 0) +
+        row?.medication.reduce((a, b) => +a + +b.price, 0) +
+        row?.contactLenses.reduce((a, b) => +a + +b.contactLensRate, 0) +
+        row?.otherProductInfo.reduce((a, b) => +a + +b.otherProductPrice, 0);
+
+      const frameVal = row?.eyeglasses.find(
+        (item) => item?.frameAdditionalPrice || item?.frameAdditionalPrice <= 0
+      );
+      const lensVal = row?.eyeglasses.find(
+        (item) => item?.lensAdditionalPrice || item?.lensAdditionalPrice <= 0
+      );
+
+      const otherProductVal = row?.otherProductInfo.find(
+        (item) =>
+          item?.otherProductAdditionalPrice ||
+          item?.otherProductAdditionalPrice <= 0
+      );
+
+      if (frameVal || lensVal || otherProductVal) {
+        return (
+          mainSum +
+          row?.eyeglasses.reduce((a, b) => b?.frameAdditionalPrice ? +a + +b.frameAdditionalPrice : a, 0) +
+          row?.eyeglasses.reduce((a, b) => b?.lensAdditionalPrice ? +a + +b.lensAdditionalPrice : a, 0) +
+          row?.otherProductInfo.reduce(
+            (a, b) => b?.otherProductAdditionalPrice ? +a + +b.otherProductAdditionalPrice : a,
+            0
+          )
+        );
+      } else {
+        return mainSum;
+      }
+    };
+
+    const checkBalance = async (row) => {
+      const total = handleTotal(row);
+
+      const deductions =
+        (row?.discount ? +row?.discount : 0) +
+        (row?.insuranceCostOne ? +row?.insuranceCostOne : 0) +
+        (row?.insuranceCostTwo ? +row?.insuranceCostTwo : 0);
+
+      const queryPayments = await firestore()
+        .collection('orderPayments')
+        .where('orderId', '==', String(row.orderId))
+        .get();
+      let resultPayments = [];
+      queryPayments.forEach((doc) => {
+        resultPayments.push(doc.data());
+      });
+      const payment = resultPayments.reduce((a, b) => +a + +b.amount, 0);
+
+      const balance = total - deductions - payment;
+
+      setBalances({ ...balances, [row?.objectID]: balance })
+      return true
     };
 
     const handleClick = (event, id) => {
@@ -166,6 +229,7 @@ const CustomHits = connectHits(
             <StyledTableCell>LAST NAME</StyledTableCell>
             <StyledTableCell>ID</StyledTableCell>
             <StyledTableCell>LOCATION</StyledTableCell>
+            <StyledTableCell>BALANCE</StyledTableCell>
             <StyledTableCell>STATUS</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -337,6 +401,13 @@ const CustomHits = connectHits(
                       }
                     }}>
                     {hit?.locationName}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {balances[hit?.objectID]}
+                    {!balances[hit?.objectID] && (
+                      <IconButton onClick={async () => await checkBalance(hit)}>
+                        <GetAppIcon />
+                      </IconButton>)}
                   </StyledTableCell>
                   <StyledTableCell
                     className="capitalize"

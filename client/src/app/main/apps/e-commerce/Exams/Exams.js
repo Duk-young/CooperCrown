@@ -1,15 +1,19 @@
-import { firestore } from 'firebase';
+import { firestore, storage } from 'firebase';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { red } from '@material-ui/core/colors';
 import { toast, Zoom } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import AddIcon from '@material-ui/icons/Add';
 import Assessment from './Assessment';
 import Button from '@material-ui/core/Button';
 import ChiefComplaints from './ChiefComplaints';
 import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 import CustomerInfo from './CustomerInfo';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -35,6 +39,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import VisualAcuity from './VisualAcuity';
 import withReducer from 'app/store/withReducer';
+import ImageSlider from '../ReusableComponents/ImageSlider';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -43,6 +48,14 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     '&:hover': {
       backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  },
+  buttonBlack: {
+    backgroundColor: '#000000',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#372b25',
       color: '#fff'
     }
   }
@@ -79,6 +92,8 @@ function Exams(props) {
   const { form, handleChange, setForm } = useForm(null);
   const [showRooms, setShowRooms] = useState();
   const [doctors, setDoctors] = useState();
+  const [images, setImages] = useState([])
+  const [openImageSlider, setOpenImageSlider] = useState(false)
   const dispatch = useDispatch();
   const classes = useStyles();
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
@@ -160,6 +175,7 @@ function Exams(props) {
         result1.id = query1.docs[0].id;
 
         setForm(result1);
+        setImages(result1?.images)
         const query = await firestore()
           .collection('customers')
           .where('customerId', '==', Number(result1.customerId))
@@ -231,6 +247,22 @@ function Exams(props) {
     setisLoading(true);
     try {
       if (form?.id) {
+
+        let uploadedImageUrls = [];
+        for (let img of images) {
+          if (img.file) {
+            await storage().ref(`images/${img.id}`).put(img.file);
+
+            const url = await storage()
+              .ref('images')
+              .child(img.id)
+              .getDownloadURL();
+            uploadedImageUrls.push({ url, name: img.name });
+
+            continue;
+          }
+          uploadedImageUrls.push({ url: img.url, name: img.name });
+        }
         await firestore()
           .collection('exams').doc(form?.id)
           .set({
@@ -242,9 +274,10 @@ function Exams(props) {
             lastName: customer?.lastName ? customer?.lastName : '',
             showRoomId: checkShowroomId(form?.locationName),
             doctorId: checkDoctorId(form?.fullName),
-            editDate: firestore.Timestamp.fromDate(new Date())
+            editDate: firestore.Timestamp.fromDate(new Date()),
+            images: uploadedImageUrls
           });
-        await checkAndUpdatePrescriptions()
+        await checkAndUpdatePrescriptions(uploadedImageUrls)
 
         dispatch(
           MessageActions.showMessage({
@@ -256,6 +289,16 @@ function Exams(props) {
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
 
+        let uploadedImageUrls = [];
+        for (let img of images) {
+          await storage().ref(`images/${img.id}`).put(img.file);
+
+          const url = await storage()
+            .ref('images')
+            .child(img.id)
+            .getDownloadURL();
+          uploadedImageUrls.push({ url, name: img.name });
+        }
         await firestore()
           .collection('exams')
           .add({
@@ -269,7 +312,8 @@ function Exams(props) {
             showRoomId: checkShowroomId(form?.locationName),
             doctorId: checkDoctorId(form?.fullName),
             creationDate: firestore.Timestamp.fromDate(new Date()),
-            editDate: firestore.Timestamp.fromDate(new Date())
+            editDate: firestore.Timestamp.fromDate(new Date()),
+            images: uploadedImageUrls
           });
 
         await firestore()
@@ -315,7 +359,8 @@ function Exams(props) {
             fromExamId: dbConfig?.examId + 1,
             showRoomId: checkShowroomId(form?.locationName),
             doctorId: checkDoctorId(form?.fullName),
-            docSign: form?.docSign
+            docSign: form?.docSign,
+            images: uploadedImageUrls
           });
 
         await firestore()
@@ -344,7 +389,8 @@ function Exams(props) {
             fromExamId: dbConfig?.examId + 1,
             showRoomId: checkShowroomId(form?.locationName),
             doctorId: checkDoctorId(form?.fullName),
-            docSign: form?.docSign
+            docSign: form?.docSign,
+            images: uploadedImageUrls
           });
 
         await firestore()
@@ -366,7 +412,7 @@ function Exams(props) {
     setisLoading(false);
   };
 
-  const checkAndUpdatePrescriptions = async () => {
+  const checkAndUpdatePrescriptions = async (uploadedImageUrls) => {
     const queryEgPrescription = await firestore()
       .collection('prescriptions').where('fromExamId', '==', Number(routeParams?.examId))
       .where('prescriptionType', '==', 'eyeglassesRx').limit(1).get();
@@ -391,7 +437,8 @@ function Exams(props) {
         prescriptionDate: firestore.Timestamp.fromDate(new Date()),
         showRoomId: checkShowroomId(form?.locationName),
         doctorId: checkDoctorId(form?.fullName),
-        docSign: form?.docSign
+        docSign: form?.docSign,
+        images: uploadedImageUrls
       })
     }
 
@@ -421,7 +468,8 @@ function Exams(props) {
         prescriptionDate: firestore.Timestamp.fromDate(new Date()),
         showRoomId: checkShowroomId(form?.locationName),
         doctorId: checkDoctorId(form?.fullName),
-        docSign: form?.docSign
+        docSign: form?.docSign,
+        images: uploadedImageUrls
       })
     }
     return true
@@ -708,6 +756,102 @@ function Exams(props) {
               </div>
             </div>
           </div>
+
+
+          <div className="flex flex-col px-16 py-6">
+            <div className="flex flex-col h-full border border-black rounded-6 py-6">
+              <div className="flex justify-center border-b border-black">
+                <h1 className="font-bold" style={{ color: '#f15a25' }}>
+                  ADDITIONAL PICTURES
+                </h1>
+              </div>
+              <div className="flex flex-col w-full">
+              <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} />
+                <div className="flex flex-row w-full overflow-scroll flex-wrap p-16">
+                  {images?.length > 0 && images.map((img, index) => (
+                    <div className="mb-8 w-224 mr-6 object-contain">
+                      <img
+                        className="w-224 h-128 shadow-1 rounded-4"
+                        onClick={() => setOpenImageSlider(true)}
+                        src={img.url}
+                        key={img.name}
+                        alt={''}
+                      />
+                      <div className="flex flex-row justify-between items-center">
+                        <div className="truncate">
+                          <TextField
+                            className="mt-12 "
+                            fullWidth
+                            disabled={disabledState}
+                            id="outlined-multiline-static"
+                            value={images[index].name.split('.', 1)}
+                            onChange={(e) => {
+                              let newImages = images;
+                              newImages[index].name = e.target.value;
+                              setImages([...newImages]);
+                            }}
+                            variant="outlined"
+                          />
+                        </div>
+
+                        <IconButton
+                          onClick={() => {
+                            let newImages = images;
+                            newImages.splice(index, 1);
+                            setImages([...newImages]);
+                          }}
+                          aria-label="delete"
+                          disabled={disabledState}
+                          className={classes.margin}>
+                          <DeleteIcon
+                            style={{ color: red[500] }}
+                            fontSize="small"
+                          />
+                        </IconButton>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <label htmlFor="upload-photo1">
+                  <input
+                    style={{ display: 'none' }}
+                    id="upload-photo1"
+                    type="file"
+                    accept="image/*"
+                    onClick={(event) => {
+                      event.target.value = '';
+                    }}
+                    onChange={(e) =>
+                      setImages([
+                        ...images,
+                        {
+                          name: e.target.files[0].name,
+                          id: uuidv4(),
+                          url: URL.createObjectURL(e.target.files[0]),
+                          file: e.target.files[0]
+                        }
+                      ])
+                    }
+                  />
+                  <div className="flex flex-col p-12 w-full">
+                    <Button
+                      className={classes.buttonBlack}
+                      style={{
+                        maxHeight: '50px',
+                        minHeight: '50px',
+                      }}
+                      variant="contained"
+                      component="span"
+                      disabled={disabledState}
+                      color="secondary">
+                      <AddIcon /> UPLOAD PHOTO
+                    </Button>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
         </div >
       }
       innerScroll

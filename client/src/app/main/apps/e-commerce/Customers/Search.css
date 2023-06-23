@@ -14,7 +14,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.custom-height {
+  height: 850px;
+}
 
+@media (min-width: 1024px) {
+  .custom-height-lg {
+    height: 650px;
+  }
+}
 
 /* Header */
 

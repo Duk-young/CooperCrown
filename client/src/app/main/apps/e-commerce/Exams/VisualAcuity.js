@@ -957,9 +957,9 @@ const VisualAcuity = (props) => {
                         type="number"
                       />
                     </div>
-                    <div className="flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                    <div className="flex flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between relative overflow-hidden">
                       <Select
-                        className='w-80'
+                        className='truncate'
                         disabled={disabledState}
                         labelId="demo-simple-select-autowidth-label"
                         value={form?.clrxOdBrand ?? ''}
@@ -975,9 +975,9 @@ const VisualAcuity = (props) => {
                         ))}
                       </Select>
                     </div>
-                    <div className="flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                    <div className="flex flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between relative overflow-hidden">
                       <Select
-                        className='w-80'
+                        className='truncate'
                         disabled={disabledState}
                         labelId="demo-simple-select-autowidth-label"
                         value={form?.clrxOdModel ?? ''}
@@ -1106,9 +1106,9 @@ const VisualAcuity = (props) => {
                         type="number"
                       />
                     </div>
-                    <div className="flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                    <div className="flex flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between relative overflow-hidden">
                       <Select
-                        className=' w-80'
+                        className='truncate'
                         disabled={disabledState}
                         labelId="demo-simple-select-autowidth-label"
                         value={form?.clrxOsBrand ?? ''}
@@ -1124,9 +1124,9 @@ const VisualAcuity = (props) => {
                         ))}
                       </Select>
                     </div>
-                    <div className="flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                    <div className="flex flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between relative overflow-hidden">
                       <Select
-                        className=' w-80'
+                        className='truncate'
                         disabled={disabledState}
                         labelId="demo-simple-select-autowidth-label"
                         value={form?.clrxOsModel ?? ''}

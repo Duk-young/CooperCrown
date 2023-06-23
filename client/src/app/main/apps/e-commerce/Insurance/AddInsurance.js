@@ -24,6 +24,7 @@ import reducer from '../store/reducers';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import ImageSlider from '../ReusableComponents/ImageSlider';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -53,6 +54,7 @@ function AddInsurance(props) {
   const [images, setImages] = useState([]);
   const [isLoading, setisLoading] = useState(true);
   const [insurances, setInsurances] = useState([]);
+  const [openImageSlider, setOpenImageSlider] = useState(false)
   const [insuranceCompanyInput, setInsuranceCompanyInput] = useState(
     form?.insuranceCompany
   );
@@ -286,7 +288,7 @@ function AddInsurance(props) {
           <FuseAnimate animation="transition.slideRightIn" delay={500}>
             <div className="p-16 sm:p-24 w-full">
               <h1 className="underline">Insurance Details</h1>
-
+              <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} />
               <div className="flex flex-row pl-16">
                 <div className="md:w-1/4 w-1/2">
                   <div className="h-auto justify-between">
@@ -438,6 +440,7 @@ function AddInsurance(props) {
                     <div className="mb-8 w-224 mr-6 object-contain">
                       <img
                         className="w-224 h-128 shadow-1 rounded-4"
+                        onClick={() => setOpenImageSlider(true)}
                         src={img.url}
                         key={img.name}
                         alt={''}

@@ -1,26 +1,32 @@
-import { firestore } from 'firebase';
+import { firestore, storage } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { red } from '@material-ui/core/colors';
 import { toast, Zoom } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import { withRouter } from 'react-router';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
+import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import CustomAlert from '../ReusableComponents/CustomAlert';
 import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
+import DeleteIcon from '@material-ui/icons/Delete';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
+import ImageSlider from '../ReusableComponents/ImageSlider';
 
 const useStyles = makeStyles({
   button: {
@@ -28,6 +34,14 @@ const useStyles = makeStyles({
     color: '#fff',
     '&:hover': {
       backgroundColor: '#f47b51',
+      color: '#fff'
+    }
+  },
+  buttonBlack: {
+    backgroundColor: '#000000',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#372b25',
       color: '#fff'
     }
   }
@@ -42,6 +56,8 @@ const AddPrescription = (props) => {
   const [filteredPrescription, setFilteredPrescription] = useState([]);
   const [prescription, setPrescription] = useState([]);
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
+  const [images, setImages] = useState([])
+  const [openImageSlider, setOpenImageSlider] = useState(false)
   const routeParams = useParams();
   const dispatch = useDispatch();
 
@@ -63,6 +79,7 @@ const AddPrescription = (props) => {
           resultEditPrescription.prescriptionDate.toDate();
         resultEditPrescription.id = queryEditPrescription.docs[0].id;
         setForm(resultEditPrescription);
+        setImages(resultEditPrescription?.images)
 
         const queryCustomer = await firestore()
           .collection('customers')
@@ -146,9 +163,26 @@ const AddPrescription = (props) => {
       try {
         const ref = firestore().collection('prescriptions').doc(form?.id);
 
+        let uploadedImageUrls = [];
+        for (let img of images) {
+          if (img.file) {
+            await storage().ref(`images/${img.id}`).put(img.file);
+
+            const url = await storage()
+              .ref('images')
+              .child(img.id)
+              .getDownloadURL();
+            uploadedImageUrls.push({ url, name: img.name });
+
+            continue;
+          }
+          uploadedImageUrls.push({ url: img.url, name: img.name });
+        }
+
         let data = {
           ...form,
-          prescriptionDate: firestore.Timestamp.fromDate(form?.prescriptionDate)
+          prescriptionDate: firestore.Timestamp.fromDate(form?.prescriptionDate),
+          images: uploadedImageUrls
         };
         delete data.id;
         await ref.set(data);
@@ -174,13 +208,25 @@ const AddPrescription = (props) => {
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
 
+        let uploadedImageUrls = [];
+        for (let img of images) {
+          await storage().ref(`images/${img.id}`).put(img.file);
+
+          const url = await storage()
+            .ref('images')
+            .child(img.id)
+            .getDownloadURL();
+          uploadedImageUrls.push({ url, name: img.name });
+        }
+
         await firestore()
           .collection('prescriptions')
           .add({
             ...form,
             prescriptionId: dbConfig?.prescriptionId + 1,
             customerId: customer.customerId,
-            prescriptionDate: form?.prescriptionDate ? firestore.Timestamp.fromDate(form?.prescriptionDate) : firestore.Timestamp.fromDate(new Date())
+            prescriptionDate: form?.prescriptionDate ? firestore.Timestamp.fromDate(form?.prescriptionDate) : firestore.Timestamp.fromDate(new Date()),
+            images: uploadedImageUrls
           });
 
         await firestore()
@@ -210,6 +256,19 @@ const AddPrescription = (props) => {
   };
 
   const handleDelete = async () => {
+    if (form?.fromExamId) {
+      toast.error('This Rx is linked to exam. Please delete the Exam.', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Zoom
+      });
+      return true
+    }
     try {
       const queryPrescription = await firestore()
         .collection('prescriptions')
@@ -329,7 +388,7 @@ const AddPrescription = (props) => {
               </div>
             </div>
           </div>
-          <div className="flex flex-row p-16 sm:p-2">
+          <div className="flex flex-col">
             {form?.prescriptionType === 'eyeglassesRx' && (
               <FuseAnimate animation="transition.slideRightIn" delay={500}>
                 <div className="flex flex-col w-full">
@@ -753,6 +812,96 @@ const AddPrescription = (props) => {
                 </div>
               </FuseAnimate>
             )}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col py-6">
+        <div className="flex flex-col h-full border border-black rounded-6 py-6">
+          <div className="flex justify-center border-b border-black">
+            <h1 className="font-bold" style={{ color: '#f15a25' }}>
+              ADDITIONAL PICTURES
+            </h1>
+          </div>
+          <div className="flex flex-col w-full">
+            <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} />
+            <div className="flex flex-row w-full overflow-scroll flex-wrap p-16">
+              {images?.length > 0 && images.map((img, index) => (
+                <div className="mb-8 w-224 mr-6 object-contain">
+                  <img
+                    className="w-224 h-128 shadow-1 rounded-4"
+                    onClick={() => setOpenImageSlider(true)}
+                    src={img.url}
+                    key={img.name}
+                    alt={''}
+                  />
+                  <div className="flex flex-row justify-between items-center">
+                    <div className="truncate">
+                      <TextField
+                        className="mt-12 "
+                        fullWidth
+                        id="outlined-multiline-static"
+                        value={images[index].name.split('.', 1)}
+                        onChange={(e) => {
+                          let newImages = images;
+                          newImages[index].name = e.target.value;
+                          setImages([...newImages]);
+                        }}
+                        variant="outlined"
+                      />
+                    </div>
+
+                    <IconButton
+                      onClick={() => {
+                        let newImages = images;
+                        newImages.splice(index, 1);
+                        setImages([...newImages]);
+                      }}
+                      aria-label="delete"
+                      className={classes.margin}>
+                      <DeleteIcon
+                        style={{ color: red[500] }}
+                        fontSize="small"
+                      />
+                    </IconButton>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <label htmlFor="upload-photo1">
+              <input
+                style={{ display: 'none' }}
+                id="upload-photo1"
+                type="file"
+                accept="image/*"
+                onClick={(event) => {
+                  event.target.value = '';
+                }}
+                onChange={(e) =>
+                  setImages([
+                    ...images,
+                    {
+                      name: e.target.files[0].name,
+                      id: uuidv4(),
+                      url: URL.createObjectURL(e.target.files[0]),
+                      file: e.target.files[0]
+                    }
+                  ])
+                }
+              />
+              <div className="flex flex-col p-12 w-full">
+                <Button
+                  className={classes.buttonBlack}
+                  style={{
+                    maxHeight: '50px',
+                    minHeight: '50px',
+                  }}
+                  variant="contained"
+                  component="span"
+                  color="secondary">
+                  <AddIcon /> UPLOAD PHOTO
+                </Button>
+              </div>
+            </label>
           </div>
         </div>
       </div>

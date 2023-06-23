@@ -26,6 +26,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import ImageSlider from '../../ReusableComponents/ImageSlider';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -95,6 +96,7 @@ function ViewFrame(props) {
   const [subtractedStocks, setSubtractedStocks] = useState([]);
   const [openSubtractStockAlert, setOpenSubtractStockAlert] = useState(false);
   const [restocks, setRestocks] = useState([]);
+  const [openImageSlider, setOpenImageSlider] = useState(false)
   const [editRestockState, setEditRestockState] = useState(false);
   const [openUpdateRestockAlert, setOpenUpdateRestockAlert] = useState(false);
   const [editSubtractStockState, seteditSubtractStockState] = useState(false);
@@ -549,11 +551,13 @@ function ViewFrame(props) {
                       />
                     </div>
                   </div>
+                  <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} />
                   <div className="flex flex-row w-full overflow-scroll flex-wrap mt-10 p-6">
                     {images.map((img, index) => (
                       <div className="mb-8 w-224 mr-6 object-contain">
                         <img
                           className="w-224 h-128 shadow-1 rounded-4"
+                          onClick={() => setOpenImageSlider(true)}
                           src={img.url}
                           key={img.name}
                           alt={''}
