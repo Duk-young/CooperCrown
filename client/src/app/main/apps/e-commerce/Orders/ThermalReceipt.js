@@ -97,7 +97,10 @@ export default function ThermalReceipt(props) {
                     <div>
                       <p className='font-9pt font-700'>-{row?.contactLensStyleOd ?? '-'}</p>
                       <p className='pl-6 font-7pt font-700'>{row.contactLensBrandOd ?? '-'} / {row.contactLensNameOd ?? '-'}</p>
-                      <p className='pl-6 font-7pt font-700'>{row.contactLensBaseCurveOd ?? '-'} / {row.contactLensPackQtyOd ?? '-'}</p>
+                      <p className='pl-6 font-7pt font-700'>{row.contactLensBaseCurveOd ?? '-'} / {row.contactLensPackQtyOd ?? '-'} Unit Rate: {row?.clOdRate} x Qty: {row?.contactLensQtyOd}</p>
+                      <p className='font-9pt font-700'>-{row?.contactLensStyleOs ?? '-'}</p>
+                      <p className='pl-6 font-7pt font-700'>{row.contactLensBrandOs ?? '-'} / {row.contactLensNameOs ?? '-'}</p>
+                      <p className='pl-6 font-7pt font-700'>{row.contactLensBaseCurveOs ?? '-'} / {row.contactLensPackQtyOs ?? '-'} Unit Rate: {row?.clOsRate} x Qty: {row?.contactLensQtyOs}</p>
                     </div>
                     <div>
                       <p className='font-7pt font-700'>{(Number(row?.contactLensRate || 0)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>

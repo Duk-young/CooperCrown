@@ -3,18 +3,50 @@ import FormControl from '@material-ui/core/FormControl';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { withRouter } from 'react-router';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from '@date-io/date-fns';
+import { firestore } from 'firebase';
 import Grid from '@material-ui/core/Grid';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker
 } from '@material-ui/pickers';
+import { Icon, IconButton } from '@material-ui/core';
 
 const VisualAcuity = (props) => {
-  const { form, handleChange, disabledState } = props;
+  const { form, handleChange, disabledState, setForm } = props;
+  const [contactLens, setContactLens] = useState([])
+  const [filteredContactLensOd, setFilteredContactLensOd] = useState(contactLens)
+  const [filteredContactLensOs, setFilteredContactLensOs] = useState(contactLens)
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      const queryContactLens = await firestore().collection('contacts').get();
+
+      let resultContacts = [];
+      queryContactLens.forEach((doc) => {
+        resultContacts.push(doc.data());
+      });
+      setContactLens(resultContacts);
+      setFilteredContactLensOd(resultContacts);
+      setFilteredContactLensOs(resultContacts);
+    }
+    fetchContacts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const filterOdContacts = (value, attribute) => {
+    let newContacts = filteredContactLensOd.filter((contact) => contact?.[attribute] === value)
+    setFilteredContactLensOd(newContacts)
+  }
+  const filterOsContacts = (value, attribute) => {
+    let newContacts2 = filteredContactLensOs.filter((contact) => contact?.[attribute] === value)
+    setFilteredContactLensOs(newContacts2)
+  }
 
   return (
     <div className="flex flex-col h-260 px-16 py-6">
@@ -794,6 +826,9 @@ const VisualAcuity = (props) => {
                       <h3 className="text-center font-700">Axis</h3>
                     </div>
                     <div className="p-1 h-auto flex-1">
+                      <h3 className="text-center font-700">Add</h3>
+                    </div>
+                    <div className="p-1 h-auto flex-1">
                       <h3 className="text-center font-700">BC</h3>
                     </div>
                     <div className="p-1 h-auto flex-1">
@@ -805,14 +840,20 @@ const VisualAcuity = (props) => {
                     <div className="p-1 h-auto flex-1">
                       <h3 className="text-center font-700">Model</h3>
                     </div>
-
-
-
                   </div>
 
                   <div className="flex flex-row">
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                    <div className="flex flex-row flex-1 h-auto border-grey-400 border-solid border-1 justify-around items-center">
                       <h3 className="text-center font-700">OD</h3>
+                      <IconButton
+                        onClick={(ev) => {
+                          setFilteredContactLensOd(contactLens)
+                          setForm({ ...form, clrxOdBrand: undefined, clrxOdModel: undefined })
+                        }}>
+                        <Icon color="action">
+                          delete
+                        </Icon>
+                      </IconButton>
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                       <TextField
@@ -870,6 +911,23 @@ const VisualAcuity = (props) => {
                         size="small"
                         fullWidth
                         id="standard-basic"
+                        value={form?.clrxOdAdd}
+                        onChange={handleChange}
+                        disabled={disabledState}
+                        name={'clrxOdAdd'}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: 'center' }
+                          }
+                        }}
+                        type="number"
+                      />
+                    </div>
+                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                      <TextField
+                        size="small"
+                        fullWidth
+                        id="standard-basic"
                         value={form?.clrxOdBc}
                         disabled={disabledState}
                         onChange={handleChange}
@@ -899,44 +957,52 @@ const VisualAcuity = (props) => {
                         type="number"
                       />
                     </div>
-
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.clrxOdBrand}
+                    <div className="flex flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between relative overflow-hidden">
+                      <Select
+                        className='truncate'
                         disabled={disabledState}
-                        onChange={handleChange}
-                        name={'clrxOdBrand'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                      />
+                        labelId="demo-simple-select-autowidth-label"
+                        value={form?.clrxOdBrand ?? ''}
+                        name="clrxOdBrand"
+                        onChange={(e) => {
+                          handleChange(e)
+                          filterOdContacts(e.target.value, 'brand')
+                        }}>
+                        {[...new Set(filteredContactLensOd?.map((item) => (item?.brand ?? '')))].map((row) => (
+                          <MenuItem value={row}>
+                            {row}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </div>
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.clrxOdModel}
+                    <div className="flex flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between relative overflow-hidden">
+                      <Select
+                        className='truncate'
                         disabled={disabledState}
-                        onChange={handleChange}
-                        name={'clrxOdModel'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                      />
+                        labelId="demo-simple-select-autowidth-label"
+                        value={form?.clrxOdModel ?? ''}
+                        name="clrxOdModel"
+                        onChange={(e) => {
+                          handleChange(e)
+                          filterOdContacts(e.target.value, 'model')
+                        }}>
+                        {[...new Set(filteredContactLensOd?.map((item) => (item?.model ?? '')))].map((row) => (<MenuItem value={row}>{row}</MenuItem>))}
+                      </Select>
                     </div>
                   </div>
 
                   <div className="flex flex-row">
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                    <div className="flex flex-row flex-1 h-auto border-grey-400 border-solid border-1 justify-around items-center">
                       <h3 className="text-center font-700">OS</h3>
+                      <IconButton
+                        onClick={(ev) => {
+                          setFilteredContactLensOs(contactLens)
+                          setForm({ ...form, clrxOsBrand: undefined, clrxOsModel: undefined })
+                        }}>
+                        <Icon color="action">
+                          delete
+                        </Icon>
+                      </IconButton>
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                       <TextField
@@ -994,6 +1060,23 @@ const VisualAcuity = (props) => {
                         size="small"
                         fullWidth
                         id="standard-basic"
+                        value={form?.clrxOsAdd}
+                        disabled={disabledState}
+                        onChange={handleChange}
+                        name={'clrxOsAdd'}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: 'center' }
+                          }
+                        }}
+                        type="number"
+                      />
+                    </div>
+                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
+                      <TextField
+                        size="small"
+                        fullWidth
+                        id="standard-basic"
                         value={form?.clrxOsBc}
                         disabled={disabledState}
                         onChange={handleChange}
@@ -1023,41 +1106,56 @@ const VisualAcuity = (props) => {
                         type="number"
                       />
                     </div>
-
-
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.clrxOsBrand}
-                        onChange={handleChange}
+                    <div className="flex flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between relative overflow-hidden">
+                      <Select
+                        className='truncate'
                         disabled={disabledState}
-                        name={'clrxOsBrand'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                      />
+                        labelId="demo-simple-select-autowidth-label"
+                        value={form?.clrxOsBrand ?? ''}
+                        name="clrxOsBrand"
+                        onChange={(e) => {
+                          handleChange(e)
+                          filterOsContacts(e.target.value, 'brand')
+                        }}>
+                        {[...new Set(filteredContactLensOs?.map((item) => (item?.brand ?? '')))].map((row) => (
+                          <MenuItem value={row}>
+                            {row}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </div>
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.clrxOsModel}
+                    <div className="flex flex-col flex-1 h-auto border-grey-400 border-solid border-1 justify-between relative overflow-hidden">
+                      <Select
+                        className='truncate'
                         disabled={disabledState}
-                        onChange={handleChange}
-                        name={'clrxOsModel'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                      />
+                        labelId="demo-simple-select-autowidth-label"
+                        value={form?.clrxOsModel ?? ''}
+                        name="clrxOsModel"
+                        onChange={(e) => {
+                          handleChange(e)
+                          filterOsContacts(e.target.value, 'model')
+                        }}>
+                        {[...new Set(filteredContactLensOs?.map((item) => (item?.model ?? '')))].map((row) => (
+                          <MenuItem value={row}>
+                            {row}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </div>
                   </div>
+                </div>
+                <div className='flex flex-row justify-around my-10 w-full px-60'>
+                  <TextField
+                    // className="mt-12"
+                    size="medium"
+                    disabled={disabledState}
+                    id="outlined-multiline-static"
+                    label="Memo"
+                    value={form?.clrxMemo}
+                    onChange={handleChange}
+                    name={'clrxMemo'}
+                    variant="outlined"
+                  />
                 </div>
                 <div className=" py-10 w-full">
 
@@ -1633,6 +1731,19 @@ const VisualAcuity = (props) => {
                       </div>
                     </div>
                   </div>
+                </div>
+                <div className='flex flex-row justify-around my-10 w-full px-60'>
+                  <TextField
+                    // className="mt-12"
+                    size="medium"
+                    disabled={disabledState}
+                    id="outlined-multiline-static"
+                    label="Memo"
+                    value={form?.egrxMemo}
+                    onChange={handleChange}
+                    name={'egrxMemo'}
+                    variant="outlined"
+                  />
                 </div>
                 <div className="flex flex-row px-60">
                   <TextField

@@ -102,9 +102,11 @@ export default function OrderReceipt(props) {
                         <div className='flex flex-row w-1/6'>
                           <p className='font-10pt text-left font-700'> - Contact Lens</p>
                         </div>
-                        <div className='flex flex-row w-4/6'>
+                        <div className='flex flex-col w-4/6'>
                           <p className='pl-6 font-10pt text-leftfont-700'>{row?.contactLensStyleOd ?? '-'} / {row.contactLensBrandOd ?? '-'} /
-                            {row.contactLensBaseCurveOd ?? '-'} / {row.contactLensBaseCurveOd ?? '-'}</p>
+                            {row.contactLensBaseCurveOd ?? '-'} / {row.contactLensBaseCurveOd ?? '-'} Unit Rate: {row?.clOdRate} x Qty: {row?.contactLensQtyOd}</p>
+                          <p className='pl-6 font-10pt text-leftfont-700'>{row?.contactLensStyleOs ?? '-'} / {row.contactLensBrandOs ?? '-'} /
+                            {row.contactLensBaseCurveOs ?? '-'} / {row.contactLensBaseCurveOs ?? '-'} Unit Rate: {row?.clOsRate} x Qty: {row?.contactLensQtyOs}</p>
                         </div>
                         <div className='flex flex-col w-1/6'>
                           <p className='font-10pt text-right font-700'>{(Number(row?.contactLensRate || 0)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>

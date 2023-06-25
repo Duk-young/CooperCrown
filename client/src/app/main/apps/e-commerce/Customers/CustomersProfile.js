@@ -859,11 +859,8 @@ const CustomerProfile = (props) => {
                                   key={row.prescriptionId}
                                   style={{ height: 10 }}>
                                   <StyledTableCell
-                                    style={
-                                      row?.onRx
-                                        ? { color: 'red' }
-                                        : { color: 'black' }
-                                    }>
+                                    style={row?.onRx ? { color: 'red' } : { color: 'black' }}
+                                    onClick={() => { props.history.push(`/apps/e-commerce/customers/editRx/${row?.prescriptionId}`) }}>
                                     {row?.onRx ? (
                                       <LabelImportantIcon color="secondary" />
                                     ) : (
@@ -923,7 +920,10 @@ const CustomerProfile = (props) => {
                                         ? { color: 'red' }
                                         : { color: 'black' }
                                     }>
-                                    {row?.contactLensModel}
+                                    <div className="flex flex-col">
+                                      <div>{row.contactLensModelOd}</div>
+                                      <div>{row.contactLensModelOs}</div>
+                                    </div>
                                   </StyledTableCell>
                                 </StyledTableRow>
                               ))}
@@ -956,6 +956,7 @@ const CustomerProfile = (props) => {
                               .map((row) => (
                                 <StyledTableRow
                                   key={row.prescriptionId}
+                                  onClick={() => { props.history.push(`/apps/e-commerce/customers/editRx/${row?.prescriptionId}`) }}
                                   style={{ height: 10 }}>
                                   <StyledTableCell>
                                     {moment(

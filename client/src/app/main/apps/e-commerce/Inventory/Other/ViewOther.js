@@ -15,6 +15,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import ImageSlider from '../../ReusableComponents/ImageSlider';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -54,6 +55,7 @@ function ViewOther(props) {
   const [images, setImages] = useState([]);
   const { form, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
+  const [openImageSlider, setOpenImageSlider] = useState(false)
   const routeParams = useParams();
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
@@ -285,11 +287,13 @@ function ViewOther(props) {
                       />
                     </div>
                   </div>
+                  <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} />
                   <div className="flex flex-row w-full overflow-scroll flex-wrap mt-10 p-6">
                     {images.map((img, index) => (
                       <div className="mb-8 w-224 mr-6 object-contain">
                         <img
                           className="w-224 h-128 shadow-1 rounded-4"
+                          onClick={() => setOpenImageSlider(true)}
                           src={img.url}
                           key={img.name}
                           alt={''}

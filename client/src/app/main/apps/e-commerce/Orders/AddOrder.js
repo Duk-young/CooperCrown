@@ -578,7 +578,7 @@ function AddOrder(props) {
 
         const queryInsurance = await firestore()
           .collection('insurances')
-          .where('customerId', '==', newCustomer)
+          .where('customerId', '==', newCustomer || Number(routeParams?.customerId))
           .get();
 
         let resultInsurance = [];

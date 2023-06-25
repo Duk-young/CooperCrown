@@ -97,7 +97,7 @@ const ContactsOrder = (props) => {
     ) {
       const clOdRate = +filteredContactLensOd[0]?.price || 0
       const clOsRate = +filteredContactLensOs[0]?.price || 0
-      return { contactLensRate: clOdRate + clOsRate, clOdRate, clOsRate }
+      return { clOdRate, clOsRate }
     } else {
       toast.error('Please select Contact Lens Style for OD & OS...', {
         position: 'top-center',
@@ -114,10 +114,10 @@ const ContactsOrder = (props) => {
   };
 
   const handleAddContactsLensToOrder = () => {
-    let { contactLensRate, clOdRate, clOsRate } = fetchContactLensRate();
+    let res = fetchContactLensRate();
 
-    if (contactLensRate) {
-      setContactLenses([...contactLenses, { ...selectedContactLens, contactLensRate, clOdRate, clOsRate }]);
+    if (res?.clOdRate && res?.clOsRate) {
+      setContactLenses([...contactLenses, { ...selectedContactLens, contactLensRate: (res?.clOdRate * selectedContactLens?.contactLensQtyOd || 0) + (res?.clOsRate * selectedContactLens?.contactLensQtyOs || 0), clOdRate: res?.clOdRate, clOsRate: res?.clOsRate }]);
     } else {
       toast.error(
         'Contact Lens Rate is not calculated yet.',
@@ -534,6 +534,22 @@ const ContactsOrder = (props) => {
                       ))}
                     </Select>
                   </FormControl>
+                  <TextField
+                    style={{ maxWidth: '80px' }}
+                    size="small"
+                    id="standard-basic"
+                    type='number'
+                    label='Quantity'
+                    disabled={disabledState}
+                    value={selectedContactLens?.contactLensQtyOd ?? ''}
+                    onChange={handleSelectedContactLensChange}
+                    name={'contactLensQtyOd'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                  />
                 </div>
                 <div className="flex w-full items-end gap-20 px-20">
                   <h3 className="text-center font-700">OS</h3>
@@ -637,6 +653,22 @@ const ContactsOrder = (props) => {
                       ))}
                     </Select>
                   </FormControl>
+                  <TextField
+                    style={{ maxWidth: '80px' }}
+                    size="small"
+                    id="standard-basic"
+                    type='number'
+                    label='Quantity'
+                    disabled={disabledState}
+                    value={selectedContactLens?.contactLensQtyOs ?? ''}
+                    onChange={handleSelectedContactLensChange}
+                    name={'contactLensQtyOs'}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: 'center' }
+                      }
+                    }}
+                  />
                 </div>
                 <div className="flex flex-col px-20 gap-10">
                   <FormControlLabel
