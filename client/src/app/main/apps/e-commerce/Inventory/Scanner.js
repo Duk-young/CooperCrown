@@ -40,7 +40,7 @@ class Scanner extends Component {
         },
         numOfWorkers: 0,
         decoder: {
-          readers: ['code_128_reader'],
+          readers: ['code_128_reader', 'code_39_reader', 'upc_reader', 'upc_e_reader'],
           debug: {
             drawBoundingBox: true,
             showFrequency: true,

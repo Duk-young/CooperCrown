@@ -240,9 +240,7 @@ export default function PrescriptionReceipt(props) {
                             </h2>
                           </div>
                           <div className="relative">
-                            <div className="flex w-full p-8">
-                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tempus finibus mauris, eu semper mauris placerat sed. Aliquam erat volutpat. Nulla tincidunt semper justo, id posuere mi commodo a. Maecenas tincidunt orci sed sapien tincidunt, sed finibus elit scelerisque. Sed nec augue eget sapien convallis tincidunt ut at libero.</p>
-                            </div>
+                            <div className="flex w-full p-8">{customer?.memos}</div>
                           </div>
                         </div>
                       </div>
