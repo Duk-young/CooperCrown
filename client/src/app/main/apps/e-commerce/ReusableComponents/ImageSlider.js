@@ -37,7 +37,7 @@ const ImageSlider = ({ open, images, handleClose }) => {
                     <Button onClick={handlePrevSlide} color="primary">
                         <NavigateBeforeIcon />
                     </Button>
-                    <img src={images[currentSlide]} alt={`Image ${currentSlide}`} className={classes.image} />
+                    <img src={images[currentSlide]} alt={`${currentSlide}`} className={classes.image} />
                     <Button onClick={handleNextSlide} color="primary">
                         <NavigateNextIcon />
                     </Button>

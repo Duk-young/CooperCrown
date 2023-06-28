@@ -94,7 +94,7 @@ exports.sendEmail = functions.https.onCall((data, context) => {
         const mailOptions = {
           from: process.env.NODEMAILER_EMAIL,
           to: customer?.email,
-          subject: "New Message from Cooper Crown",
+          subject: data?.subject ?? 'New Message From Cooper Crown',
           html: `<h2>Hi ${customer?.firstName} ${customer?.lastName}, </h2>
     <p>${data?.message} </p>
      <h3>Best Wishes</h3> 
@@ -130,7 +130,7 @@ exports.sendEventEmail = functions.https.onCall((data, context) => {
     const mailOptions = {
       from: process.env.NODEMAILER_EMAIL,
       to: data?.allEmails,
-      subject: "New Message from Cooper Crown",
+      subject: data?.subject ?? "New Message from Cooper Crown",
       html: `<h2>Dear Customer, </h2>
     <p>${data?.message} </p>
      <h3>Best Wishes</h3> 
@@ -209,7 +209,7 @@ exports.birthdayMessageFunction = functions.pubsub
         const mailOptions = {
           from: process.env.NODEMAILER_EMAIL,
           to: row?.email,
-          subject: "New Message from Cooper Crown",
+          subject: templatesresult?.templates?.birthdaySubject ?? "New Message from Cooper Crown",
           html: `<h2>Hi ${row?.firstName} ${row?.lastName}, </h2>
           <p>${templatesresult?.templates?.birthday} </p>
            <h3>Best Wishes</h3> 
@@ -265,7 +265,7 @@ exports.examExpiry = functions.pubsub
         const mailOptions = {
           from: process.env.NODEMAILER_EMAIL,
           to: row?.email,
-          subject: "New Message from Cooper Crown",
+          subject: templatesresult?.templates?.examExpiry ?? "New Message from Cooper Crown",
           html: `<h2>Hi Mr. ${row?.lastName} , </h2>
           <p>${templatesresult?.templates?.examExpiry} </p>
            <h3>Best Wishes</h3> 

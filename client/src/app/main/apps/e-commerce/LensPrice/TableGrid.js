@@ -32,16 +32,6 @@ export default function TableGrid(props) {
   const classes = useStyles();
   const [columns, setColumns] = useState(null)
   const { disabledState, rows, setRows } = props;
-  const [page, setPage] = useState(0);
-
-  const handlePageChange = (params) => {
-    console.log('formmmm', params.page)
-    setPage(params.page);
-  };
-
-
-
-
 
   const handleCommit = (e) => {
     const array = rows.map((row) => {
