@@ -70,6 +70,7 @@
     "react-draggable": "4.3.1",
     "react-frame-component": "4.1.1",
     "react-i18next": "11.3.4",
+    "react-image-crop": "^10.1.5",
     "react-image-data-capture": "^1.2.2",
     "react-instantsearch-dom": "^6.20.0",
     "react-masonry-css": "1.0.14",

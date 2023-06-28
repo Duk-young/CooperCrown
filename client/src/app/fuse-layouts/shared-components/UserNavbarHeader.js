@@ -59,11 +59,7 @@ function UserNavbarHeader(props) {
 			<Avatar
 				className={clsx(classes.avatar, 'avatar')}
 				alt="user photo"
-				src={
-					user.data.photoURL && user.data.photoURL !== ''
-						? user.data.photoURL
-						: 'assets/images/avatars/profile.jpg'
-				}
+				src={user.data?.firestoreDetails?.picture ? user.data?.firestoreDetails?.picture : 'assets/images/avatars/profile.jpg'}
 			/>
 		</AppBar>
 	);

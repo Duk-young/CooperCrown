@@ -920,7 +920,6 @@ const VisualAcuity = (props) => {
                             style: { textAlign: 'center' }
                           }
                         }}
-                        type="number"
                       />
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -1069,7 +1068,6 @@ const VisualAcuity = (props) => {
                             style: { textAlign: 'center' }
                           }
                         }}
-                        type="number"
                       />
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">

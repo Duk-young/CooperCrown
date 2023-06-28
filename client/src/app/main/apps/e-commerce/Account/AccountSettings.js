@@ -16,6 +16,7 @@ import reducer from '../store/reducers';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import UploadPicture from '../ReusableComponents/UploadPicture';
 import withReducer from 'app/store/withReducer';
 
 const useStyles = makeStyles((theme) => ({
@@ -134,6 +135,8 @@ function AccountSettings(props) {
                   </div>
                   <div>
                     <div className="flex flex-col justify-center p-16 sm:p-24 ">
+                      {form?.picture && (<img src={form?.picture} alt='profilePicture' className='w-128 h-128 rounded-full ml-16' />)}
+                      <div className='flex flex-row py-16 ml-16'><UploadPicture form={form} setForm={setForm} setisLoading={setisLoading} userId={routeParams?.uid} /></div>
                       <div className="flex flex-row p-6 mb-16 gap-10">
                         <TextField
                           className="w-1/2"

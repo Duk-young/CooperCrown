@@ -211,7 +211,7 @@ function UpdateCustomer(props) {
         }
         try {
             const sendEmail = firebaseService.functions.httpsCallable('sendEmail');
-            const res = await sendEmail({ customers:[{email:form?.email, firstName: form?.firstName, lastName: form?.lastName}], message: templates?.newCustomer })
+            const res = await sendEmail({ customers:[{email:form?.email, firstName: form?.firstName, lastName: form?.lastName}], message: templates?.newCustomer, subject: templates?.newCustomerSubject })
 
             console.log('Result from sendEmail is', res)
             dispatch(MessageActions.showMessage({ message: 'Welcome email sent successfully' }));

@@ -33,29 +33,29 @@ function Login() {
         <div className="absolute inset-0">
           <StarsBackground />
         </div>
-        <div className="absolute inset-0">
+        {/* <div className="absolute inset-0">
           <Earth />
-        </div>
-        <div className="flex w-full flex-col flex-grow-0 items-center text-white p-16 text-center md:p-128 md:items-start md:flex-shrink-0 md:flex-1 md:text-left" style={{ zIndex: 1 }}>
+        </div> */}
+        <div className="flex w-full flex-col flex-grow-0 items-center text-white p-16 text-center md:p-128 md:items-center md:flex-shrink-0 md:flex-1 md:text-left self-center" style={{ zIndex: 1 }}>
           <FuseAnimate animation="transition.expandIn">
             <img
-              className="w-128 mb-32"
+              className="w-384"
               src="assets/images/logos/fuse.svg"
               alt="logo"
             />
           </FuseAnimate>
 
-          <FuseAnimate animation="transition.slideUpIn" delay={300}>
+          {/* <FuseAnimate animation="transition.slideUpIn" delay={300}>
             <Typography variant="h3" color="inherit" className="font-light">
-              Welcome to the FUSE!
+              Welcome to COOPER CROWN!
             </Typography>
-          </FuseAnimate>
+          </FuseAnimate> */}
 
-          <FuseAnimate delay={400}>
+          {/* <FuseAnimate delay={400}>
             <Typography variant="subtitle1" color="inherit" className="max-w-512 mt-16">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ullamcorper nisl erat, vel convallis elit fermentum pellentesque. Sed mollis velit facilisis facilisis.
             </Typography>
-          </FuseAnimate>
+          </FuseAnimate> */}
         </div>
       </div>
 

@@ -9,6 +9,7 @@ import reducer from '../store/reducers';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import FuseLoading from '@fuse/core/FuseLoading/FuseLoading';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 function EmailTemplates() {
 
   const classes = useStyles();
+  const [isLoading, setisLoading] = useState(false);
   const { form, handleChange, setForm } = useForm(null);
   const [disabledState, setDisabledState] = useState(true);
 
@@ -50,7 +52,15 @@ function EmailTemplates() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const onSubmit = async() => {
+    setisLoading(true)
+    setDisabledState(true)
+    await firestore().collection('emailTemplates').doc('emailTemplates').update({templates: form})
+    setisLoading(false)
+  }
 
+
+  if (isLoading) return <FuseLoading />
   return (
     <FusePageCarded
       header={
@@ -69,7 +79,7 @@ function EmailTemplates() {
               variant="contained"
               color="secondary"
               onClick={() => {
-                disabledState ? setDisabledState(false) : setDisabledState(true)
+                disabledState ? setDisabledState(false) : onSubmit()
               }}
             >
               {disabledState
@@ -87,7 +97,18 @@ function EmailTemplates() {
                 <h1 className="font-700" style={{ color: '#f15a25' }}>
                   Welcome Message
                 </h1>
-
+              </div>
+              <div className='p-16'>
+                <TextField
+                  label='Subject'
+                  disabled={disabledState}
+                  id="newCustomerSubject"
+                  name="newCustomerSubject"
+                  value={form?.newCustomerSubject}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                />
               </div>
               <TextField
                 // className="border-0"
@@ -113,6 +134,18 @@ function EmailTemplates() {
                   Exam Expiration Reminder
                 </h1>
               </div>
+              <div className='p-16'>
+                <TextField
+                  label='Subject'
+                  disabled={disabledState}
+                  id="examExpirySubject"
+                  name="examExpirySubject"
+                  value={form?.examExpirySubject}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                />
+              </div>
               <TextField
                 // className="pb-12"
                 disabled={disabledState}
@@ -137,6 +170,18 @@ function EmailTemplates() {
                 <h1 className="font-700" style={{ color: '#f15a25' }}>
                   Birthday Message
                 </h1>
+              </div>
+              <div className='p-16'>
+                <TextField
+                  label='Subject'
+                  disabled={disabledState}
+                  id="birthdaySubject"
+                  name="birthdaySubject"
+                  value={form?.birthdaySubject}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                />
               </div>
               <TextField
                 // className="pb-12"
@@ -185,6 +230,18 @@ function EmailTemplates() {
                 <h1 className="font-700 flex-1 text-center" style={{ color: '#f15a25', marginRight: '75px' }}>
                   Sale/Event Message
                 </h1>
+              </div>
+              <div className='p-16'>
+                <TextField
+                  label='Subject'
+                  disabled={disabledState}
+                  id="specialMessageSubject"
+                  name="specialMessageSubject"
+                  value={form?.specialMessageSubject}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                />
               </div>
               <TextField
                 // className="pb-12"
