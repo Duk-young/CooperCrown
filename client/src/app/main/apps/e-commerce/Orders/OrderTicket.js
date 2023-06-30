@@ -34,6 +34,7 @@ export default function OrderTicket(props) {
         .where('locationName', '==', mainForm?.locationName)
         .limit(1)
         .get();
+        if (queryShowroom.empty) return true
       let resultShowRoom = queryShowroom.docs[0].data();
       resultShowRoom.id = queryShowroom.docs[0].id;
 
@@ -214,6 +215,7 @@ export default function OrderTicket(props) {
                         <p className='pl-4 font-9pt text-left'>Detail: {row?.lensDetail}</p>
                       </div>
                     </div>
+                    {mainForm?.shipFrameToCustomerLogic && (<p className='pt-4 px-32 font-9pt text-left'> - Ship To Customer</p>)}
                     {row?.frameLater && (<p className='pt-4 px-32 font-9pt text-left'> - Frame to Come Later</p>)}
                     {row?.orderFrameInsurance && (<p className='px-32 font-9pt text-left'> - Order Frame From Insurance</p>)}
                     {row?.cutLensOnly && (<p className='pt-12 px-32 font-9pt text-left'> - Cut Lens Only</p>)}
@@ -301,6 +303,7 @@ export default function OrderTicket(props) {
                         <p className='pl-4 font-9pt text-left'>Base Curve: {row?.contactLensBaseCurveOs}</p>
                       </div>
                     </div>
+                    {mainForm?.shipContactLensToCustomerLogic && (<p className='pt-4 px-32 font-9pt text-left'> - Ship To Customer</p>)}
                     {row?.orderFromShowroom && (<p className='pt-4 px-32 font-9pt text-left'> - Order From Showroom</p>)}
                     {row?.contactLensInsurance && (<p className='px-32 font-9pt text-left'> - Order From Insurance</p>)}
                     <div className='flex flex-row justify-center my-8'>

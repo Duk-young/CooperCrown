@@ -246,7 +246,7 @@ function NewShowRoom(props) {
     <FusePageCarded
       header={(
         <div className='flex flex-col w-full'>
-          <div className='flex flex-row justify-center w-full'>
+          <div className='flex flex-row justify-center w-full h-full'>
             <div className='flex flex-row justify-start w-1/3'>
               <Typography
                 className="normal-case flex sm:mb-12"
@@ -263,16 +263,14 @@ function NewShowRoom(props) {
             <div className='flex flex-row justify-center w-1/3'>
               <Typography
                 className="flex mx-0 sm:mx-12 uppercase"
-                style={{ fontSize: '3rem', fontWeight: 600 }}
+                style={{ fontSize: '2.5rem', fontWeight: 600 }}
                 variant="h6">
-                {form?.email ? form.email : 'New User'}
+                {form?.fname && form?.lname ? `${form?.fname} ${form?.lname}` : 'New User'}
               </Typography>
             </div>
-            <div className='flex w-1/3'></div>
-          </div>
-          <div className='flex flex-row justify-end w-full items-center gap-10'>
+            <div className='flex lg:flex-row lg:items-center flex-col w-1/3 items-center gap-4'>
             <Button
-              style={{ width: '190px', height: '40px' }}
+              style={{ width: '180px', height: '35px' }}
               className={classes.button}
               variant="contained"
               color="secondary"
@@ -283,7 +281,7 @@ function NewShowRoom(props) {
               Change Email
             </Button>
             <Button
-              style={{ width: '190px', height: '40px' }}
+              style={{ width: '180px', height: '35px' }}
               className={classes.button}
               variant="contained"
               color="secondary"
@@ -293,6 +291,7 @@ function NewShowRoom(props) {
               }}>
               Change Password
             </Button>
+            </div>
           </div>
         </div>
       )}

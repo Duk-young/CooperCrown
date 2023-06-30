@@ -4,7 +4,6 @@ import { useReactToPrint } from 'react-to-print';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
-import logo from './images/logo.JPG';
 import moment from 'moment'
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef } from 'react';
@@ -39,6 +38,7 @@ export default function OrderReceipt(props) {
         .where('locationName', '==', mainForm?.locationName)
         .limit(1)
         .get();
+      if (queryShowroom.empty) return true
       let resultShowRoom = queryShowroom.docs[0].data();
       resultShowRoom.id = queryShowroom.docs[0].id;
 
@@ -73,9 +73,8 @@ export default function OrderReceipt(props) {
               <div class="flex flex-col justify-center items-center w-full px-20 h-full">
                 <div class="w-full">
                   <div className='flex flex-col w-full justify-center p-10 h-full'>
-                    <p className='font-13pt text-center font-700'>cooper crown</p>
-                    <div className="mx-auto w-40">
-                      <img src={logo} alt="" />
+                    <div className="mx-auto w-160 flex flex-row justify-center py-16">
+                      <img className="w-160" src="assets/images/logos/logoblack.svg" alt="logossss" />
                     </div>
                     <p className=' pt-4 font-13pt text-center font-700'>RECEIPT</p>
                     <div className='flex flex-row justify-between px-60'>
@@ -187,8 +186,7 @@ export default function OrderReceipt(props) {
               <div class="page-footer-space"></div>
             </tfoot>
           </table>
-          <div className='print-footer flex flex-col px-12'>
-            <div className='w-full h-2 border-b-1 border-black border-dotted my-8'></div>
+          <div className='print-footer flex flex-col px-12 mb-16'>
             <div class="flex flex-col justify-center items-center w-full">
               <p className='font-10pt font-700 text-center'>{showroom?.locationName} {showroom?.City} {showroom?.State}</p>
               <p className='font-10pt font-700 text-center'>Phone: {showroom?.phoneNo} / {showroom?.email}</p>

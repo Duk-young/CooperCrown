@@ -5,9 +5,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import clsx from 'clsx';
 import FuseLoading from '@fuse/core/FuseLoading';
-import FusePageSimple from '@fuse/core/FusePageSimple';
 import moment from 'moment'
-import Paper from '@material-ui/core/Paper';
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
 import Table from '@material-ui/core/Table';
@@ -207,11 +205,6 @@ function Insurance(props) {
   const [isLoading, setisLoading] = useState(true);
   const [payments, setPayments] = useState(true);
   const { form, handleChange } = useForm(null);
-
-  useEffect(() => {
-    console.log(typeof form?.start)
-  
-  }, [form])
   
 
   useEffect(() => {
@@ -235,9 +228,7 @@ function Insurance(props) {
 
 
   return (
-    <FusePageSimple
-      content={
-        <div className="flex w-full">
+        <div className="flex w-full overflow-hidden">
           <InstantSearch
             searchClient={searchClient}
             indexName="insuranceClaims"
@@ -360,19 +351,15 @@ function Insurance(props) {
               </div>
               <TableContainer
                 stickyHeader
-                component={Paper}
                 className="flex flex-col w-full overflow-scroll">
                 <CustomHits payments={payments} props={props} />
               </TableContainer>
               <div className="flex flex-row justify-center">
-                <Pagination />
+                <Pagination showLast={true} />
               </div>
             </div>
           </InstantSearch>
         </div>
-      }
-      innerScroll
-    />
   );
 }
 

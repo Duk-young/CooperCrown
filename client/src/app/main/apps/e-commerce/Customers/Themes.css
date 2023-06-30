@@ -543,7 +543,6 @@ a[class^='ais-'] {
 }
 
 .ais-Pagination-item--selected {
-  background-color: whitesmoke;
   background-image: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.34),
