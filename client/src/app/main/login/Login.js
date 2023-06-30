@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import FirebaseLoginTab from './tabs/FirebaseLoginTab';
-import Earth from './Earth';
+// import Earth from './Earth';
 import StarsBackground from './StarsBackground';
 
 const useStyles = makeStyles((theme) => ({

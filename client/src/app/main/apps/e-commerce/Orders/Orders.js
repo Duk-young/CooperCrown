@@ -16,7 +16,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import clsx from 'clsx';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
-import FusePageSimple from '@fuse/core/FusePageSimple';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import moment from 'moment';
@@ -569,287 +568,282 @@ function Orders(props) {
   if (isLoading) return <FuseLoading />;
 
   return (
-    <FusePageSimple
-      content={
-        <div className="flex w-full ">
-          <TableContainer className="flex flex-col w-full">
-            <InstantSearch searchClient={searchClient} indexName="orders">
-              <div className={clsx(classes.tabHeader)}>
-                <div className="p-4 flex justify-center">
-                  <Typography
-                    className="hidden sm:flex mx-0 sm:mx-12 text-center uppercase"
-                    variant="h6"
-                    style={{ fontSize: '3rem', fontWeight: 600 }}>
-                    ORDERS
-                  </Typography>
-                </div>
-              </div>
-              <div className={clsx(classes.tabHeader)}>
-                <Tabs
-                  value={value}
-                  onChange={handleTabChange}
-                  indicatorColor="rgb(241, 90, 37)"
-                  textColor="rgb(241, 90, 37)"
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="simple tabs example">
-                  {statuses.map((status, index) => {
-                    return (
-                      <StyledTab
-                        key={index}
-                        className="p-0"
-                        wrapped
-                        label={status.label.toUpperCase()}
-                        style={{
-                          maxWidth: '100px',
-                          fontSize: '1.2rem'
-                        }}
-                        {...a11yProps(status.value)}
-                      />
-                    );
-                  })}
-                </Tabs>
-              </div>
-              <Configure
-                filters={value > 0 ? `orderStatus: '${statuses[value]?.label}'` : ''}
-              />
-              <div className={classes.header}>
-                <div className="flex flex-col w-1/3">
-                  <div className="date-picker w-full flex flex-row gap-10">
-                    <StyledDatePicker
-                      id="date"
-                      label="Start Date"
-                      type="date"
-                      variant="outlined"
-                      style={{ border: 'none' }}
-                      defaultValue={form?.start}
-                      InputLabelProps={{
-                        shrink: true,
-                        style: { color: 'white' }
-                      }}
-                      InputProps={{
-                        inputProps: {
-                          style: { color: 'white', fontSize: '10px' }
-                        }
-                      }}
-                      onChange={(e) => {
-                        handleChange({
-                          target: {
-                            name: 'start',
-                            value: firestore.Timestamp.fromDate(
-                              new Date(e.target.value)
-                            )
-                          }
-                        });
-                      }}
-                    />
-                    <StyledDatePicker
-                      id="date"
-                      label="End Date"
-                      type="date"
-                      style={{ border: 'none' }}
-                      defaultValue={form?.end}
-                      variant="outlined"
-                      InputLabelProps={{
-                        shrink: true,
-                        style: { color: 'white' }
-                      }}
-                      InputProps={{
-                        inputProps: {
-                          style: { color: 'white', fontSize: '10px' }
-                        }
-                      }}
-                      onChange={(e) => {
-                        handleChange({
-                          target: {
-                            name: 'end',
-                            value: firestore.Timestamp.fromDate(
-                              new Date(e.target.value)
-                            )
-                          }
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col w-1/3">
-                  <SearchBox
-                    translations={{
-                      placeholder: 'Search for orders...'
+    <div className="flex w-full overflow-hidden">
+      <div className='flex flex-col w-full'>
+        <InstantSearch searchClient={searchClient} indexName="orders">
+          <div className={clsx(classes.tabHeader)}>
+            <div className="p-4 flex justify-center">
+              <Typography
+                className="hidden sm:flex mx-0 sm:mx-12 text-center uppercase"
+                variant="h6"
+                style={{ fontSize: '3rem', fontWeight: 600 }}>
+                ORDERS
+              </Typography>
+            </div>
+          </div>
+          <div className={clsx(classes.tabHeader)}>
+            <Tabs
+              value={value}
+              onChange={handleTabChange}
+              indicatorColor="rgb(241, 90, 37)"
+              textColor="rgb(241, 90, 37)"
+              variant="scrollable"
+              scrollButtons="auto"
+              aria-label="simple tabs example">
+              {statuses.map((status, index) => {
+                return (
+                  <StyledTab
+                    key={index}
+                    className="p-0"
+                    wrapped
+                    label={status.label.toUpperCase()}
+                    style={{
+                      maxWidth: '100px',
+                      fontSize: '1.2rem'
                     }}
-                    style={{ color: '#000' }}
-                    submit={
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 18 18">
-                        <g
-                          fill="none"
-                          fillRule="evenodd"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.67"
-                          transform="translate(1 1)">
-                          <circle cx="7.11" cy="7.11" r="7.11" />
-                          <path d="M16 16l-3.87-3.87" />
-                        </g>
-                      </svg>
+                    {...a11yProps(status.value)}
+                  />
+                );
+              })}
+            </Tabs>
+          </div>
+          <Configure
+            filters={value > 0 ? `orderStatus: '${statuses[value]?.label}'` : ''}
+          />
+          <div className={classes.header}>
+            <div className="flex flex-col w-1/3">
+              <div className="date-picker w-full flex flex-row gap-10">
+                <StyledDatePicker
+                  id="date"
+                  label="Start Date"
+                  type="date"
+                  variant="outlined"
+                  style={{ border: 'none' }}
+                  defaultValue={form?.start}
+                  InputLabelProps={{
+                    shrink: true,
+                    style: { color: 'white' }
+                  }}
+                  InputProps={{
+                    inputProps: {
+                      style: { color: 'white', fontSize: '10px' }
                     }
-                    reset={false}
-                  />
-                </div>
-                <div className="flex flex-1 justify-center">
-                  <HitsPerPage
-                    defaultRefinement={50}
-                    items={[
-                      { value: 50, label: 'Show 50' },
-                      { value: 100, label: 'Show 100' },
-                      { value: 200, label: 'Show 200' }
-                    ]}
-                  />
-                </div>
-                <div className="flex flex-row">
-                  <FuseAnimate animation="transition.slideRightIn" delay={300}>
-                    <Button
-                      onClick={() => {
-                        if (userData.userRole === 'admin' || userData?.ordersCreate) {
-                          props.history.push(
-                            `/apps/e-commerce/orders/addorder/new`
-                          );
-                        } else {
-                          toast.error('You are not authorized', {
-                            position: 'top-center',
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            transition: Zoom
-                          });
-                        }
-                      }}
-                      className={classes.button}
-                      variant="contained"
-                      color="secondary">
-                      <span className="hidden sm:flex">Add New</span>
-                      <span className="flex sm:hidden">New</span>
-                    </Button>
-                  </FuseAnimate>
-                </div>
+                  }}
+                  onChange={(e) => {
+                    handleChange({
+                      target: {
+                        name: 'start',
+                        value: firestore.Timestamp.fromDate(
+                          new Date(e.target.value)
+                        )
+                      }
+                    });
+                  }}
+                />
+                <StyledDatePicker
+                  id="date"
+                  label="End Date"
+                  type="date"
+                  style={{ border: 'none' }}
+                  defaultValue={form?.end}
+                  variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                    style: { color: 'white' }
+                  }}
+                  InputProps={{
+                    inputProps: {
+                      style: { color: 'white', fontSize: '10px' }
+                    }
+                  }}
+                  onChange={(e) => {
+                    handleChange({
+                      target: {
+                        name: 'end',
+                        value: firestore.Timestamp.fromDate(
+                          new Date(e.target.value)
+                        )
+                      }
+                    });
+                  }}
+                />
               </div>
-              <>
-                {statuses.map((status) => (
-                  <TabPanel
-                    key={status.value}
-                    value={value}
-                    index={status.value}>
-                    <CustomHits
-                      props={props}
-                      value={value}
-                      setIsDataEmpty={setIsDataEmpty}
-                      selected={selected}
-                      setSelected={setSelected}
-                      selectAllData={selectAllData}
-                      setSelectAllData={setSelectAllData}
-                      userData={userData}
-                      history={props?.history}
-                    />
-                  </TabPanel>
-                ))}
-              </>
-              <div className="flex flex-row justify-between">
-                <div className="flex-1"></div>
-                <div className="flex-1 justify-center mt-8"><Pagination /></div>
-                <div className="flex-1"></div>
-              </div>
-              <div className='flex flex-row justify-end gap-10 px-10'>
-                {value === 7 && (
-                  <Button
-                    className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
-                      }`}
-                    style={{
-                      backgroundColor: '#222',
-                      color: '#FFF'
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    disabled={selected.length === 0 || selected.length > 1}
-                    onClick={() => {
+            </div>
+            <div className="flex flex-col w-1/3">
+              <SearchBox
+                translations={{
+                  placeholder: 'Search for orders...'
+                }}
+                style={{ color: '#000' }}
+                submit={
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 18 18">
+                    <g
+                      fill="none"
+                      fillRule="evenodd"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.67"
+                      transform="translate(1 1)">
+                      <circle cx="7.11" cy="7.11" r="7.11" />
+                      <path d="M16 16l-3.87-3.87" />
+                    </g>
+                  </svg>
+                }
+                reset={false}
+              />
+            </div>
+            <div className="flex flex-1 justify-center">
+              <HitsPerPage
+                defaultRefinement={50}
+                items={[
+                  { value: 50, label: 'Show 50' },
+                  { value: 100, label: 'Show 100' },
+                  { value: 200, label: 'Show 200' }
+                ]}
+              />
+            </div>
+            <div className="flex flex-row">
+              <FuseAnimate animation="transition.slideRightIn" delay={300}>
+                <Button
+                  onClick={() => {
+                    if (userData.userRole === 'admin' || userData?.ordersCreate) {
                       props.history.push(
-                        `/apps/e-commerce/orders/redoorder/${selected[0]}`
+                        `/apps/e-commerce/orders/addorder/new`
                       );
-                    }}>
-                    REDO
-                  </Button>
-                )}
-                {value === 3 && (
-                  <Button
-                    className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
-                      }`}
-                    style={{
-                      backgroundColor: '#222',
-                      color: '#FFF'
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    disabled={selected.length === 0 || selected.length > 1}
-                    onClick={() => {
-                      updateStatus(selected, statuses[5].label)
-                    }}>
-                    TO SHOWROOM
-                  </Button>
-                )}
-                {value === 4 && (
-                  <Button
-                    className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
-                      }`}
-                    style={{
-                      backgroundColor: '#222',
-                      color: '#FFF'
-                    }}
-                    variant="contained"
-                    color="secondary"
-                    disabled={selected.length === 0 || selected.length > 1}
-                    onClick={() => {
-                      updateStatus(selected, statuses[3].label)
-                    }}>
-                    IN PROGRESS
-                  </Button>
-                )}
-                {(value !== 0 && value !== 4 && value !== 8) &&
-                  !isDataEmpty &&
-                  value === statuses[value].value && (
-                    <Button
-                      className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
-                        }`}
-                      style={{
-                        backgroundColor: '#222',
-                        color: '#FFF'
-                      }}
-                      // className={classes.button}
-                      variant="contained"
-                      disabled={selected.length === 0 || selected.length > 1}
-                      color="secondary"
-                      onClick={() => {
-                        updateStatus(selected, statuses[value + 1].label)
-                      }}>
-                      <span className="hidden sm:flex">
-                        {statuses[value].label !== 'cancelled'
-                          ? statuses[value + 1].label
-                          : null}
-                      </span>
-                    </Button>
-                  )}
-              </div>
-            </InstantSearch>
+                    } else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
+                  }}
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary">
+                  <span className="hidden sm:flex">Add New</span>
+                  <span className="flex sm:hidden">New</span>
+                </Button>
+              </FuseAnimate>
+            </div>
+          </div>
+          <TableContainer stickyHeader className="flex flex-col w-full overflow-scroll">
+            {statuses.map((status) => (
+              <TabPanel
+                key={status.value}
+                value={value}
+                index={status.value}>
+                <CustomHits
+                  props={props}
+                  value={value}
+                  setIsDataEmpty={setIsDataEmpty}
+                  selected={selected}
+                  setSelected={setSelected}
+                  selectAllData={selectAllData}
+                  setSelectAllData={setSelectAllData}
+                  userData={userData}
+                  history={props?.history}
+                />
+              </TabPanel>
+            ))}
           </TableContainer>
-        </div>
-      }
-      innerScroll
-    />
+          <div className="flex flex-row justify-between">
+            <div className="flex-1"></div>
+            <div className="flex-1 justify-center mt-8"><Pagination showLast={true} /></div>
+            <div className="flex-1"></div>
+          </div>
+          <div className='flex flex-row justify-end gap-10 px-10'>
+            {value === 7 && (
+              <Button
+                className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
+                  }`}
+                style={{
+                  backgroundColor: '#222',
+                  color: '#FFF'
+                }}
+                variant="contained"
+                color="secondary"
+                disabled={selected.length === 0 || selected.length > 1}
+                onClick={() => {
+                  props.history.push(
+                    `/apps/e-commerce/orders/redoorder/${selected[0]}`
+                  );
+                }}>
+                REDO
+              </Button>
+            )}
+            {value === 3 && (
+              <Button
+                className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
+                  }`}
+                style={{
+                  backgroundColor: '#222',
+                  color: '#FFF'
+                }}
+                variant="contained"
+                color="secondary"
+                disabled={selected.length === 0 || selected.length > 1}
+                onClick={() => {
+                  updateStatus(selected, statuses[5].label)
+                }}>
+                TO SHOWROOM
+              </Button>
+            )}
+            {value === 4 && (
+              <Button
+                className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
+                  }`}
+                style={{
+                  backgroundColor: '#222',
+                  color: '#FFF'
+                }}
+                variant="contained"
+                color="secondary"
+                disabled={selected.length === 0 || selected.length > 1}
+                onClick={() => {
+                  updateStatus(selected, statuses[3].label)
+                }}>
+                IN PROGRESS
+              </Button>
+            )}
+            {(value !== 0 && value !== 4 && value !== 8) &&
+              !isDataEmpty &&
+              value === statuses[value].value && (
+                <Button
+                  className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0 || selected.length > 1) && 'opacity-75'
+                    }`}
+                  style={{
+                    backgroundColor: '#222',
+                    color: '#FFF'
+                  }}
+                  // className={classes.button}
+                  variant="contained"
+                  disabled={selected.length === 0 || selected.length > 1}
+                  color="secondary"
+                  onClick={() => {
+                    updateStatus(selected, statuses[value + 1].label)
+                  }}>
+                  <span className="hidden sm:flex">
+                    {statuses[value].label !== 'cancelled'
+                      ? statuses[value + 1].label
+                      : null}
+                  </span>
+                </Button>
+              )}
+          </div>
+        </InstantSearch>
+      </div>
+    </div>
   );
 }
 

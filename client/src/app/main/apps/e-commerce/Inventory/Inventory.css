@@ -547,7 +547,6 @@ h2 {
 }
 
 .ais-Pagination-item--selected {
-  background-color: white;
   background-image: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.34),

@@ -4,7 +4,6 @@ import { useReactToPrint } from 'react-to-print';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
-import logo from './images/logo.JPG';
 import moment from 'moment'
 import CanvasDraw from 'react-canvas-draw';
 import PropTypes from 'prop-types';
@@ -57,19 +56,23 @@ export default function PrescriptionReceipt(props) {
         .where('showRoomId', '==', mainForm?.showRoomId)
         .limit(1)
         .get();
-      let resultShowRoom = queryShowroom.docs[0].data();
-      resultShowRoom.id = queryShowroom.docs[0].id;
+      if (!queryShowroom.empty) {
+        let resultShowRoom = queryShowroom.docs[0].data();
+        resultShowRoom.id = queryShowroom.docs[0].id;
 
-      setShowroom(resultShowRoom);
+        setShowroom(resultShowRoom);
+      }
       const queryDoctor = await firestore()
         .collection('doctors')
         .where('doctorId', '==', mainForm?.doctorId)
         .limit(1)
         .get();
-      let resultDoctor = queryDoctor.docs[0].data();
-      resultDoctor.id = queryDoctor.docs[0].id;
+      if (!queryDoctor.empty) {
+        let resultDoctor = queryDoctor.docs[0].data();
+        resultDoctor.id = queryDoctor.docs[0].id;
 
-      setDoctor(resultDoctor);
+        setDoctor(resultDoctor);
+      }
     };
     fetchDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,9 +108,8 @@ export default function PrescriptionReceipt(props) {
               <div class="flex flex-col justify-center items-center w-full px-20 h-full">
                 <div class="w-full">
                   <div className='flex flex-col w-full justify-center p-10 h-full'>
-                    <p className='font-13pt text-center font-700'>cooper crown</p>
-                    <div className="mx-auto w-40">
-                      <img src={logo} alt="" />
+                    <div className="mx-auto w-160 flex flex-row justify-center py-16">
+                      <img className="w-160" src="assets/images/logos/logoblack.svg" alt="logossss" />
                     </div>
                     <p className=' pt-4 font-13pt text-center font-700'>
                       {mainForm?.prescriptionType === 'eyeglassesRx' && 'EYEGLASSES RX'}
@@ -490,16 +492,16 @@ export default function PrescriptionReceipt(props) {
                       <p className='font-10pt font-700'>Date : {moment().format('MM/DD/YYYY')}</p>
                     </div>
                     <div className='flex'>
-                        <CanvasDraw
-                          ref={(canvasDraw) => setSaveableCanvas(canvasDraw)}
-                          brushRadius={1}
-                          disabled={true}
-                          brushColor={'#000000'}
-                          imgSrc={DocSig}
-                          lazyRadius="0"
-                          canvasWidth={300}
-                          canvasHeight={300}
-                        />
+                      <CanvasDraw
+                        ref={(canvasDraw) => setSaveableCanvas(canvasDraw)}
+                        brushRadius={1}
+                        disabled={true}
+                        brushColor={'#000000'}
+                        imgSrc={DocSig}
+                        lazyRadius="0"
+                        canvasWidth={300}
+                        canvasHeight={300}
+                      />
                     </div>
                   </div>
                 </div>

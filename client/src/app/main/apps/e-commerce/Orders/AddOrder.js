@@ -853,7 +853,7 @@ function AddOrder(props) {
                         </div>
                         <div className="flex flex-col p-12 flex-1 h-auto">
                           <div className="flex flex-col">
-                            {(eyeglasses || contactLenses || medication) && (
+                            {(eyeglasses?.length > 0 || contactLenses?.length > 0 || medication?.length > 0) && (
                               <div className="flex flex-col border-t-1 border-r-1 border-l-1 border-black border-solid">
                                 {eyeglasses.map((row, index) => (
                                   <div

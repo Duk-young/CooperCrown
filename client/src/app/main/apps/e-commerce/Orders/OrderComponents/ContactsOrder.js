@@ -90,8 +90,10 @@ const ContactsOrder = (props) => {
   }, []);
 
   const fetchContactLensRate = () => {
-
-    if (
+    if (selectedContactLens?.OU) {
+      const clOdRate = +filteredContactLensOd[0]?.price || 0
+      return { clOdRate, clOsRate: clOdRate }
+    } else if (
       selectedContactLens?.contactLensStyleOd &&
       selectedContactLens?.contactLensStyleOs
     ) {
@@ -114,6 +116,7 @@ const ContactsOrder = (props) => {
   };
 
   const handleAddContactsLensToOrder = () => {
+    console.log('formmmm', selectedContactLens)
     let res = fetchContactLensRate();
 
     if (res?.clOdRate && res?.clOsRate) {
@@ -677,7 +680,24 @@ const ContactsOrder = (props) => {
                     control={
                       <Checkbox
                         checked={selectedContactLens?.OU ?? ''}
-                        onChange={handleSelectedContactLensChange}
+                        onChange={(e) => {
+                          // handleSelectedContactLensChange(e)
+                          if (e.target.checked) {
+                            console.log('I am triggered')
+                            setSelectedContactLens({
+                              ...selectedContactLens, OU: e.target.checked, contactLensStyleOs: selectedContactLens?.contactLensStyleOd, contactLensBrandOs: selectedContactLens?.contactLensBrandOd,
+                              contactLensNameOs: selectedContactLens?.contactLensNameOd, contactLensBaseCurveOs: selectedContactLens?.contactLensBaseCurveOd, contactLensPackQtyOs: selectedContactLens?.contactLensPackQtyOd,
+                              contactLensQtyOs: selectedContactLens?.contactLensQtyOd
+                            })
+                            setFilteredContactLensOs(contactLens)
+                          } else {
+                            setSelectedContactLens({
+                              ...selectedContactLens, OU: e.target.checked, contactLensStyleOs: undefined, contactLensBrandOs: undefined, contactLensNameOs: undefined,
+                              contactLensBaseCurveOs: undefined, contactLensPackQtyOs: undefined, contactLensQtyOs: undefined
+                            })
+                            setFilteredContactLensOs(contactLens)
+                          }
+                        }}
                         name="OU"
                         disabled={disabledState}
                       />

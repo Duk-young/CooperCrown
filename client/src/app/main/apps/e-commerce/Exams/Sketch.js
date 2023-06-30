@@ -33,9 +33,9 @@ const Sketch = (props) => {
   return (
     <div>
       <div className="relative">
-        <div className="flex flex-row justify-around">
-          <div className="flex-1 flex flex-row ">
-            <FormControl className="ml-32 ">
+        <div className="flex flex-row">
+          <div className="flex-1 flex flex-row justify-center">
+            <FormControl>
               <Select
                 labelId="demo-simple-select-autowidth-label"
                 id="ethnicityId"
@@ -53,9 +53,8 @@ const Sketch = (props) => {
               <FormHelperText>Color</FormHelperText>
             </FormControl>
           </div>
-          <div className="flex-1 flex flex-row ">
+          <div className="flex-1 flex flex-row justify-start">
             <TextField
-              className="ml-4"
               size="small"
               id="outlined-multiline-static"
               label="Brush Radius"

@@ -9,9 +9,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
-import FusePageSimple from '@fuse/core/FusePageSimple';
 import moment from 'moment';
-import Paper from '@material-ui/core/Paper';
 import React from 'react';
 import reducer from '../store/reducers';
 import Table from '@material-ui/core/Table';
@@ -181,9 +179,7 @@ function Customers(props) {
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   return (
-    <FusePageSimple
-      content={
-        <div className="flex w-full">
+        <div className="flex w-full overflow-hidden">
           <InstantSearch
             searchClient={searchClient}
             indexName="customers"
@@ -336,21 +332,17 @@ function Customers(props) {
               </div>
               <TableContainer
                 stickyHeader
-                component={Paper}
                 className="flex flex-col w-full overflow-scroll">
                 <CustomHits props={props} />
               </TableContainer>
               <div className="flex flex-row justify-center">
                 <div className="flex flex-1"></div>
-                <div className="flex flex-1 justify-center mt-8"><Pagination /></div>
+                <div className="flex flex-1 justify-center mt-8"><Pagination showLast={true} /></div>
                 <div className="flex flex-1"></div>
               </div>
             </div>
           </InstantSearch>
         </div>
-      }
-      innerScroll
-    />
   );
 }
 

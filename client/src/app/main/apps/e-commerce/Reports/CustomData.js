@@ -171,7 +171,7 @@ const CustomData = (props) => {
         }
         try {
             const sendEventEmail = firebaseService.functions.httpsCallable('sendEventEmail');
-            const res = await sendEventEmail({ allEmails, message: templates?.specialMessage, subject: templates?.specialMessageSubject })
+            await sendEventEmail({ allEmails, message: templates?.specialMessage, subject: templates?.specialMessageSubject })
 
             dispatch(MessageActions.showMessage({ message: 'Emails sent successfully' }));
             setisLoading(false)

@@ -4,7 +4,6 @@ import { useReactToPrint } from 'react-to-print';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
-import logo from './images/logo.JPG';
 import moment from 'moment'
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef } from 'react';
@@ -24,6 +23,7 @@ export default function ThermalReceipt(props) {
   } = props;
 
   const [templates, setTemplates] = useState([]);
+  const [showroom, setShowroom] = useState(false);
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
@@ -42,8 +42,21 @@ export default function ThermalReceipt(props) {
         ? queryTemplates?.templates?.terms.split('<br>')
         : '';
       setTemplates(terms.length ? terms : []);
+
+      if (!mainForm?.locationName) return
+      const queryShowroom = await firestore()
+        .collection('showRooms')
+        .where('locationName', '==', mainForm?.locationName)
+        .limit(1)
+        .get();
+      if (queryShowroom.empty) return true
+      let resultShowRoom = queryShowroom.docs[0].data();
+      resultShowRoom.id = queryShowroom.docs[0].id;
+
+      setShowroom(resultShowRoom);
     };
     fetchDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -69,9 +82,8 @@ export default function ThermalReceipt(props) {
           <div class="flex justify-center items-center">
             <div class="thermal-paper p-2">
               <div className='flex flex-col w-full border-1 border-black justify-center p-10'>
-                <p className='font-12pt text-center'>cooper crown</p>
-                <div className="mx-auto w-28">
-                  <img src={logo} alt="" />
+                <div className="mx-auto w-128 flex flex-row justify-center py-16">
+                  <img className="w-128" src="assets/images/logos/logoblack.svg" alt="logossss" />
                 </div>
                 <p className=' pt-4 font-12pt text-center'>RECEIPT</p>
                 <div className='flex flex-row justify-between'>
@@ -160,6 +172,11 @@ export default function ThermalReceipt(props) {
                   {templates.map((row) => (
                     <p className='font-7pt font-grey'>{row}</p>
                   ))}
+                </div>
+                <div class="flex flex-col justify-center items-center w-full mt-20 mb-8">
+                  <p className='font-7pt font-700 text-center'>{showroom?.locationName} {showroom?.City} {showroom?.State}</p>
+                  <p className='font-7pt font-700 text-center'>Phone: {showroom?.phoneNo} / {showroom?.email}</p>
+                  <p className='font-7pt font-700 text-center'>www.coopercwn.com</p>
                 </div>
               </div>
             </div>

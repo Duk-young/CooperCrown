@@ -43,6 +43,66 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+// Create custom styles
+const styles = {
+    root: {
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'white', // Change border color
+            },
+            '&:hover fieldset': {
+                borderColor: 'white', // Change border color on hover
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'white', // Change border color when focused
+            },
+            '& input': {
+                color: 'white', // Change text color
+            },
+            '&.Mui-disabled': {
+                '& fieldset': {
+                    borderColor: 'white', // Change border color for disabled state
+                },
+            },
+        },
+        '& .MuiInputLabel-root': {
+            color: 'white', // Change label color
+        }
+    },
+};
+
+// Create a custom styled TextField component
+const CustomTextField = withStyles(styles)(TextField);
+
+// Create custom styles
+const selectStyles = {
+    select: {
+        color: 'white', // Change text color
+        '&:before': {
+            borderColor: 'white', // Change border color
+        },
+        '&:after': {
+            borderColor: 'white', // Change border color when selected
+        },
+        '&:hover': {
+            '&:not(.Mui-disabled)': {
+                '&:before': {
+                    borderColor: 'white', // Change border color on hover
+                },
+            },
+        },
+    },
+    icon: {
+        fill: 'white', // Change arrow icon color
+    },
+    formHelperText: {
+        color: 'white', // Change FormHelperText color
+    },
+};
+
+// Create a custom styled Select component
+const CustomSelect = withStyles(selectStyles)(Select);
+
 const StyledDatePicker = withStyles((theme) => ({
     root: {
         '& label.Mui-focused': {
@@ -194,7 +254,97 @@ function PaymentReport(props) {
                                     PAYMENT REPORT
                                 </Typography>
                             </div>
-                            <div className='flex flex-row w-full pt-32 pb-16'>
+                            <div className='flex flex-row w-full justify-between px-16 pt-32 pb-16 items-center'>
+                                <div className='flex flex-row w-3/4'>
+                                    <CustomTextField
+                                        disabled={true}
+                                        style={{ width: '120px' }}
+                                        label="Cash Total"
+                                        variant="outlined"
+                                        size="small"
+                                        className="px-12"
+                                        value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
+                                            if (currentValue?.paymentMode === 'Cash') {
+                                                return accumulator + +currentValue?.amount;
+                                            } else {
+                                                return accumulator;
+                                            }
+                                        }, 0)}`}
+                                    />
+                                    <CustomTextField
+                                        disabled={true}
+                                        style={{ width: '120px' }}
+                                        label="Credit Total"
+                                        variant="outlined"
+                                        size="small"
+                                        className="px-12"
+                                        value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
+                                            if (currentValue?.paymentMode === 'Credit Card') {
+                                                return accumulator + +currentValue?.amount;
+                                            } else {
+                                                return accumulator;
+                                            }
+                                        }, 0)}`}
+                                    />
+                                    <CustomTextField
+                                        disabled={true}
+                                        style={{ width: '120px' }}
+                                        label="Check Total"
+                                        variant="outlined"
+                                        size="small"
+                                        className="px-12"
+                                        value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
+                                            if (currentValue?.paymentMode === 'Check') {
+                                                return accumulator + +currentValue?.amount;
+                                            } else {
+                                                return accumulator;
+                                            }
+                                        }, 0)}`}
+                                    />
+                                    <CustomTextField
+                                        disabled={true}
+                                        style={{ width: '120px' }}
+                                        label="Insurance Total"
+                                        variant="outlined"
+                                        size="small"
+                                        className="px-12"
+                                        value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
+                                            if (currentValue?.paymentType === 'insurance') {
+                                                return accumulator + +currentValue?.amount;
+                                            } else {
+                                                return accumulator;
+                                            }
+                                        }, 0)}`}
+                                    />
+                                    <CustomTextField
+                                        disabled={true}
+                                        style={{ width: '120px' }}
+                                        label="Gift Total"
+                                        variant="outlined"
+                                        size="small"
+                                        className="px-12"
+                                        value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
+                                            if (currentValue?.paymentMode === 'Store Credit / Gift Card') {
+                                                return accumulator + +currentValue?.amount;
+                                            } else {
+                                                return accumulator;
+                                            }
+                                        }, 0)}`}
+                                    />
+                                </div>
+                                <FormControl className='w-1/4 text-white'>
+                                    <FormHelperText className='text-white'>Select Location</FormHelperText>
+                                    <CustomSelect
+                                        value={form?.locationName ?? ''}
+                                        name="locationName"
+                                        onChange={handleChange}
+                                        autoWidth>
+                                        <MenuItem key={'ALL'} value={'ALL'}>{'ALL'}</MenuItem>
+                                        {showrooms.map((row, index) => (<MenuItem key={index} value={row?.locationName}>{row?.locationName}</MenuItem>))}
+                                    </CustomSelect>
+                                </FormControl>
+                            </div>
+                            <div className='flex flex-row w-full'>
                                 <div className='flex flex-col items-center w-1/3'>
                                     <div className="date-picker w-full flex flex-row gap-10 pl-4 justify-around">
                                         <StyledDatePicker
@@ -318,96 +468,6 @@ function PaymentReport(props) {
                         </div>
                     </div>
 
-                    <div className='flex flex-row w-full justify-between p-16 items-center'>
-                        <div className='flex flex-row w-3/4'>
-                            <TextField
-                                disabled={true}
-                                style={{ width: '120px' }}
-                                label="Cash Total"
-                                variant="outlined"
-                                size="small"
-                                className="px-12"
-                                value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
-                                    if (currentValue?.paymentMode === 'Cash') {
-                                        return accumulator + +currentValue?.amount;
-                                    } else {
-                                        return accumulator;
-                                    }
-                                }, 0)}`}
-                            />
-                            <TextField
-                                disabled={true}
-                                style={{ width: '120px' }}
-                                label="Credit Total"
-                                variant="outlined"
-                                size="small"
-                                className="px-12"
-                                value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
-                                    if (currentValue?.paymentMode === 'Credit Card') {
-                                        return accumulator + +currentValue?.amount;
-                                    } else {
-                                        return accumulator;
-                                    }
-                                }, 0)}`}
-                            />
-                            <TextField
-                                disabled={true}
-                                style={{ width: '120px' }}
-                                label="Check Total"
-                                variant="outlined"
-                                size="small"
-                                className="px-12"
-                                value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
-                                    if (currentValue?.paymentMode === 'Check') {
-                                        return accumulator + +currentValue?.amount;
-                                    } else {
-                                        return accumulator;
-                                    }
-                                }, 0)}`}
-                            />
-                            <TextField
-                                disabled={true}
-                                style={{ width: '120px' }}
-                                label="Insurance Total"
-                                variant="outlined"
-                                size="small"
-                                className="px-12"
-                                value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
-                                    if (currentValue?.paymentType === 'insurance') {
-                                        return accumulator + +currentValue?.amount;
-                                    } else {
-                                        return accumulator;
-                                    }
-                                }, 0)}`}
-                            />
-                            <TextField
-                                disabled={true}
-                                style={{ width: '120px' }}
-                                label="Gift Total"
-                                variant="outlined"
-                                size="small"
-                                className="px-12"
-                                value={`$ ${filteredPayments.reduce((accumulator, currentValue) => {
-                                    if (currentValue?.paymentMode === 'Store Credit / Gift Card') {
-                                        return accumulator + +currentValue?.amount;
-                                    } else {
-                                        return accumulator;
-                                    }
-                                }, 0)}`}
-                            />
-                        </div>
-                        <FormControl className='w-1/4'>
-                            <FormHelperText>Select Location</FormHelperText>
-                            <Select
-                                value={form?.locationName ?? ''}
-                                name="locationName"
-                                onChange={handleChange}
-                                autoWidth>
-                                <MenuItem key={'ALL'} value={'ALL'}>{'ALL'}</MenuItem>
-                                {showrooms.map((row, index) => (<MenuItem key={index} value={row?.locationName}>{row?.locationName}</MenuItem>))}
-                            </Select>
-                        </FormControl>
-                    </div>
                     <Table stickyHeader aria-label="customized table">
                         <TableHead>
                             <TableRow>
@@ -422,9 +482,12 @@ function PaymentReport(props) {
                         </TableHead>
                         <TableBody>
                             {filteredPayments.sort((a, b) => (a.paymentDate < b.paymentDate ? -1 : 1)).map((hit, index) => (
-                                <StyledTableRow key={index}>
+                                <StyledTableRow key={index} onClick={() => {
+                                    hit?.orderId ? props.history.push(`/apps/e-commerce/orders/vieworder/${hit?.orderId}`) :
+                                    hit?.insuranceClaimId && props.history.push(`/apps/e-commerce/insurances/viewclaim/${hit?.insuranceClaimId}`)
+                                }}>
                                     <StyledTableCell>{moment(hit?.paymentDate.toDate()).format('MM/DD/YYYY')}</StyledTableCell>
-                                    <StyledTableCell>{hit?.customOrderId}</StyledTableCell>
+                                    <StyledTableCell>{hit?.customOrderId || hit?.insuranceClaimId}</StyledTableCell>
                                     <StyledTableCell>{`${hit?.firstName ?? ''} ${hit?.lastName ?? ''}`}</StyledTableCell>
                                     <StyledTableCell>{`$ ${Number(hit?.amount).toLocaleString()}`}</StyledTableCell>
                                     <StyledTableCell>{hit?.paymentMode}</StyledTableCell>

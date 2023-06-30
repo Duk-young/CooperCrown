@@ -842,6 +842,8 @@ const CustomerProfile = (props) => {
                               <StyledTableCell>CYLINDER</StyledTableCell>
                               <StyledTableCell>AXIS</StyledTableCell>
                               <StyledTableCell>ADD</StyledTableCell>
+                              <StyledTableCell>BC</StyledTableCell>
+                              <StyledTableCell>BRAND</StyledTableCell>
                               <StyledTableCell>MODEL</StyledTableCell>
                             </TableRow>
                           </TableHead>
@@ -912,6 +914,28 @@ const CustomerProfile = (props) => {
                                     <div className="flex flex-col">
                                       <div>{row.contactLensAddOd}</div>
                                       <div>{row.contactLensAddOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
+                                    <div className="flex flex-col">
+                                      <div>{row.contactLensBcOd}</div>
+                                      <div>{row.contactLensBcOs}</div>
+                                    </div>
+                                  </StyledTableCell>
+                                  <StyledTableCell
+                                    style={
+                                      row?.onRx
+                                        ? { color: 'red' }
+                                        : { color: 'black' }
+                                    }>
+                                    <div className="flex flex-col">
+                                      <div>{row.contactLensBrandOd}</div>
+                                      <div>{row.contactLensBrandOs}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
