@@ -377,7 +377,7 @@ function UpdateCustomerForm(props) {
               <Button
                 className={classes.button}
                 variant="contained"
-                color="primary"
+                color="secondary"
                 onClick={() => {
                   setOpen(true);
                 }}>
