@@ -260,11 +260,13 @@ function Customers(props) {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col w-1/3 border-1 headerSearch">
+                  <div className="flex flex-col w-1/3 headerSearch">
                     <SearchBox
+                      className="search-box-form"
                       translations={{
-                        placeholder: 'Search for customers...'
+                        placeholder: ''
                       }}
+                      style={{ color: 'white' }}
                       submit={
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -274,7 +276,7 @@ function Customers(props) {
                           <g
                             fill="none"
                             fillRule="evenodd"
-                            stroke="currentColor"
+                            stroke="white"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth="1.67"
@@ -323,8 +325,8 @@ function Customers(props) {
                         // className="whitespace-no-wrap normal-case"
                         variant="contained"
                         color="secondary">
-                        <span className="hidden sm:flex">ADD NEW</span>
-                        <span className="flex sm:hidden">ADD</span>
+                        <span className="hidden sm:flex">+ ADD NEW</span>
+                        <span className="flex sm:hidden">+ ADD</span>
                       </Button>
                     </div>
                   </div>
