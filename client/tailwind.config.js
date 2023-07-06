@@ -358,11 +358,9 @@ module.exports = {
 			},
 			'primary-green': {
 				default: '#368C69',
-				100: '#368C69',
 			},
 			'secondary-green': {
 				default: '#D1E8DD',
-				100: '#D1E8DD',
 			}
 		},
 		spacing: {
