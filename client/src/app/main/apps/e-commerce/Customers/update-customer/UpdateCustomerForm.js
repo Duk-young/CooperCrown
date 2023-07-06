@@ -35,11 +35,12 @@ import { states } from 'app/main/apps/e-commerce/Emails/helper.js';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: "#368C69",
+    color: 'white',
     fontSize: 14,
-    padding: 5,
-    textAlign: 'center'
+    textAlign: 'center',
+    border: 'none',
+    borderRadius: 'none',
   },
   body: {
     fontSize: 14,
@@ -47,6 +48,13 @@ const StyledTableCell = withStyles((theme) => ({
     textAlign: 'center'
   }
 }))(TableCell);
+
+const StyledTableContainer = withStyles((theme) => ({
+  root: {
+    borderRadius: '0px',
+    backgroundColor: "red",
+  }
+}))(TableContainer);
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
@@ -56,19 +64,19 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   flexGrow: {
     flex: '1'
   },
   button: {
-    backgroundColor: '#f15a25',
+    backgroundColor: '#057350',
     color: '#fff',
     '&:hover': {
-      backgroundColor: '#f47b51',
+      backgroundColor: '#368C69',
       color: '#fff'
     }
   }
-});
+}));
 
 function UpdateCustomerForm(props) {
   const classes = useStyles();
@@ -110,7 +118,7 @@ function UpdateCustomerForm(props) {
     <div>
       <div className="flex md:flex-row flex-col">
         <div className="p-10 md:w-3/5 w-full">
-          <div className="py-4 border-1 border-black border-solid rounded-6">
+          <div className="py-4 rounded-1">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
               <h1 className="font-700" style={{ color: '#f15a25' }}>
                 CUSTOMER INFO
@@ -359,25 +367,24 @@ function UpdateCustomerForm(props) {
         </div>
 
         <div className="p-10 md:w-2/5 w-full md:pl-0 h-360">
-          <div className="py-4 border-1 border-black border-solid rounded-6">
-            <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-              <h1 className="font-700" style={{ color: '#f15a25' }}>
+          <div className="py-4 rounded-4 bg-secondary-green">
+            <div className="flex flex-row justify-center border-b-1 bg-secondary-green border-solid" style={{ borderColor: '#368c69' }}>
+              <h1 className="font-700" style={{ color: '#368c69' }}>
                 FAMILY TREE
               </h1>
             </div>
-            <div className="flex flex-col p-6">
+            <div className="flex justify-end p-10">
               <Button
                 className={classes.button}
                 variant="contained"
-                color="secondary"
+                color="primary"
                 onClick={() => {
                   setOpen(true);
                 }}>
-                <AddIcon />
-                ADD FAMILY
+                + ADD FAMILY
               </Button>
             </div>
-            <div className="flex flex-col w-full p-4">
+            <div className="flex flex-col w-full">
               <AddFamilyDialog
                 handleClose={handleClose}
                 open={open}
@@ -388,11 +395,11 @@ function UpdateCustomerForm(props) {
               />
 
               <div className="flex flex-col w-full h-288">
-                <TableContainer
+                <StyledTableContainer
                   className="flex flex-col w-full"
                   component={Paper}>
                   <Table
-                    // className={classes.table}
+                    className="bg-primary-green"
                     stickyHeader
                     aria-label="customized table">
                     <TableHead>
@@ -430,7 +437,7 @@ function UpdateCustomerForm(props) {
                         ))}
                     </TableBody>
                   </Table>
-                </TableContainer>
+                </StyledTableContainer>
               </div>
             </div>
           </div>
@@ -439,7 +446,7 @@ function UpdateCustomerForm(props) {
       <div className="flex flex-col p-10 mt-40">
         <FuseAnimate animation="transition.slideRightIn" delay={300}>
           <Button
-            className={classes.button}
+            className={`p-10 ${classes.button}`}
             variant="contained"
             color="secondary"
             onClick={() => {
