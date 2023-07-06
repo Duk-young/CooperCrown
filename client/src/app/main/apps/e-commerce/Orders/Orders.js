@@ -731,8 +731,8 @@ function Orders(props) {
                   className={classes.button}
                   variant="contained"
                   color="secondary">
-                  <span className="hidden sm:flex">+ Add New</span>
-                  <span className="flex sm:hidden">+ New</span>
+                  <span className="hidden sm:flex">Add New</span>
+                  <span className="flex sm:hidden">New</span>
                 </Button>
               </FuseAnimate>
             </div>

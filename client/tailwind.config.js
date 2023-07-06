@@ -355,12 +355,6 @@ module.exports = {
 				A200: '#18FFFF',
 				A400: '#00E5FF',
 				A700: '#00B8D4'
-			},
-			'primary-green': {
-				default: '#368C69',
-			},
-			'secondary-green': {
-				default: '#D1E8DD',
 			}
 		},
 		spacing: {
