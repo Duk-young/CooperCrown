@@ -403,11 +403,11 @@ function PaymentReport(props) {
                                         />
                                     </div>
                                 </div>
-                                <div className='flex flex-col items-center w-1/3'>
+                                <div className='flex flex-col items-center w-1/3 border-0'>
                                     <Paper
-                                        className="flex items-center w-full px-8 py-4 rounded-8 bg-transparent border-1 border-white border-solid"
+                                        className="flex items-center w-full px-8 py-4 rounded-none bg-transparent border-b-1 border-white border-solid"
                                         elevation={1}>
-                                        <Icon style={{ color: 'orange' }}>search</Icon>
+                                        <Icon style={{ color: 'white' }}>search</Icon>
                                         <Input
                                             placeholder="Search"
                                             className="flex flex-1 mx-8 min-h-40 bg-transparent text-white"
