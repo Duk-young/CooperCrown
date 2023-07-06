@@ -163,8 +163,8 @@ function Doctors(props) {
                         onClick={() => {props.history.push('/apps/e-commerce/doctor/new')}}
                         variant="contained"
                         color="secondary">
-                        <span className="hidden sm:flex">ADD NEW</span>
-                        <span className="flex sm:hidden">ADD</span>
+                        <span className="hidden sm:flex">+ ADD NEW</span>
+                        <span className="flex sm:hidden">+ ADD</span>
                       </Button>
                     </div>
                   </div>
