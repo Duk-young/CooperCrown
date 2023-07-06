@@ -344,9 +344,3 @@ mark {
   --toastify-toast-width: 500px !important;
 }
 
-.headerSearch .ais-SearchBox-form input,
-input.ais-SearchBox-input {
-  border: none;
-  border-bottom: 1px white solid;
-  border-radius: 0px;
-}

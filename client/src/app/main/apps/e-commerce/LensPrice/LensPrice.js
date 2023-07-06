@@ -110,7 +110,7 @@ function LensPrice(props) {
                   <Paper
                     className="flex items-center w-full px-8 py-4 rounded-8 bg-transparent border-1 border-white border-solid"
                     elevation={1}>
-                    <Icon style={{ color: 'white' }}>search</Icon>
+                    <Icon style={{ color: 'orange' }}>search</Icon>
                     <Input
                       placeholder="Search"
                       className="flex flex-1 mx-8 min-h-44 bg-transparent text-white"
@@ -139,8 +139,8 @@ function LensPrice(props) {
                     }
                     variant="contained"
                     color="secondary">
-                    <span className="hidden sm:flex">+ ADD NEW</span>
-                    <span className="flex sm:hidden">+ ADD</span>
+                    <span className="hidden sm:flex">ADD NEW</span>
+                    <span className="flex sm:hidden">ADD</span>
                   </Button>
                 </div>
               </div>
