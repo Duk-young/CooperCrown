@@ -41,7 +41,7 @@ const useStyles = makeStyles({
     backgroundColor: '#000000',
     color: '#fff',
     '&:hover': {
-      backgroundColor: '#372b25',
+      backgroundColor: '#000000',
       color: '#fff'
     }
   }
@@ -52,6 +52,7 @@ const AddPrescription = (props) => {
   const { setChangeOccured } = props;
   const [isLoading, setisLoading] = useState(true);
   const [customer, setCustomer] = useState({});
+  const [imageIndex, setImageIndex] = useState(0)
   const { form, handleChange, setForm } = useForm(null);
   const [filteredPrescription, setFilteredPrescription] = useState([]);
   const [prescription, setPrescription] = useState([]);
@@ -823,13 +824,15 @@ const AddPrescription = (props) => {
             </h1>
           </div>
           <div className="flex flex-col w-full">
-            <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} />
+            <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} imageIndex={imageIndex} />
             <div className="flex flex-row w-full overflow-scroll flex-wrap p-16">
               {images?.length > 0 && images.map((img, index) => (
                 <div className="mb-8 w-224 mr-6 object-contain">
                   <img
                     className="w-224 h-128 shadow-1 rounded-4"
-                    onClick={() => setOpenImageSlider(true)}
+                    onClick={() => {
+                      setImageIndex(index)
+                      setOpenImageSlider(true)}}
                     src={img.url}
                     key={img.name}
                     alt={''}

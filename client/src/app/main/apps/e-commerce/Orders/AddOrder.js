@@ -618,27 +618,27 @@ function AddOrder(props) {
     <div>
       <FusePageCarded
         header={
-          <div className="w-full">
+          <div className="flex flex-col w-full h-136">
             <div className="order-no relative">
-              <IconButton
+                <IconButton
                 className="absolute top-0 bottom-0 left-0"
-                onClick={() => {
-                  if (disabledState || eyeglasses.length === 0) {
-                    props.history.push(`/apps/e-commerce/orders`);
-                  } else {
-                    setOpenAlert1(true);
-                  }
-                }}>
-                <Icon className="text-20">arrow_back</Icon>
-                <span className="mx-4 text-12">Orders</span>
-              </IconButton>
-              <Typography className="text-16 sm:text-20 truncate text-center">
-                {routeParams.orderId
-                  ? `ORDER No. ${form?.customOrderId}`
-                  : 'NEW ORDER'}
-              </Typography>
-            </div>
-            <div className="order-header-content flex justify-between items-center p-2">
+                  onClick={() => {
+                    if (disabledState || eyeglasses.length === 0) {
+                      props.history.push(`/apps/e-commerce/orders`);
+                    } else {
+                      setOpenAlert1(true);
+                    }
+                  }}>
+                  <Icon className="text-20">arrow_back</Icon>
+                  <span className="mx-4 text-12">Orders</span>
+                </IconButton>
+                <Typography className="text-16 sm:text-20 truncate text-center">
+                  {routeParams.orderId
+                    ? `ORDER No. ${form?.customOrderId}`
+                    : 'NEW ORDER'}
+                </Typography>
+              </div>
+            <div className="order-header-content flex justify-between items-center p-10">
               <div className="date-picker w-1/3 flex gap-10">
                 <TextField
                   id="date"
@@ -696,7 +696,7 @@ function AddOrder(props) {
                 )}
               </div>
               {routeParams.orderId && (
-                <div className='flex flex-col w-1/3'>
+              <div className='flex flex-col w-1/3'>
                   <FormControl className='w-2/3' variant="outlined">
                     <InputLabel id="demo-simple-select-autowidth-label" color='white'>
                       Select an option:
@@ -730,64 +730,9 @@ function AddOrder(props) {
 
                     </Select>
                   </FormControl>
-
-                  {/* <div className="CTAs flex gap-10 w-full justify-end">
-                    <Button
-                      className="w-0"
-                      style={{
-                        backgroundColor: '#f15a25',
-                        color: '#fff',
-                        width: '190px'
-                      }}
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => { setOpenThermalReceipt(true) }}>
-                      Thermal
-                    </Button>
-                    <Button
-                      className="w-0"
-                      style={{
-                        backgroundColor: '#f15a25',
-                        color: '#fff',
-                        width: '190px'
-                      }}
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => { setOpenOrderTicket(true) }}>
-                      Order
-                    </Button>
-                  </div>
-                  <div className="CTAs flex gap-10 w-full justify-end pt-8">
-                    <Button
-                      className="w-0"
-                      style={{
-                        backgroundColor: '#f15a25',
-                        color: '#fff',
-                        width: '190px'
-                      }}
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => {
-                        setOpenOrderReceipt(true);
-                      }}>
-                      PRINT
-                    </Button>
-                    <Button
-                      className="w-0"
-                      style={{
-                        backgroundColor: '#f15a25',
-                        color: '#fff',
-                        width: '190px'
-                      }}
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => { setOpenThermalReceipt(true) }}>
-                      Thermal
-                    </Button>
-                  </div> */}
                 </div>
-              )}
-            </div>
+                )}
+              </div>
 
             <div>
               <Dialog
@@ -824,7 +769,7 @@ function AddOrder(props) {
           </div>
         }
         content={
-          showroom.length && (
+          showroom?.length && (
             <div className="flex flex-col w-full">
               <CustomerInfo form={form} handleChange={handleChange} customer={customer}
                 disabledState={disabledState} setNewCustomer={setNewCustomer} />

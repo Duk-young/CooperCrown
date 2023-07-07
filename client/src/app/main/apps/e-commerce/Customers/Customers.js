@@ -67,7 +67,7 @@ const CustomHits = connectHits(({ hits, props }) => {
   return (
     <Table stickyHeader aria-label="customized table">
       <TableHead>
-        <TableRow>
+        <TableRow className='truncate'>
           <StyledTableCell>ID</StyledTableCell>
           <StyledTableCell>FIRST NAME</StyledTableCell>
           <StyledTableCell>LAST NAME</StyledTableCell>
@@ -84,7 +84,7 @@ const CustomHits = connectHits(({ hits, props }) => {
           <StyledTableRow
             key={hit.objectID}
             hover
-            className="cursor-pointer"
+            className="cursor-pointer truncate"
             onClick={() => {
               if (userData.userRole === 'admin' || userData?.customersView) {
                 props.history.push(

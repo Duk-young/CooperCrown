@@ -222,7 +222,7 @@ function Discount(props) {
               </Button>
             </div>
             {routeParams.discountId !== 'new' && (
-              <div className="flex flex-col">
+              <div className="flex flex-row">
                 <ConfirmDiscountDelete open={open} handleClose={handleClose} form={form} propssent={props} />
 
                 <Button

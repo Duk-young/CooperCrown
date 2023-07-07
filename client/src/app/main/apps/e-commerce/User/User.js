@@ -269,28 +269,32 @@ function NewShowRoom(props) {
               </Typography>
             </div>
             <div className='flex lg:flex-row lg:items-center flex-col w-1/3 items-center gap-4'>
-            <Button
-              style={{ width: '180px', height: '35px' }}
-              className={classes.button}
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                setChangeType('email')
-                setOpen(true)
-              }}>
-              Change Email
-            </Button>
-            <Button
-              style={{ width: '180px', height: '35px' }}
-              className={classes.button}
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                setChangeType('password')
-                setOpen(true)
-              }}>
-              Change Password
-            </Button>
+              {routeParams?.userId !== 'new' && (
+                <>
+                  <Button
+                    style={{ width: '180px', height: '35px' }}
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      setChangeType('email')
+                      setOpen(true)
+                    }}>
+                    Change Email
+                  </Button>
+                  <Button
+                    style={{ width: '180px', height: '35px' }}
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      setChangeType('password')
+                      setOpen(true)
+                    }}>
+                    Change Password
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -525,7 +529,7 @@ function NewShowRoom(props) {
                 {routeParams?.userId === 'new' && (
                   <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                     <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                      <h1 className="font-700" style={{ color: '#f15a25' }}>
+                      <h1 className="font-700 uppercase" style={{ color: '#f15a25' }}>
                         Login Info
                       </h1>
                     </div>

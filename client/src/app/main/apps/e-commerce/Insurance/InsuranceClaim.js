@@ -5,7 +5,6 @@ import { useParams, Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import CustomAlert from '../ReusableComponents/CustomAlert';
 import EditIcon from '@material-ui/icons/Edit';
@@ -335,7 +334,6 @@ const InsuranceClaim = (props) => {
                 onClick={() => {
                   setOpen(true);
                 }}>
-                <AddIcon />
                 ADD NEW
               </Button>
               <ReceiveInsurancePayment

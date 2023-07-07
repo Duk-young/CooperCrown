@@ -102,21 +102,6 @@ function AccountSettings(props) {
                   {form?.email ?? ''}
                 </Typography>
               </div>
-              <div className="flex pl-8 items-center">
-                <div className="flex flex-col w-1/3"></div>
-                <div className="flex flex-col w-1/3"></div>
-                <div className="flex flex-row w-1/3 justify-end mr-16 items-center">
-                  <div>
-                    <Button
-                      className={classes.button}
-                      onClick={onSubmit}
-                      variant="contained"
-                      color="secondary">
-                      <span className="flex">SAVE</span>
-                    </Button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )
@@ -294,6 +279,13 @@ function AccountSettings(props) {
                           variant="outlined"
                         />
                       </div>
+                      <Button
+                        className={classes.button}
+                        onClick={onSubmit}
+                        variant="contained"
+                        color="secondary">
+                        <span className="flex">SAVE</span>
+                      </Button>
                     </div>
                   </div>
                 </div>

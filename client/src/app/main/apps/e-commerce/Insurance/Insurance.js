@@ -71,9 +71,9 @@ const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID,
 
 const CustomHits = connectHits(({ hits, payments, props }) => {
   return (
-    <Table aria-label="customized table">
+    <Table stickyHeader aria-label="customized table">
       <TableHead>
-        <TableRow>
+        <TableRow className='truncate'>
           <StyledTableCell>DATE</StyledTableCell>
           <StyledTableCell>LOCATION</StyledTableCell>
           <StyledTableCell>ID</StyledTableCell>
@@ -88,7 +88,7 @@ const CustomHits = connectHits(({ hits, payments, props }) => {
       </TableHead>
       <TableBody>
         {hits.map((hit) => (
-          <StyledTableRow key={hit.objectID} hover className="cursor-pointer">
+          <StyledTableRow key={hit.objectID} hover className="cursor-pointer truncate">
             <StyledTableCell
               component="th"
               scope="row"

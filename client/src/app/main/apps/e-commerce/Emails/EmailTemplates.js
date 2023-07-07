@@ -73,7 +73,7 @@ function EmailTemplates() {
               EMAIL TEMPLATE
             </Typography>
           </div>
-          <div className='flex flex-row justify-end mr-20 items-end'>
+          <div className='flex flex-row justify-end mr-20 mt-40'>
             <Button
               className={classes.button}
               variant="contained"

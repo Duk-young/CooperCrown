@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import * as Actions from '../store/actions';
@@ -21,8 +21,27 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.dark,
     padding: '10px 0',
     width: '100%'
+  },
+  button: {
+    backgroundColor: '#f15a25',
+    color: '#fff',
+    marginLeft: '4px',
+    marginRight: '4px',
+    '&:hover': {
+      backgroundColor: '#f47b51',
+      color: '#fff'
+    }
   }
 }));
+
+const StyledTab = withStyles((theme) => ({
+  root: {
+    '&$selected': {
+      color: '#f15a25', // Custom color for the selected tab
+    },
+  },
+  selected: {},
+}))(Tab);
 
 function SecurityAndPrivacy() {
   const classes = useStyles();
@@ -119,13 +138,13 @@ function SecurityAndPrivacy() {
             <Tabs
               value={selectedTab}
               onChange={handleTabChange}
-              indicatorColor="secondary"
+              indicatorColor="transparent"
               textColor="white"
               variant="fullwidth"
               scrollButtons="off"
               centered>
-              <Tab className="h-64" label="Update Email" />
-              <Tab className="h-64" label="Update Password" />
+              <StyledTab className="h-64" label="Update Email" />
+              <StyledTab className="h-64" label="Update Password" />
             </Tabs>
           </div>
           <div>

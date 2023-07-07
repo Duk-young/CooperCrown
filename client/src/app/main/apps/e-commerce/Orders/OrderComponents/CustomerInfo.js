@@ -39,7 +39,7 @@ const CustomerInfo = (props) => {
   return (
     <div className="flex flex-row p-16 sm:p-24 w-full gap-20">
       <div className="customer-info py-8  border-1 w-1/2 border-black border-solid rounded-6">
-        <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+        <div className="flex flex-row justify-center">
           <SearchDialouge
             type="text"
             title="CUSTOMER INFO"

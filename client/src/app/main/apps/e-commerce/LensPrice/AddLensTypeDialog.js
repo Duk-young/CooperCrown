@@ -2,7 +2,6 @@ import { firestore } from 'firebase';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
@@ -118,7 +117,6 @@ return newTable
           variant="extended"
           color="primary"
           aria-label="add">
-          <AddIcon />
           Save Details
         </Button>
       </div>

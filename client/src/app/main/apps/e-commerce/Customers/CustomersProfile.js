@@ -559,7 +559,7 @@ const CustomerProfile = (props) => {
                     INSURANCE
                   </h2>
                 </div>
-                <div className="flex flex-col p-12">
+                <div className="flex flex-row p-12 justify-end">
                   <Button
                     className={classes.button}
                     variant="contained"
@@ -582,7 +582,7 @@ const CustomerProfile = (props) => {
                         });
                       }
                     }}>
-                    + ADD NEW
+                    ADD NEW
                   </Button>
                 </div>
                 <div className="flex flex-1 overflow-scroll">
@@ -655,7 +655,7 @@ const CustomerProfile = (props) => {
                     RX
                   </h2>
                 </div>
-                <div className="flex flex-col p-12">
+                <div className="flex flex-row p-12 justify-end">
                   <Button
                     className={classes.button}
                     variant="contained"
@@ -665,7 +665,7 @@ const CustomerProfile = (props) => {
                         `/apps/e-commerce/customers/addRx/${customer?.customerId}`
                       );
                     }}>
-                    + ADD NEW
+                    ADD NEW
                   </Button>
                 </div>
                 <PrescriptionReceipt
@@ -1007,7 +1007,7 @@ const CustomerProfile = (props) => {
                     EXAM HISTORY
                   </h2>
                 </div>
-                <div className="flex flex-col p-12">
+                <div className="flex flex-row p-12 justify-end">
                   <Button
                     className={classes.button}
                     variant="contained"
@@ -1030,7 +1030,7 @@ const CustomerProfile = (props) => {
                         });
                       }
                     }}>
-                    + ADD NEW
+                    ADD NEW
                   </Button>
                 </div>
                 <div className="flex flex-1 overflow-scroll">
@@ -1098,7 +1098,7 @@ const CustomerProfile = (props) => {
                   ORDER HISTORY
                 </h2>
               </div>
-              <div className="flex flex-col p-12">
+              <div className="flex flex-row p-12 justify-end">
                 <Button
                   className={classes.button}
                   variant="contained"
@@ -1108,7 +1108,7 @@ const CustomerProfile = (props) => {
                       `/apps/e-commerce/orders/addorder/${customer.customerId}`
                     );
                   }}>
-                  + ADD NEW
+                  ADD NEW
                 </Button>
               </div>
               <OrderHistory customer={customer} />
