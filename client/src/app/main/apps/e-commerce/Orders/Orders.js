@@ -66,11 +66,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#f47b51',
       color: '#fff'
     }
-  },
-  root: {
-    '& .MuiTab-root': {
-      minWidth: '100px'
-    }
   }
 }));
 
@@ -206,9 +201,9 @@ const CustomHits = connectHits(
     }, [value]);
 
     return (
-      <Table aria-label="customized table">
+      <Table stickyHeader aria-label="customized table">
         <TableHead>
-          <TableRow>
+          <TableRow className='truncate'>
             <StyledTableCell> </StyledTableCell>
             {value !== 0 && (
               <StyledTableCell padding="checkbox">
@@ -241,7 +236,7 @@ const CustomHits = connectHits(
                 <StyledTableRow
                   key={hit.objectID}
                   hover
-                  className="cursor-pointer"
+                  className="cursor-pointer truncate"
                   onClick={(event) => handleClick(event, hit.orderId)}>
                   <StyledTableCell
                     scope="row"
@@ -468,7 +463,7 @@ const StyledTab = withStyles((theme) => ({
   root: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: '1rem',
+    minWidth: '100px',
     '&$selected': {
       color: '#f15a25', // Custom color for the selected tab
     },
@@ -595,10 +590,8 @@ function Orders(props) {
                   <StyledTab
                     key={index}
                     className="p-0"
-                    wrapped
                     label={status.label.toUpperCase()}
                     style={{
-                      maxWidth: '100px',
                       fontSize: '1.2rem'
                     }}
                     {...a11yProps(status.value)}

@@ -155,8 +155,8 @@ function NewShowRoom(props) {
           </div>
           <div className='flex flex-row justify-center w-2/4'>
             <Typography
-              className="flex mx-0 sm:mx-12 uppercase"
-              style={{ fontSize: '3rem', fontWeight: 600 }}
+              className="text-16 sm:text-20 truncate text-center uppercase"
+              style={{ fontWeight: 600 }}
               variant="h6">
               {form?.type ? form.type : 'New Contact Lens'}
             </Typography>

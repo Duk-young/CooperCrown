@@ -10,7 +10,6 @@ import { useForm } from '@fuse/hooks';
 import { useHistory } from 'react-router-dom';
 import * as Actions from './store/actions';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import AddIcon from '@material-ui/icons/Add';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import algoliasearch from 'algoliasearch/lite';
 import AppBar from '@material-ui/core/AppBar';
@@ -514,7 +513,6 @@ export default function NewAppointmentDialog() {
               variant="extended"
               color="primary"
               aria-label="add">
-              <AddIcon />
               Save Details
             </Fab>
           </div>

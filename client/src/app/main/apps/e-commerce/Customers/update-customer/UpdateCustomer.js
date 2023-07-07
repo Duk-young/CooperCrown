@@ -271,8 +271,8 @@ function UpdateCustomer(props) {
                 <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
                   <FuseAnimate animation="transition.slideLeftIn" delay={300}>
                     <Typography className="text-16 sm:text-20 truncate">
-                      {form?.customerId ? 'Update ' : 'New '}
-                      Customer
+                      {form?.customerId ? 'UPDATE ' : 'NEW '}
+                      CUSTOMER
                     </Typography>
                   </FuseAnimate>
                 </div>

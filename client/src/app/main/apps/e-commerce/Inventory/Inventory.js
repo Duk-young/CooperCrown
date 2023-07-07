@@ -28,7 +28,8 @@ const StyledTab = withStyles((theme) => ({
   root: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: '1.5rem',
+    minWidth: '100px',
+    fontSize: '1.2rem',
     '&$selected': {
       color: '#f15a25', // Custom color for the selected tab
     },

@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#000000',
     color: '#fff',
     '&:hover': {
-      backgroundColor: '#372b25',
+      backgroundColor: '#000000',
       color: '#fff'
     }
   },
@@ -90,21 +90,18 @@ function ViewLens(props) {
         root: classes.layoutRoot
       }}
       header={
-        <div>
-          <IconButton
-            onClick={() => {
-              props.history.push(`/apps/inventory`);
-            }}>
-            <Icon className="text-20">arrow_back</Icon>
-            <span className="mx-4 text-12">Inventory</span>
-          </IconButton>
-
-          <div className="flex flex-row">
-            <Icon className="text-20 mt-4">listalt</Icon>
-            <Typography className="text-16 pl-16 sm:text-20 truncate">
-              Lens Detail
-            </Typography>
+        <div className='flex flex-row w-full'>
+          <div className='flex flex-row w-1/3 h-16'>
+            <IconButton
+              onClick={() => { props.history.push(`/apps/inventory`); }}>
+              <Icon className="text-20">arrow_back</Icon>
+              <span className="mx-4 text-12">Inventory</span>
+            </IconButton>
           </div>
+          <div className='flex flex-row w-1/3 justify-center'>
+            <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h6">VIEW LENS</Typography>
+          </div>
+          <div className='flex flex-row w-1/3'></div>
         </div>
       }
       content={
@@ -122,7 +119,7 @@ function ViewLens(props) {
                   </div>
                   <div className="flex flex-row w-full">
                     <div className="flex flex-col w-1/2 p-6">
-                      <div className="flex flex-col p-2 border-1 border-grey-400">
+                      <div className="flex flex-col p-2 border-1 border-grey-400 rounded-4">
                         <FormControl>
                           <InputLabel htmlFor="standard-adornment-password">
                             SKU
@@ -221,11 +218,11 @@ function ViewLens(props) {
                   <Button
                     className={classes.orangeButton}
                     variant="contained"
-                    style={{ minHeight: '60px', maxHeight: '60px' }}
+                    style={{ minHeight: '40px', maxHeight: '40px' }}
                     onClick={() => {
                       if (userData.userRole === 'admin' || userData?.inventoryEdit) {
                         props.history.push(`/apps/inventory/addlens/${routeParams?.lensId}`);
-                      }else {
+                      } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
                           autoClose: 5000,
@@ -238,7 +235,7 @@ function ViewLens(props) {
                         });
                       }
                     }}>
-                    <Icon>edit</Icon> EDIT
+                    EDIT
                   </Button>
                 </div>
               </div>

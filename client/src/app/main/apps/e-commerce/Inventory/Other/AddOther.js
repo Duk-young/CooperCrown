@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#000000',
     color: '#fff',
     '&:hover': {
-      backgroundColor: '#372b25',
+      backgroundColor: '#000000',
       color: '#fff'
     }
   },
@@ -239,30 +239,27 @@ function AddOther(props) {
         root: classes.layoutRoot
       }}
       header={
-        <div>
-          <IconButton
-            onClick={() => {
-              if (
-                Object.keys(form).length === 0 &&
-                form.constructor === Object
-              ) {
-                props.history.push(`/apps/inventory`);
-              } else {
-                setOpenAlert(true);
-              }
-            }}>
-            <Icon className="text-20">arrow_back</Icon>
-            <span className="mx-4 text-12">Inventory</span>
-          </IconButton>
-
-          <div className="flex flex-row">
-            <Icon className="text-20 mt-4">listalt</Icon>
-            <Typography className="text-16 pl-16 sm:text-20 truncate">
-              Product Detail
-            </Typography>
+        <div className='flex flex-row w-full'>
+          <div className='flex flex-row w-1/3 h-16'>
+            <IconButton
+              onClick={() => {
+                if (
+                  Object.keys(form).length === 0 &&
+                  form.constructor === Object
+                ) {
+                  props.history.push(`/apps/inventory`);
+                } else {
+                  setOpenAlert(true);
+                }
+              }}>
+              <Icon className="text-20">arrow_back</Icon>
+              <span className="mx-4 text-12">Inventory</span>
+            </IconButton>
           </div>
-
-          <div>
+          <div className='flex flex-row w-1/3 justify-center'>
+            <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h6">NEW PRODUCT</Typography>
+          </div>
+          <div className='flex flex-row w-1/3'>
             <Dialog
               fullWidth
               maxWidth="sm"
@@ -311,7 +308,7 @@ function AddOther(props) {
                   </div>
                   <div className="flex flex-row w-full">
                     <div className="flex flex-col w-1/2 p-6">
-                      <div className="flex flex-col p-2 border-1 border-grey-400">
+                      <div className="flex flex-col p-2 border-1 border-grey-400 rounded-4">
                         <FormControl>
                           <InputLabel htmlFor="standard-adornment-password">
                             SKU
@@ -428,7 +425,7 @@ function AddOther(props) {
                     <div className="flex flex-col w-1/3 justify-center items-center">
                       <h3 className="font-700">PRINTED SIZE</h3>
                     </div>
-                    <div className="flex flex-row w-2/3 justify-center pr-92">
+                    <div className="flex flex-row w-2/3 justify-center pr-92 gap-8">
                       <TextField
                         required
                         label="A"
@@ -468,7 +465,7 @@ function AddOther(props) {
                     <div className="flex flex-col w-1/3 justify-center items-center">
                       <h3 className="font-700">MEASURED SIZE</h3>
                     </div>
-                    <div className="flex flex-row w-2/3 justify-center pr-12">
+                    <div className="flex flex-row w-2/3 justify-center pr-12 gap-8">
                       <TextField
                         required
                         label="A"
@@ -740,7 +737,7 @@ function AddOther(props) {
               <Button
                 className={classes.orangeButton}
                 variant="contained"
-                style={{ minHeight: '60px', maxHeight: '60px' }}
+                style={{ minHeight: '4 gap-80px', maxHeight: '4 gap-80px' }}
                 onClick={() => {
                   if (form && form?.sku) {
                     setOpenAlertOnSave(true);

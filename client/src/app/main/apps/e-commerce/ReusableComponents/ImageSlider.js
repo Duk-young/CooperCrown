@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const useStyles = makeStyles(() => ({
     image: {
@@ -18,9 +18,15 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const ImageSlider = ({ open, images, handleClose }) => {
+const ImageSlider = ({ open, images, handleClose, imageIndex }) => {
     const classes = useStyles();
-    const [currentSlide, setCurrentSlide] = useState(0);
+    const [currentSlide, setCurrentSlide] = useState(null);
+
+    useEffect(() => {
+      if (imageIndex !== undefined && open) setCurrentSlide(imageIndex)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open])
+    
 
     const handleNextSlide = () => {
         setCurrentSlide((prevSlide) => (prevSlide === images.length - 1 ? 0 : prevSlide + 1));

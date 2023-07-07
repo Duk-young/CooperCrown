@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#000000',
     color: '#fff',
     '&:hover': {
-      backgroundColor: '#372b25',
+      backgroundColor: '#000000',
       color: '#fff'
     }
   },
@@ -98,6 +98,7 @@ function ViewFrame(props) {
   const [restocks, setRestocks] = useState([]);
   const [openImageSlider, setOpenImageSlider] = useState(false)
   const [editRestockState, setEditRestockState] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0)
   const [openUpdateRestockAlert, setOpenUpdateRestockAlert] = useState(false);
   const [editSubtractStockState, seteditSubtractStockState] = useState(false);
   const [openUpdateSubtractStockAlert, setOpenUpdateSubtractStockAlert] =
@@ -355,21 +356,18 @@ function ViewFrame(props) {
         root: classes.layoutRoot
       }}
       header={
-        <div>
-          <IconButton
-            onClick={() => {
-              props.history.push(`/apps/inventory`);
-            }}>
-            <Icon className="text-20">arrow_back</Icon>
-            <span className="mx-4 text-12">Inventory</span>
-          </IconButton>
-
-          <div className="flex flex-row">
-            <Icon className="text-20 mt-4">listalt</Icon>
-            <Typography className="text-16 pl-16 sm:text-20 truncate">
-              Frame Detail
-            </Typography>
+        <div className='flex flex-row w-full'>
+          <div className='flex flex-row w-1/3 h-16'>
+            <IconButton
+              onClick={() => { props.history.push(`/apps/inventory`); }}>
+              <Icon className="text-20">arrow_back</Icon>
+              <span className="mx-4 text-12">Inventory</span>
+            </IconButton>
           </div>
+          <div className='flex flex-row w-1/3 justify-center'>
+            <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h6">FRAME DETAIL</Typography>
+          </div>
+          <div className='flex flex-row w-1/3'></div>
         </div>
       }
       content={
@@ -387,7 +385,7 @@ function ViewFrame(props) {
                   </div>
                   <div className="flex flex-row w-full">
                     <div className="flex flex-col w-1/2 p-6">
-                      <div className="flex flex-col p-2 border-1 border-grey-400">
+                      <div className="flex flex-col p-2 border-1 border-grey-400 border-solid rounded-4">
                         <FormControl>
                           <InputLabel htmlFor="standard-adornment-password">
                             SKU
@@ -471,7 +469,7 @@ function ViewFrame(props) {
                     <div className="flex flex-col w-1/3 justify-center items-center">
                       <h3 className="font-700">PRINTED SIZE</h3>
                     </div>
-                    <div className="flex flex-row w-2/3 justify-center pr-92">
+                    <div className="flex flex-row w-2/3 justify-center pr-92 gap-8">
                       <TextField
                         required
                         label="A"
@@ -508,7 +506,7 @@ function ViewFrame(props) {
                     <div className="flex flex-col w-1/3 justify-center items-center">
                       <h3 className="font-700">MEASURED SIZE</h3>
                     </div>
-                    <div className="flex flex-row w-2/3 justify-center pr-12">
+                    <div className="flex flex-row w-2/3 justify-center pr-12 gap-8">
                       <TextField
                         required
                         label="A"
@@ -551,13 +549,17 @@ function ViewFrame(props) {
                       />
                     </div>
                   </div>
-                  <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} />
+                  <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)}
+                    images={images?.length > 0 ? images.map((img) => img.url) : []} imageIndex={imageIndex} />
                   <div className="flex flex-row w-full overflow-scroll flex-wrap mt-10 p-6">
                     {images.map((img, index) => (
                       <div className="mb-8 w-224 mr-6 object-contain">
                         <img
                           className="w-224 h-128 shadow-1 rounded-4"
-                          onClick={() => setOpenImageSlider(true)}
+                          onClick={() => {
+                            setImageIndex(index)
+                            setOpenImageSlider(true)
+                          }}
                           src={img.url}
                           key={img.name}
                           alt={''}
@@ -581,7 +583,7 @@ function ViewFrame(props) {
                   <Button
                     className={classes.orangeButton}
                     variant="contained"
-                    style={{ minHeight: '60px', maxHeight: '60px' }}
+                    style={{ minHeight: '40px', maxHeight: '40px' }}
                     onClick={() => {
                       if (userData.userRole === 'admin' || userData?.inventoryEdit) {
                         props.history.push(
@@ -600,7 +602,6 @@ function ViewFrame(props) {
                         });
                       }
                     }}>
-                    <Icon>edit</Icon>
                     EDIT
                   </Button>
                 </div>
@@ -766,7 +767,7 @@ function ViewFrame(props) {
                       <Button
                         className={classes.orangeButton}
                         variant="contained"
-                        style={{ minHeight: '60px', maxHeight: '60px' }}
+                        style={{ minHeight: '40px', maxHeight: '40px' }}
                         onClick={() => {
                           if (addStock?.addStockQty > 0) {
                             setOpenAddStockAlert(true);
@@ -797,7 +798,7 @@ function ViewFrame(props) {
                           <Button
                             className={classes.orangeButton}
                             variant="contained"
-                            style={{ minHeight: '60px', maxHeight: '60px' }}
+                            style={{ minHeight: '40px', maxHeight: '40px' }}
                             onClick={() => {
                               if (addStock?.addStockQty > 0) {
                                 setOpenUpdateRestockAlert(true);
@@ -817,7 +818,7 @@ function ViewFrame(props) {
                           <Button
                             className={classes.buttonBlack}
                             variant="contained"
-                            style={{ minHeight: '60px', maxHeight: '60px' }}
+                            style={{ minHeight: '40px', maxHeight: '40px' }}
                             onClick={() => {
                               restocks.push({ ...addStock?.row });
                               setAddStock({ addStockQty: 0, addStockMemo: '' });
@@ -946,7 +947,7 @@ function ViewFrame(props) {
                       <Button
                         className={classes.orangeButton}
                         variant="contained"
-                        style={{ minHeight: '60px', maxHeight: '60px' }}
+                        style={{ minHeight: '40px', maxHeight: '40px' }}
                         onClick={() => {
                           if (
                             subtractStock?.subtractStockQty > 0 &&
@@ -979,7 +980,7 @@ function ViewFrame(props) {
                           <Button
                             className={classes.orangeButton}
                             variant="contained"
-                            style={{ minHeight: '60px', maxHeight: '60px' }}
+                            style={{ minHeight: '40px', maxHeight: '40px' }}
                             onClick={() => {
                               if (subtractStock?.subtractStockQty > 0) {
                                 setOpenUpdateSubtractStockAlert(true);
@@ -999,7 +1000,7 @@ function ViewFrame(props) {
                           <Button
                             className={classes.buttonBlack}
                             variant="contained"
-                            style={{ minHeight: '60px', maxHeight: '60px' }}
+                            style={{ minHeight: '40px', maxHeight: '40px' }}
                             onClick={() => {
                               subtractedStocks.push({ ...subtractStock?.row });
                               setSubtractStock({
