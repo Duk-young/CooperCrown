@@ -7,7 +7,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import * as Actions from 'app/store/actions';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FuseNavVerticalItem(props) {
-  const userRole = useSelector(({ auth }) => auth.user.role);
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
   const dispatch = useDispatch();
 
   const theme = useTheme();
@@ -56,9 +56,11 @@ function FuseNavVerticalItem(props) {
   });
   const { t } = useTranslation('navigation');
 
+  const restrictedLinkIds = ['Showroom-Managment','Doctor-Management', 'user-management', 'emailTemplates', 'priceSetting', 'lens-price', 'contact-price', 'service-price', 'dicount-price']
+
   const hasPermission = useMemo(
-    () => FuseUtils.hasPermission(item.auth, userRole),
-    [item.auth, userRole]
+    () => (restrictedLinkIds.includes(item?.id) && userData?.userRole === 'staff') ? false : true,
+    [userData]
   );
 
   if (!hasPermission) {

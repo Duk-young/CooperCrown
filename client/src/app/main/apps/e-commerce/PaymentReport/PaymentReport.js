@@ -1,6 +1,8 @@
 import { firestore } from 'firebase';
+import { TableContainer } from '@material-ui/core';
 import { toast, Zoom } from 'react-toastify';
 import { useForm } from '@fuse/hooks';
+import { useSelector } from 'react-redux';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
@@ -22,7 +24,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import { TableContainer } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -112,6 +113,7 @@ function PaymentReport(props) {
     const [payments, setPayments] = useState([]);
     const [filteredPayments, setFilteredPayments] = useState([]);
     const { form, handleChange, setForm } = useForm({ locationName: 'ALL' });
+    const userData = useSelector(state => state.auth.user.data.firestoreDetails);
     const [showrooms, setShowrooms] = useState([]);
 
     useEffect(() => {
@@ -131,8 +133,16 @@ function PaymentReport(props) {
                 resultAllPayments.push({ ...doc.data(), paymentType: 'insurance' });
             });
 
-            setPayments(resultAllPayments)
-            setFilteredPayments(resultAllPayments)
+            if (userData?.userRole === 'staff') {
+                let newPayments = resultAllPayments.filter((payment) => payment?.locationName === userData?.locationName)
+
+                setPayments(newPayments)
+                setFilteredPayments(newPayments)
+                setForm({locationName: userData?.locationName})
+            } else {
+                setPayments(resultAllPayments)
+                setFilteredPayments(resultAllPayments)
+            }
 
             const queryShowrooms = await firestore().collection('showRooms').get();
             let showroomsData = [];
@@ -283,6 +293,7 @@ function PaymentReport(props) {
                                     },
                                 }}
                                 value={form?.locationName ?? ''}
+                                disabled={userData?.userRole === 'staff'}
                                 name="locationName"
                                 onChange={handleChange}
                                 autoWidth>

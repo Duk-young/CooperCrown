@@ -395,6 +395,14 @@ function AddOrder(props) {
     return balance
   };
 
+  useEffect(() => {
+    if (userData?.userRole === 'staff' && showroom?.length > 0 && !form?.locationName) {
+      const userShowroom = showroom.filter((location) => location?.showRoomId === userData?.showRoomId)
+      if (userShowroom?.length > 0) setForm({ ...form, locationName: userShowroom?.[0]?.locationName })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData, showroom])
+
   // useEffect Hook to call delayed data to avoid loading times
   useEffect(() => {
     const fetchDelayedData = async () => {
@@ -503,7 +511,7 @@ function AddOrder(props) {
           resultPayments.push(doc.data());
         });
         setPayments(resultPayments);
-        const queryInsurance = await firestore()
+        const queryInsurance = await firestore() 
           .collection('insurances')
           .where('customerId', '==', resultOrder?.customerId)
           .get();
@@ -686,7 +694,7 @@ function AddOrder(props) {
                   <CustomAutocomplete
                     list={showroom}
                     form={form}
-                    disabled={disabledState}
+                    disabled={disabledState || userData?.userRole === 'staff'}
                     setForm={setForm}
                     handleChange={handleChange}
                     id="locationName"

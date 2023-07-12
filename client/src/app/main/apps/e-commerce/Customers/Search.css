@@ -18,6 +18,10 @@ body {
   height: 850px;
 }
 
+::-webkit-calendar-picker-indicator {
+  filter: brightness(0) invert(1)
+}
+
 @media (min-width: 1024px) {
   .custom-height-lg {
     height: 650px;

@@ -552,11 +552,6 @@ function Orders(props) {
     }
   };
 
-  // const handleRefresh = () => {
-  //   searchClient.clearCache()
-  //   setData([])
-  // };
-
   const handleTabChange = (_, newValue) => {
     setValue(newValue);
   };
@@ -601,7 +596,12 @@ function Orders(props) {
             </Tabs>
           </div>
           <Configure
-            filters={value > 0 ? `orderStatus: '${statuses[value]?.label}'` : ''}
+            filters={
+              `${value > 0 ? `orderStatus: '${statuses[value]?.label}'` : ''}${userData?.userRole === 'staff'
+                ? `${value > 0 ? ' AND ' : ''}locationName: '${userData?.locationName}'`
+                : ''
+              }`
+            }
           />
           <div className={classes.header}>
             <div className="flex flex-col w-1/3">
@@ -730,7 +730,7 @@ function Orders(props) {
               </FuseAnimate>
             </div>
           </div>
-          <TableContainer stickyHeader className="flex flex-col w-full overflow-scroll">
+          <TableContainer className="flex flex-col w-full overflow-scroll">
             {statuses.map((status) => (
               <TabPanel
                 key={status.value}
