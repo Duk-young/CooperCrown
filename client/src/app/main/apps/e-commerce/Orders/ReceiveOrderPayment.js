@@ -96,7 +96,7 @@ export default function ReceiveOrderPayment(props) {
             ...form,
             paymentDate: firestore.Timestamp.fromDate(new Date()),
             orderPaymentId: dbConfig?.orderPaymentId + 1,
-            orderId: orderId,
+            orderId: Number(orderId),
             customOrderId,
             firstName,
             lastName,
@@ -110,7 +110,7 @@ export default function ReceiveOrderPayment(props) {
 
         const queryPayments = await firestore()
           .collection('orderPayments')
-          .where('orderId', '==', orderId)
+          .where('orderId', '==', Number(orderId))
           .get();
         let resultPayments = [];
         queryPayments.forEach((doc) => {

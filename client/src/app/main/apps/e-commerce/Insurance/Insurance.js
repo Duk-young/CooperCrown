@@ -82,6 +82,7 @@ const CustomHits = connectHits(({ hits, payments, props }) => {
           <StyledTableCell>ID</StyledTableCell>
           <StyledTableCell>ORDER No</StyledTableCell>
           <StyledTableCell>NAME</StyledTableCell>
+          <StyledTableCell>DOB</StyledTableCell>
           <StyledTableCell>INSURANCE</StyledTableCell>
           <StyledTableCell>POLICY No.</StyledTableCell>
           <StyledTableCell>CLAIM AMOUNT</StyledTableCell>
@@ -127,6 +128,12 @@ const CustomHits = connectHits(({ hits, payments, props }) => {
                   `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
                 );
               }}>{`${hit?.firstName} ${hit?.lastName}`}</StyledTableCell>
+            <StyledTableCell
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>{hit?.dob ? moment(hit?.dob).format('MM/DD/YYYY') : ''}</StyledTableCell>
             <StyledTableCell
               onClick={() => {
                 props.history.push(

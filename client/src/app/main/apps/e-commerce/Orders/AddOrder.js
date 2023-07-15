@@ -9,7 +9,6 @@ import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
-import ConfirmDelete from './DeleteOrder';
 import ContactsOrder from './OrderComponents/ContactsOrder';
 import CustomAutocomplete from '../ReusableComponents/Autocomplete';
 import CustomerInfo from './OrderComponents/CustomerInfo';
@@ -51,6 +50,7 @@ import withReducer from 'app/store/withReducer';
 import ThermalReceipt from './ThermalReceipt';
 import OrderTicket from './OrderTicket';
 import PickupReceipt from './OrderComponents/PickupReceipt';
+import CustomAlert from '../ReusableComponents/CustomAlert';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -129,10 +129,6 @@ function AddOrder(props) {
 
   const routeParams = useParams();
   const dispatch = useDispatch();
-
-  const handleDeleteClose = () => {
-    setOpenDelete(false);
-  };
 
   const handleCloseAlert1 = () => {
     setOpenAlert1(false);
@@ -261,6 +257,7 @@ function AddOrder(props) {
               insuranceClaimId: dbConfig?.insuranceClaimId + 1,
               orderId: dbConfig?.orderId + 1,
               customerId: customer?.customerId,
+              dob: customer?.dob ?? '',
               firstName: customer?.firstName ?? '',
               lastName: customer?.lastName ?? '',
               insuranceCompany: insuranceComp1?.insuranceCompany,
@@ -281,6 +278,7 @@ function AddOrder(props) {
                 insuranceClaimId: dbConfig?.insuranceClaimId + 2,
                 orderId: dbConfig?.orderId + 1,
                 customerId: customer?.customerId,
+                dob: customer?.dob ?? '',
                 firstName: customer?.firstName ?? '',
                 lastName: customer?.lastName ?? '',
                 insuranceCompany: insuranceComp2?.insuranceCompany,
@@ -504,14 +502,14 @@ function AddOrder(props) {
 
         const queryPayments = await firestore()
           .collection('orderPayments')
-          .where('orderId', '==', routeParams.orderId)
+          .where('orderId', '==', Number(routeParams.orderId))
           .get();
         let resultPayments = [];
         queryPayments.forEach((doc) => {
           resultPayments.push(doc.data());
         });
         setPayments(resultPayments);
-        const queryInsurance = await firestore() 
+        const queryInsurance = await firestore()
           .collection('insurances')
           .where('customerId', '==', resultOrder?.customerId)
           .get();
@@ -610,6 +608,51 @@ function AddOrder(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newCustomer]);
 
+  const handleDelete = async () => {
+    try {
+      setisLoading(true)
+
+      const insuranceQuerySnapshot = await firestore().collection('insuranceClaims').where('orderId', '==', Number(form?.orderId)).get();
+      if(!insuranceQuerySnapshot.empty) insuranceQuerySnapshot.forEach(async (doc) => { await doc.ref.delete() });
+
+      const insurancePaymentsQuerySnapshot = await firestore().collection('insurancePayments').where('orderId', '==', Number(form?.orderId)).get();
+      if(!insurancePaymentsQuerySnapshot.empty) insurancePaymentsQuerySnapshot.forEach(async (doc) => { await doc.ref.delete() });
+
+      const orderPaymentsQuerySnapshot = await firestore().collection('orderPayments').where('orderId', '==', Number(form?.orderId)).get();
+      if(!orderPaymentsQuerySnapshot.empty) orderPaymentsQuerySnapshot.forEach(async (doc) => { await doc.ref.delete() });
+
+      if (form?.eyeglasses?.length > 0) {
+        await Promise.all(
+          form?.eyeglasses.map(async (pair) => {
+            if (pair?.frameId) {
+              const queryFrame = await firestore().collection('frames').where('frameId', '==', Number(pair?.frameId)).limit(1).get();
+
+              if (!queryFrame.empty) {
+                let frameData = queryFrame.docs[0].data();
+                frameData.id = queryFrame.docs[0].id;
+                let qty = Number(frameData?.quantity) + 1
+                await firestore().collection('frames').doc(frameData.id).update({quantity: qty});
+              }
+            }
+          })
+        );
+      }
+
+      await firestore().collection('orders').doc(form?.id).delete()
+
+      dispatch(
+        MessageActions.showMessage({
+          message: 'Order deleted successfully'
+        })
+      );
+      setisLoading(false)
+      props.history.push('/apps/e-commerce/orders');
+      
+    } catch (error) {
+      console.log('Error while deleting order: ', error)
+    }
+  }
+
   const date = moment();
 
   const currentDate = date.format('YYYY-MM-DD');
@@ -628,24 +671,24 @@ function AddOrder(props) {
         header={
           <div className="flex flex-col w-full h-136">
             <div className="order-no relative">
-                <IconButton
+              <IconButton
                 className="absolute top-0 bottom-0 left-0"
-                  onClick={() => {
-                    if (disabledState || eyeglasses.length === 0) {
-                      props.history.push(`/apps/e-commerce/orders`);
-                    } else {
-                      setOpenAlert1(true);
-                    }
-                  }}>
-                  <Icon className="text-20">arrow_back</Icon>
-                  <span className="mx-4 text-12">Orders</span>
-                </IconButton>
-                <Typography className="text-16 sm:text-20 truncate text-center">
-                  {routeParams.orderId
-                    ? `ORDER No. ${form?.customOrderId}`
-                    : 'NEW ORDER'}
-                </Typography>
-              </div>
+                onClick={() => {
+                  if (disabledState || eyeglasses.length === 0) {
+                    props.history.push(`/apps/e-commerce/orders`);
+                  } else {
+                    setOpenAlert1(true);
+                  }
+                }}>
+                <Icon className="text-20">arrow_back</Icon>
+                <span className="mx-4 text-12">Orders</span>
+              </IconButton>
+              <Typography className="text-16 sm:text-20 truncate text-center">
+                {routeParams.orderId
+                  ? `ORDER No. ${form?.customOrderId}`
+                  : 'NEW ORDER'}
+              </Typography>
+            </div>
             <div className="order-header-content flex justify-between items-center p-10">
               <div className="date-picker w-1/3 flex gap-10">
                 <TextField
@@ -704,7 +747,7 @@ function AddOrder(props) {
                 )}
               </div>
               {routeParams.orderId && (
-              <div className='flex flex-col w-1/3'>
+                <div className='flex flex-col w-1/3'>
                   <FormControl className='w-2/3' variant="outlined">
                     <InputLabel id="demo-simple-select-autowidth-label" color='white'>
                       Select an option:
@@ -739,8 +782,8 @@ function AddOrder(props) {
                     </Select>
                   </FormControl>
                 </div>
-                )}
-              </div>
+              )}
+            </div>
 
             <div>
               <Dialog
@@ -1295,12 +1338,8 @@ function AddOrder(props) {
 
                   {routeParams?.orderId && (
                     <>
-                      <ConfirmDelete
-                        open={openDelete}
-                        handleClose={handleDeleteClose}
-                        form={form}
-                        propssent={props}
-                      />
+                      <CustomAlert open={openDelete} setOpen={setOpenDelete} text1='Are you sure?'
+                        text2='Selected order, its insurance claim as well as payments will be deleted.' customFunction={handleDelete} />
                       <Button
                         style={{
                           backgroundColor: 'transparent',
