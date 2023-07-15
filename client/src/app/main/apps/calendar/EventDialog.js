@@ -1,10 +1,9 @@
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import Switch from '@material-ui/core/Switch';
 import { DateTimePicker } from '@material-ui/pickers';
 import { firestore } from 'firebase';
 import { toast, Zoom } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
+import { useHistory } from 'react-router-dom';
 import * as Actions from './store/actions';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -30,6 +29,7 @@ const defaultFormState = {
 };
 
 function EventDialog(props) {
+  const history = useHistory()
   const dispatch = useDispatch();
   const eventDialog = useSelector(({ calendarApp }) => calendarApp.events.eventDialog);
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
@@ -230,24 +230,44 @@ function EventDialog(props) {
           </DialogActions>
         ) : (
           <DialogActions className="justify-between px-8 sm:px-16">
-            <IconButton onClick={() => {
-              if (userData.userRole === 'admin' || userData?.appointmentsDelete) {
-                handleRemove()
-              } else {
-                toast.error('You are not authorized', {
-                  position: 'top-center',
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  transition: Zoom
-                });
-              }
-            }}>
-              <Icon>delete</Icon>
-            </IconButton>
+            <div className='flex flex-row w-full justify-between'>
+              <IconButton onClick={() => {
+                if (userData.userRole === 'admin' || userData?.appointmentsDelete) {
+                  handleRemove()
+                } else {
+                  toast.error('You are not authorized', {
+                    position: 'top-center',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    transition: Zoom
+                  });
+                }
+              }}>
+                <Icon>delete</Icon>
+              </IconButton>
+              <IconButton onClick={() => {
+                if (userData.userRole === 'admin' || userData?.appointmentsEdit) {
+                  history.push(`/apps/e-commerce/customers/editAppointment/${form?.firebaseId}`)
+                } else {
+                  toast.error('You are not authorized', {
+                    position: 'top-center',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    transition: Zoom
+                  });
+                }
+              }}>
+                <Icon>edit</Icon>
+              </IconButton>
+            </div>
           </DialogActions>
         )}
       </form>

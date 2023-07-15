@@ -21,6 +21,7 @@ export const getEvents = () => async (dispatch) => {
       let event = doc.data();
       event.start = event.start.toDate();
       event.end = event.end.toDate();
+      event.firebaseId = doc.id;
       test.push(event);
     });
 

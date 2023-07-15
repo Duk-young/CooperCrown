@@ -16,6 +16,8 @@ import reducer from './store/reducers';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import withReducer from 'app/store/withReducer';
 import { toast, Zoom } from 'react-toastify';
+import { firestore } from 'firebase';
+import FuseLoading from '@fuse/core/FuseLoading/FuseLoading';
 
 moment.locale('ko', {
   week: {
@@ -187,6 +189,7 @@ function CalendarApp(props) {
   const [currentShowroom, setCurrentShowroom] = useState(null);
   const classes = useStyles(props);
   const headerEl = useRef(null);
+  const [isLoading, setisLoading] = useState(false)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   useEffect(() => {
@@ -197,6 +200,23 @@ function CalendarApp(props) {
     console.log(appointments)
   }, [appointments]);
 
+  const moveEvent = async ({ event, start, end }) => {
+    try {
+      setisLoading(true)
+      setEvents([])
+      await firestore().collection('appointments').doc(event?.firebaseId).update({
+        start: firestore.Timestamp.fromDate(start),
+        end: firestore.Timestamp.fromDate(end)
+      })
+      dispatch(Actions.getEvents())
+      setisLoading(false)
+    } catch (error) {
+      console.log('Error while moving event: ', error)
+    }
+  }
+
+
+if (isLoading) return <FuseLoading />
 
   return (
     <div className={clsx(classes.root, 'flex flex-col flex-auto relative')}>
@@ -206,9 +226,10 @@ function CalendarApp(props) {
         selectable
         min={new Date(1950, 0, 0, 8, 0, 0, 0)}
         localizer={localizer}
-        events={events}
+        events={events?.length > 0 ? events : []}
         longPressThreshold={10}
         defaultView={Views.WEEK}
+        onEventDrop={moveEvent}
         defaultDate={new Date()}
         startAccessor="start"
         endAccessor="end"
@@ -220,7 +241,7 @@ function CalendarApp(props) {
           toolbar: (_props) => {
             return headerEl.current
               ? ReactDOM.createPortal(
-                <CalendarHeader {..._props} setEvents={setEvents} setCurrentShowroom={setCurrentShowroom} />,
+                <CalendarHeader {..._props} setEvents={setEvents} setCurrentShowroom={setCurrentShowroom} currentShowroom={currentShowroom} />,
                 headerEl.current
               )
               : null;

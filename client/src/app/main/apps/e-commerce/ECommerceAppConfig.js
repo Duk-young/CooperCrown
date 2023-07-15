@@ -93,6 +93,10 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Appointments/Appointments'))
     },
     {
+      path: '/apps/e-commerce/customers/editAppointment/:appointmentId',
+      component: React.lazy(() => import('./Appointments/EditAppointments'))
+    },
+    {
       path: '/apps/e-commerce/customers/:customerId',
       component: React.lazy(() =>
         import('./Customers/update-customer/UpdateCustomer')

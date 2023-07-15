@@ -138,7 +138,7 @@ function PaymentReport(props) {
 
                 setPayments(newPayments)
                 setFilteredPayments(newPayments)
-                setForm({locationName: userData?.locationName})
+                setForm({ locationName: userData?.locationName })
             } else {
                 setPayments(resultAllPayments)
                 setFilteredPayments(resultAllPayments)
@@ -161,14 +161,14 @@ function PaymentReport(props) {
         if (form?.locationName !== 'ALL') {
             newPayments = newPayments.filter((payment) => payment?.locationName === form?.locationName)
         }
-        if (form?.start || form?.end) {
+        if (form?.start?.seconds || form?.end?.seconds) {
             let start = form?.start ?? firestore.Timestamp.fromDate(new Date('01/01/2000'))
             let end = form?.end ?? firestore.Timestamp.fromDate(new Date())
 
             newPayments = newPayments.filter((payment) => payment?.paymentDate >= start && payment?.paymentDate <= end)
         }
-
         setFilteredPayments(newPayments)
+        return newPayments
     }
 
     const downloadExcel = (filteredPayments) => {
@@ -376,8 +376,8 @@ function PaymentReport(props) {
                                         const inputValue = e.target.value.toLowerCase()
                                         if (inputValue && inputValue !== '') {
                                             let newPayments = []
-
-                                            payments.map((payment) => {
+                                            const filtered = filterData()
+                                            filtered.map((payment) => {
                                                 if ((payment?.customOrderId && payment?.customOrderId.includes(inputValue))
                                                     || (payment?.firstName && payment?.firstName.toLowerCase().includes(inputValue))
                                                     || (payment?.lastName && payment?.lastName.toLowerCase().includes(inputValue))
@@ -389,10 +389,8 @@ function PaymentReport(props) {
                                                 return true
                                             })
                                             setFilteredPayments(newPayments);
-                                            setForm('ALL')
                                         } else {
                                             filterData()
-                                            setForm('ALL')
                                         }
                                     }}
                                     inputProps={{
