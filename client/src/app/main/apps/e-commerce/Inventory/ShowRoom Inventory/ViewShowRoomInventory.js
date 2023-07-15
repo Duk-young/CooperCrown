@@ -9,6 +9,8 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
+import { useDispatch } from 'react-redux';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
@@ -19,6 +21,7 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import ImageSlider from '../../ReusableComponents/ImageSlider';
+import CustomAlert from '../../ReusableComponents/CustomAlert';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -59,10 +62,27 @@ function ViewShowRoomInventory(props) {
   const { form, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
   const routeParams = useParams();
+  const dispatch = useDispatch()
   const [imageIndex, setImageIndex] = useState(0)
   const [showRooms, setShowRooms] = useState([]);
   const [openImageSlider, setOpenImageSlider] = useState(false)
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+
+  const handleDelete = async () => {
+    try {
+      setisLoading(true);
+
+      await firestore().collection('showRoomInventory').doc(form?.id).delete();
+
+      dispatch(MessageActions.showMessage({ message: 'Showroom inventory deleted successfully' }));
+      setisLoading(false);
+      props.history.push('/apps/inventory');
+
+    } catch (error) {
+      console.log('Error while deleting lens:', error);
+    }
+  };
 
   useEffect(() => {
     const id = routeParams.showRoomInventoryId;
@@ -325,7 +345,8 @@ function ViewShowRoomInventory(props) {
                           className="w-224 h-128 shadow-1 rounded-4"
                           onClick={() => {
                             setImageIndex(index)
-                            setOpenImageSlider(true)}}
+                            setOpenImageSlider(true)
+                          }}
                           src={img.url}
                           key={img.name}
                           alt={''}
@@ -346,30 +367,62 @@ function ViewShowRoomInventory(props) {
                       </div>
                     ))}
                   </div>
-                  <Button
-                    className={classes.orangeButton}
-                    variant="contained"
-                    style={{ minHeight: '40px', maxHeight: '40px' }}
-                    onClick={() => {
-                      if (userData.userRole === 'admin' || userData?.inventoryEdit) {
-                        props.history.push(
-                          `/apps/inventory/addshowroominventory/${routeParams?.showRoomInventoryId}`
-                        );
-                      } else {
-                        toast.error('You are not authorized', {
-                          position: 'top-center',
-                          autoClose: 5000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          transition: Zoom
-                        });
-                      }
-                    }}>
-                    EDIT
-                  </Button>
+                  <div className='flex flex-row w-full gap-10 px-10'>
+                    <div className='flex flex-row w-3/4'>
+                      <div className='flex flex-col w-full'>
+                        <Button
+                          className={classes.orangeButton}
+                          variant="contained"
+                          style={{ minHeight: '40px', maxHeight: '40px' }}
+                          onClick={() => {
+                            if (userData.userRole === 'admin' || userData?.inventoryEdit) {
+                              props.history.push(`/apps/inventory/addshowroominventory/${routeParams?.showRoomInventoryId}`);
+                            } else {
+                              toast.error('You are not authorized', {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              });
+                            }
+                          }}>
+                          EDIT
+                        </Button>
+                      </div>
+                    </div>
+                    <div className='flex flex-row w-1/4'>
+                      <div className='flex flex-col w-full'>
+                        <Button
+                          className={classes.buttonBlack}
+                          variant="contained"
+                          style={{ minHeight: '40px', maxHeight: '40px' }}
+                          onClick={() => {
+                            if (userData.userRole === 'admin' || userData?.inventoryDelete) {
+                              setOpenDeleteConfirmation(true)
+                            } else {
+                              toast.error('You are not authorized', {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              });
+                            }
+                          }}>
+                          DELETE
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <CustomAlert open={openDeleteConfirmation} setOpen={setOpenDeleteConfirmation} text1='Are you sure?'
+                    text2='All data including pictures associated with this showroom inventory will be deleted.' customFunction={handleDelete} />
                 </div>
               </div>
               <div className="w-full md:w-1/2 p-6">

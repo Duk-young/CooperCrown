@@ -1,21 +1,24 @@
 import { firestore } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { toast, Zoom } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
+import CustomAlert from '../../ReusableComponents/CustomAlert';
 import FormControl from '@material-ui/core/FormControl';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import ImageSlider from '../../ReusableComponents/ImageSlider';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import ImageSlider from '../../ReusableComponents/ImageSlider';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -52,13 +55,30 @@ const useStyles = makeStyles((theme) => ({
 
 function ViewOther(props) {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const [images, setImages] = useState([]);
   const { form, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
   const [imageIndex, setImageIndex] = useState(0)
   const [openImageSlider, setOpenImageSlider] = useState(false)
   const routeParams = useParams();
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+
+  const handleDelete = async () => {
+    try {
+      setisLoading(true);
+
+      await firestore().collection('other').doc(form?.id).delete();
+
+      dispatch(MessageActions.showMessage({ message: 'Product deleted successfully' }));
+      setisLoading(false);
+      props.history.push('/apps/inventory');
+
+    } catch (error) {
+      console.log('Error while deleting other product:', error);
+    }
+  };
 
   useEffect(() => {
     const id = routeParams.otherId;
@@ -315,30 +335,62 @@ function ViewOther(props) {
                       </div>
                     ))}
                   </div>
-                  <Button
-                    className={classes.orangeButton}
-                    variant="contained"
-                    style={{ minHeight: '40px', maxHeight: '40px' }}
-                    onClick={() => {
-                      if (userData.userRole === 'admin' || userData?.inventoryEdit) {
-                        props.history.push(
-                          `/apps/inventory/addother/${routeParams?.otherId}`
-                        );
-                      } else {
-                        toast.error('You are not authorized', {
-                          position: 'top-center',
-                          autoClose: 5000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          transition: Zoom
-                        });
-                      }
-                    }}>
-                    EDIT
-                  </Button>
+                  <div className='flex flex-row w-full gap-10 px-10'>
+                    <div className='flex flex-row w-3/4'>
+                      <div className='flex flex-col w-full'>
+                        <Button
+                          className={classes.orangeButton}
+                          variant="contained"
+                          style={{ minHeight: '40px', maxHeight: '40px' }}
+                          onClick={() => {
+                            if (userData.userRole === 'admin' || userData?.inventoryEdit) {
+                              props.history.push(`/apps/inventory/addother/${routeParams?.otherId}`);
+                            } else {
+                              toast.error('You are not authorized', {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              });
+                            }
+                          }}>
+                          EDIT
+                        </Button>
+                      </div>
+                    </div>
+                    <div className='flex flex-row w-1/4'>
+                      <div className='flex flex-col w-full'>
+                        <Button
+                          className={classes.buttonBlack}
+                          variant="contained"
+                          style={{ minHeight: '40px', maxHeight: '40px' }}
+                          onClick={() => {
+                            if (userData.userRole === 'admin' || userData?.inventoryDelete) {
+                              setOpenDeleteConfirmation(true)
+                            } else {
+                              toast.error('You are not authorized', {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              });
+                            }
+                          }}>
+                          DELETE
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <CustomAlert open={openDeleteConfirmation} setOpen={setOpenDeleteConfirmation} text1='Are you sure?'
+                    text2='All data including pictures associated with this product will be deleted.' customFunction={handleDelete} />
                 </div>
               </div>
               <div className="w-full md:w-1/2 p-6">
