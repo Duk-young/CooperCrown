@@ -1,19 +1,18 @@
-import NavLinkAdapter from '@fuse/core/NavLinkAdapter';
-import FuseUtils from '@fuse/utils';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { withRouter } from 'react-router-dom';
+import * as Actions from 'app/store/actions';
+import clsx from 'clsx';
+import FuseNavBadge from '../FuseNavBadge';
 import Icon from '@material-ui/core/Icon';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import * as Actions from 'app/store/actions';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import React, { useMemo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import FuseNavBadge from '../FuseNavBadge';
+import NavLinkAdapter from '@fuse/core/NavLinkAdapter';
 import PolicyOutlinedIcon from '@material-ui/icons/PolicyOutlined';
+import PropTypes from 'prop-types';
+import React, { useMemo } from 'react';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles((theme) => ({
   item: (props) => ({
@@ -60,7 +59,7 @@ function FuseNavVerticalItem(props) {
 
   const hasPermission = useMemo(
     () => (restrictedLinkIds.includes(item?.id) && userData?.userRole === 'staff') ? false : true,
-    [userData]
+    [userData, item.id, restrictedLinkIds]
   );
 
   if (!hasPermission) {

@@ -596,12 +596,7 @@ function Orders(props) {
             </Tabs>
           </div>
           <Configure
-            filters={
-              `${value > 0 ? `orderStatus: '${statuses[value]?.label}'` : ''}${userData?.userRole === 'staff'
-                ? `${value > 0 ? ' AND ' : ''}locationName: '${userData?.locationName}'`
-                : ''
-              }`
-            }
+            filters={`${value > 0 ? `orderStatus:'${statuses[value]?.label}'` : ''}${userData?.userRole === 'staff' ? `${value > 0 ? ' AND ' : ''}locationName:'${userData?.locationName}'` : ''}${(value > 0 || userData?.userRole === 'staff') ? ' AND ' : ''}${`orderDate:${form?.start ? new Date(form?.start).getTime() : -2208988800000} TO ${form?.end ? new Date(form?.end).getTime() : new Date().getTime()}`}`}
           />
           <div className={classes.header}>
             <div className="flex flex-col w-1/3">
@@ -626,9 +621,7 @@ function Orders(props) {
                     handleChange({
                       target: {
                         name: 'start',
-                        value: firestore.Timestamp.fromDate(
-                          new Date(e.target.value)
-                        )
+                        value: e.target.value
                       }
                     });
                   }}
@@ -653,9 +646,7 @@ function Orders(props) {
                     handleChange({
                       target: {
                         name: 'end',
-                        value: firestore.Timestamp.fromDate(
-                          new Date(e.target.value)
-                        )
+                        value: e.target.value
                       }
                     });
                   }}

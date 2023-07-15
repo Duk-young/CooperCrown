@@ -1,7 +1,6 @@
 import './App.mobile.css';
 import './Search.css';
 import './Themes.css';
-import { firestore } from 'firebase';
 import { toast, Zoom } from 'react-toastify';
 import { useForm } from '@fuse/hooks';
 import { useSelector } from 'react-redux';

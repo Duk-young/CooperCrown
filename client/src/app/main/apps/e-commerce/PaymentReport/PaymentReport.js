@@ -153,6 +153,7 @@ function PaymentReport(props) {
         };
 
         fetchPaymentDetails();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const filterData = () => {
