@@ -198,7 +198,7 @@ function UpdateCustomerForm(props) {
                           label="Male"
                         />
                         <FormControlLabel
-                          value="other"
+                          value="Other"
                           control={<Radio />}
                           label="Other"
                         />
