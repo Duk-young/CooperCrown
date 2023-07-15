@@ -6,6 +6,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import clsx from 'clsx';
 import FuseLoading from '@fuse/core/FuseLoading';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
 import moment from 'moment'
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
@@ -25,7 +26,8 @@ import {
   SearchBox,
   HitsPerPage,
   SortBy,
-  Configure
+  Configure,
+  connectStateResults
 } from 'react-instantsearch-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -226,6 +228,12 @@ function Insurance(props) {
 
     fetchData();
   }, []);
+
+  const ResultStats = connectStateResults(
+    ({ searching }) =>
+      searching ? (<LoadingDialog />) : (<div></div>)
+  );
+
   if (isLoading) return <FuseLoading />;
 
 
@@ -351,6 +359,7 @@ function Insurance(props) {
               </div>
             </div>
           </div>
+          <ResultStats />
           <TableContainer
             stickyHeader
             className="flex flex-col w-full overflow-scroll">

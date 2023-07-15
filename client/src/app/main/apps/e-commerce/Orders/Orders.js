@@ -37,8 +37,10 @@ import {
   SearchBox,
   Pagination,
   HitsPerPage,
-  Configure
+  Configure,
+  connectStateResults
 } from 'react-instantsearch-dom';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -555,6 +557,12 @@ function Orders(props) {
   const handleTabChange = (_, newValue) => {
     setValue(newValue);
   };
+
+  const ResultStats = connectStateResults(
+    ({ searching }) =>
+      searching ? (<LoadingDialog />) : (<div></div>)
+  );
+
   if (isLoading) return <FuseLoading />;
 
   return (
@@ -721,6 +729,7 @@ function Orders(props) {
               </FuseAnimate>
             </div>
           </div>
+          <ResultStats />
           <TableContainer className="flex flex-col w-full overflow-scroll">
             {statuses.map((status) => (
               <TabPanel

@@ -22,6 +22,23 @@ body {
   filter: brightness(0) invert(1)
 }
 
+.centered-component {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.transparent-div {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
 @media (min-width: 1024px) {
   .custom-height-lg {
     height: 650px;

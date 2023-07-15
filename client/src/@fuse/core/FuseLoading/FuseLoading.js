@@ -17,7 +17,7 @@ function FuseLoading(props) {
 
 	return (
 		<div className="flex flex-1 flex-col items-center justify-center">
-			<Typography className="text-20 mb-16" color="textSecondary">
+			<Typography className="text-20 mb-16" style={{ color: props?.loadingColor || "textSecondary" }}>
 				Loading...
 			</Typography>
 			<LinearProgress className="w-xs" color="secondary" />

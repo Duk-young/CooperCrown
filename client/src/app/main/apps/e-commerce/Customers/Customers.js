@@ -26,8 +26,10 @@ import {
   InstantSearch,
   SearchBox,
   HitsPerPage,
-  Configure
+  Configure,
+  connectStateResults
 } from 'react-instantsearch-dom';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -177,6 +179,11 @@ function Customers(props) {
   const { form, handleChange } = useForm(null);
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
+  const ResultStats = connectStateResults(
+    ({ searching }) =>
+      searching ? (<LoadingDialog />) : (<div></div>)
+  );
+
   return (
         <div className="flex w-full overflow-hidden">
           <InstantSearch
@@ -325,6 +332,7 @@ function Customers(props) {
                   </div>
                 </div>
               </div>
+              <ResultStats />
               <TableContainer
                 stickyHeader
                 className="flex flex-col w-full overflow-scroll">

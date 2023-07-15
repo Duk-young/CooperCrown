@@ -5,7 +5,8 @@ import {
   HitsPerPage,
   Pagination,
   connectRefinementList,
-  ClearRefinements
+  ClearRefinements,
+  connectStateResults
 } from 'react-instantsearch-dom';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
@@ -27,6 +28,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import LoadingDialog from '../../ReusableComponents/LoadingDialog';
 
 const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 const VirtualRefinementList = connectRefinementList(() => null);
@@ -178,6 +180,11 @@ const Frames = (props) => {
     setOpenFiltersDialog(false);
   };
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+
+  const ResultStats = connectStateResults(
+    ({ searching }) =>
+      searching ? (<LoadingDialog />) : (<div></div>)
+  );
 
   return (
     <div className="flex flex-col w-full ">
@@ -363,6 +370,7 @@ const Frames = (props) => {
             </Dialog>
           </div>
         </div>
+        <ResultStats />
         <TableContainer className="flex flex-col w-full ">
           <CustomHits props={props} userData={userData} history={props?.history} />
           <div className="flex flex-row justify-center">
