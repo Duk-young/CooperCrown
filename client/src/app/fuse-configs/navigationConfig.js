@@ -12,7 +12,7 @@ const navigationConfig = [
   {
     id: 'applications',
     title: '',
-    translate: 'APPLICATIONS',
+    translate: '',
     type: 'group',
     auth: authRoles.staff,
     icon: 'apps',

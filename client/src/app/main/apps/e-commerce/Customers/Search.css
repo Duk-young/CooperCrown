@@ -39,6 +39,11 @@ body {
   z-index: 9999;
 }
 
+.bottom-left-component {
+  position: absolute;
+  bottom: 16px;
+}
+
 @media (min-width: 1024px) {
   .custom-height-lg {
     height: 650px;
