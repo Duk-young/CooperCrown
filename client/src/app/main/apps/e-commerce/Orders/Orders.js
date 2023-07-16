@@ -41,6 +41,7 @@ import {
   connectStateResults
 } from 'react-instantsearch-dom';
 import LoadingDialog from '../ReusableComponents/LoadingDialog';
+import MultipleOrderTickets from './MultipleOrderTickets';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -519,6 +520,7 @@ function Orders(props) {
   const [selected, setSelected] = React.useState([]);
   const [selectAllData, setSelectAllData] = React.useState(false);
   const [isLoading, setisLoading] = React.useState(false);
+  const [openOrderTickets, setOpenOrderTickets] = useState(false)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   const updateStatus = async (order, status) => {
@@ -755,6 +757,11 @@ function Orders(props) {
             <div className="flex-1 justify-center mt-8"><Pagination showLast={true} /></div>
             <div className="flex-1"></div>
           </div>
+          <MultipleOrderTickets
+            selectedOrders={selected}
+            open={openOrderTickets}
+            handleClose={() => setOpenOrderTickets(false)}
+          />
           <div className='flex flex-row justify-end gap-10 px-10'>
             {value === 7 && (
               <Button
@@ -790,6 +797,22 @@ function Orders(props) {
                   updateStatus(selected, statuses[5].label)
                 }}>
                 TO SHOWROOM
+              </Button>
+            )}
+            {value === 2 && (
+              <Button
+                className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0) && 'opacity-75'}`}
+                style={{
+                  backgroundColor: '#222',
+                  color: '#FFF'
+                }}
+                variant="contained"
+                color="secondary"
+                disabled={selected.length === 0}
+                onClick={() => {
+                  setOpenOrderTickets(true)
+                }}>
+                Print Tickets
               </Button>
             )}
             {value === 4 && (
