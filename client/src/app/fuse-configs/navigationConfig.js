@@ -92,7 +92,7 @@ const navigationConfig = [
         translate: 'Payment Report',
         auth: authRoles.staff,
         type: 'item',
-        icon: 'category',
+        icon: 'calculator',
         url: '/apps/e-commerce/paymentreport'
       },
       {

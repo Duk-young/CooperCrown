@@ -75,7 +75,7 @@ function FuseNavVerticalItem(props) {
       className={clsx(classes.item, 'list-item')}
       onClick={(ev) => mdDown && dispatch(Actions.navbarCloseMobile())}
       exact={item.exact}>
-      {item.icon && item.icon !== 'policy' && (
+      {item.icon && item.icon !== 'policy' && item.icon !== 'calculator' && (
         <Icon className="list-item-icon text-16 flex-shrink-0" color="action">
           {item.icon}
         </Icon>
@@ -85,6 +85,14 @@ function FuseNavVerticalItem(props) {
           className="list-item-icon text-16 flex-shrink-0"
           color="action"
         />
+      )}
+
+      {item.icon === 'calculator' && (
+        <img
+        className="w-20 h-20 mr-10"
+        src={`assets/images/logos/Calculator.png`}
+        alt='Calculator'
+      />
       )}
 
       <ListItemText
