@@ -202,30 +202,6 @@ function EmailTemplates() {
               />
             </div>
             <div className="flex flex-col h-full pt-4 border-1 border-black border-solid rounded-6">
-              <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                <h1 className="font-700" style={{ color: '#f15a25' }}>
-                  Terms & Conditions
-                </h1>
-              </div>
-              <TextField
-                // className="pb-12"
-                disabled={disabledState}
-                id="terms"
-                type="text"
-                name="terms"
-                value={form?.terms}
-                onChange={handleChange}
-                multiline
-                rows={12}
-                variant="standard"
-                style={{ padding: '18.5px 14px' }}
-                InputProps={{
-                  disableUnderline: true,
-                }}
-                fullWidth
-              />
-            </div>
-            <div className="flex flex-col h-full pt-4 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row items-center border-b-1 border-black border-solid">
                 <h1 className="font-700 flex-1 text-center" style={{ color: '#f15a25', marginRight: '75px' }}>
                   Sale/Event Message

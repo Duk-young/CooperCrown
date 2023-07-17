@@ -1,10 +1,12 @@
 import { firestore } from 'firebase';
 import { Link } from 'react-router-dom';
 import { useForm } from '@fuse/hooks';
+import { useSelector } from 'react-redux';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import clsx from 'clsx';
 import FuseLoading from '@fuse/core/FuseLoading';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
 import moment from 'moment'
 import React, { useState, useEffect } from 'react';
 import reducer from '../store/reducers';
@@ -24,7 +26,8 @@ import {
   SearchBox,
   HitsPerPage,
   SortBy,
-  Configure
+  Configure,
+  connectStateResults
 } from 'react-instantsearch-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -79,6 +82,7 @@ const CustomHits = connectHits(({ hits, payments, props }) => {
           <StyledTableCell>ID</StyledTableCell>
           <StyledTableCell>ORDER No</StyledTableCell>
           <StyledTableCell>NAME</StyledTableCell>
+          <StyledTableCell>DOB</StyledTableCell>
           <StyledTableCell>INSURANCE</StyledTableCell>
           <StyledTableCell>POLICY No.</StyledTableCell>
           <StyledTableCell>CLAIM AMOUNT</StyledTableCell>
@@ -124,6 +128,12 @@ const CustomHits = connectHits(({ hits, payments, props }) => {
                   `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
                 );
               }}>{`${hit?.firstName} ${hit?.lastName}`}</StyledTableCell>
+            <StyledTableCell
+              onClick={() => {
+                props.history.push(
+                  `/apps/e-commerce/insurances/viewclaim/${hit.insuranceClaimId}`
+                );
+              }}>{hit?.dob ? moment(hit?.dob).format('MM/DD/YYYY') : ''}</StyledTableCell>
             <StyledTableCell
               onClick={() => {
                 props.history.push(
@@ -205,7 +215,8 @@ function Insurance(props) {
   const [isLoading, setisLoading] = useState(true);
   const [payments, setPayments] = useState(true);
   const { form, handleChange } = useForm(null);
-  
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+
 
   useEffect(() => {
     setisLoading(true);
@@ -224,142 +235,149 @@ function Insurance(props) {
 
     fetchData();
   }, []);
+
+  const ResultStats = connectStateResults(
+    ({ searching }) =>
+      searching ? (<LoadingDialog />) : (<div></div>)
+  );
+
   if (isLoading) return <FuseLoading />;
 
 
   return (
-        <div className="flex w-full overflow-hidden">
-          <InstantSearch
-            searchClient={searchClient}
-            indexName="insuranceClaims"
-            refresh>
-            <div className="flex flex-col w-full">
-              <div className={clsx(classes.header)}>
-                <div className="flex flex-row p-4 w-full justify-center">
-                  <Configure
-                    filters={`orderDate: ${form?.start ? new Date(form?.start).getTime() : -2208988800000
-                      } TO ${form?.end ? new Date(form?.end).getTime() : new Date().getTime()
-                      }`}
-                  />
-                  <Typography
-                    className="hidden sm:flex mx-0 sm:mx-12 uppercase"
-                    style={{ fontSize: '3rem', fontWeight: 600 }}
-                    variant="h6">
-                    INSURANCE
-                  </Typography>
-                </div>
-                <div className="flex pt-32 pb-16 pl-8 items-center">
-                  <div className="flex flex-col w-1/3 mt-0 px-12">
-                    <div className="flex flex-row justify-around gap-8">
-                      <div className="w-full flex gap-10">
-                        <StyledDatePicker
-                          id="date"
-                          label="Start Date"
-                          type="date"
-                          value={form?.start}
-                          variant="outlined"
-                          style={{ border: 'none' }}
-                          name='start'
-                          InputLabelProps={{
-                            shrink: true,
-                            style: { color: 'white' }
-                          }}
-                          InputProps={{
-                            inputProps: {
-                              style: { color: 'white', fontSize: '10px' }
-                            }
-                          }}
-                          onChange={handleChange}
-                        />
-                        <StyledDatePicker
-                          id="date"
-                          label="End Date"
-                          type="date"
-                          value={form?.end}
-                          name='end'
-                          variant="outlined"
-                          style={{ border: 'none' }}
-                          InputLabelProps={{
-                            shrink: true,
-                            style: { color: 'white' }
-                          }}
-                          InputProps={{
-                            inputProps: {
-                              style: { color: 'white', fontSize: '10px' }
-                            }
-                          }}
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col w-1/3 border-1 headerSearch">
-                    <SearchBox
-                      translations={{
-                        placeholder: 'Search for claims...'
+    <div className="flex w-full overflow-hidden">
+      <InstantSearch
+        searchClient={searchClient}
+        indexName="insuranceClaims"
+        refresh>
+        <div className="flex flex-col w-full">
+          <div className={clsx(classes.header)}>
+            <div className="flex flex-row p-4 w-full justify-center">
+              <Configure
+                filters={`orderDate: ${form?.start ? new Date(form?.start).getTime() : -2208988800000
+                  } TO ${form?.end ? new Date(form?.end).getTime() : new Date().getTime()
+                  } ${userData?.userRole === 'staff' ? `AND locationName: '${userData?.locationName}'` : ''}`}
+              />
+              <Typography
+                className="hidden sm:flex mx-0 sm:mx-12 uppercase"
+                style={{ fontSize: '3rem', fontWeight: 600 }}
+                variant="h6">
+                INSURANCE
+              </Typography>
+            </div>
+            <div className="flex pt-32 pb-16 pl-8 items-center">
+              <div className="flex flex-col w-1/3 mt-0 px-12">
+                <div className="flex flex-row justify-around gap-8">
+                  <div className="w-full flex gap-10">
+                    <StyledDatePicker
+                      id="date"
+                      label="Start Date"
+                      type="date"
+                      value={form?.start}
+                      variant="outlined"
+                      style={{ border: 'none' }}
+                      name='start'
+                      InputLabelProps={{
+                        shrink: true,
+                        style: { color: 'white' }
                       }}
-                      submit={
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 18 18">
-                          <g
-                            fill="none"
-                            fillRule="evenodd"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.67"
-                            transform="translate(1 1)">
-                            <circle cx="7.11" cy="7.11" r="7.11" />
-                            <path d="M16 16l-3.87-3.87" />
-                          </g>
-                        </svg>
-                      }
-                      reset={false}
+                      InputProps={{
+                        inputProps: {
+                          style: { color: 'white', fontSize: '10px' }
+                        }
+                      }}
+                      onChange={handleChange}
+                    />
+                    <StyledDatePicker
+                      id="date"
+                      label="End Date"
+                      type="date"
+                      value={form?.end}
+                      name='end'
+                      variant="outlined"
+                      style={{ border: 'none' }}
+                      InputLabelProps={{
+                        shrink: true,
+                        style: { color: 'white' }
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          style: { color: 'white', fontSize: '10px' }
+                        }
+                      }}
+                      onChange={handleChange}
                     />
                   </div>
-                  <div className="flex flex-row w-1/3 justify-around items-center">
-                    <div>
-                      <HitsPerPage
-                        defaultRefinement={50}
-                        items={[
-                          { value: 50, label: 'Show 50' },
-                          { value: 100, label: 'Show 100' },
-                          { value: 200, label: 'Show 200' }
-                        ]}
-                      />
-                    </div>
-                    <div>
-                      <SortBy
-                        className="w-full"
-                        defaultRefinement="insuranceClaims"
-                        items={[
-                          { value: 'insuranceClaims', label: 'By Date' },
-                          // { value: 'insuranceClaimsIdAsc', label: 'ID (Asc)' },
-                          // { value: 'insuranceClaimsIdAsc', label: 'ID (Desc)' },
-                          { value: 'insuranceClaimsOrderAsc', label: 'Order ID (Asc)' },
-                          { value: 'insuranceClaimsOrderDesc', label: 'Order ID (Desc)' },
-                          { value: 'insuranceClaimAmountAsc', label: 'Amount (Asc)' },
-                          { value: 'insuranceClaimAmountDesc', label: 'Amount (Desc)' }
-                        ]}
-                      />
-                    </div>
-                  </div>
                 </div>
               </div>
-              <TableContainer
-                stickyHeader
-                className="flex flex-col w-full overflow-scroll">
-                <CustomHits payments={payments} props={props} />
-              </TableContainer>
-              <div className="flex flex-row justify-center">
-                <Pagination showLast={true} />
+              <div className="flex flex-col w-1/3 border-1 headerSearch">
+                <SearchBox
+                  translations={{
+                    placeholder: 'Search for claims...'
+                  }}
+                  submit={
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 18 18">
+                      <g
+                        fill="none"
+                        fillRule="evenodd"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.67"
+                        transform="translate(1 1)">
+                        <circle cx="7.11" cy="7.11" r="7.11" />
+                        <path d="M16 16l-3.87-3.87" />
+                      </g>
+                    </svg>
+                  }
+                  reset={false}
+                />
+              </div>
+              <div className="flex flex-row w-1/3 justify-around items-center">
+                <div>
+                  <HitsPerPage
+                    defaultRefinement={50}
+                    items={[
+                      { value: 50, label: 'Show 50' },
+                      { value: 100, label: 'Show 100' },
+                      { value: 200, label: 'Show 200' }
+                    ]}
+                  />
+                </div>
+                <div>
+                  <SortBy
+                    className="w-full"
+                    defaultRefinement="insuranceClaims"
+                    items={[
+                      { value: 'insuranceClaims', label: 'By Date' },
+                      // { value: 'insuranceClaimsIdAsc', label: 'ID (Asc)' },
+                      // { value: 'insuranceClaimsIdAsc', label: 'ID (Desc)' },
+                      { value: 'insuranceClaimsOrderAsc', label: 'Order ID (Asc)' },
+                      { value: 'insuranceClaimsOrderDesc', label: 'Order ID (Desc)' },
+                      { value: 'insuranceClaimAmountAsc', label: 'Amount (Asc)' },
+                      { value: 'insuranceClaimAmountDesc', label: 'Amount (Desc)' }
+                    ]}
+                  />
+                </div>
               </div>
             </div>
-          </InstantSearch>
+          </div>
+          <ResultStats />
+          <TableContainer
+            stickyHeader
+            className="flex flex-col w-full overflow-scroll">
+            <CustomHits payments={payments} props={props} />
+          </TableContainer>
+          <div className="flex flex-row justify-center">
+            <Pagination showLast={true} />
+          </div>
         </div>
+      </InstantSearch>
+    </div>
   );
 }
 

@@ -1,19 +1,18 @@
-import NavLinkAdapter from '@fuse/core/NavLinkAdapter';
-import FuseUtils from '@fuse/utils';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { withRouter } from 'react-router-dom';
+import * as Actions from 'app/store/actions';
+import clsx from 'clsx';
+import FuseNavBadge from '../FuseNavBadge';
 import Icon from '@material-ui/core/Icon';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import * as Actions from 'app/store/actions';
-import clsx from 'clsx';
+import NavLinkAdapter from '@fuse/core/NavLinkAdapter';
+import PolicyOutlinedIcon from '@material-ui/icons/PolicyOutlined';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import FuseNavBadge from '../FuseNavBadge';
-import PolicyOutlinedIcon from '@material-ui/icons/PolicyOutlined';
 
 const useStyles = makeStyles((theme) => ({
   item: (props) => ({
@@ -45,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FuseNavVerticalItem(props) {
-  const userRole = useSelector(({ auth }) => auth.user.role);
+  const userData = useSelector(state => state.auth.user.data.firestoreDetails);
   const dispatch = useDispatch();
 
   const theme = useTheme();
@@ -56,9 +55,11 @@ function FuseNavVerticalItem(props) {
   });
   const { t } = useTranslation('navigation');
 
+  const restrictedLinkIds = ['Showroom-Managment','Doctor-Management', 'user-management', 'emailTemplates', 'priceSetting', 'lens-price', 'contact-price', 'service-price', 'dicount-price']
+
   const hasPermission = useMemo(
-    () => FuseUtils.hasPermission(item.auth, userRole),
-    [item.auth, userRole]
+    () => (restrictedLinkIds.includes(item?.id) && userData?.userRole === 'staff') ? false : true,
+    [userData, item.id, restrictedLinkIds]
   );
 
   if (!hasPermission) {
@@ -74,7 +75,7 @@ function FuseNavVerticalItem(props) {
       className={clsx(classes.item, 'list-item')}
       onClick={(ev) => mdDown && dispatch(Actions.navbarCloseMobile())}
       exact={item.exact}>
-      {item.icon && item.icon !== 'policy' && (
+      {item.icon && item.icon !== 'policy' && item.icon !== 'calculator' && (
         <Icon className="list-item-icon text-16 flex-shrink-0" color="action">
           {item.icon}
         </Icon>
@@ -84,6 +85,14 @@ function FuseNavVerticalItem(props) {
           className="list-item-icon text-16 flex-shrink-0"
           color="action"
         />
+      )}
+
+      {item.icon === 'calculator' && (
+        <img
+        className="w-20 h-20 mr-10"
+        src={`assets/images/logos/Calculator.png`}
+        alt='Calculator'
+      />
       )}
 
       <ListItemText

@@ -37,8 +37,11 @@ import {
   SearchBox,
   Pagination,
   HitsPerPage,
-  Configure
+  Configure,
+  connectStateResults
 } from 'react-instantsearch-dom';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
+import MultipleOrderTickets from './MultipleOrderTickets';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -463,7 +466,7 @@ const StyledTab = withStyles((theme) => ({
   root: {
     color: 'white',
     fontWeight: 'bold',
-    minWidth: '100px',
+    minWidth: '110px',
     '&$selected': {
       color: '#f15a25', // Custom color for the selected tab
     },
@@ -517,6 +520,7 @@ function Orders(props) {
   const [selected, setSelected] = React.useState([]);
   const [selectAllData, setSelectAllData] = React.useState(false);
   const [isLoading, setisLoading] = React.useState(false);
+  const [openOrderTickets, setOpenOrderTickets] = useState(false)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   const updateStatus = async (order, status) => {
@@ -552,14 +556,15 @@ function Orders(props) {
     }
   };
 
-  // const handleRefresh = () => {
-  //   searchClient.clearCache()
-  //   setData([])
-  // };
-
   const handleTabChange = (_, newValue) => {
     setValue(newValue);
   };
+
+  const ResultStats = connectStateResults(
+    ({ searching }) =>
+      searching ? (<LoadingDialog />) : (<div></div>)
+  );
+
   if (isLoading) return <FuseLoading />;
 
   return (
@@ -601,7 +606,7 @@ function Orders(props) {
             </Tabs>
           </div>
           <Configure
-            filters={value > 0 ? `orderStatus: '${statuses[value]?.label}'` : ''}
+            filters={`${value > 0 ? `orderStatus:'${statuses[value]?.label}'` : ''}${userData?.userRole === 'staff' ? `${value > 0 ? ' AND ' : ''}locationName:'${userData?.locationName}'` : ''}${(value > 0 || userData?.userRole === 'staff') ? ' AND ' : ''}${`orderDate:${form?.start ? new Date(form?.start).getTime() : -2208988800000} TO ${form?.end ? new Date(form?.end).getTime() : new Date().getTime()}`}`}
           />
           <div className={classes.header}>
             <div className="flex flex-col w-1/3">
@@ -626,9 +631,7 @@ function Orders(props) {
                     handleChange({
                       target: {
                         name: 'start',
-                        value: firestore.Timestamp.fromDate(
-                          new Date(e.target.value)
-                        )
+                        value: e.target.value
                       }
                     });
                   }}
@@ -653,9 +656,7 @@ function Orders(props) {
                     handleChange({
                       target: {
                         name: 'end',
-                        value: firestore.Timestamp.fromDate(
-                          new Date(e.target.value)
-                        )
+                        value: e.target.value
                       }
                     });
                   }}
@@ -730,7 +731,8 @@ function Orders(props) {
               </FuseAnimate>
             </div>
           </div>
-          <TableContainer stickyHeader className="flex flex-col w-full overflow-scroll">
+          <ResultStats />
+          <TableContainer className="flex flex-col w-full overflow-scroll">
             {statuses.map((status) => (
               <TabPanel
                 key={status.value}
@@ -755,6 +757,11 @@ function Orders(props) {
             <div className="flex-1 justify-center mt-8"><Pagination showLast={true} /></div>
             <div className="flex-1"></div>
           </div>
+          <MultipleOrderTickets
+            selectedOrders={selected}
+            open={openOrderTickets}
+            handleClose={() => setOpenOrderTickets(false)}
+          />
           <div className='flex flex-row justify-end gap-10 px-10'>
             {value === 7 && (
               <Button
@@ -790,6 +797,22 @@ function Orders(props) {
                   updateStatus(selected, statuses[5].label)
                 }}>
                 TO SHOWROOM
+              </Button>
+            )}
+            {value === 2 && (
+              <Button
+                className={`whitespace-no-wrap mt-42 uppercase ${(selected.length === 0) && 'opacity-75'}`}
+                style={{
+                  backgroundColor: '#222',
+                  color: '#FFF'
+                }}
+                variant="contained"
+                color="secondary"
+                disabled={selected.length === 0}
+                onClick={() => {
+                  setOpenOrderTickets(true)
+                }}>
+                Print Tickets
               </Button>
             )}
             {value === 4 && (

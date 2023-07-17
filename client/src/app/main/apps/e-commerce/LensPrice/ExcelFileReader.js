@@ -34,7 +34,7 @@ const ExcelFileReader = (props) => {
         const updatedObj = {};
         Object.keys(obj).forEach((key) => {
           if (key === 'id') {
-          updatedObj[key] = obj[key].toFixed(2);
+          updatedObj[key] = Number(obj[key]).toFixed(2);
           }else {
             const updatedKey = Number(key).toFixed(2);
             updatedObj[updatedKey] = obj[key];

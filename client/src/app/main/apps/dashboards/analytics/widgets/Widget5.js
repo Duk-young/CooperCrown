@@ -24,7 +24,7 @@ function Widget5(props) {
           {Object.keys(data.datasets).map((key) => (
             <Button
               key={key}
-              className="py-8 px-12"
+              className="py-8 px-8"
               size="small"
               onClick={() => setDataset(key)}
               disabled={key === dataset}>

@@ -1,15 +1,19 @@
-import FuseScrollbars from '@fuse/core/FuseScrollbars';
+import { IconButton, Typography } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
+import * as authActions from 'app/auth/store/actions';
 import AppBar from '@material-ui/core/AppBar';
+import clsx from 'clsx';
+import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import Hidden from '@material-ui/core/Hidden';
 import Icon from '@material-ui/core/Icon';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Logo from 'app/fuse-layouts/shared-components/Logo';
 import NavbarFoldedToggleButton from 'app/fuse-layouts/shared-components/NavbarFoldedToggleButton';
 import NavbarMobileToggleButton from 'app/fuse-layouts/shared-components/NavbarMobileToggleButton';
 import Navigation from 'app/fuse-layouts/shared-components/Navigation';
-import UserNavbarHeader from 'app/fuse-layouts/shared-components/UserNavbarHeader';
-import clsx from 'clsx';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import React from 'react';
+import UserNavbarHeader from 'app/fuse-layouts/shared-components/UserNavbarHeader';
 
 const useStyles = makeStyles({
   content: {
@@ -20,18 +24,20 @@ const useStyles = makeStyles({
       'linear-gradient(rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 30%), linear-gradient(rgba(0, 0, 0, 0.25) 0, rgba(0, 0, 0, 0) 40%)',
     backgroundRepeat: 'no-repeat',
     backgroundSize: '100% 40px, 100% 10px',
-    backgroundAttachment: 'local, scroll'
+    backgroundAttachment: 'local, scroll',
+    marginBottom:'45px'
   }
 });
 
 function NavbarLayout1(props) {
   const classes = useStyles();
   const theme = useTheme();
+  const dispatch = useDispatch()
   const { displayState, setDisplayState } = props;
 
   return (
     <div
-      className={clsx('flex flex-col overflow-hidden h-full', props.className)}>
+      className={clsx('flex flex-col overflow-hidden h-full relative', props.className)}>
       <AppBar
         color="primary"
         position="static"
@@ -68,6 +74,14 @@ function NavbarLayout1(props) {
 
         <Navigation layout="vertical" />
       </FuseScrollbars>
+      <div className='bottom-left-component w-full'>
+        <div className='flex flex-col items-center justify-center self-center w-full'>
+          <IconButton onClick={() => { dispatch(authActions.logoutUser()) }}>
+            <PowerSettingsNewIcon className='mr-10' />
+            <Typography style={{ fontSize: '1.5rem', fontWeight: 600, color: 'white' }} variant="h6">LOGOUT</Typography>
+          </IconButton>
+        </div>
+      </div>
     </div>
   );
 }

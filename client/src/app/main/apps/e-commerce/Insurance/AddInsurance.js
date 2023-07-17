@@ -19,12 +19,12 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import ImageSlider from '../ReusableComponents/ImageSlider';
 import React, { useEffect, useState } from 'react';
 import reducer from '../store/reducers';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import ImageSlider from '../ReusableComponents/ImageSlider';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -239,30 +239,34 @@ function AddInsurance(props) {
   return (
     <FusePageCarded
       header={
-        <div>
-          <IconButton
-            onClick={() => {
-              if (
-                Object.keys(form).length === 0 &&
-                form.constructor === Object
-              ) {
-                props.history.push(
-                  `/apps/e-commerce/customers/profile/${routeParams.customerId}`
-                );
-              } else {
-                setOpenAlertOnBack(true);
-              }
-            }}>
-            <Icon className="text-20">arrow_back</Icon>
-            <span className="mx-4 text-12">Customer's Profile</span>
-          </IconButton>
-
-          <div className="flex flex-row">
-            <Icon className="text-20 mt-4">listalt</Icon>
-            <Typography className="text-16 pl-16 sm:text-20 truncate">
-              Adding Insurance Info
+        <div className='flex flex-row justify-center w-full'>
+          <div className='flex flex-row justify-start w-1/5 items-start'>
+            <IconButton
+              onClick={() => {
+                if (
+                  Object.keys(form).length === 0 &&
+                  form.constructor === Object
+                ) {
+                  props.history.push(
+                    `/apps/e-commerce/customers/profile/${routeParams.customerId}`
+                  );
+                } else {
+                  setOpenAlertOnBack(true);
+                }
+              }}>
+              <Icon className="text-20">arrow_back</Icon>
+              <span className="mx-4 text-12">Customer's Profile</span>
+            </IconButton>
+          </div>
+          <div className='flex flex-row justify-center w-3/5'>
+            <Typography
+              className="flex mx-0 sm:mx-12 uppercase"
+              style={{ fontSize: '2rem', fontWeight: 600 }}
+              variant="h6">
+              New Insurance
             </Typography>
           </div>
+          <div className='flex flex-row justify-start w-1/5'></div>
           <CustomAlert
             open={openAlertOnBack}
             setOpen={setOpenAlertOnBack}
@@ -487,8 +491,8 @@ function AddInsurance(props) {
                   <Button
                     className={classes.button}
                     style={{
-                      maxHeight: '70px',
-                      minHeight: '70px'
+                      maxHeight: '40px',
+                      minHeight: '40px'
                     }}
                     variant="contained"
                     color="secondary"
@@ -508,8 +512,7 @@ function AddInsurance(props) {
                         });
                       }
                     }}>
-                    <Icon>save</Icon>
-                    SAVE INSURANCE
+                    SAVE
                   </Button>
                 </div>
                 {routeParams?.insuranceId && (

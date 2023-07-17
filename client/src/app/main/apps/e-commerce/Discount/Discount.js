@@ -130,7 +130,7 @@ function Discount(props) {
       header={
         form && (
           <div className='flex flex-row justify-center w-full'>
-            <div className='flex flex-row justify-start w-1/3'>
+            <div className='flex flex-row justify-start w-1/5'>
               <Typography
                 className="normal-case flex sm:mb-12"
                 component={Link}
@@ -143,7 +143,7 @@ function Discount(props) {
                 <span className="mx-4">Discount</span>
               </Typography>
             </div>
-            <div className='flex flex-row justify-center w-1/3'>
+            <div className='flex flex-row justify-center w-3/5'>
               <Typography
                 className="flex mx-0 sm:mx-12 uppercase"
                 style={{ fontSize: '3rem', fontWeight: 600 }}
@@ -151,7 +151,7 @@ function Discount(props) {
                 {form.code ? form.code : 'New Discount'}
               </Typography>
             </div>
-            <div className='flex flex-row justify-start w-1/3'></div>
+            <div className='flex flex-row justify-start w-1/5'></div>
           </div>
         )
       }

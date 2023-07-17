@@ -12,7 +12,7 @@ const navigationConfig = [
   {
     id: 'applications',
     title: '',
-    translate: 'APPLICATIONS',
+    translate: '',
     type: 'group',
     auth: authRoles.staff,
     icon: 'apps',
@@ -92,7 +92,7 @@ const navigationConfig = [
         translate: 'Payment Report',
         auth: authRoles.staff,
         type: 'item',
-        icon: 'category',
+        icon: 'calculator',
         url: '/apps/e-commerce/paymentreport'
       },
       {
@@ -126,6 +126,14 @@ const navigationConfig = [
             type: 'item',
             auth: authRoles.staff,
             url: '/apps/SecurityAndPrivacy',
+            exact: true
+          },
+          {
+            id: 'Terms-And-Conditions',
+            title: 'Terms And Conditions',
+            type: 'item',
+            auth: authRoles.staff,
+            url: '/apps/e-commerce/termsandconditions',
             exact: true
           },
           {

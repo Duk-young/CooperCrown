@@ -1,7 +1,6 @@
 import './App.mobile.css';
 import './Search.css';
 import './Themes.css';
-import { firestore } from 'firebase';
 import { toast, Zoom } from 'react-toastify';
 import { useForm } from '@fuse/hooks';
 import { useSelector } from 'react-redux';
@@ -27,8 +26,10 @@ import {
   InstantSearch,
   SearchBox,
   HitsPerPage,
-  Configure
+  Configure,
+  connectStateResults
 } from 'react-instantsearch-dom';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -178,6 +179,11 @@ function Customers(props) {
   const { form, handleChange } = useForm(null);
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
+  const ResultStats = connectStateResults(
+    ({ searching }) =>
+      searching ? (<LoadingDialog />) : (<div></div>)
+  );
+
   return (
         <div className="flex w-full overflow-hidden">
           <InstantSearch
@@ -188,8 +194,8 @@ function Customers(props) {
               <div className={clsx(classes.header)}>
                 <div className="flex flex-row p-4 w-full justify-center">
                   <Configure
-                    filters={`dob: ${form?.start ? form?.start.getTime() : -2208988800000
-                      } TO ${form?.end ? form?.end.getTime() : new Date().getTime()
+                    filters={`dob: ${form?.start ? new Date(form?.start).getTime() : -2208988800000
+                      } TO ${form?.end ? new Date(form?.end).getTime() : new Date().getTime()
                       }`}
                   />
                   <Typography
@@ -223,9 +229,7 @@ function Customers(props) {
                             handleChange({
                               target: {
                                 name: 'start',
-                                value: firestore.Timestamp.fromDate(
-                                  new Date(e.target.value)
-                                )
+                                value: e.target.value
                               }
                             });
                           }}
@@ -250,9 +254,7 @@ function Customers(props) {
                             handleChange({
                               target: {
                                 name: 'end',
-                                value: firestore.Timestamp.fromDate(
-                                  new Date(e.target.value)
-                                )
+                                value: e.target.value
                               }
                             });
                           }}
@@ -330,6 +332,7 @@ function Customers(props) {
                   </div>
                 </div>
               </div>
+              <ResultStats />
               <TableContainer
                 stickyHeader
                 className="flex flex-col w-full overflow-scroll">

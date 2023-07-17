@@ -28,7 +28,7 @@ function Login() {
   // }
 
   return (
-    <div className={clsx(classes.root, 'flex flex-col flex-1 flex-shrink-0 p-24 md:flex-row md:p-0')}>
+    <div className={clsx(classes.root, 'flex flex-col flex-1 flex-shrink-0 md:flex-row')}>
       <div className="relative flex flex-1">
         <div className="absolute inset-0">
           <StarsBackground />

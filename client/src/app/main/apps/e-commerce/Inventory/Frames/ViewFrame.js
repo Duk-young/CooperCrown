@@ -101,8 +101,8 @@ function ViewFrame(props) {
   const [imageIndex, setImageIndex] = useState(0)
   const [openUpdateRestockAlert, setOpenUpdateRestockAlert] = useState(false);
   const [editSubtractStockState, seteditSubtractStockState] = useState(false);
-  const [openUpdateSubtractStockAlert, setOpenUpdateSubtractStockAlert] =
-    useState(false);
+  const [openUpdateSubtractStockAlert, setOpenUpdateSubtractStockAlert] = useState(false);
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   const handleAddStock = async () => {
@@ -279,6 +279,27 @@ function ViewFrame(props) {
     );
   };
 
+  const handleDelete = async () => {
+    try {
+      setisLoading(true);
+
+      const restocksQuerySnapshot = await firestore().collection('restocks').where('frameId', '==', Number(routeParams?.frameId)).get();
+      restocksQuerySnapshot.forEach(async (doc) => { await doc.ref.delete(); });
+
+      const subtractStocksQuerySnapshot = await firestore().collection('subtractStocks').where('frameId', '==', Number(routeParams?.frameId)).get();
+      subtractStocksQuerySnapshot.forEach(async (doc) => { await doc.ref.delete(); });
+
+      await firestore().collection('frames').doc(form?.id).delete();
+
+      dispatch(MessageActions.showMessage({ message: 'Frame deleted successfully' }));
+      setisLoading(false);
+      props.history.push('/apps/inventory');
+
+    } catch (error) {
+      console.log('Error while deleting frame:', error);
+    }
+  };
+
   useEffect(() => {
     const id = routeParams.frameId;
     const fetchFrame = async () => {
@@ -357,17 +378,17 @@ function ViewFrame(props) {
       }}
       header={
         <div className='flex flex-row w-full'>
-          <div className='flex flex-row w-1/3 h-16'>
+          <div className='flex flex-row w-1/5 h-16'>
             <IconButton
               onClick={() => { props.history.push(`/apps/inventory`); }}>
               <Icon className="text-20">arrow_back</Icon>
               <span className="mx-4 text-12">Inventory</span>
             </IconButton>
           </div>
-          <div className='flex flex-row w-1/3 justify-center'>
-            <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h6">FRAME DETAIL</Typography>
+          <div className='flex flex-row w-3/5 justify-center'>
+            <Typography className='truncate' style={{ fontSize: '3rem', fontWeight: 600 }} variant="h6">{`FRAME: ${form?.productDescription}`}</Typography>
           </div>
-          <div className='flex flex-row w-1/3'></div>
+          <div className='flex flex-row w-1/5'></div>
         </div>
       }
       content={
@@ -392,6 +413,7 @@ function ViewFrame(props) {
                           </InputLabel>
                           <Input
                             id="standard-adornment-password"
+                            disableUnderline
                             value={form?.sku ? form?.sku : ''}
                             name="sku"
                           />
@@ -580,30 +602,64 @@ function ViewFrame(props) {
                       </div>
                     ))}
                   </div>
-                  <Button
-                    className={classes.orangeButton}
-                    variant="contained"
-                    style={{ minHeight: '40px', maxHeight: '40px' }}
-                    onClick={() => {
-                      if (userData.userRole === 'admin' || userData?.inventoryEdit) {
-                        props.history.push(
-                          `/apps/inventory/addframes/${routeParams?.frameId}`
-                        );
-                      } else {
-                        toast.error('You are not authorized', {
-                          position: 'top-center',
-                          autoClose: 5000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          transition: Zoom
-                        });
-                      }
-                    }}>
-                    EDIT
-                  </Button>
+                  <div className='flex flex-row w-full gap-10 px-10'>
+                    <div className='flex flex-row w-3/4'>
+                      <div className='flex flex-col w-full'>
+                        <Button
+                          className={classes.orangeButton}
+                          variant="contained"
+                          style={{ minHeight: '40px', maxHeight: '40px' }}
+                          onClick={() => {
+                            if (userData.userRole === 'admin' || userData?.inventoryEdit) {
+                              props.history.push(
+                                `/apps/inventory/addframes/${routeParams?.frameId}`
+                              );
+                            } else {
+                              toast.error('You are not authorized', {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              });
+                            }
+                          }}>
+                          EDIT
+                        </Button>
+                      </div>
+                    </div>
+                    <div className='flex flex-row w-1/4'>
+                      <div className='flex flex-col w-full'>
+                        <Button
+                          className={classes.buttonBlack}
+                          variant="contained"
+                          style={{ minHeight: '40px', maxHeight: '40px' }}
+                          onClick={() => {
+                            if (userData.userRole === 'admin' || userData?.inventoryDelete) {
+                              setOpenDeleteConfirmation(true)
+                            } else {
+                              toast.error('You are not authorized', {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              });
+                            }
+                          }}>
+                          DELETE
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <CustomAlert open={openDeleteConfirmation} setOpen={setOpenDeleteConfirmation} text1='Are you sure?'
+                    text2='All data including pictures associated with this frame will be deleted.' customFunction={handleDelete} />
                 </div>
               </div>
               <div className="w-full md:w-1/2 p-6">

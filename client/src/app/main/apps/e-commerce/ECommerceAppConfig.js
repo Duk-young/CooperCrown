@@ -15,6 +15,10 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Emails/EmailTemplates'))
     },
     {
+      path: '/apps/e-commerce/termsandconditions',
+      component: React.lazy(() => import('./TermsAndConditions/TermsAndConditions'))
+    },
+    {
       path: '/apps/e-commerce/paymentreport',
       component: React.lazy(() => import('./PaymentReport/PaymentReport'))
     },
@@ -91,6 +95,10 @@ const ECommerceAppConfig = {
     {
       path: '/apps/e-commerce/customers/addAppointment/:customerId',
       component: React.lazy(() => import('./Appointments/Appointments'))
+    },
+    {
+      path: '/apps/e-commerce/customers/editAppointment/:appointmentId',
+      component: React.lazy(() => import('./Appointments/EditAppointments'))
     },
     {
       path: '/apps/e-commerce/customers/:customerId',

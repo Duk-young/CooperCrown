@@ -1,6 +1,8 @@
 import { firestore } from 'firebase';
+import { TableContainer } from '@material-ui/core';
 import { toast, Zoom } from 'react-toastify';
 import { useForm } from '@fuse/hooks';
+import { useSelector } from 'react-redux';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
@@ -22,7 +24,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import { TableContainer } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -112,6 +113,7 @@ function PaymentReport(props) {
     const [payments, setPayments] = useState([]);
     const [filteredPayments, setFilteredPayments] = useState([]);
     const { form, handleChange, setForm } = useForm({ locationName: 'ALL' });
+    const userData = useSelector(state => state.auth.user.data.firestoreDetails);
     const [showrooms, setShowrooms] = useState([]);
 
     useEffect(() => {
@@ -131,8 +133,16 @@ function PaymentReport(props) {
                 resultAllPayments.push({ ...doc.data(), paymentType: 'insurance' });
             });
 
-            setPayments(resultAllPayments)
-            setFilteredPayments(resultAllPayments)
+            if (userData?.userRole === 'staff') {
+                let newPayments = resultAllPayments.filter((payment) => payment?.locationName === userData?.locationName)
+
+                setPayments(newPayments)
+                setFilteredPayments(newPayments)
+                setForm({ locationName: userData?.locationName })
+            } else {
+                setPayments(resultAllPayments)
+                setFilteredPayments(resultAllPayments)
+            }
 
             const queryShowrooms = await firestore().collection('showRooms').get();
             let showroomsData = [];
@@ -143,6 +153,7 @@ function PaymentReport(props) {
         };
 
         fetchPaymentDetails();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const filterData = () => {
@@ -150,14 +161,14 @@ function PaymentReport(props) {
         if (form?.locationName !== 'ALL') {
             newPayments = newPayments.filter((payment) => payment?.locationName === form?.locationName)
         }
-        if (form?.start || form?.end) {
+        if (form?.start?.seconds || form?.end?.seconds) {
             let start = form?.start ?? firestore.Timestamp.fromDate(new Date('01/01/2000'))
             let end = form?.end ?? firestore.Timestamp.fromDate(new Date())
 
             newPayments = newPayments.filter((payment) => payment?.paymentDate >= start && payment?.paymentDate <= end)
         }
-
         setFilteredPayments(newPayments)
+        return newPayments
     }
 
     const downloadExcel = (filteredPayments) => {
@@ -210,7 +221,7 @@ function PaymentReport(props) {
                         </Typography>
                     </div>
                     <div className='flex flex-row w-full justify-between px-16 pt-32 pb-16 items-center'>
-                        <div className='flex flex-row w-3/4'>
+                        <div className='flex flex-row w-3/4 pt-16'>
                             <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128'>
                                 <p className='font-8pt truncate'>Cash Total</p>
                                 <p className='font-12pt pl-12 truncate'>
@@ -283,6 +294,7 @@ function PaymentReport(props) {
                                     },
                                 }}
                                 value={form?.locationName ?? ''}
+                                disabled={userData?.userRole === 'staff'}
                                 name="locationName"
                                 onChange={handleChange}
                                 autoWidth>
@@ -364,8 +376,8 @@ function PaymentReport(props) {
                                         const inputValue = e.target.value.toLowerCase()
                                         if (inputValue && inputValue !== '') {
                                             let newPayments = []
-
-                                            payments.map((payment) => {
+                                            const filtered = filterData()
+                                            filtered.map((payment) => {
                                                 if ((payment?.customOrderId && payment?.customOrderId.includes(inputValue))
                                                     || (payment?.firstName && payment?.firstName.toLowerCase().includes(inputValue))
                                                     || (payment?.lastName && payment?.lastName.toLowerCase().includes(inputValue))
@@ -377,10 +389,8 @@ function PaymentReport(props) {
                                                 return true
                                             })
                                             setFilteredPayments(newPayments);
-                                            setForm('ALL')
                                         } else {
                                             filterData()
-                                            setForm('ALL')
                                         }
                                     }}
                                     inputProps={{

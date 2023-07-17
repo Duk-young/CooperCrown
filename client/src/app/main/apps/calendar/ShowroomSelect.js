@@ -7,7 +7,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useSelector } from 'react-redux';
 
-export default function ShowroomSelect({ setEvents, setCurrentShowroom }) {
+export default function ShowroomSelect({ setEvents, setCurrentShowroom, currentShowroom }) {
   const appointments = useSelector(
     ({ calendarApp }) => calendarApp.events.entities
   );
@@ -25,7 +25,7 @@ export default function ShowroomSelect({ setEvents, setCurrentShowroom }) {
         showroomdata.push(doc.data());
       });
       setShowRooms(showroomdata);
-      if(userData?.userRole === 'staff') {
+      if (userData?.userRole === 'staff') {
         let filteredEvents = appointments.filter(
           (word) => word.showRoomId === userData?.showRoomId
         );
@@ -33,6 +33,13 @@ export default function ShowroomSelect({ setEvents, setCurrentShowroom }) {
         setEvents(filteredEvents);
         setSelectedShowroom(userData?.showRoomId)
         setCurrentShowroom(userData?.showRoomId)
+      }
+      if (userData?.userRole === 'admin' && currentShowroom) {
+        let filteredEvents = appointments.filter(
+          (word) => word.showRoomId === currentShowroom
+        );
+        setSelectedShowroom(currentShowroom)
+        setEvents(filteredEvents);
       }
     };
     fetchDetails();

@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   fab: {
     position: 'absolute',
     bottom: 0,
-    right: 0
+    right: 30
   }
 }));
 
@@ -78,7 +78,7 @@ const Sketch = (props) => {
           }}
           lazyRadius="0"
           disabled={disabledState}
-          canvasWidth={750}
+          canvasWidth={700}
           canvasHeight={400}
         />
         <Fab

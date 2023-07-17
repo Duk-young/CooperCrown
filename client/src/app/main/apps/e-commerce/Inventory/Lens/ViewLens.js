@@ -1,10 +1,13 @@
 import { firestore } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { toast, Zoom } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
+import CustomAlert from '../../ReusableComponents/CustomAlert';
 import FormControl from '@material-ui/core/FormControl';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
@@ -51,10 +54,27 @@ const useStyles = makeStyles((theme) => ({
 
 function ViewLens(props) {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const { form, setForm } = useForm(null);
   const [isLoading, setisLoading] = useState(false);
   const routeParams = useParams();
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+
+  const handleDelete = async () => {
+    try {
+      setisLoading(true);
+
+      await firestore().collection('lens').doc(form?.id).delete();
+
+      dispatch(MessageActions.showMessage({ message: 'Lens deleted successfully' }));
+      setisLoading(false);
+      props.history.push('/apps/inventory');
+
+    } catch (error) {
+      console.log('Error while deleting lens:', error);
+    }
+  };
 
   useEffect(() => {
     const id = routeParams.lensId;
@@ -126,6 +146,7 @@ function ViewLens(props) {
                           </InputLabel>
                           <Input
                             id="standard-adornment-password"
+                            disableUnderline
                             value={form?.sku ? form?.sku : ''}
                             name="sku"
                           />
@@ -215,28 +236,62 @@ function ViewLens(props) {
                       />
                     </div>
                   </div>
-                  <Button
-                    className={classes.orangeButton}
-                    variant="contained"
-                    style={{ minHeight: '40px', maxHeight: '40px' }}
-                    onClick={() => {
-                      if (userData.userRole === 'admin' || userData?.inventoryEdit) {
-                        props.history.push(`/apps/inventory/addlens/${routeParams?.lensId}`);
-                      } else {
-                        toast.error('You are not authorized', {
-                          position: 'top-center',
-                          autoClose: 5000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          transition: Zoom
-                        });
-                      }
-                    }}>
-                    EDIT
-                  </Button>
+                  <div className='flex flex-row w-full gap-10 px-10'>
+                    <div className='flex flex-row w-3/4'>
+                      <div className='flex flex-col w-full'>
+                        <Button
+                          className={classes.orangeButton}
+                          variant="contained"
+                          style={{ minHeight: '40px', maxHeight: '40px' }}
+                          onClick={() => {
+                            if (userData.userRole === 'admin' || userData?.inventoryEdit) {
+                              props.history.push(`/apps/inventory/addlens/${routeParams?.lensId}`);
+                            } else {
+                              toast.error('You are not authorized', {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              });
+                            }
+                          }}>
+                          EDIT
+                        </Button>
+                      </div>
+                    </div>
+                    <div className='flex flex-row w-1/4'>
+                      <div className='flex flex-col w-full'>
+                        <Button
+                          className={classes.buttonBlack}
+                          variant="contained"
+                          style={{ minHeight: '40px', maxHeight: '40px' }}
+                          onClick={() => {
+                            if (userData.userRole === 'admin' || userData?.inventoryDelete) {
+                              setOpenDeleteConfirmation(true)
+                            } else {
+                              toast.error('You are not authorized', {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              });
+                            }
+                          }}>
+                          DELETE
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <CustomAlert open={openDeleteConfirmation} setOpen={setOpenDeleteConfirmation} text1='Are you sure?'
+                    text2='All data including pictures associated with this lens will be deleted.' customFunction={handleDelete} />
                 </div>
               </div>
               <div className="w-full md:w-1/2 p-6">

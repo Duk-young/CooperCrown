@@ -316,6 +316,7 @@ function AddFrames(props) {
                           </InputLabel>
                           <Input
                             id="standard-adornment-password"
+                            disableUnderline
                             value={form?.sku ? form?.sku : ''}
                             name="sku"
                             onChange={handleChange}

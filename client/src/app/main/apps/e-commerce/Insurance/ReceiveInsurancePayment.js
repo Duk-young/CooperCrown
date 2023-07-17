@@ -94,7 +94,8 @@ export default function ReceiveInsurancePayment(props) {
             firstName: claim?.firstName,
             lastName: claim?.lastName,
             locationName: claim?.locationName,
-            customOrderId: claim?.customOrderId
+            customOrderId: claim?.customOrderId,
+            orderId: Number(claim?.orderId)
           });
 
         await firestore()

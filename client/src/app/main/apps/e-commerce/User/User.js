@@ -174,10 +174,11 @@ function NewShowRoom(props) {
           .set({
             ...form,
             password: '',
-            confirmPassword: '',
+            confirmPassword: '', 
             Role: 'Staff',
             CompanyId: userRecord.data.user.uid,
-            dateCreated: firestore.Timestamp.fromDate(new Date())
+            dateCreated: firestore.Timestamp.fromDate(new Date()),
+            locationName: showRooms?.find((room) => room?.showRoomId === form?.showRoomId)?.locationName
           })
 
         dispatch(MessageActions.showMessage({ message: 'User created successfully' }));
@@ -193,7 +194,7 @@ function NewShowRoom(props) {
       await firebaseService.firestoreDb
         .collection('users')
         .doc(routeParams?.userId)
-        .set(form)
+        .set({...form, locationName: showRooms?.find((room) => room?.showRoomId === form?.showRoomId)?.locationName})
 
       dispatch(MessageActions.showMessage({ message: 'User updated successfully' }));
       setisLoading(false)
