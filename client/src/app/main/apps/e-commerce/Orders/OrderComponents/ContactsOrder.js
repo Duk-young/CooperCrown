@@ -776,13 +776,15 @@ const ContactsOrder = (props) => {
                 component={Paper}>
                 <Table aria-label="customized table">
                   <TableHead>
-                    <TableRow>
+                    <TableRow className='truncate'>
                       <StyledTableCell>RX</StyledTableCell>
                       <StyledTableCell>Style</StyledTableCell>
                       <StyledTableCell>Brand</StyledTableCell>
                       <StyledTableCell>Model</StyledTableCell>
                       <StyledTableCell>Base Curve</StyledTableCell>
                       <StyledTableCell>Pack Qty</StyledTableCell>
+                      <StyledTableCell>Unit Price</StyledTableCell>
+                      <StyledTableCell>Qty</StyledTableCell>
                       <StyledTableCell>Price</StyledTableCell>
                       <StyledTableCell></StyledTableCell>
                     </TableRow>
@@ -795,7 +797,7 @@ const ContactsOrder = (props) => {
                         }}
                         key={index}
                         hover
-                        className="cursor-pointer">
+                        className="cursor-pointer truncate">
                         <StyledTableCell>
                           <div className="flex flex-col">
                             <div>OD</div>
@@ -836,6 +838,18 @@ const ContactsOrder = (props) => {
                           <div className="flex flex-col">
                             <div>{row?.clOdRate}</div>
                             <div>{row?.clOsRate}</div>
+                          </div>
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          <div className="flex flex-col">
+                            <div>{row?.contactLensQtyOd}</div>
+                            <div>{row?.contactLensQtyOs}</div>
+                          </div>
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          <div className="flex flex-col">
+                            <div>{row?.clOdRate * row?.contactLensQtyOd}</div>
+                            <div>{row?.clOsRate * row?.contactLensQtyOs}</div>
                           </div>
                         </StyledTableCell>
                         <StyledTableCell>

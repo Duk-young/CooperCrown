@@ -323,12 +323,14 @@ function PaymentReport(props) {
                                         }
                                     }}
                                     onChange={(e) => {
+                                        const selectedDate = new Date(e.target.value);
+                                        selectedDate.setHours(0, 0, 0, 0);
+                                        const timestamp = firestore.Timestamp.fromDate(selectedDate);
+
                                         handleChange({
                                             target: {
                                                 name: 'start',
-                                                value: firestore.Timestamp.fromDate(
-                                                    new Date(e.target.value)
-                                                )
+                                                value: timestamp
                                             }
                                         });
                                     }}
@@ -350,12 +352,14 @@ function PaymentReport(props) {
                                         }
                                     }}
                                     onChange={(e) => {
+                                        const selectedDate = new Date(e.target.value);
+                                        selectedDate.setHours(23, 59, 59, 0);
+                                        const timestamp = firestore.Timestamp.fromDate(selectedDate);
+
                                         handleChange({
                                             target: {
                                                 name: 'end',
-                                                value: firestore.Timestamp.fromDate(
-                                                    new Date(e.target.value)
-                                                )
+                                                value: timestamp
                                             }
                                         });
                                     }}

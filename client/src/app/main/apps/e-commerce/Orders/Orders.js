@@ -606,7 +606,7 @@ function Orders(props) {
             </Tabs>
           </div>
           <Configure
-            filters={`${value > 0 ? `orderStatus:'${statuses[value]?.label}'` : ''}${userData?.userRole === 'staff' ? `${value > 0 ? ' AND ' : ''}locationName:'${userData?.locationName}'` : ''}${(value > 0 || userData?.userRole === 'staff') ? ' AND ' : ''}${`orderDate:${form?.start ? new Date(form?.start).getTime() : -2208988800000} TO ${form?.end ? new Date(form?.end).getTime() : new Date().getTime()}`}`}
+            filters={`${value > 0 ? `orderStatus:'${statuses[value]?.label}'` : ''}${userData?.userRole === 'staff' ? `${value > 0 ? ' AND ' : ''}locationName:'${userData?.locationName}'` : ''}${(value > 0 || userData?.userRole === 'staff') ? ' AND ' : ''}${`orderDate:${form?.start ? new Date(form?.start).setHours(0, 0, 0, 0) : -2208988800000} TO ${form?.end ? new Date(form?.end).setHours(23, 59, 59, 0) : new Date().getTime()}`}`}
           />
           <div className={classes.header}>
             <div className="flex flex-col w-1/3">
