@@ -215,6 +215,21 @@ function CalendarApp(props) {
     }
   }
 
+  const resizeEvent = async ({ event, start, end }) => {
+    try {
+      setisLoading(true)
+      setEvents([])
+      await firestore().collection('appointments').doc(event?.firebaseId).update({
+        start: firestore.Timestamp.fromDate(start),
+        end: firestore.Timestamp.fromDate(end)
+      })
+      dispatch(Actions.getEvents())
+      setisLoading(false)
+    } catch (error) {
+      console.log('Error while resizing event: ', error)
+    }
+  }
+
 
 if (isLoading) return <FuseLoading />
 
@@ -230,6 +245,7 @@ if (isLoading) return <FuseLoading />
         longPressThreshold={10}
         defaultView={Views.WEEK}
         onEventDrop={moveEvent}
+        onEventResize={resizeEvent}
         defaultDate={new Date()}
         startAccessor="start"
         endAccessor="end"
