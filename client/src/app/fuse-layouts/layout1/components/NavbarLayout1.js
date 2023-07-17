@@ -11,6 +11,7 @@ import Logo from 'app/fuse-layouts/shared-components/Logo';
 import NavbarFoldedToggleButton from 'app/fuse-layouts/shared-components/NavbarFoldedToggleButton';
 import NavbarMobileToggleButton from 'app/fuse-layouts/shared-components/NavbarMobileToggleButton';
 import Navigation from 'app/fuse-layouts/shared-components/Navigation';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import React from 'react';
 import UserNavbarHeader from 'app/fuse-layouts/shared-components/UserNavbarHeader';
 
@@ -23,7 +24,8 @@ const useStyles = makeStyles({
       'linear-gradient(rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 30%), linear-gradient(rgba(0, 0, 0, 0.25) 0, rgba(0, 0, 0, 0) 40%)',
     backgroundRepeat: 'no-repeat',
     backgroundSize: '100% 40px, 100% 10px',
-    backgroundAttachment: 'local, scroll'
+    backgroundAttachment: 'local, scroll',
+    marginBottom:'45px'
   }
 });
 
@@ -74,8 +76,8 @@ function NavbarLayout1(props) {
       </FuseScrollbars>
       <div className='bottom-left-component w-full'>
         <div className='flex flex-col items-center justify-center self-center w-full'>
-          <IconButton onClick={() => {dispatch(authActions.logoutUser())}}>
-            <Icon className='mr-10'>exit_to_app</Icon>
+          <IconButton onClick={() => { dispatch(authActions.logoutUser()) }}>
+            <PowerSettingsNewIcon className='mr-10' />
             <Typography style={{ fontSize: '1.5rem', fontWeight: 600, color: 'white' }} variant="h6">LOGOUT</Typography>
           </IconButton>
         </div>

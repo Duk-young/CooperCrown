@@ -15,6 +15,10 @@ const ECommerceAppConfig = {
       component: React.lazy(() => import('./Emails/EmailTemplates'))
     },
     {
+      path: '/apps/e-commerce/termsandconditions',
+      component: React.lazy(() => import('./TermsAndConditions/TermsAndConditions'))
+    },
+    {
       path: '/apps/e-commerce/paymentreport',
       component: React.lazy(() => import('./PaymentReport/PaymentReport'))
     },

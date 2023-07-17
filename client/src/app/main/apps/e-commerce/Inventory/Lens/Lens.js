@@ -330,10 +330,10 @@ const Lens = (props) => {
         <ResultStats />
         <TableContainer className="flex flex-col w-full ">
           <CustomHits props={props} userData={userData} history={props?.history} />
-          <div className="flex flex-row justify-center">
-            <Pagination showLast={true} />
-          </div>
         </TableContainer>
+        <div className="flex flex-row justify-center">
+          <Pagination showLast={true} />
+        </div>
       </InstantSearch>
     </div>
   );

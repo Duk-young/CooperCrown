@@ -145,6 +145,7 @@ const InsuranceClaim = (props) => {
         resultClaim?.orderDate && resultClaim.orderDate.toDate();
       resultClaim.id = queryClaim.docs[0].id;
       setForm(resultClaim);
+
       const queryPayments = await firestore()
         .collection('insurancePayments')
         .where('insuranceClaimId', '==', Number(id))
@@ -154,6 +155,7 @@ const InsuranceClaim = (props) => {
         resultPayments.push(doc.data());
       });
       setPayments(resultPayments);
+
       if (resultClaim?.insuranceId) {
         const queryInsuranceCompany = await firestore()
           .collection('insurances')
@@ -181,22 +183,29 @@ const InsuranceClaim = (props) => {
         header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
       }}
       header={
-        <div className="mt-24">
-          <Typography
-            className="normal-case flex items-center sm:mb-12"
-            component={Link}
-            role="button"
-            to="/apps/e-commerce/insurance"
-            color="inherit">
-            <Icon className="text-20">arrow_back</Icon>
-            <span className="mx-4">Insurances</span>
-          </Typography>
-          <div className="flex flex-row">
-            <Icon className="text-20 mt-4">people</Icon>
-            <Typography className="text-16 pl-16 sm:text-20 truncate">
-              Insurance Claim Detail
+        <div className='flex flex-row justify-center w-full'>
+          <div className='flex flex-row justify-start w-1/5'>
+            <Typography
+              className="normal-case flex sm:mb-12"
+              component={Link}
+              role="button"
+              to="/apps/e-commerce/insurance"
+              color="inherit">
+              <Icon className="text-20">
+                arrow_back
+              </Icon>
+              <span className="mx-4">Insurances</span>
             </Typography>
           </div>
+          <div className='flex flex-row justify-center w-3/5'>
+            <Typography
+              className="flex mx-0 sm:mx-12 uppercase"
+              style={{ fontSize: '3rem', fontWeight: 600 }}
+              variant="h6">
+              {`Insurance: ${insuranceCompany?.primaryHolder}`}
+            </Typography>
+          </div>
+          <div className='flex flex-row justify-start w-1/5'></div>
         </div>
       }
       content={
@@ -413,7 +422,7 @@ const InsuranceClaim = (props) => {
           </div>
           <div className="my-6 border-1 border-black border-solid rounded-6 w-full">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-              <h1 className="font-700" style={{ color: '#f15a25' }} onClick={()=> props.history.push(`/apps/e-commerce/orders/vieworder/${form?.orderId}`)}>
+              <h1 className="font-700" style={{ color: '#f15a25' }} onClick={() => props.history.push(`/apps/e-commerce/orders/vieworder/${form?.orderId}`)}>
                 ORDER INFO
               </h1>
             </div>
@@ -478,7 +487,7 @@ const InsuranceClaim = (props) => {
                 fullWidth
                 id="outlined-multiline-static"
                 label="Company"
-                value={insuranceCompany?.insuranceCompany}
+                value={insuranceCompany?.insuranceCompany ?? ''}
                 variant="outlined"
               />
               <TextField
@@ -487,7 +496,7 @@ const InsuranceClaim = (props) => {
                 fullWidth
                 id="outlined-multiline-static"
                 label="Primary Holder"
-                value={insuranceCompany?.primaryHolder}
+                value={insuranceCompany?.primaryHolder ?? ''}
                 variant="outlined"
               />
               <TextField
@@ -496,7 +505,7 @@ const InsuranceClaim = (props) => {
                 fullWidth
                 id="outlined-multiline-static"
                 label="Policy No"
-                value={insuranceCompany?.policyNo}
+                value={insuranceCompany?.policyNo ?? ''}
                 variant="outlined"
               />
               <TextField
@@ -505,7 +514,7 @@ const InsuranceClaim = (props) => {
                 fullWidth
                 id="outlined-multiline-static"
                 label="SSN"
-                value={insuranceCompany?.ssn}
+                value={insuranceCompany?.ssn ?? ''}
                 variant="outlined"
               />
               <TextField
@@ -514,7 +523,7 @@ const InsuranceClaim = (props) => {
                 fullWidth
                 id="outlined-multiline-static"
                 label="Other"
-                value={insuranceCompany?.other}
+                value={insuranceCompany?.other ?? ''}
                 variant="outlined"
               />
             </div>

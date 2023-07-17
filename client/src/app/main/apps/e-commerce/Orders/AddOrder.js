@@ -264,6 +264,7 @@ function AddOrder(props) {
               policyNo: insuranceComp1?.policyNo,
               insuranceCost: Number(form?.insuranceCostOne),
               claimStatus: 'Unclaimed',
+              insuranceId: form?.insuranceId,
               customOrderId: orders.length > 0 ? moment(new Date()).format('YYMMDD') +
                 _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
             });
@@ -285,6 +286,7 @@ function AddOrder(props) {
                 policyNo: insuranceComp2?.policyNo,
                 insuranceCost: Number(form?.insuranceCostTwo),
                 claimStatus: 'Unclaimed',
+                insuranceId: form?.insuranceId2,
                 customOrderId: orders.length > 0 ? moment(new Date()).format('YYMMDD') +
                   _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
               });

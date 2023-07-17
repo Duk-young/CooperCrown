@@ -1,3 +1,5 @@
+import { useDispatch, useSelector } from 'react-redux';
+import * as authActions from 'app/auth/store/actions';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
@@ -5,10 +7,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
-import * as authActions from 'app/auth/store/actions';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import Typography from '@material-ui/core/Typography';
+
 import { Link } from 'react-router-dom';
 
 function UserMenu(props) {
@@ -100,7 +102,7 @@ function UserMenu(props) {
 							}}
 						>
 							<ListItemIcon className="min-w-40">
-								<Icon>exit_to_app</Icon>
+								<PowerSettingsNewIcon className='mr-10' />
 							</ListItemIcon>
 							<ListItemText primary="Logout" />
 						</MenuItem>

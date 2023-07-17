@@ -129,6 +129,14 @@ const navigationConfig = [
             exact: true
           },
           {
+            id: 'Terms-And-Conditions',
+            title: 'Terms And Conditions',
+            type: 'item',
+            auth: authRoles.staff,
+            url: '/apps/e-commerce/termsandconditions',
+            exact: true
+          },
+          {
             id: 'Showroom-Managment',
             title: 'Showroom Managment',
             type: 'item',

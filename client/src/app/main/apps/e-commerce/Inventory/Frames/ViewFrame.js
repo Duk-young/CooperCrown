@@ -378,17 +378,17 @@ function ViewFrame(props) {
       }}
       header={
         <div className='flex flex-row w-full'>
-          <div className='flex flex-row w-1/3 h-16'>
+          <div className='flex flex-row w-1/5 h-16'>
             <IconButton
               onClick={() => { props.history.push(`/apps/inventory`); }}>
               <Icon className="text-20">arrow_back</Icon>
               <span className="mx-4 text-12">Inventory</span>
             </IconButton>
           </div>
-          <div className='flex flex-row w-1/3 justify-center'>
-            <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h6">FRAME DETAIL</Typography>
+          <div className='flex flex-row w-3/5 justify-center'>
+            <Typography className='truncate' style={{ fontSize: '3rem', fontWeight: 600 }} variant="h6">{`FRAME: ${form?.productDescription}`}</Typography>
           </div>
-          <div className='flex flex-row w-1/3'></div>
+          <div className='flex flex-row w-1/5'></div>
         </div>
       }
       content={

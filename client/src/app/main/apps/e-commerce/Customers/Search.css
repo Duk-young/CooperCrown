@@ -41,7 +41,7 @@ body {
 
 .bottom-left-component {
   position: absolute;
-  bottom: 16px;
+  bottom: 0px;
 }
 
 @media (min-width: 1024px) {
