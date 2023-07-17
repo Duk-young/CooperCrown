@@ -59,7 +59,7 @@ const LensTypesChart = (props) => {
     <div className="w-full py-4">
       <div className="flex flex-row justify-between relative">
         <div className="flex flex-col px-4 w-full">
-          <Widget2 title="Lens Types" data={data} />
+          <Widget2 title="." data={data} />
 
         </div>
         <div className="absolute top-0 right-0">

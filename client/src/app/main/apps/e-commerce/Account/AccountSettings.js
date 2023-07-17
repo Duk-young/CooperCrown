@@ -279,15 +279,17 @@ function AccountSettings(props) {
                           variant="outlined"
                         />
                       </div>
-                      <Button
-                        className={classes.button}
-                        onClick={onSubmit}
-                        variant="contained"
-                        color="secondary">
-                        <span className="flex">SAVE</span>
-                      </Button>
                     </div>
                   </div>
+                </div>
+                <div className="flex flex-col justify-center p-16 sm:p-24 ">
+                  <Button
+                    className={classes.button}
+                    onClick={onSubmit}
+                    variant="contained"
+                    color="secondary">
+                    <span className="flex">SAVE</span>
+                  </Button>
                 </div>
               </div>
             </div>

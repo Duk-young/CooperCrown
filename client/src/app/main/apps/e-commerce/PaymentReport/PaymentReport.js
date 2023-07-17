@@ -221,7 +221,7 @@ function PaymentReport(props) {
                         </Typography>
                     </div>
                     <div className='flex flex-row w-full justify-between px-16 pt-32 pb-16 items-center'>
-                        <div className='flex flex-row w-3/4'>
+                        <div className='flex flex-row w-3/4 pt-16'>
                             <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128'>
                                 <p className='font-8pt truncate'>Cash Total</p>
                                 <p className='font-12pt pl-12 truncate'>
