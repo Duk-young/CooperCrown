@@ -615,13 +615,13 @@ function AddOrder(props) {
       setisLoading(true)
 
       const insuranceQuerySnapshot = await firestore().collection('insuranceClaims').where('orderId', '==', Number(form?.orderId)).get();
-      if(!insuranceQuerySnapshot.empty) insuranceQuerySnapshot.forEach(async (doc) => { await doc.ref.delete() });
+      if (!insuranceQuerySnapshot.empty) insuranceQuerySnapshot.forEach(async (doc) => { await doc.ref.delete() });
 
       const insurancePaymentsQuerySnapshot = await firestore().collection('insurancePayments').where('orderId', '==', Number(form?.orderId)).get();
-      if(!insurancePaymentsQuerySnapshot.empty) insurancePaymentsQuerySnapshot.forEach(async (doc) => { await doc.ref.delete() });
+      if (!insurancePaymentsQuerySnapshot.empty) insurancePaymentsQuerySnapshot.forEach(async (doc) => { await doc.ref.delete() });
 
       const orderPaymentsQuerySnapshot = await firestore().collection('orderPayments').where('orderId', '==', Number(form?.orderId)).get();
-      if(!orderPaymentsQuerySnapshot.empty) orderPaymentsQuerySnapshot.forEach(async (doc) => { await doc.ref.delete() });
+      if (!orderPaymentsQuerySnapshot.empty) orderPaymentsQuerySnapshot.forEach(async (doc) => { await doc.ref.delete() });
 
       if (form?.eyeglasses?.length > 0) {
         await Promise.all(
@@ -633,7 +633,7 @@ function AddOrder(props) {
                 let frameData = queryFrame.docs[0].data();
                 frameData.id = queryFrame.docs[0].id;
                 let qty = Number(frameData?.quantity) + 1
-                await firestore().collection('frames').doc(frameData.id).update({quantity: qty});
+                await firestore().collection('frames').doc(frameData.id).update({ quantity: qty });
               }
             }
           })
@@ -649,7 +649,7 @@ function AddOrder(props) {
       );
       setisLoading(false)
       props.history.push('/apps/e-commerce/orders');
-      
+
     } catch (error) {
       console.log('Error while deleting order: ', error)
     }
@@ -878,20 +878,24 @@ function AddOrder(props) {
                                     className="px-20 py-10 border-b-1 border-black border-solid"
                                     key={index}>
                                     <div className="flex flex-row justify-between">
-                                      <h3>
-                                        {`
-                                        ${row.contactLensStyleOd ?? '-'}
-                                        / ${row.contactLensBrandOd ?? '-'}
-                                        / ${row.contactLensNameOd ?? '-'}
-                                        / ${row.contactLensBaseCurveOd ?? '-'}
-                                        / ${row.contactLensPackQtyOd ?? '-'}
-                                      `}
-                                      </h3>
+                                      <h3>OD: {row?.contactLensStyleOd ?? '-'} / {row.contactLensBrandOd ?? '-'} /{row.contactLensBaseCurveOd ?? '-'} /
+                                        {row.contactLensBaseCurveOd ?? '-'} Unit Rate: {row?.clOdRate} x Qty: {row?.contactLensQtyOd}</h3>
                                       <h3>
                                         $
                                         {row?.contactLensRate &&
                                           Number(
-                                            row?.contactLensRate
+                                            row?.clOdRate * row?.contactLensQtyOd
+                                          ).toLocaleString()}
+                                      </h3>
+                                    </div>
+                                    <div className="flex flex-row justify-between">
+                                      <h3>OS: {row?.contactLensStyleOs ?? '-'} / {row.contactLensBrandOs ?? '-'} /{row.contactLensBaseCurveOs ?? '-'} /
+                                        {row.contactLensBaseCurveOs ?? '-'} Unit Rate: {row?.clOsRate} x Qty: {row?.contactLensQtyOs}</h3>
+                                      <h3>
+                                        $
+                                        {row?.contactLensRate &&
+                                          Number(
+                                            row?.clOsRate * row?.contactLensQtyOs
                                           ).toLocaleString()}
                                       </h3>
                                     </div>

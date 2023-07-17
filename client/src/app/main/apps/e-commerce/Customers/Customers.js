@@ -194,8 +194,8 @@ function Customers(props) {
               <div className={clsx(classes.header)}>
                 <div className="flex flex-row p-4 w-full justify-center">
                   <Configure
-                    filters={`dob: ${form?.start ? new Date(form?.start).getTime() : -2208988800000
-                      } TO ${form?.end ? new Date(form?.end).getTime() : new Date().getTime()
+                    filters={`dob: ${form?.start ? new Date(form?.start).setHours(0, 0, 0, 0) : -2208988800000
+                      } TO ${form?.end ? new Date(form?.end).setHours(23, 59, 59, 0) : new Date().getTime()
                       }`}
                   />
                   <Typography

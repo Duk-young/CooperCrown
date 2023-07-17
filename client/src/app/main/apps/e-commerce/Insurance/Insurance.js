@@ -254,8 +254,8 @@ function Insurance(props) {
           <div className={clsx(classes.header)}>
             <div className="flex flex-row p-4 w-full justify-center">
               <Configure
-                filters={`orderDate: ${form?.start ? new Date(form?.start).getTime() : -2208988800000
-                  } TO ${form?.end ? new Date(form?.end).getTime() : new Date().getTime()
+                filters={`orderDate: ${form?.start ? new Date(form?.start).setHours(0, 0, 0, 0) : -2208988800000
+                  } TO ${form?.end ? new Date(form?.end).setHours(23, 59, 59, 0) : new Date().getTime()
                   } ${userData?.userRole === 'staff' ? `AND locationName: '${userData?.locationName}'` : ''}`}
               />
               <Typography
@@ -286,10 +286,13 @@ function Insurance(props) {
                           style: { color: 'white', fontSize: '10px' }
                         }
                       }}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e)
+                        console.log(new Date(form?.start).setHours(0, 0, 0, 0))
+                      }}
                     />
                     <StyledDatePicker
-                      id="date"
+                      id="date" 
                       label="End Date"
                       type="date"
                       value={form?.end}
