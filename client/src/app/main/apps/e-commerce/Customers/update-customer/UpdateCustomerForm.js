@@ -1,11 +1,8 @@
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from '@material-ui/pickers';
+import { states } from 'app/main/apps/e-commerce/Emails/helper.js';
 import { toast, Zoom } from 'react-toastify';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import AddFamilyDialog from './AddFamilyDialog';
-import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import DateFnsUtils from '@date-io/date-fns';
@@ -31,7 +28,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import { states } from 'app/main/apps/e-commerce/Emails/helper.js';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -104,7 +100,7 @@ function UpdateCustomerForm(props) {
     return phoneNumberString;
   }
 
-  useEffect(() => {}, [form]);
+  useEffect(() => { }, [form]);
 
   return (
     <div>
@@ -171,17 +167,15 @@ function UpdateCustomerForm(props) {
                       </Grid>
                     </MuiPickersUtilsProvider>
                   </div>
-                  <div className="flex mt-10">
+                  <div className="flex mt-10 flex-row justify-between">
                     <Typography
-                      className={`username text-16 whitespace-no-wrap self-center ${
-                        error?.gender ? 'text-red' : ''
-                      } `}
+                      className={`username text-16 whitespace-no-wrap self-center ${error?.gender ? 'text-red' : ''
+                        } `}
                       color="inherit">
                       Gender
                     </Typography>
                     <FormControl component="fieldset">
                       <RadioGroup
-                        className="ml-60"
                         row
                         aria-label="gender"
                         name="gender"
@@ -365,7 +359,7 @@ function UpdateCustomerForm(props) {
                 FAMILY TREE
               </h1>
             </div>
-            <div className="flex flex-col p-6">
+            <div className="flex flex-row p-12 justify-end">
               <Button
                 className={classes.button}
                 variant="contained"
@@ -373,8 +367,7 @@ function UpdateCustomerForm(props) {
                 onClick={() => {
                   setOpen(true);
                 }}>
-                <AddIcon />
-                ADD FAMILY
+                ADD NEW
               </Button>
             </div>
             <div className="flex flex-col w-full p-4">
