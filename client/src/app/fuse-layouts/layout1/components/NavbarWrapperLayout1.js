@@ -158,6 +158,7 @@ function NavbarWrapperLayout1(props) {
                 className={classes.navbarContent}
                 displayState={displayState}
                 setDisplayState={setDisplayState}
+                foldedAndClosed={foldedAndClosed}
               />
             </div>
           </Hidden>
@@ -178,6 +179,7 @@ function NavbarWrapperLayout1(props) {
                 className={classes.navbarContent}
                 displayState={displayState}
                 setDisplayState={setDisplayState}
+                foldedAndClosed={foldedAndClosed}
               />
             </Drawer>
           </Hidden>

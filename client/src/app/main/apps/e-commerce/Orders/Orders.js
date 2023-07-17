@@ -162,7 +162,7 @@ const CustomHits = connectHits(
 
       const queryPayments = await firestore()
         .collection('orderPayments')
-        .where('orderId', '==', String(row.orderId))
+        .where('orderId', '==', Number(row.orderId))
         .get();
       let resultPayments = [];
       queryPayments.forEach((doc) => {

@@ -25,7 +25,7 @@ const useStyles = makeStyles({
     backgroundRepeat: 'no-repeat',
     backgroundSize: '100% 40px, 100% 10px',
     backgroundAttachment: 'local, scroll',
-    marginBottom:'45px'
+    marginBottom: '45px'
   }
 });
 
@@ -33,7 +33,7 @@ function NavbarLayout1(props) {
   const classes = useStyles();
   const theme = useTheme();
   const dispatch = useDispatch()
-  const { displayState, setDisplayState } = props;
+  const { displayState, setDisplayState, foldedAndClosed } = props;
 
   return (
     <div
@@ -78,7 +78,9 @@ function NavbarLayout1(props) {
         <div className='flex flex-col items-center justify-center self-center w-full'>
           <IconButton onClick={() => { dispatch(authActions.logoutUser()) }}>
             <PowerSettingsNewIcon className='mr-10' />
-            <Typography style={{ fontSize: '1.5rem', fontWeight: 600, color: 'white' }} variant="h6">LOGOUT</Typography>
+            {!foldedAndClosed ? (
+              <Typography style={{ fontSize: '1.5rem', fontWeight: 600, color: 'white' }} variant="h6">LOGOUT</Typography>
+            ) : ''}
           </IconButton>
         </div>
       </div>

@@ -251,6 +251,7 @@ function EventDialog(props) {
               </IconButton>
               <IconButton onClick={() => {
                 if (userData.userRole === 'admin' || userData?.appointmentsEdit) {
+                  closeComposeDialog();
                   history.push(`/apps/e-commerce/customers/editAppointment/${form?.firebaseId}`)
                 } else {
                   toast.error('You are not authorized', {

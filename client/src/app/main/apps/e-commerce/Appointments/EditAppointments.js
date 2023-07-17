@@ -268,7 +268,7 @@ const EditAppointments = (props) => {
                         );
                         let count = 0;
                         appointments
-                            .filter((word) => word.showRoomId === form?.showRoomId)
+                            .filter((word) => word.showRoomId === form?.showRoomId && word?.appointmentId !== form?.appointmentId)
                             .map((row) => {
                                 if (
                                     (start >= row?.start && start < row?.end) ||

@@ -413,6 +413,7 @@ function ViewFrame(props) {
                           </InputLabel>
                           <Input
                             id="standard-adornment-password"
+                            className='pl-10'
                             disableUnderline
                             value={form?.sku ? form?.sku : ''}
                             name="sku"
