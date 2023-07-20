@@ -291,214 +291,254 @@ function AddInsurance(props) {
           <></>
         ) : (
           <FuseAnimate animation="transition.slideRightIn" delay={500}>
-            <div className="p-16 sm:p-24 w-full">
-              <h1 className="underline">Insurance Details</h1>
-              <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} imageIndex={imageIndex} />
-              <div className="flex flex-row pl-16">
-                <div className="md:w-1/4 w-1/2">
-                  <div className="h-auto justify-between">
-                    <Autocomplete
-                      options={insurances}
-                      getOptionLabel={(option) =>
-                        option?.insuranceCompany || option
-                      }
-                      id="insuranceId"
-                      value={form?.insuranceCompany}
-                      inputValue={insuranceCompanyInput}
-                      freeSolo
-                      onInputChange={(e, value) => {
-                        setInsuranceCompanyInput(value);
-                        handleChange({
-                          target: { value: value, name: 'insuranceCompany' }
-                        });
-                      }}
-                      name="insuranceCompany"
-                      onChange={(_, value) =>
-                        handleChange({
-                          target: {
-                            value: value?.insuranceCompany,
-                            name: 'insuranceCompany'
-                          }
-                        })
-                      }
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Insurance Company"
-                          variant="outlined"
-                          margin="normal"
-                        />
-                      )}
-                    />
-                    <TextField
-                      className="mt-12 "
-                      fullWidth
-                      // disabled={disabledState}
-                      id="outlined-multiline-static"
-                      label="Primary Holder"
-                      value={form?.primaryHolder}
-                      onChange={handleChange}
-                      name={'primaryHolder'}
-                      variant="outlined"
-                    />
-                    <TextField
-                      className="mt-12 "
-                      fullWidth
-                      // disabled={disabledState}
-                      id="outlined-multiline-static"
-                      label="Policy #"
-                      value={form?.policyNo}
-                      onChange={handleChange}
-                      name={'policyNo'}
-                      variant="outlined"
-                    />
-                    <TextField
-                      className="mt-12 "
-                      fullWidth
-                      // disabled={disabledState}
-                      id="outlined-multiline-static"
-                      label="SSN"
-                      value={form?.ssn}
-                      onChange={handleChange}
-                      name={'ssn'}
-                      variant="outlined"
-                    />
-                    <TextField
-                      className="mt-12 "
-                      fullWidth
-                      // disabled={disabledState}
-                      id="outlined-multiline-static"
-                      label="Other"
-                      value={form?.other}
-                      onChange={handleChange}
-                      name={'other'}
-                      variant="outlined"
-                    />
-                  </div>
+            <div className="flex flex-col p-16">
+              <div className="py-4 border-1 border-black border-solid rounded-6">
+                <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                  <h2 className="font-700" style={{ color: '#f15a25' }}>
+                    INSURANCE DETAILS
+                  </h2>
                 </div>
-
-                <div className="p-8 flex-1 ml-10 h-auto justify-between">
-                  <div className="flex flex-col overflow-scroll">
-                    <label htmlFor="upload-photo1">
-                      <input
-                        style={{ display: 'none' }}
-                        id="upload-photo1"
-                        type="file"
-                        accept="image/*"
-                        onClick={(event) => {
-                          event.target.value = '';
-                        }}
-                        onChange={(e) =>
-                          setImages([
-                            ...images,
-                            {
-                              name: e.target.files[0].name,
-                              id: uuidv4(),
-                              url: URL.createObjectURL(e.target.files[0]),
-                              file: e.target.files[0]
+                <div className="flex flex-col w-full h-auto">
+                  <div className="p-16 sm:p-24 w-full">
+                    <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)} images={images?.length > 0 ? images.map((img) => img.url) : []} imageIndex={imageIndex} />
+                    <div className="flex flex-row pl-16">
+                      <div className="md:w-1/4 w-1/2">
+                        <div className="h-auto justify-between">
+                          <Autocomplete
+                            options={insurances}
+                            getOptionLabel={(option) =>
+                              option?.insuranceCompany || option
                             }
-                          ])
-                        }
-                      />
-                      <div className="flex flex-col p-12 w-full md:w-1/3">
-                        <Button
-                          className={classes.buttonBlack}
-                          style={{
-                            maxHeight: '100px',
-                            minHeight: '100px'
-                          }}
-                          variant="contained"
-                          component="span"
-                          color="secondary">
-                          <AddIcon /> UPLOAD PHOTO
-                        </Button>
-                      </div>
-                    </label>
-                    <div className="flex flex-col p-12 pt-0 w-full md:w-1/3">
-                      <Button
-                        onClick={() => {
-                          setOpenCameraDialog(true);
-                        }}
-                        className={classes.buttonBlack}
-                        style={{
-                          maxHeight: '100px',
-                          minHeight: '100px'
-                        }}
-                        variant="contained"
-                        component="span"
-                        color="secondary">
-                        <CameraAltIcon /> CAPTURE PHOTO
-                      </Button>
-                      <CameraDialog
-                        open={openCameraDialog}
-                        handleClose={handleCameraDilogClose}
-                        setImages={setImages}
-                        images={images}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col w-full overflow-scroll">
-                <div className="flex flex-row w-full overflow-scroll flex-wrap mt-10">
-                  {images.map((img, index) => (
-                    <div className="mb-8 w-224 mr-6 object-contain">
-                      <img
-                        className="w-224 h-128 shadow-1 rounded-4"
-                        onClick={() => {
-                          setImageIndex(index)
-                          setOpenImageSlider(true)
-                        }}
-                        src={img.url}
-                        key={img.name}
-                        alt={''}
-                      />
-                      <div className="flex flex-row justify-between items-center">
-                        <div className="truncate">
+                            id="insuranceId"
+                            value={form?.insuranceCompany}
+                            inputValue={insuranceCompanyInput}
+                            freeSolo
+                            onInputChange={(e, value) => {
+                              setInsuranceCompanyInput(value);
+                              handleChange({
+                                target: { value: value, name: 'insuranceCompany' }
+                              });
+                            }}
+                            name="insuranceCompany"
+                            onChange={(_, value) =>
+                              handleChange({
+                                target: {
+                                  value: value?.insuranceCompany,
+                                  name: 'insuranceCompany'
+                                }
+                              })
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Insurance Company"
+                                variant="outlined"
+                                margin="normal"
+                              />
+                            )}
+                          />
                           <TextField
                             className="mt-12 "
                             fullWidth
                             // disabled={disabledState}
                             id="outlined-multiline-static"
-                            value={images[index].name.split('.', 1)}
-                            onChange={(e) => {
-                              let newImages = images;
-                              newImages[index].name = e.target.value;
-                              setImages([...newImages]);
-                            }}
+                            label="Primary Holder"
+                            value={form?.primaryHolder}
+                            onChange={handleChange}
+                            name={'primaryHolder'}
+                            variant="outlined"
+                          />
+                          <TextField
+                            className="mt-12 "
+                            fullWidth
+                            // disabled={disabledState}
+                            id="outlined-multiline-static"
+                            label="Policy #"
+                            value={form?.policyNo}
+                            onChange={handleChange}
+                            name={'policyNo'}
+                            variant="outlined"
+                          />
+                          <TextField
+                            className="mt-12 "
+                            fullWidth
+                            // disabled={disabledState}
+                            id="outlined-multiline-static"
+                            label="SSN"
+                            value={form?.ssn}
+                            onChange={handleChange}
+                            name={'ssn'}
+                            variant="outlined"
+                          />
+                          <TextField
+                            className="mt-12 "
+                            fullWidth
+                            // disabled={disabledState}
+                            id="outlined-multiline-static"
+                            label="Other"
+                            value={form?.other}
+                            onChange={handleChange}
+                            name={'other'}
                             variant="outlined"
                           />
                         </div>
+                      </div>
 
-                        <IconButton
-                          onClick={() => {
-                            let newImages = images;
-                            newImages.splice(index, 1);
-                            setImages([...newImages]);
-                          }}
-                          aria-label="delete"
-                          className={classes.margin}>
-                          <DeleteIcon
-                            style={{ color: red[500] }}
-                            fontSize="small"
-                          />
-                        </IconButton>
+                      <div className="p-8 flex-1 ml-10 h-auto justify-between">
+                        <div className="flex flex-col overflow-scroll">
+                          <label htmlFor="upload-photo1">
+                            <input
+                              style={{ display: 'none' }}
+                              id="upload-photo1"
+                              type="file"
+                              accept="image/*"
+                              onClick={(event) => {
+                                event.target.value = '';
+                              }}
+                              onChange={(e) =>
+                                setImages([
+                                  ...images,
+                                  {
+                                    name: e.target.files[0].name,
+                                    id: uuidv4(),
+                                    url: URL.createObjectURL(e.target.files[0]),
+                                    file: e.target.files[0]
+                                  }
+                                ])
+                              }
+                            />
+                            <div className="flex flex-col p-12 w-full md:w-1/3">
+                              <Button
+                                className={classes.buttonBlack}
+                                style={{
+                                  maxHeight: '100px',
+                                  minHeight: '100px'
+                                }}
+                                variant="contained"
+                                component="span"
+                                color="secondary">
+                                <AddIcon /> UPLOAD PHOTO
+                              </Button>
+                            </div>
+                          </label>
+                          <div className="flex flex-col p-12 pt-0 w-full md:w-1/3">
+                            <Button
+                              onClick={() => {
+                                setOpenCameraDialog(true);
+                              }}
+                              className={classes.buttonBlack}
+                              style={{
+                                maxHeight: '100px',
+                                minHeight: '100px'
+                              }}
+                              variant="contained"
+                              component="span"
+                              color="secondary">
+                              <CameraAltIcon /> CAPTURE PHOTO
+                            </Button>
+                            <CameraDialog
+                              open={openCameraDialog}
+                              handleClose={handleCameraDilogClose}
+                              setImages={setImages}
+                              images={images}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  ))}
+                    <div className="flex flex-col w-full overflow-scroll">
+                      <div className="flex flex-row w-full overflow-scroll flex-wrap mt-10">
+                        {images.map((img, index) => (
+                          <div className="mb-8 w-224 mr-6 object-contain">
+                            <img
+                              className="w-224 h-128 shadow-1 rounded-4"
+                              onClick={() => {
+                                setImageIndex(index)
+                                setOpenImageSlider(true)
+                              }}
+                              src={img.url}
+                              key={img.name}
+                              alt={''}
+                            />
+                            <div className="flex flex-row justify-between items-center">
+                              <div className="truncate">
+                                <TextField
+                                  className="mt-12 "
+                                  fullWidth
+                                  // disabled={disabledState}
+                                  id="outlined-multiline-static"
+                                  value={images[index].name.split('.', 1)}
+                                  onChange={(e) => {
+                                    let newImages = images;
+                                    newImages[index].name = e.target.value;
+                                    setImages([...newImages]);
+                                  }}
+                                  variant="outlined"
+                                />
+                              </div>
+
+                              <IconButton
+                                onClick={() => {
+                                  let newImages = images;
+                                  newImages.splice(index, 1);
+                                  setImages([...newImages]);
+                                }}
+                                aria-label="delete"
+                                className={classes.margin}>
+                                <DeleteIcon
+                                  style={{ color: red[500] }}
+                                  fontSize="small"
+                                />
+                              </IconButton>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col p-12 md:w-1/4">
+              </div>
+              <div className="flex flex-col p-12">
+                <Button
+                  className={classes.button}
+                  style={{
+                    maxHeight: '40px',
+                    minHeight: '40px'
+                  }}
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    if ((userData.userRole === 'admin' || userData?.insuranceEdit) && onSubmit) {
+                      onSubmit()
+                    } else {
+                      toast.error('You are not authorized', {
+                        position: 'top-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        transition: Zoom
+                      });
+                    }
+                  }}>
+                  SAVE
+                </Button>
+              </div>
+              {routeParams?.insuranceId && (
+                <div className="flex flex-row p-12">
                   <Button
-                    className={classes.button}
                     style={{
-                      maxHeight: '40px',
-                      minHeight: '40px'
+                      maxHeight: '70px',
+                      minHeight: '70px',
+                      color: 'red'
                     }}
-                    variant="contained"
-                    color="secondary"
+                    variant="outlined"
                     onClick={() => {
-                      if ((userData.userRole === 'admin' || userData?.insuranceEdit) && onSubmit) {
-                        onSubmit()
+                      if (userData.userRole === 'admin' || userData?.insuranceDelete) {
+                        handleDelete()
                       } else {
                         toast.error('You are not authorized', {
                           position: 'top-center',
@@ -512,41 +552,13 @@ function AddInsurance(props) {
                         });
                       }
                     }}>
-                    SAVE
+                    <Icon>delete</Icon>
+                    DELETE INSURANCE
                   </Button>
                 </div>
-                {routeParams?.insuranceId && (
-                  <div className="flex flex-row p-12 md:w-1/3">
-                    <Button
-                      style={{
-                        maxHeight: '70px',
-                        minHeight: '70px',
-                        color: 'red'
-                      }}
-                      variant="outlined"
-                      onClick={() => {
-                        if (userData.userRole === 'admin' || userData?.insuranceDelete) {
-                          handleDelete()
-                        } else {
-                          toast.error('You are not authorized', {
-                            position: 'top-center',
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            transition: Zoom
-                          });
-                        }
-                      }}>
-                      <Icon>delete</Icon>
-                      DELETE INSURANCE
-                    </Button>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
+
           </FuseAnimate>
         )
       }

@@ -196,7 +196,7 @@ function ViewShowRoomInventory(props) {
                       <TextField
                         className="mt-8"
                         required
-                        label="Colour"
+                        label="Color"
                         id="colour"
                         name="colour"
                         value={form?.colour}

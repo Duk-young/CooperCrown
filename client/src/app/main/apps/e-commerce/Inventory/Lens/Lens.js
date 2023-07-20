@@ -295,7 +295,7 @@ const Lens = (props) => {
                         showMore={true}
                         searchable={true}
                         translations={{
-                          placeholder: 'Search for colours…'
+                          placeholder: 'Search for colors…'
                         }}
                       />
                     </Panel>

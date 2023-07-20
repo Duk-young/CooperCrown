@@ -78,7 +78,7 @@ const CustomHits = connectHits((props) => {
               <StyledTableCell>SKU</StyledTableCell>
               <StyledTableCell>BRAND</StyledTableCell>
               <StyledTableCell>MODEL</StyledTableCell>
-              <StyledTableCell>COLOUR</StyledTableCell>
+              <StyledTableCell>COLOR</StyledTableCell>
               <StyledTableCell>MATERIAL</StyledTableCell>
               <StyledTableCell>SHAPE</StyledTableCell>
               <StyledTableCell>SIZE</StyledTableCell>
@@ -377,14 +377,14 @@ const ShowRoomInventory = (props) => {
                     </Panel>
                   </div>
                   <div className="p-6">
-                    <Panel header="Colour">
+                    <Panel header="Color">
                       <RefinementList
                         attribute="colour"
                         limit={10}
                         showMore={true}
                         searchable={true}
                         translations={{
-                          placeholder: 'Search for colours…'
+                          placeholder: 'Search for colors…'
                         }}
                       />
                     </Panel>

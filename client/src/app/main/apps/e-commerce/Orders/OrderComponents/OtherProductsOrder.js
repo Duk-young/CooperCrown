@@ -195,7 +195,7 @@ const OtherProductsOrder = (props) => {
                       value={otherProduct?.otherProductColour ?? ''}
                       onChange={handleOtherProductChange}
                       name={'otherProductColour'}
-                      label="Colour"
+                      label="Color"
                       size="small"
                       disabled={true}
                       InputProps={{

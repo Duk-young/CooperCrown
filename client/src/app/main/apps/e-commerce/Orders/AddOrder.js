@@ -669,7 +669,7 @@ function AddOrder(props) {
   if (isLoading) return <FuseLoading />;
 
   return (
-    <div>
+    <div className='overflow-hidden'>
       <FusePageCarded
         header={
           <div className="flex flex-col w-full h-136">

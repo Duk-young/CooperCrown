@@ -725,7 +725,7 @@ const EyeglassessOrder = (props) => {
                         value={selectedFrame?.frameColour ?? ''}
                         onChange={handleSelectedFrameChange}
                         name={'frameColour'}
-                        label="Colour"
+                        label="Color"
                         InputProps={{
                           inputProps: {
                             style: { textAlign: 'center' }
