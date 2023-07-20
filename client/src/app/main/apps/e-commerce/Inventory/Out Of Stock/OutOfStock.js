@@ -14,10 +14,14 @@ import TableRow from '@material-ui/core/TableRow';
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
+    textAlign: 'center'
   },
   body: {
-    fontSize: 14
+    fontSize: 14,
+    padding: 10,
+    textAlign: 'center',
+    maxWidth: 'min-content'
   }
 }))(TableCell);
 

@@ -71,7 +71,7 @@ function UpdateCustomerForm(props) {
   const {
     form,
     handleChange,
-    error,
+    errors,
     setForm,
     familyMembers,
     setFamilyMembers,
@@ -100,8 +100,6 @@ function UpdateCustomerForm(props) {
     return phoneNumberString;
   }
 
-  useEffect(() => { }, [form]);
-
   return (
     <div>
       <div className="flex md:flex-row flex-col">
@@ -118,7 +116,8 @@ function UpdateCustomerForm(props) {
                 <div className="flex flex-col w-1/2">
                   <TextField
                     className="mt-8"
-                    error={error?.firstName}
+                    error={errors?.firstName}
+                    helperText={errors?.firstName}
                     required
                     label="First Name"
                     autoFocus
@@ -136,7 +135,8 @@ function UpdateCustomerForm(props) {
                   />
                   <TextField
                     className="mt-8"
-                    error={error?.lastName}
+                    error={errors?.lastName}
+                    helperText={errors?.lastName}
                     required
                     label="Last Name"
                     id="last-name"
@@ -153,17 +153,20 @@ function UpdateCustomerForm(props) {
                   />
                   <div className="flex">
                     <Typography
-                      className="username text-16 whitespace-no-wrap self-center"
+                      className={`username text-16 whitespace-no-wrap self-center ${errors?.dob ? 'text-red' : ''} `}
                       color="inherit">
-                      Date of Birth
+                      Date of Birth*
                     </Typography>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <Grid container justifyContent="start">
                         <KeyboardDatePicker
+                          required
                           className="ml-24"
                           margin="normal"
                           id="date-picker-dialog"
                           format="MM/dd/yyyy"
+                          error={errors?.dob}
+                          helperText={errors?.dob}
                           value={form?.dob}
                           onChange={(date) => {
                             handleChange({
@@ -179,15 +182,15 @@ function UpdateCustomerForm(props) {
                   </div>
                   <div className="flex mt-10 flex-row justify-between">
                     <Typography
-                      className={`username text-16 whitespace-no-wrap self-center ${error?.gender ? 'text-red' : ''
-                        } `}
+                      className={`username text-16 whitespace-no-wrap self-center ${errors?.gender ? 'text-red' : ''} `}
                       color="inherit">
-                      Gender
+                      Gender*
                     </Typography>
                     <FormControl component="fieldset">
                       <RadioGroup
                         row
                         aria-label="gender"
+                        error={errors?.gender}
                         name="gender"
                         value={form?.gender}
                         onChange={handleChange}>
@@ -207,24 +210,26 @@ function UpdateCustomerForm(props) {
                           label="Other"
                         />
                       </RadioGroup>
+                      <FormHelperText className=' text-red'>{errors?.gender}</FormHelperText>
                     </FormControl>
                   </div>
                   <div className="flex">
                     <Typography
-                      className="username text-16 whitespace-no-wrap self-center"
+                      className={`username text-16 whitespace-no-wrap self-center ${errors?.ethnicity ? 'text-red' : ''} `}
                       color="inherit">
-                      Ethnicity
+                      Ethnicity*
                     </Typography>
                     <div className="w-full">
                       <FormControl className="pl-32 w-full">
                         <Select
                           labelId="demo-simple-select-autowidth-label"
                           id="ethnicityId"
-                          defaultValue={form?.ethnicity}
+                          required
                           value={form?.ethnicity}
                           name="ethnicity"
                           onChange={handleChange}
-                          error={error?.ethnicity}
+                          error={errors?.ethnicity}
+                          helperText={errors?.ethnicity}
                           autoWidth>
                           <MenuItem value={'American Indian & Alaska Native'}>
                             American Indian & Alaska Native
@@ -248,14 +253,13 @@ function UpdateCustomerForm(props) {
                           </MenuItem>
                           <MenuItem value={'Others'}>Others</MenuItem>
                         </Select>
-                        <FormHelperText>Select from the list</FormHelperText>
+                        {errors?.ethnicity && <FormHelperText className='text-red'>{errors?.ethnicity}</FormHelperText>}
+                        {!errors?.ethnicity && <FormHelperText>Select from the list</FormHelperText>}
                       </FormControl>
                     </div>
                   </div>
                   <TextField
                     className="mt-10"
-                    error={form?.code === ''}
-                    required
                     multiline
                     maxRows={7}
                     minRows={7}
@@ -276,9 +280,11 @@ function UpdateCustomerForm(props) {
                 <div className="flex flex-col w-1/2 pl-10">
                   <TextField
                     className="mt-8"
+                    required
                     id="outlined-multiline-static"
                     label="Address"
-                    error={error?.address}
+                    error={errors?.address}
+                    helperText={errors?.address}
                     value={form?.address}
                     onChange={(e) => handleChange({
                       target: {
@@ -292,7 +298,8 @@ function UpdateCustomerForm(props) {
                   <TextField
                     className="mt-8"
                     required
-                    error={error?.city}
+                    error={errors?.city}
+                    helperText={errors?.city}
                     label="City"
                     id="city"
                     name="city"
@@ -311,6 +318,7 @@ function UpdateCustomerForm(props) {
                     id="stateId"
                     value={form?.state}
                     fullWidth
+                    error={errors?.state}
                     getOptionSelected={(option, value) => option.name === value}
                     inputValue={state}
                     onInputChange={(e, value) => setState(value)}
@@ -321,13 +329,15 @@ function UpdateCustomerForm(props) {
                       })
                     }
                     renderInput={(params) => (
-                      <TextField {...params} label="State" margin="normal" />
+                      <TextField {...params} label="State*" margin="normal" />
                     )}
                   />
+                  <FormHelperText className=' text-red'>{errors?.state}</FormHelperText>
                   <TextField
                     className="mt-8"
                     required
-                    error={error?.zipCode}
+                    error={errors?.zipCode}
+                    helperText={errors?.zipCode}
                     label="ZIP Code"
                     id="zip-code"
                     name="zipCode"
@@ -342,7 +352,8 @@ function UpdateCustomerForm(props) {
                     label="Phone 1"
                     id="phone1"
                     name="phone1"
-                    error={error?.phone1}
+                    error={errors?.phone1}
+                    helperText={errors?.phone1}
                     value={form?.phone1}
                     onChange={handleChange}
                     variant="outlined"
@@ -350,7 +361,6 @@ function UpdateCustomerForm(props) {
                   />
                   <TextField
                     className="mt-8"
-                    required
                     label="Phone 2"
                     id="phone2"
                     name="phone2"
@@ -361,11 +371,9 @@ function UpdateCustomerForm(props) {
                   />
                   <TextField
                     className="mt-8"
-                    required
                     label="Email"
                     id="email"
                     name="email"
-                    error={error?.email}
                     value={form?.email}
                     onChange={handleChange}
                     variant="outlined"
