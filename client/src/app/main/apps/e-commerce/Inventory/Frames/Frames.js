@@ -15,7 +15,6 @@ import { toast, Zoom } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import Dialog from '@material-ui/core/Dialog';
@@ -30,7 +29,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import LoadingDialog from '../../ReusableComponents/LoadingDialog';
 
-const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 const VirtualRefinementList = connectRefinementList(() => null);
 
 const CustomHits = connectHits((props) => {
@@ -74,7 +72,7 @@ const CustomHits = connectHits((props) => {
               <StyledTableCell>SKU</StyledTableCell>
               <StyledTableCell>BRAND</StyledTableCell>
               <StyledTableCell>MODEL</StyledTableCell>
-              <StyledTableCell>COLOUR</StyledTableCell>
+              <StyledTableCell>COLOR</StyledTableCell>
               <StyledTableCell>MATERIAL</StyledTableCell>
               <StyledTableCell>SHAPE</StyledTableCell>
               <StyledTableCell>SIZE</StyledTableCell>
@@ -133,11 +131,14 @@ const CustomHits = connectHits((props) => {
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
+    textAlign: 'center'
   },
   body: {
     fontSize: 14,
-    padding: 0
+    padding: 10,
+    textAlign: 'center',
+    maxWidth: 'min-content'
   }
 }))(TableCell);
 
@@ -189,7 +190,7 @@ const Frames = (props) => {
   return (
     <div className="flex flex-col w-full ">
       <InstantSearch
-        searchClient={searchClient}
+        searchClient={props?.searchClient}
         indexName="frames"
         onSearchStateChange={(state) => {
           if (
@@ -333,14 +334,14 @@ const Frames = (props) => {
                     </Panel>
                   </div>
                   <div className="p-6">
-                    <Panel header="Colour">
+                    <Panel header="Color">
                       <RefinementList
                         attribute="colour"
                         limit={10}
                         showMore={true}
                         searchable={true}
                         translations={{
-                          placeholder: 'Search for colours…'
+                          placeholder: 'Search for colors…'
                         }}
                       />
                     </Panel>

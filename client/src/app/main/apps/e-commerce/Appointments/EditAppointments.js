@@ -1,28 +1,38 @@
 import { firestore } from 'firebase';
+import { makeStyles } from '@material-ui/core/styles';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 import { toast, Zoom } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import Button from '@material-ui/core/Button';
+import CustomerInfo from './CustomerInfo';
 import DateFnsUtils from '@date-io/date-fns';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseLoading from '@fuse/core/FuseLoading';
-import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker
-} from '@material-ui/pickers';
+
+const useStyles = makeStyles({
+    orangeButton: {
+        backgroundColor: '#f15a25',
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: '#f47b51',
+            color: '#fff'
+        }
+    }
+});
 
 const EditAppointments = (props) => {
+    const classes = useStyles();
     const dispatch = useDispatch();
     const routeParams = useParams();
     const [customer, setCustomer] = useState({});
@@ -32,15 +42,6 @@ const EditAppointments = (props) => {
     const [appointments, setAppointments] = useState([]);
     const { form, handleChange, setForm } = useForm(null);
 
-    function formatPhoneNumber(phoneNumberString) {
-        var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
-        var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-        if (match) {
-            var intlCode = match[1] ? '+1 ' : '';
-            return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-        }
-        return phoneNumberString;
-    }
 
     useEffect(() => {
         setisLoading(true);
@@ -82,7 +83,7 @@ const EditAppointments = (props) => {
                 doctorsData.push(doc.data());
             });
 
-
+            doctorsData = sortAlphabetically(doctorsData, 'fullName')
             setDoctors(doctorsData.filter((obj) => { return obj.showrooms?.some((showroom) => showroom.showRoomId === appointment?.showRoomId) }))
             setisLoading(false);
         };
@@ -129,187 +130,182 @@ const EditAppointments = (props) => {
         <></>
     ) : (
         <div className="flex flex-col w-full">
-            <div className="flex flex-row p-16 sm:p-24 w-full">
-                <div className="p-8 w-1/3 h-auto border-grey-400 border-solid border-1">
-                    <h1 className="underline font-700">Patient Details</h1>
-                    <h2>{`Customer Id: ${customer.customerId}`}</h2>
-                    <h2>{`Name: ${customer?.firstName} ${customer.lastName} `}</h2>
-                    <h2>{`Address: ${customer.address}, ${customer.state}, ${customer.zipCode}`}</h2>
-                    <h2>{`Phone: ${formatPhoneNumber(customer.phone1)}`}</h2>
-                    <h2>{`Email: ${customer.email}`}</h2>
-                    <h2>{`DOB: ${customer.dob.toDateString()}`}</h2>
-                    <h2>{`Sex: ${customer.gender}`}</h2>
-                </div>
-                <div className="p-8 w-2/3 h-auto relative">
-                    <h1>Appointment Details</h1>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justifyContent="space-around">
-                            <KeyboardDatePicker
-                                margin="none"
-                                id="date-picker-dialog"
-                                label="Select Date"
-                                format="MM/dd/yyyy"
-                                value={form?.start}
-                                onChange={(date) => {
-                                    handleChange({
-                                        target: { name: 'start', value: date }
-                                    });
-                                }}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date'
-                                }}
-                            />
-                            <KeyboardTimePicker
-                                margin="none"
-                                id="time-picker"
-                                label="Select Start Time"
-                                minutesStep={15}
-                                value={form?.start}
-                                onChange={(date) => {
-                                    handleChange({
-                                        target: { name: 'start', value: date }
-                                    });
-                                }}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change time'
-                                }}
-                            />
-                        </Grid>
-                    </MuiPickersUtilsProvider>
-                    <div className="flex flex-col w-full">
-                        <div className="flex flex-row justify-around p-12">
-                            <FormControl>
-                                <Select
-                                    labelId="demo-simple-select-autowidth-label"
-                                    id="ethnicityId"
-                                    defaultValue={form?.duration}
-                                    value={form?.duration}
-                                    name="duration"
-                                    onChange={handleChange}
-                                    autoWidth>
-                                    <MenuItem value={15}>15 Minutes</MenuItem>
-                                    <MenuItem value={30}>30 Minutes</MenuItem>
-                                    <MenuItem value={45}>45 Minutes</MenuItem>
-                                    <MenuItem value={60}>One Hour</MenuItem>
-                                </Select>
-                                <FormHelperText>Select duration from the list</FormHelperText>
-                            </FormControl>
-                            <FormControl>
-                                <Select
-                                    labelId="demo-simple-select-autowidth-label"
-                                    id="doctorId"
-                                    value={form?.doctorId}
-                                    name="doctorId"
-                                    onChange={handleChange}
-                                    autoWidth>
-                                    {doctors.map((row) => (
-                                        <MenuItem value={row?.doctorId}>
-                                            {row?.fullName}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                <FormHelperText>Select doctor from the list</FormHelperText>
-                            </FormControl>
-                        </div>
-                        <div className="flex flex-row justify-center">
-                            <FormControl>
-                                <Select
-                                    labelId="demo-simple-select-autowidth-label"
-                                    id="showRoomId"
-                                    disabled
-                                    defaultValue={form?.showRoomId}
-                                    value={form?.showRoomId}
-                                    name="showRoomId"
-                                    onChange={handleChange}
-                                    autoWidth>
-                                    {showRooms.map((row) => (
-                                        <MenuItem value={row?.showRoomId}>
-                                            {row?.locationName}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                <FormHelperText>Select showroom from the list</FormHelperText>
-                            </FormControl>
+            <div className="flex flex-col w-full">
+                <div className="flex flex-row p-16 sm:p-24 w-full gap-10">
+                    <div className='w-1/2'>
+                        <CustomerInfo customer={customer} />
+                    </div>
+                    <div className="w-1/2 h-auto relative">
+                        <div className="w-full border-1 border-black border-solid rounded-6">
+                            <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+                                <h1 className="font-700 truncate" style={{ color: '#f15a25' }}>
+                                    APPOINTMENT DETAILS
+                                </h1>
+                            </div>
+                            <div className='flex flex-col w-full gap-10 p-16 mb-6'>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <KeyboardDatePicker
+                                        margin="none"
+                                        id="date-picker-dialog"
+                                        label="Select Date"
+                                        format="MM/dd/yyyy"
+                                        value={form?.start}
+                                        onChange={(date) => {
+                                            handleChange({
+                                                target: { name: 'start', value: date }
+                                            });
+                                        }}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date'
+                                        }}
+                                    />
+                                    <KeyboardTimePicker
+                                        margin="none"
+                                        id="time-picker"
+                                        label="Select Start Time"
+                                        minutesStep={15}
+                                        value={form?.start}
+                                        onChange={(date) => {
+                                            handleChange({
+                                                target: { name: 'start', value: date }
+                                            });
+                                        }}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change time'
+                                        }}
+                                    />
+                                </MuiPickersUtilsProvider>
+                                <FormControl>
+                                    <FormHelperText>Select duration from the list</FormHelperText>
+                                    <Select
+                                        labelId="demo-simple-select-autowidth-label"
+                                        id="ethnicityId"
+                                        defaultValue={form?.duration}
+                                        value={form?.duration}
+                                        name="duration"
+                                        onChange={handleChange}
+                                        autoWidth>
+                                        <MenuItem value={15}>15 Minutes</MenuItem>
+                                        <MenuItem value={30}>30 Minutes</MenuItem>
+                                        <MenuItem value={45}>45 Minutes</MenuItem>
+                                        <MenuItem value={60}>One Hour</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <FormControl>
+                                    <FormHelperText>Select doctor from the list</FormHelperText>
+                                    <Select
+                                        labelId="demo-simple-select-autowidth-label"
+                                        id="doctorId"
+                                        value={form?.doctorId}
+                                        name="doctorId"
+                                        onChange={handleChange}
+                                        autoWidth>
+                                        {doctors.map((row) => (
+                                            <MenuItem value={row?.doctorId}>
+                                                {row?.fullName}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl>
+                                    <FormHelperText>Select showroom from the list</FormHelperText>
+                                    <Select
+                                        labelId="demo-simple-select-autowidth-label"
+                                        id="showRoomId"
+                                        disabled
+                                        defaultValue={form?.showRoomId}
+                                        value={form?.showRoomId}
+                                        name="showRoomId"
+                                        onChange={handleChange}
+                                        autoWidth>
+                                        {showRooms.map((row) => (
+                                            <MenuItem value={row?.showRoomId}>
+                                                {row?.locationName}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="flex flex-row  w-full">
-                <div className="p-8 w-full h-auto relative">
-                    <TextField
-                        className="p-10"
-                        fullWidth
-                        id="outlined-multiline-static"
-                        label="Medical History"
-                        multiline
-                        rows={15}
-                        value={customer?.medicalHistory}
-                        onChange={(e) => {
-                            setCustomer({
-                                ...customer,
-                                medicalHistory: e.target.value
-                            });
-                        }}
-                        name={'medicalHistory'}
-                        variant="outlined"
-                    />
+                <div className="flex flex-row  w-full">
+                    <div className="p-8 w-full h-auto relative">
+                        <TextField
+                            className="p-10"
+                            fullWidth
+                            id="outlined-multiline-static"
+                            label="Medical History"
+                            multiline
+                            rows={15}
+                            value={customer?.medicalHistory}
+                            onChange={(e) => {
+                                setCustomer({
+                                    ...customer,
+                                    medicalHistory: e.target.value
+                                });
+                            }}
+                            name={'medicalHistory'}
+                            variant="outlined"
+                        />
+                    </div>
+                </div>
+                <div className='flex flex-col w-full p-16'>
+                    <Button
+                        className={classes.orangeButton}
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => {
+                            if (form?.showRoomId && form?.duration) {
+                                let start = firestore.Timestamp.fromDate(form?.start);
+                                let end = firestore.Timestamp.fromDate(
+                                    moment(form?.start).add(form?.duration, 'm').toDate()
+                                );
+                                let count = 0;
+                                appointments
+                                    .filter((word) => word.showRoomId === form?.showRoomId && word?.appointmentId !== form?.appointmentId)
+                                    .map((row) => {
+                                        if (
+                                            (start >= row?.start && start < row?.end) ||
+                                            (end > row?.start && end <= row?.end) ||
+                                            (row?.start >= start && row?.start < end) ||
+                                            (row?.end > start && row?.end <= end)
+                                        ) {
+                                            count++;
+                                        }
+                                        return null;
+                                    });
+                                if (count > 0) {
+                                    toast.error('Selected slot is unavailable!', {
+                                        position: 'top-center',
+                                        autoClose: 5000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        transition: Zoom
+                                    });
+                                } else {
+                                    onSubmit();
+                                }
+                            } else {
+                                toast.error('Showroom and duration are mandatory fields', {
+                                    position: 'top-center',
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    transition: Zoom
+                                });
+                            }
+                        }}>
+                        Save Details
+                    </Button>
                 </div>
             </div>
-            {/* <FuseAnimate animation="transition.slideRightIn" delay={300}> */}
-            <Button
-                className="whitespace-no-wrap normal-case"
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                    if (form?.showRoomId && form?.duration) {
-                        let start = firestore.Timestamp.fromDate(form?.start);
-                        let end = firestore.Timestamp.fromDate(
-                            moment(form?.start).add(form?.duration, 'm').toDate()
-                        );
-                        let count = 0;
-                        appointments
-                            .filter((word) => word.showRoomId === form?.showRoomId && word?.appointmentId !== form?.appointmentId)
-                            .map((row) => {
-                                if (
-                                    (start >= row?.start && start < row?.end) ||
-                                    (end > row?.start && end <= row?.end) ||
-                                    (row?.start >= start && row?.start < end) ||
-                                    (row?.end > start && row?.end <= end)
-                                ) {
-                                    count++;
-                                }
-                                return null;
-                            });
-                        if (count > 0) {
-                            toast.error('Selected slot is unavailable!', {
-                                position: 'top-center',
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                transition: Zoom
-                            });
-                        } else {
-                            onSubmit();
-                        }
-                    } else {
-                        toast.error('Showroom and duration are mandatory fields', {
-                            position: 'top-center',
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            transition: Zoom
-                        });
-                    }
-                }}>
-                Save Details
-            </Button>
-            {/* </FuseAnimate> */}
         </div>
     );
 };

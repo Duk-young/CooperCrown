@@ -3,11 +3,14 @@ import '../e-commerce/Customers/Search.css';
 import '../e-commerce/Customers/Themes.css';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
+import { makeStyles } from '@material-ui/core/styles';
 import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
-import { withStyles } from '@material-ui/core/styles';
+import { sortAlphabetically } from '../e-commerce/ReusableComponents/HelperFunctions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useHistory } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
 import * as Actions from './store/actions';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
@@ -16,10 +19,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import DateFnsUtils from '@date-io/date-fns';
 import Dialog from '@material-ui/core/Dialog';
-import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import moment from 'moment';
@@ -39,11 +41,18 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker
-} from '@material-ui/pickers';
+
+const useStyles = makeStyles({
+  orangeButton: {
+      backgroundColor: '#f15a25',
+      color: '#fff',
+      '&:hover': {
+          backgroundColor: '#f47b51',
+          color: '#fff'
+      }
+  }
+});
+
 const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const CustomHits = connectHits(({ hits, form, closeComposeDialog }) => {
@@ -116,6 +125,7 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 export default function NewAppointmentDialog() {
+  const classes = useStyles();
   const { form, handleChange, setForm } = useForm(null);
   const [error, setError] = useState();
   const [appointments, setAppointments] = useState([]);
@@ -143,7 +153,7 @@ export default function NewAppointmentDialog() {
             newAppointmentDialog.data.start,
             'MM/DD/YYYY, h:mm:ss a'
           ).toDate(),
-          duration: 30 
+          duration: 30
         });
       }
 
@@ -164,7 +174,7 @@ export default function NewAppointmentDialog() {
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
 
       let doctorsData = [];
       const queryDoctors = await firestore().collection('doctors').get();
@@ -172,11 +182,12 @@ export default function NewAppointmentDialog() {
       queryDoctors.forEach((doc) => {
         doctorsData.push(doc.data());
       });
+      doctorsData = sortAlphabetically(doctorsData, 'fullName')
       if (newAppointmentDialog?.data?.showRoomId && doctorsData?.length > 0) {
         setDoctors(doctorsData.filter((obj) => {
           return obj.showrooms?.some((showroom) => showroom.showRoomId === newAppointmentDialog?.data?.showRoomId);
         }))
-      }else {setDoctors(doctorsData);}
+      } else { setDoctors(doctorsData); }
 
       setError('');
     };
@@ -259,17 +270,17 @@ export default function NewAppointmentDialog() {
       onClose={closeComposeDialog}
       aria-labelledby="simple-dialog-title">
       <AppBar position="static">
-        <Toolbar className="flex w-full">
-          <Typography variant="subtitle1" color="inherit">
-            Appointment Details
+        <Toolbar className="flex w-full justify-center">
+          <Typography variant="subtitle1" color="inherit" align='center'>
+            {form?.appointmentType === 'new' && 'NEW'} {form?.appointmentType === 'existing' && 'EXISTING'} CUSTOMER APPOINTMENT
           </Typography>
         </Toolbar>
       </AppBar>
 
       <div className="p-8 w-full h-auto relative">
-        <FormControl component="fieldset">
+        <FormControl component="fieldset" className='w-full'>
           <RadioGroup
-            className="ml-60"
+            className="flex flex-row justify-center gap-20 w-full"
             row
             aria-label="appointmentType"
             name="appointmentType"
@@ -479,7 +490,11 @@ export default function NewAppointmentDialog() {
           />
 
           <div className="flex flex-col p-10 w-full ">
-            <Fab
+            <Button
+              className={classes.orangeButton}
+              variant="contained"
+              color="secondary"
+              disabled={disabledState}
               onClick={() => {
                 if (form?.firstName && form?.lastName && form?.showRoomId && form?.duration) {
                   let start = firestore.Timestamp.fromDate(form?.start);
@@ -509,12 +524,9 @@ export default function NewAppointmentDialog() {
                   setError('Name, showroom or duration cannot be Empty!');
                 }
               }}
-              disabled={disabledState}
-              variant="extended"
-              color="primary"
-              aria-label="add">
+            >
               Save Details
-            </Fab>
+            </Button>
           </div>
           <h3 className="text-red-900">{error ? error : ''}</h3>
         </div>

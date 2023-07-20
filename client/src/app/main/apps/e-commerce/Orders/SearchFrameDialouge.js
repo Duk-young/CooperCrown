@@ -37,7 +37,7 @@ const CustomHits = connectHits(({ hits, form, setForm, handleClose }) => {
           <StyledTableCell>SKU</StyledTableCell>
           <StyledTableCell>Brand</StyledTableCell>
           <StyledTableCell>Description</StyledTableCell>
-          <StyledTableCell>Colour</StyledTableCell>
+          <StyledTableCell>Color</StyledTableCell>
           <StyledTableCell>Material</StyledTableCell>
           <StyledTableCell>Shape</StyledTableCell>
           <StyledTableCell>Options</StyledTableCell>
@@ -106,7 +106,7 @@ const CustomProductHits = connectHits(
             <StyledTableCell>SKU</StyledTableCell>
             <StyledTableCell>Brand</StyledTableCell>
             <StyledTableCell>Description</StyledTableCell>
-            <StyledTableCell>Colour</StyledTableCell>
+            <StyledTableCell>Color</StyledTableCell>
             <StyledTableCell>Material</StyledTableCell>
             <StyledTableCell>Shape</StyledTableCell>
             <StyledTableCell>Options</StyledTableCell>

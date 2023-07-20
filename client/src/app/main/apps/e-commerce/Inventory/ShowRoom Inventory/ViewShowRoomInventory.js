@@ -22,6 +22,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import ImageSlider from '../../ReusableComponents/ImageSlider';
 import CustomAlert from '../../ReusableComponents/CustomAlert';
+import { sortAlphabetically } from '../../ReusableComponents/HelperFunctions';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -106,7 +107,7 @@ function ViewShowRoomInventory(props) {
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
 
       setisLoading(false);
     };
@@ -195,7 +196,7 @@ function ViewShowRoomInventory(props) {
                       <TextField
                         className="mt-8"
                         required
-                        label="Colour"
+                        label="Color"
                         id="colour"
                         name="colour"
                         value={form?.colour}

@@ -725,7 +725,7 @@ const EyeglassessOrder = (props) => {
                         value={selectedFrame?.frameColour ?? ''}
                         onChange={handleSelectedFrameChange}
                         name={'frameColour'}
-                        label="Colour"
+                        label="Color"
                         InputProps={{
                           inputProps: {
                             style: { textAlign: 'center' }
@@ -865,7 +865,12 @@ const EyeglassessOrder = (props) => {
                         className="w-full"
                         name="frameMemo"
                         value={selectedFrame?.frameMemo ?? ''}
-                        onChange={handleSelectedFrameChange}
+                        onChange={(e) => handleSelectedFrameChange({
+                          target: {
+                            name: 'frameMemo',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         disabled={disabledState}
                       />
                       <TextField
@@ -961,9 +966,14 @@ const EyeglassessOrder = (props) => {
                         disabled={disabledState}
                         id="standard-basic"
                         value={selectedFrame?.lensColour ?? ''}
-                        onChange={handleSelectedFrameChange}
+                        onChange={(e) => handleSelectedFrameChange({
+                          target: {
+                            name: 'lensColour',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         name={'lensColour'}
-                        label="Colour/Tint"
+                        label="Color/Tint"
                         InputProps={{
                           inputProps: {
                             style: { textAlign: 'center' }
@@ -977,7 +987,12 @@ const EyeglassessOrder = (props) => {
                         disabled={disabledState}
                         id="standard-basic"
                         value={selectedFrame?.lensDetail ?? ''}
-                        onChange={handleSelectedFrameChange}
+                        onChange={(e) => handleSelectedFrameChange({
+                          target: {
+                            name: 'lensDetail',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         name={'lensDetail'}
                         label="Detail"
                         InputProps={{
@@ -1050,7 +1065,12 @@ const EyeglassessOrder = (props) => {
                       className="w-full"
                       name="lensMemo"
                       value={selectedFrame?.lensMemo ?? ''}
-                      onChange={handleSelectedFrameChange}
+                      onChange={(e) => handleSelectedFrameChange({
+                        target: {
+                          name: 'lensMemo',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
                       disabled={disabledState}
                     />
                     <TextField

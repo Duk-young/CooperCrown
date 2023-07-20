@@ -38,6 +38,7 @@ import SalesRatioPieChart from './SalesRatioPieChart';
 import SunglassesChart from './SunglassesChart';
 import TopDesignsTable from './TopDesignsTable';
 import withReducer from 'app/store/withReducer';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 
 const useStyles = makeStyles({
   flexGrow: {
@@ -134,7 +135,7 @@ function Reports() {
       queryShowrooms.forEach((doc) => {
         showroomsData.push(doc.data());
       });
-      setShowrooms(showroomsData)
+      setShowrooms(sortAlphabetically(showroomsData, 'locationName'))
 
       setIsLoading(false)
     };

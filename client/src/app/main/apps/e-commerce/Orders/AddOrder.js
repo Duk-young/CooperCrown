@@ -51,6 +51,7 @@ import ThermalReceipt from './ThermalReceipt';
 import OrderTicket from './OrderTicket';
 import PickupReceipt from './OrderComponents/PickupReceipt';
 import CustomAlert from '../ReusableComponents/CustomAlert';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -412,14 +413,14 @@ function AddOrder(props) {
       queryShowroom.forEach((doc) => {
         resultShowroom.push(doc.data());
       });
-      setShowroom(resultShowroom);
+      setShowroom(sortAlphabetically(resultShowroom, 'locationName'));
 
       const queryDiscounts = await firestore().collection('discounts').get();
       let resultDiscounts = [];
       queryDiscounts.forEach((doc) => {
         resultDiscounts.push(doc.data());
       });
-      setDiscounts(resultDiscounts);
+      setDiscounts(sortAlphabetically(resultDiscounts, 'code'));
 
       const queryContactLens = await firestore().collection('contacts').get();
 
@@ -520,7 +521,7 @@ function AddOrder(props) {
         queryInsurance.forEach((doc) => {
           resultInsurance.push(doc.data());
         });
-        setInsurances(resultInsurance);
+        setInsurances(sortAlphabetically(resultInsurance, 'insuranceCompany'));
         setisLoading(false);
       };
       fetchDetails();
@@ -668,7 +669,7 @@ function AddOrder(props) {
   if (isLoading) return <FuseLoading />;
 
   return (
-    <div>
+    <div className='overflow-hidden'>
       <FusePageCarded
         header={
           <div className="flex flex-col w-full h-136">
@@ -978,7 +979,12 @@ function AddOrder(props) {
                                     disabled={disabledState}
                                     value={form?.discountMemo}
                                     name="discountMemo"
-                                    onChange={handleChange}
+                                    onChange={(e) => handleChange({
+                                      target: {
+                                        name: 'discountMemo',
+                                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                                      }
+                                    })}
                                   />
                                   <FormControl
                                     disabled={true}
@@ -1031,7 +1037,12 @@ function AddOrder(props) {
                                     disabled={disabledState}
                                     value={form?.insuranceOneMemo ?? ''}
                                     name="insuranceOneMemo"
-                                    onChange={handleChange}
+                                    onChange={(e) => handleChange({
+                                      target: {
+                                        name: 'insuranceOneMemo',
+                                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                                      }
+                                    })}
                                   />
                                   <FormControl
                                     className="w-1/2"
@@ -1086,7 +1097,12 @@ function AddOrder(props) {
                                     disabled={disabledState}
                                     value={form?.insuranceTwoMemo ?? ''}
                                     name="insuranceTwoMemo"
-                                    onChange={handleChange}
+                                    onChange={(e) => handleChange({
+                                      target: {
+                                        name: 'insuranceTwoMemo',
+                                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                                      }
+                                    })}
                                   />
                                   <FormControl
                                     className="w-1/2"

@@ -16,7 +16,6 @@ import { toast, Zoom } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import Dialog from '@material-ui/core/Dialog';
@@ -24,6 +23,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import LoadingDialog from '../../ReusableComponents/LoadingDialog';
 import MenuItem from '@material-ui/core/MenuItem';
 import React, { useState, useEffect } from 'react';
 import Select from '@material-ui/core/Select';
@@ -33,9 +33,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import LoadingDialog from '../../ReusableComponents/LoadingDialog';
-
-const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
+import { sortAlphabetically } from '../../ReusableComponents/HelperFunctions';
 
 const VirtualRefinementList = connectRefinementList(() => null);
 
@@ -80,7 +78,7 @@ const CustomHits = connectHits((props) => {
               <StyledTableCell>SKU</StyledTableCell>
               <StyledTableCell>BRAND</StyledTableCell>
               <StyledTableCell>MODEL</StyledTableCell>
-              <StyledTableCell>COLOUR</StyledTableCell>
+              <StyledTableCell>COLOR</StyledTableCell>
               <StyledTableCell>MATERIAL</StyledTableCell>
               <StyledTableCell>SHAPE</StyledTableCell>
               <StyledTableCell>SIZE</StyledTableCell>
@@ -141,11 +139,14 @@ const CustomHits = connectHits((props) => {
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
+    textAlign: 'center'
   },
   body: {
     fontSize: 14,
-    padding: 10
+    padding: 10,
+    textAlign: 'center',
+    maxWidth: 'min-content'
   }
 }))(TableCell);
 
@@ -198,7 +199,7 @@ const ShowRoomInventory = (props) => {
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
     };
     fetchShowRooms();
   }, []);
@@ -211,7 +212,7 @@ const ShowRoomInventory = (props) => {
   return (
     <div className="flex flex-col w-full ">
       <InstantSearch
-        searchClient={searchClient}
+        searchClient={props?.searchClient}
         indexName="showRoomInventory"
         onSearchStateChange={(state) => {
           if (
@@ -379,14 +380,14 @@ const ShowRoomInventory = (props) => {
                     </Panel>
                   </div>
                   <div className="p-6">
-                    <Panel header="Colour">
+                    <Panel header="Color">
                       <RefinementList
                         attribute="colour"
                         limit={10}
                         showMore={true}
                         searchable={true}
                         translations={{
-                          placeholder: 'Search for colours…'
+                          placeholder: 'Search for colors…'
                         }}
                       />
                     </Panel>

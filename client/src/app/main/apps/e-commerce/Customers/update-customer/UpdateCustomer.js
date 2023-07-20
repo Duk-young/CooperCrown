@@ -22,14 +22,14 @@ import UpdateCustomerForm from './UpdateCustomerForm';
 import withReducer from 'app/store/withReducer';
 
 function UpdateCustomer(props) {
-  const [error] = useState(null);
-  // const [errors, setErrors] = useState({});
+
   const [familyMembers, setFamilyMembers] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [isLoading, setisLoading] = useState(true);
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
   const [templates, setTemplates] = useState({});
+  const [errors, setErrors] = useState({})
   const { form, handleChange, setForm } = useForm(null);
   const dispatch = useDispatch();
   const routeParams = useParams();
@@ -94,49 +94,11 @@ function UpdateCustomer(props) {
     }
   }, [routeParams.customerId, setForm]);
 
-  // const validate = () => {
-  //   const result = Joi.validate(form, schema);
-
-  // toast.error('Please Fill Required Fields!', {
-  //   position: 'top-center',
-  //   autoClose: 5000,
-  //   hideProgressBar: false,
-  //   closeOnClick: true,
-  //   pauseOnHover: true,
-  //   draggable: true,
-  //   progress: undefined,
-  //   transition: Zoom
-  // });
-  //   if (result?.error?.details) {
-  //     setError({
-  //       [result?.error?.details[0]?.context?.label]: true
-  //     });
-  //     return false;
-  //   }
-  //   return true;
-  // };
 
   if (isLoading) {
     return <FuseLoading />;
   }
 
-  //   const isFormValid = () => {
-  //  const errs = {};
-
-  //   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   const errs = isFormValid();
-  //   setErrors(errs);
-
-  //   if (Object.entries(errs).some((err) => err !== '')) {
-  //     return;
-  //   }
-
-  //   console.log('submitting!!!');
-  // };
 
   const onSubmit = async () => {
     // if (!validate()) return;
@@ -231,6 +193,63 @@ function UpdateCustomer(props) {
     }
   };
 
+  const isFormValid = () => {
+    let errs = {};
+
+    if (!form.firstName) {
+      errs.firstName = 'Please enter first name.'
+    }
+
+    if (!form.lastName) {
+      errs.lastName = 'Please enter last name.'
+    }
+
+    if (!form.dob) {
+      errs.dob = 'Please enter date of birth.'
+    }
+
+    if (!form.gender) {
+      errs.gender = 'Please enter gender.'
+    }
+
+    if (!form.ethnicity) {
+      errs.ethnicity = 'Please enter ethnicity.'
+    }
+
+    if (!form.address) {
+      errs.address = 'Please enter address.'
+    }
+    
+    if (!form.city) {
+      errs.city = 'Please enter city.'
+    }
+    
+    if (!form.state) {
+      errs.state = 'Please enter state.'
+    }
+
+    if (!form.zipCode) {
+      errs.zipCode = 'Please enter zip code.'
+    }
+
+    if (!form.phone1) {
+      errs.phone1 = 'Please enter phone no.'
+    }
+    return errs;
+  }
+
+  const handleSubmit = (e) => {
+
+    const errs = isFormValid();
+    setErrors(errs);
+
+    if (Object.entries(errs).some((err) => err !== '')) {
+      return
+    }
+
+    onSubmit();
+  }
+
   return (
     form &&
     customers && (
@@ -284,15 +303,15 @@ function UpdateCustomer(props) {
               setOpen={setOpenAlertOnSave}
               text1="Save Changes?"
               text2="Are you sure?"
-              customFunction={onSubmit}
-            />
+              customFunction={handleSubmit}
+            /> 
           </div>
         }
         content={
           <UpdateCustomerForm
             form={form}
             handleChange={handleChange}
-            error={error}
+            errors={errors}
             setForm={setForm}
             familyMembers={familyMembers}
             setFamilyMembers={setFamilyMembers}

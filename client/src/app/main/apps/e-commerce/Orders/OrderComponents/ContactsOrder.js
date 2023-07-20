@@ -24,6 +24,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
+import { sortAlphabetically } from '../../ReusableComponents/HelperFunctions';
 
 const useStyles = makeStyles({
   button: {
@@ -291,9 +292,14 @@ const ContactsOrder = (props) => {
                       fullWidth
                       id="standard-basic"
                       disabled={disabledState}
-                      value={selectedContactLens?.contactLensAddOd ?? ''}
-                      onChange={handleSelectedContactLensChange}
-                      name={'contactLensAddOd'}
+                      value={selectedContactLens?.contactLensModelOd ?? ''}
+                      onChange={(e) => handleSelectedContactLensChange({
+                        target: {
+                          name: 'contactLensModelOd',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
+                      name={'contactLensModelOd'} 
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -380,9 +386,14 @@ const ContactsOrder = (props) => {
                       fullWidth
                       id="standard-basic"
                       disabled={disabledState}
-                      value={selectedContactLens?.contactLensAddOs ?? ''}
-                      onChange={handleSelectedContactLensChange}
-                      name={'contactLensAddOs'}
+                      value={selectedContactLens?.contactLensModelOs ?? ''}
+                      onChange={(e) => handleSelectedContactLensChange({
+                        target: {
+                          name: 'contactlensModelOs',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
+                      name={'contactLensModelOs'}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -450,7 +461,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOdContacts(e.target.value, 'style')
                       }}>
-                      {[...new Set(filteredContactLensOd?.map((item) => (item?.style ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOd, 'style')?.map((item) => (item?.style ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>
@@ -470,7 +481,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOdContacts(e.target.value, 'brand')
                       }}>
-                      {[...new Set(filteredContactLensOd?.map((item) => (item?.brand ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOd, 'brand')?.map((item) => (item?.brand ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>
@@ -490,7 +501,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOdContacts(e.target.value, 'model')
                       }}>
-                      {[...new Set(filteredContactLensOd?.map((item) => (item?.model ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOd, 'model')?.map((item) => (item?.model ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>
@@ -510,7 +521,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOdContacts(e.target.value, 'basecurve')
                       }}>
-                      {[...new Set(filteredContactLensOd?.map((item) => (item?.basecurve ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOd, 'basecurve')?.map((item) => (item?.basecurve ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>
@@ -530,7 +541,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOdContacts(e.target.value, 'packquantity')
                       }}>
-                      {[...new Set(filteredContactLensOd?.map((item) => (item?.packquantity ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOd, 'packquantity')?.map((item) => (item?.packquantity ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>
@@ -569,7 +580,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOsContacts(e.target.value, 'style')
                       }}>
-                      {[...new Set(filteredContactLensOs?.map((item) => (item?.style ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOs, 'style')?.map((item) => (item?.style ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>
@@ -589,7 +600,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOsContacts(e.target.value, 'brand')
                       }}>
-                      {[...new Set(filteredContactLensOs?.map((item) => (item?.brand ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOs, 'brand')?.map((item) => (item?.brand ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>
@@ -609,7 +620,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOsContacts(e.target.value, 'model')
                       }}>
-                      {[...new Set(filteredContactLensOs?.map((item) => (item?.model ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOs, 'model')?.map((item) => (item?.model ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>
@@ -629,7 +640,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOsContacts(e.target.value, 'basecurve')
                       }}>
-                      {[...new Set(filteredContactLensOs?.map((item) => (item?.basecurve ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOs, 'basecurve')?.map((item) => (item?.basecurve ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>
@@ -649,7 +660,7 @@ const ContactsOrder = (props) => {
                         handleSelectedContactLensChange(e)
                         filterOsContacts(e.target.value, 'packquantity')
                       }}>
-                      {[...new Set(filteredContactLensOs?.map((item) => (item?.packquantity ?? '')))].map((row) => (
+                      {[...new Set(sortAlphabetically(filteredContactLensOs, 'packquantity')?.map((item) => (item?.packquantity ?? '')))].map((row) => (
                         <MenuItem value={row}>
                           {row}
                         </MenuItem>

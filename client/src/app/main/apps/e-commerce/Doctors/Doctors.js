@@ -1,9 +1,12 @@
+import { IconButton } from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
+import CachedIcon from '@material-ui/icons/Cached';
 import clsx from 'clsx';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
 import moment from 'moment'
-import React from 'react';
+import React, { useState } from 'react';
 import reducer from '../store/reducers';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -21,7 +24,6 @@ import {
   HitsPerPage,
   connectStateResults
 } from 'react-instantsearch-dom';
-import LoadingDialog from '../ReusableComponents/LoadingDialog';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -40,8 +42,6 @@ const useStyles = makeStyles((theme) => ({
     }
   }
 }));
-
-const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const CustomHits = connectHits(({ hits, props }) => {
 
@@ -101,6 +101,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 function Doctors(props) {
   const classes = useStyles(props);
+  const [searchClient, setsearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
 
   const ResultStats = connectStateResults(
     ({ searching }) =>
@@ -115,13 +116,18 @@ function Doctors(props) {
         refresh>
         <div className="flex flex-col w-full">
           <div className={clsx(classes.header)}>
-            <div className="flex flex-row p-4 w-full justify-center">
+            <div className="flex flex-row p-4 w-full justify-center items-center">
               <Typography
                 className="hidden sm:flex mx-0 sm:mx-12 uppercase"
                 style={{ fontSize: '3rem', fontWeight: 600 }}
                 variant="h6">
                 DOCTORS
               </Typography>
+              <IconButton color='secondary' onClick={() => {
+                setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+              }}>
+                <CachedIcon />
+              </IconButton>
             </div>
             <div className="flex pt-32 pb-16 pl-8 items-center">
               <div className="flex flex-col w-1/3 mt-0 px-12"></div>

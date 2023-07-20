@@ -207,7 +207,12 @@ function NewShowRoom(props) {
                       id="locationName"
                       name="locationName"
                       value={form.locationName}
-                      onChange={handleChange}
+                      onChange={(e) => handleChange({
+                        target: {
+                          name: 'locationName',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
                       variant="outlined"
                       error={errors.locationName}
                       helperText={errors.locationName}
@@ -219,7 +224,12 @@ function NewShowRoom(props) {
                       required
                       id="locationAddress"
                       name="locationAddress"
-                      onChange={handleChange}
+                      onChange={(e) => handleChange({
+                        target: {
+                          name: 'locationAddress',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
                       label="Location Address"
                       type="text"
                       value={form.locationAddress}
@@ -238,7 +248,12 @@ function NewShowRoom(props) {
                       id="City"
                       name="City"
                       value={form.City}
-                      onChange={handleChange}
+                      onChange={(e) => handleChange({
+                        target: {
+                          name: 'City',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
                       variant="outlined"
                       error={errors.city}
                       helperText={errors.city}
@@ -319,7 +334,12 @@ function NewShowRoom(props) {
                       id="other1"
                       name="other1"
                       value={form.other1}
-                      onChange={handleChange}
+                      onChange={(e) => handleChange({
+                        target: {
+                          name: 'other1',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
                       variant="outlined"
                       fullWidth
                     />

@@ -341,7 +341,7 @@ function AddLens(props) {
                       <TextField
                         className="mt-8"
                         required
-                        label="Colour"
+                        label="Color"
                         id="colour"
                         name="colour"
                         value={form?.colour ? form?.colour : ''}

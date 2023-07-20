@@ -173,7 +173,12 @@ function Discount(props) {
                     id="discount-code"
                     name="code"
                     value={form.code}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'code',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     variant="outlined"
                     error={errors.code}
                     helperText={errors.code}
@@ -186,7 +191,12 @@ function Discount(props) {
                     name="description"
                     type="text"
                     value={form.description}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'description',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     variant="outlined"
                     fullWidth
                   />

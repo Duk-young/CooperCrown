@@ -355,7 +355,12 @@ function AddOther(props) {
                         id="brand"
                         name="brand"
                         value={form?.brand ? form?.brand : ''}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange({
+                          target: {
+                            name: 'brand',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         variant="outlined"
                         fullWidth
                       />
@@ -370,18 +375,28 @@ function AddOther(props) {
                             ? form?.productDescription
                             : ''
                         }
-                        onChange={handleChange}
+                        onChange={(e) => handleChange({
+                          target: {
+                            name: 'productDescription',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         variant="outlined"
                         fullWidth
                       />
                       <TextField
                         className="mt-8"
                         required
-                        label="Colour"
+                        label="Color"
                         id="colour"
                         name="colour"
                         value={form?.colour ? form?.colour : ''}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange({
+                          target: {
+                            name: 'colour',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         variant="outlined"
                         fullWidth
                       />
@@ -393,7 +408,12 @@ function AddOther(props) {
                         id="material"
                         name="material"
                         value={form?.material ? form?.material : ''}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange({
+                          target: {
+                            name: 'material',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         variant="outlined"
                         fullWidth
                       />
@@ -404,7 +424,12 @@ function AddOther(props) {
                         id="shape"
                         name="shape"
                         value={form?.shape ? form?.shape : ''}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange({
+                          target: {
+                            name: 'shape',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         variant="outlined"
                         fullWidth
                       />
@@ -633,7 +658,12 @@ function AddOther(props) {
                         id="madeIn"
                         name="madeIn"
                         value={form?.madeIn ? form?.madeIn : ''}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange({
+                          target: {
+                            name: 'madeIn',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         variant="outlined"
                         fullWidth
                       />
@@ -644,7 +674,12 @@ function AddOther(props) {
                         id="supplier"
                         name="supplier"
                         value={form?.supplier ? form?.supplier : ''}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange({
+                          target: {
+                            name: 'supplier',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         variant="outlined"
                         fullWidth
                       />
@@ -660,7 +695,12 @@ function AddOther(props) {
                         value={
                           form?.supplierAddress ? form?.supplierAddress : ''
                         }
-                        onChange={handleChange}
+                        onChange={(e) => handleChange({
+                          target: {
+                            name: 'supplierAddress',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         variant="outlined"
                         fullWidth
                       />
@@ -688,7 +728,12 @@ function AddOther(props) {
                         id="supplierNotes"
                         name="supplierNotes"
                         value={form?.supplierNotes ? form?.supplierNotes : ''}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange({
+                          target: {
+                            name: 'supplierNotes',
+                            value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                          }
+                        })}
                         variant="outlined"
                         fullWidth
                       />

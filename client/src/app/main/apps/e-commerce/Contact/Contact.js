@@ -180,7 +180,12 @@ function NewShowRoom(props) {
                     required
                     id="contact-style"
                     name="style"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'style',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     label="Style"
                     type="style"
                     value={form?.style}
@@ -194,7 +199,12 @@ function NewShowRoom(props) {
                     required
                     id="contact-brand"
                     name="brand"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'brand',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     label="Brand"
                     type="brand"
                     value={form?.brand}
@@ -208,7 +218,12 @@ function NewShowRoom(props) {
                     required
                     id="contact-model"
                     name="model"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'model',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     label="Model"
                     type="model"
                     value={form?.model}

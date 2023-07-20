@@ -1,10 +1,14 @@
 import { firestore } from 'firebase';
+import { IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { useForm } from '@fuse/hooks';
 import { useSelector } from 'react-redux';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
+import CachedIcon from '@material-ui/icons/Cached';
 import clsx from 'clsx';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FuseLoading from '@fuse/core/FuseLoading';
 import LoadingDialog from '../ReusableComponents/LoadingDialog';
 import moment from 'moment'
@@ -25,7 +29,6 @@ import {
   InstantSearch,
   SearchBox,
   HitsPerPage,
-  SortBy,
   Configure,
   connectStateResults
 } from 'react-instantsearch-dom';
@@ -70,22 +73,40 @@ const StyledDatePicker = withStyles((theme) => ({
   }
 }))(TextField);
 
-const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
+const CustomHits = connectHits(({ hits, payments, props, sortCriteria, setSortCriteria }) => {
 
-const CustomHits = connectHits(({ hits, payments, props }) => {
+  const setSortOrder = (columnName, currentSort) => {
+    const ascendingSortKey = `insuranceClaims${columnName}Asc`;
+    const descendingSortKey = `insuranceClaims${columnName}Desc`;
+
+    // If the current sort is ascending, switch to descending
+    if (currentSort === ascendingSortKey) {
+      setSortCriteria(descendingSortKey)
+      return true;
+    }
+
+    // If the current sort is descending or not set, switch to ascending
+    setSortCriteria(ascendingSortKey)
+    return true;
+  }
+
   return (
     <Table stickyHeader aria-label="customized table">
       <TableHead>
         <TableRow className='truncate'>
           <StyledTableCell>DATE</StyledTableCell>
-          <StyledTableCell>LOCATION</StyledTableCell>
+          <StyledTableCell className='cursor-pointer'  onClick={() => setSortOrder('Location', sortCriteria)}>LOCATION
+          {sortCriteria === 'insuranceClaimsLocationAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsLocationDesc' && <ExpandLessIcon />}</StyledTableCell>
           <StyledTableCell>ID</StyledTableCell>
-          <StyledTableCell>ORDER No</StyledTableCell>
-          <StyledTableCell>NAME</StyledTableCell>
+          <StyledTableCell className='cursor-pointer'  onClick={() => setSortOrder('Order', sortCriteria)}>ORDER No. 
+          {sortCriteria === 'insuranceClaimsOrderAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsOrderDesc' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell className='cursor-pointer'  onClick={() => setSortOrder('Name', sortCriteria)}>NAME
+          {sortCriteria === 'insuranceClaimsNameAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsNameDesc' && <ExpandLessIcon />}</StyledTableCell>
           <StyledTableCell>DOB</StyledTableCell>
           <StyledTableCell>INSURANCE</StyledTableCell>
           <StyledTableCell>POLICY No.</StyledTableCell>
-          <StyledTableCell>CLAIM AMOUNT</StyledTableCell>
+          <StyledTableCell className='cursor-pointer' onClick={() => setSortOrder('Amount', sortCriteria)}>CLAIM AMOUNT
+          {sortCriteria === 'insuranceClaimsAmountAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsAmountDesc' && <ExpandLessIcon />}</StyledTableCell>
           <StyledTableCell>RECEIVED AMOUNT</StyledTableCell>
           <StyledTableCell>STATUS</StyledTableCell>
         </TableRow>
@@ -212,10 +233,12 @@ const StyledTableRow = withStyles((theme) => ({
 
 function Insurance(props) {
   const classes = useStyles(props);
-  const [isLoading, setisLoading] = useState(true);
-  const [payments, setPayments] = useState(true);
   const { form, handleChange } = useForm(null);
+  const [payments, setPayments] = useState(true);
+  const [isLoading, setisLoading] = useState(true);
+  const [sortCriteria, setSortCriteria] = useState('insuranceClaims')
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+  const [searchClient, setsearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
 
 
   useEffect(() => {
@@ -248,11 +271,11 @@ function Insurance(props) {
     <div className="flex w-full overflow-hidden">
       <InstantSearch
         searchClient={searchClient}
-        indexName="insuranceClaims"
+        indexName={sortCriteria}
         refresh>
         <div className="flex flex-col w-full">
           <div className={clsx(classes.header)}>
-            <div className="flex flex-row p-4 w-full justify-center">
+            <div className="flex flex-row p-4 w-full justify-center items-center">
               <Configure
                 filters={`orderDate: ${form?.start ? new Date(form?.start).setHours(0, 0, 0, 0) : -2208988800000
                   } TO ${form?.end ? new Date(form?.end).setHours(23, 59, 59, 0) : new Date().getTime()
@@ -264,6 +287,11 @@ function Insurance(props) {
                 variant="h6">
                 INSURANCE
               </Typography>
+              <IconButton color='secondary' onClick={() => {
+                setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+              }}>
+                <CachedIcon />
+              </IconButton>
             </div>
             <div className="flex pt-32 pb-16 pl-8 items-center">
               <div className="flex flex-col w-1/3 mt-0 px-12">
@@ -352,19 +380,6 @@ function Insurance(props) {
                   />
                 </div>
                 <div>
-                  <SortBy
-                    className="w-full"
-                    defaultRefinement="insuranceClaims"
-                    items={[
-                      { value: 'insuranceClaims', label: 'By Date' },
-                      // { value: 'insuranceClaimsIdAsc', label: 'ID (Asc)' },
-                      // { value: 'insuranceClaimsIdAsc', label: 'ID (Desc)' },
-                      { value: 'insuranceClaimsOrderAsc', label: 'Order ID (Asc)' },
-                      { value: 'insuranceClaimsOrderDesc', label: 'Order ID (Desc)' },
-                      { value: 'insuranceClaimAmountAsc', label: 'Amount (Asc)' },
-                      { value: 'insuranceClaimAmountDesc', label: 'Amount (Desc)' }
-                    ]}
-                  />
                 </div>
               </div>
             </div>
@@ -373,7 +388,7 @@ function Insurance(props) {
           <TableContainer
             stickyHeader
             className="flex flex-col w-full overflow-scroll">
-            <CustomHits payments={payments} props={props} />
+            <CustomHits payments={payments} props={props} setSortCriteria={setSortCriteria} sortCriteria={sortCriteria} />
           </TableContainer>
           <div className="flex flex-row justify-center">
             <Pagination showLast={true} />

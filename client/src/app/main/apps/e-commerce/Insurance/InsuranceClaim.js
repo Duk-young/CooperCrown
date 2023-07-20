@@ -335,7 +335,7 @@ const InsuranceClaim = (props) => {
                 PAYMENT HISTORY
               </h1>
             </div>
-            <div className="flex flex-col p-12">
+            <div className="flex flex-row p-12 justify-end">
               <Button
                 className={classes.orangeButton}
                 variant="contained"
