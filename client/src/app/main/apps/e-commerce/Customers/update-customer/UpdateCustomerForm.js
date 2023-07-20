@@ -125,7 +125,12 @@ function UpdateCustomerForm(props) {
                     id="first-name"
                     name="firstName"
                     value={form?.firstName}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'firstName',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     variant="outlined"
                     fullWidth
                   />
@@ -137,7 +142,12 @@ function UpdateCustomerForm(props) {
                     id="last-name"
                     name="lastName"
                     value={form?.lastName}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'lastName',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     variant="outlined"
                     fullWidth
                   />
@@ -216,8 +226,12 @@ function UpdateCustomerForm(props) {
                           onChange={handleChange}
                           error={error?.ethnicity}
                           autoWidth>
-                          <MenuItem value={'White / Caucasian'}>
-                            White / Caucasian
+                          <MenuItem value={'American Indian & Alaska Native'}>
+                            American Indian & Alaska Native
+                          </MenuItem>
+                          <MenuItem value={'Asian'}>Asian</MenuItem>
+                          <MenuItem value={'Asian / India & Pakistan'}>
+                            Asian / India & Pakistan
                           </MenuItem>
                           <MenuItem value={'Black / African American'}>
                             Black / African American
@@ -225,16 +239,12 @@ function UpdateCustomerForm(props) {
                           <MenuItem value={'Hispanic / Latino'}>
                             Hispanic / Latino
                           </MenuItem>
-                          <MenuItem value={'Asian'}>Asian</MenuItem>
-                          <MenuItem value={'Asian / India & Pakistan'}>
-                            Asian / India & Pakistan
-                          </MenuItem>
-                          <MenuItem value={'American Indian & Alaska Native'}>
-                            American Indian & Alaska Native
-                          </MenuItem>
                           <MenuItem
                             value={'Native Hawaiian & Other Pacific Islander'}>
                             Native Hawaiian & Other Pacific Islander
+                          </MenuItem>
+                          <MenuItem value={'White / Caucasian'}>
+                            White / Caucasian
                           </MenuItem>
                           <MenuItem value={'Others'}>Others</MenuItem>
                         </Select>
@@ -253,7 +263,12 @@ function UpdateCustomerForm(props) {
                     id="other"
                     name="other"
                     value={form?.other}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'other',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     variant="outlined"
                     fullWidth
                   />
@@ -265,7 +280,12 @@ function UpdateCustomerForm(props) {
                     label="Address"
                     error={error?.address}
                     value={form?.address}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'address',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     name="address"
                     variant="outlined"
                   />
@@ -277,7 +297,12 @@ function UpdateCustomerForm(props) {
                     id="city"
                     name="city"
                     value={form?.city}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'city',
+                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                      }
+                    })}
                     variant="outlined"
                     fullWidth
                   />

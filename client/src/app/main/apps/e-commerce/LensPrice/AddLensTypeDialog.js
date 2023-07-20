@@ -85,7 +85,12 @@ return newTable
           type="text"
           name="lensType"
           value={form?.lensType}
-          onChange={handleChange}
+          onChange={(e) => handleChange({
+            target: {
+              name: 'lensType',
+              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+            }
+          })}
           variant="outlined"
           fullWidth
         />

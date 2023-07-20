@@ -171,7 +171,12 @@ function Service(props) {
                       id="service-name"
                       name="name"
                       value={form.name}
-                      onChange={handleChange}
+                      onChange={(e) => handleChange({
+                        target: {
+                          name: 'name',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
                       variant="outlined"
                       error={errors.name}
                       helperText={errors.name}
@@ -183,7 +188,12 @@ function Service(props) {
                       id="service-description"
                       name="description"
                       value={form.description}
-                      onChange={handleChange}
+                      onChange={(e) => handleChange({
+                        target: {
+                          name: 'description',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
                       variant="outlined"
                       fullWidth
                     />

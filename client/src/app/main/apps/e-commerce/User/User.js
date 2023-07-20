@@ -348,7 +348,12 @@ function NewShowRoom(props) {
                           name="State"
                           type="text"
                           value={form?.State ?? ''}
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'State',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           error={errors.State}
                           helperText={errors.State}
                           variant="outlined"
@@ -363,7 +368,12 @@ function NewShowRoom(props) {
                           name="fname"
                           type="text"
                           value={form?.fname ?? ''}
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'fname',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           variant="outlined"
                           error={errors.fname}
                           helperText={errors.fname}
@@ -377,7 +387,12 @@ function NewShowRoom(props) {
                           name="lname"
                           type="text"
                           value={form?.lname ?? ''}
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'lname',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           variant="outlined"
                           error={errors.lname}
                           helperText={errors.lname}
@@ -390,7 +405,12 @@ function NewShowRoom(props) {
                           required
                           id="user-address"
                           name="address"
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'address',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           label="Address"
                           type="address"
                           value={form?.address ?? ''}
@@ -500,7 +520,12 @@ function NewShowRoom(props) {
                           name="other"
                           type="text"
                           value={form?.other ?? ''}
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'other',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           variant="outlined"
                         />
                       </div>

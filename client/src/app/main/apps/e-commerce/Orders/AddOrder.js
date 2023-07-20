@@ -979,7 +979,12 @@ function AddOrder(props) {
                                     disabled={disabledState}
                                     value={form?.discountMemo}
                                     name="discountMemo"
-                                    onChange={handleChange}
+                                    onChange={(e) => handleChange({
+                                      target: {
+                                        name: 'discountMemo',
+                                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                                      }
+                                    })}
                                   />
                                   <FormControl
                                     disabled={true}
@@ -1032,7 +1037,12 @@ function AddOrder(props) {
                                     disabled={disabledState}
                                     value={form?.insuranceOneMemo ?? ''}
                                     name="insuranceOneMemo"
-                                    onChange={handleChange}
+                                    onChange={(e) => handleChange({
+                                      target: {
+                                        name: 'insuranceOneMemo',
+                                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                                      }
+                                    })}
                                   />
                                   <FormControl
                                     className="w-1/2"
@@ -1087,7 +1097,12 @@ function AddOrder(props) {
                                     disabled={disabledState}
                                     value={form?.insuranceTwoMemo ?? ''}
                                     name="insuranceTwoMemo"
-                                    onChange={handleChange}
+                                    onChange={(e) => handleChange({
+                                      target: {
+                                        name: 'insuranceTwoMemo',
+                                        value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                                      }
+                                    })}
                                   />
                                   <FormControl
                                     className="w-1/2"

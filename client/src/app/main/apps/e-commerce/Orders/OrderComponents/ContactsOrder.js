@@ -292,9 +292,14 @@ const ContactsOrder = (props) => {
                       fullWidth
                       id="standard-basic"
                       disabled={disabledState}
-                      value={selectedContactLens?.contactLensAddOd ?? ''}
-                      onChange={handleSelectedContactLensChange}
-                      name={'contactLensAddOd'}
+                      value={selectedContactLens?.contactLensModelOd ?? ''}
+                      onChange={(e) => handleSelectedContactLensChange({
+                        target: {
+                          name: 'contactLensModelOd',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
+                      name={'contactLensModelOd'} 
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -381,9 +386,14 @@ const ContactsOrder = (props) => {
                       fullWidth
                       id="standard-basic"
                       disabled={disabledState}
-                      value={selectedContactLens?.contactLensAddOs ?? ''}
-                      onChange={handleSelectedContactLensChange}
-                      name={'contactLensAddOs'}
+                      value={selectedContactLens?.contactLensModelOs ?? ''}
+                      onChange={(e) => handleSelectedContactLensChange({
+                        target: {
+                          name: 'contactlensModelOs',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
+                      name={'contactLensModelOs'}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }

@@ -245,7 +245,12 @@ function Doctor(props) {
                           name="fname"
                           type="text"
                           value={form?.fname}
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'fname',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           variant="outlined"
                           error={errors.fname}
                           helperText={errors.fname}
@@ -257,7 +262,12 @@ function Doctor(props) {
                           required
                           id="doctor-address"
                           name="address"
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'address',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           label="Address"
                           type="address"
                           value={form?.address}
@@ -277,7 +287,12 @@ function Doctor(props) {
                           name="lname"
                           type="text"
                           value={form?.lname}
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'lname',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           variant="outlined"
                           error={errors.lname}
                           helperText={errors.lname}
@@ -292,7 +307,12 @@ function Doctor(props) {
                           name="city"
                           type="text"
                           value={form?.city}
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'city',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           variant="outlined"
                           error={errors.city}
                           helperText={errors.city}
@@ -422,7 +442,12 @@ function Doctor(props) {
                           name="other"
                           type="text"
                           value={form?.other}
-                          onChange={handleChange}
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: 'other',
+                              value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                            }
+                          })}
                           variant="outlined"
                           disabled={disabledState}
                         />
