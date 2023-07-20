@@ -24,6 +24,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -149,7 +150,7 @@ function PaymentReport(props) {
             queryShowrooms.forEach((doc) => {
                 showroomsData.push(doc.data());
             });
-            setShowrooms(showroomsData)
+            setShowrooms(sortAlphabetically(showroomsData, 'locationName'))
         };
 
         fetchPaymentDetails();

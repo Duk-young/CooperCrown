@@ -44,6 +44,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker
 } from '@material-ui/pickers';
+import { sortAlphabetically } from '../e-commerce/ReusableComponents/HelperFunctions';
 const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const CustomHits = connectHits(({ hits, form, closeComposeDialog }) => {
@@ -164,7 +165,7 @@ export default function NewAppointmentDialog() {
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
 
       let doctorsData = [];
       const queryDoctors = await firestore().collection('doctors').get();
@@ -172,6 +173,7 @@ export default function NewAppointmentDialog() {
       queryDoctors.forEach((doc) => {
         doctorsData.push(doc.data());
       });
+      doctorsData = sortAlphabetically(doctorsData, 'fullName')
       if (newAppointmentDialog?.data?.showRoomId && doctorsData?.length > 0) {
         setDoctors(doctorsData.filter((obj) => {
           return obj.showrooms?.some((showroom) => showroom.showRoomId === newAppointmentDialog?.data?.showRoomId);

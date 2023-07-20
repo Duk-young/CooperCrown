@@ -51,6 +51,7 @@ import ThermalReceipt from './ThermalReceipt';
 import OrderTicket from './OrderTicket';
 import PickupReceipt from './OrderComponents/PickupReceipt';
 import CustomAlert from '../ReusableComponents/CustomAlert';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -412,14 +413,14 @@ function AddOrder(props) {
       queryShowroom.forEach((doc) => {
         resultShowroom.push(doc.data());
       });
-      setShowroom(resultShowroom);
+      setShowroom(sortAlphabetically(resultShowroom, 'locationName'));
 
       const queryDiscounts = await firestore().collection('discounts').get();
       let resultDiscounts = [];
       queryDiscounts.forEach((doc) => {
         resultDiscounts.push(doc.data());
       });
-      setDiscounts(resultDiscounts);
+      setDiscounts(sortAlphabetically(resultDiscounts, 'code'));
 
       const queryContactLens = await firestore().collection('contacts').get();
 
@@ -520,7 +521,7 @@ function AddOrder(props) {
         queryInsurance.forEach((doc) => {
           resultInsurance.push(doc.data());
         });
-        setInsurances(resultInsurance);
+        setInsurances(sortAlphabetically(resultInsurance, 'insuranceCompany'));
         setisLoading(false);
       };
       fetchDetails();

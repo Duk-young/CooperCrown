@@ -28,6 +28,7 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 
 const useStyles = makeStyles({
   table: {
@@ -70,7 +71,7 @@ function NewShowRoom(props) {
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
 
       if (routeParams?.userId !== 'new') {
 

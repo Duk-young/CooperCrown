@@ -36,6 +36,7 @@ import ServicesOrder from './OrderComponents/ServicesOrder';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 
 const useStyles = makeStyles({
   button: {
@@ -271,7 +272,7 @@ function RedoOrder(props) {
       queryDiscounts.forEach((doc) => {
         resultDiscounts.push(doc.data());
       });
-      setDiscounts(resultDiscounts);
+      setDiscounts(sortAlphabetically(resultDiscounts, 'code'));
 
       const queryContactLens = await firestore().collection('contacts').get();
 
@@ -370,7 +371,7 @@ function RedoOrder(props) {
         queryInsurance.forEach((doc) => {
           resultInsurance.push(doc.data());
         });
-        setInsurances(resultInsurance);
+        setInsurances(sortAlphabetically(resultInsurance, 'insuranceCompany'));
         setisLoading(false);
       };
       fetchDetails();

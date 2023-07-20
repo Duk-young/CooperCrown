@@ -33,6 +33,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import { sortAlphabetically } from '../../ReusableComponents/HelperFunctions';
 
 const VirtualRefinementList = connectRefinementList(() => null);
 
@@ -195,7 +196,7 @@ const ShowRoomInventory = (props) => {
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
     };
     fetchShowRooms();
   }, []);

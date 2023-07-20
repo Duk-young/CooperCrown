@@ -21,6 +21,7 @@ import {
     KeyboardTimePicker,
     KeyboardDatePicker
 } from '@material-ui/pickers';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 
 const EditAppointments = (props) => {
     const dispatch = useDispatch();
@@ -82,7 +83,7 @@ const EditAppointments = (props) => {
                 doctorsData.push(doc.data());
             });
 
-
+            doctorsData = sortAlphabetically(doctorsData, 'fullName')
             setDoctors(doctorsData.filter((obj) => { return obj.showrooms?.some((showroom) => showroom.showRoomId === appointment?.showRoomId) }))
             setisLoading(false);
         };

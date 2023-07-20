@@ -33,6 +33,7 @@ import React, { useState, useEffect } from 'react';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import { sortAlphabetically } from '../../ReusableComponents/HelperFunctions';
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -114,7 +115,7 @@ function AddShowRoomInventory(props) {
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
 
       setisLoading(false);
     };
@@ -126,7 +127,7 @@ function AddShowRoomInventory(props) {
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
     };
 
     if (id) fetchShowRoomInventory();

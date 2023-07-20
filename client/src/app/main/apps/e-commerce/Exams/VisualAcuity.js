@@ -16,6 +16,7 @@ import {
   KeyboardTimePicker
 } from '@material-ui/pickers';
 import { Icon, IconButton } from '@material-ui/core';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 
 const VisualAcuity = (props) => {
   const { form, handleChange, disabledState, setForm } = props;
@@ -967,7 +968,7 @@ const VisualAcuity = (props) => {
                           handleChange(e)
                           filterOdContacts(e.target.value, 'brand')
                         }}>
-                        {[...new Set(filteredContactLensOd?.map((item) => (item?.brand ?? '')))].map((row) => (
+                        {[...new Set(sortAlphabetically(filteredContactLensOd, 'brand')?.map((item) => (item?.brand ?? '')))].map((row) => (
                           <MenuItem value={row}>
                             {row}
                           </MenuItem>
@@ -985,7 +986,7 @@ const VisualAcuity = (props) => {
                           handleChange(e)
                           filterOdContacts(e.target.value, 'model')
                         }}>
-                        {[...new Set(filteredContactLensOd?.map((item) => (item?.model ?? '')))].map((row) => (<MenuItem value={row}>{row}</MenuItem>))}
+                        {[...new Set(sortAlphabetically(filteredContactLensOd, 'model')?.map((item) => (item?.model ?? '')))].map((row) => (<MenuItem value={row}>{row}</MenuItem>))}
                       </Select>
                     </div>
                   </div>

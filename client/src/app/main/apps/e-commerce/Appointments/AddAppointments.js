@@ -22,6 +22,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker
 } from '@material-ui/pickers';
+import { sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 
 const AddAppointments = (props) => {
   const history = useHistory();
@@ -76,14 +77,14 @@ const AddAppointments = (props) => {
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
 
       const queryDoctors = await firestore().collection('doctors').get();
       let doctorsData = [];
       queryDoctors.forEach((doc) => {
         doctorsData.push(doc.data());
       });
-
+      doctorsData = sortAlphabetically(doctorsData, 'fullName')
       if (history?.location?.state?.start !== undefined) {
         setForm({
           start: history.location.state.start,

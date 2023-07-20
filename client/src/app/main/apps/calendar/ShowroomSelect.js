@@ -6,6 +6,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useSelector } from 'react-redux';
+import { sortAlphabetically } from '../e-commerce/ReusableComponents/HelperFunctions';
 
 export default function ShowroomSelect({ setEvents, setCurrentShowroom, currentShowroom }) {
   const appointments = useSelector(
@@ -24,7 +25,7 @@ export default function ShowroomSelect({ setEvents, setCurrentShowroom, currentS
       queryShowrooms.forEach((doc) => {
         showroomdata.push(doc.data());
       });
-      setShowRooms(showroomdata);
+      setShowRooms(sortAlphabetically(showroomdata, 'locationName'));
       if (userData?.userRole === 'staff') {
         let filteredEvents = appointments.filter(
           (word) => word.showRoomId === userData?.showRoomId
