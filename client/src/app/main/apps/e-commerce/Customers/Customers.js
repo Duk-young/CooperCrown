@@ -1,15 +1,18 @@
 import './App.mobile.css';
 import './Search.css';
 import './Themes.css';
+import { IconButton } from '@material-ui/core';
 import { toast, Zoom } from 'react-toastify';
 import { useForm } from '@fuse/hooks';
 import { useSelector } from 'react-redux';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
+import CachedIcon from '@material-ui/icons/Cached';
 import clsx from 'clsx';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
 import moment from 'moment';
-import React from 'react';
+import React, {useState} from 'react';
 import reducer from '../store/reducers';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -29,7 +32,6 @@ import {
   Configure,
   connectStateResults
 } from 'react-instantsearch-dom';
-import LoadingDialog from '../ReusableComponents/LoadingDialog';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -48,8 +50,6 @@ const useStyles = makeStyles((theme) => ({
     }
   }
 }));
-
-const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const CustomHits = connectHits(({ hits, props }) => {
 
@@ -178,6 +178,7 @@ function Customers(props) {
   const classes = useStyles(props);
   const { form, handleChange } = useForm(null);
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+  const [searchClient, setsearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
 
   const ResultStats = connectStateResults(
     ({ searching }) =>
@@ -185,167 +186,172 @@ function Customers(props) {
   );
 
   return (
-        <div className="flex w-full overflow-hidden">
-          <InstantSearch
-            searchClient={searchClient}
-            indexName="customers"
-            refresh>
-            <div className="flex flex-col w-full">
-              <div className={clsx(classes.header)}>
-                <div className="flex flex-row p-4 w-full justify-center">
-                  <Configure
-                    filters={`dob: ${form?.start ? new Date(form?.start).setHours(0, 0, 0, 0) : -2208988800000
-                      } TO ${form?.end ? new Date(form?.end).setHours(23, 59, 59, 0) : new Date().getTime()
-                      }`}
-                  />
-                  <Typography
-                    className="hidden sm:flex mx-0 sm:mx-12 uppercase"
-                    style={{ fontSize: '3rem', fontWeight: 600 }}
-                    variant="h6">
-                    Customer
-                  </Typography>
-                </div>
-                <div className="flex pt-32 pb-16 pl-8 items-center">
-                  <div className="flex flex-col w-1/3 mt-0 px-12">
-                    <div className="flex flex-row justify-around gap-8">
-                      <div className="w-full flex gap-10">
-                        <StyledDatePicker
-                          id="date"
-                          label="Start Date"
-                          type="date"
-                          value={form?.start}
-                          variant="outlined"
-                          style={{ border: 'none' }}
-                          InputLabelProps={{
-                            shrink: true,
-                            style: { color: 'white' }
-                          }}
-                          InputProps={{
-                            inputProps: {
-                              style: { color: 'white', fontSize: '10px' }
-                            }
-                          }}
-                          onChange={(e) => {
-                            handleChange({
-                              target: {
-                                name: 'start',
-                                value: e.target.value
-                              }
-                            });
-                          }}
-                        />
-                        <StyledDatePicker
-                          id="date"
-                          label="End Date"
-                          type="date"
-                          value={form?.end}
-                          variant="outlined"
-                          style={{ border: 'none' }}
-                          InputLabelProps={{
-                            shrink: true,
-                            style: { color: 'white' }
-                          }}
-                          InputProps={{
-                            inputProps: {
-                              style: { color: 'white', fontSize: '10px' }
-                            }
-                          }}
-                          onChange={(e) => {
-                            handleChange({
-                              target: {
-                                name: 'end',
-                                value: e.target.value
-                              }
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col w-1/3 border-1 headerSearch">
-                    <SearchBox
-                      translations={{
-                        placeholder: 'Search for customers...'
+    <div className="flex w-full overflow-hidden">
+      <InstantSearch
+        searchClient={searchClient}
+        indexName="customers"
+        refresh>
+        <div className="flex flex-col w-full">
+          <div className={clsx(classes.header)}>
+            <div className="flex flex-row p-4 w-full justify-center items-center">
+              <Configure
+                filters={`dob: ${form?.start ? new Date(form?.start).setHours(0, 0, 0, 0) : -2208988800000
+                  } TO ${form?.end ? new Date(form?.end).setHours(23, 59, 59, 0) : new Date().getTime()
+                  }`}
+              />
+              <Typography
+                className="hidden sm:flex mx-0 sm:mx-12 uppercase"
+                style={{ fontSize: '3rem', fontWeight: 600 }}
+                variant="h6">
+                Customer
+              </Typography>
+              <IconButton color='secondary' onClick={() => {
+                setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+              }}>
+                <CachedIcon />
+              </IconButton>
+            </div>
+            <div className="flex pt-32 pb-16 pl-8 items-center">
+              <div className="flex flex-col w-1/3 mt-0 px-12">
+                <div className="flex flex-row justify-around gap-8">
+                  <div className="w-full flex gap-10">
+                    <StyledDatePicker
+                      id="date"
+                      label="Start Date"
+                      type="date"
+                      value={form?.start}
+                      variant="outlined"
+                      style={{ border: 'none' }}
+                      InputLabelProps={{
+                        shrink: true,
+                        style: { color: 'white' }
                       }}
-                      submit={
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 18 18">
-                          <g
-                            fill="none"
-                            fillRule="evenodd"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.67"
-                            transform="translate(1 1)">
-                            <circle cx="7.11" cy="7.11" r="7.11" />
-                            <path d="M16 16l-3.87-3.87" />
-                          </g>
-                        </svg>
-                      }
-                      reset={false}
+                      InputProps={{
+                        inputProps: {
+                          style: { color: 'white', fontSize: '10px' }
+                        }
+                      }}
+                      onChange={(e) => {
+                        handleChange({
+                          target: {
+                            name: 'start',
+                            value: e.target.value
+                          }
+                        });
+                      }}
+                    />
+                    <StyledDatePicker
+                      id="date"
+                      label="End Date"
+                      type="date"
+                      value={form?.end}
+                      variant="outlined"
+                      style={{ border: 'none' }}
+                      InputLabelProps={{
+                        shrink: true,
+                        style: { color: 'white' }
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          style: { color: 'white', fontSize: '10px' }
+                        }
+                      }}
+                      onChange={(e) => {
+                        handleChange({
+                          target: {
+                            name: 'end',
+                            value: e.target.value
+                          }
+                        });
+                      }}
                     />
                   </div>
-                  <div className="flex flex-row w-1/3 justify-around items-center">
-                    <div className="flex flex-col w-1/3 ">
-                      <div className="flex flex-1 justify-center">
-                        <HitsPerPage
-                          defaultRefinement={50}
-                          items={[
-                            { value: 50, label: 'Show 50' },
-                            { value: 100, label: 'Show 100' },
-                            { value: 200, label: 'Show 200' }
-                          ]}
-                        />
-                      </div>
-                    </div>
-                    <div className="">
-                      <Button
-                        className={classes.button}
-                        onClick={() => {
-                          if (userData.userRole === 'admin' || userData?.customersCreate) {
-                            props.history.push('/apps/e-commerce/create-customer')
-                          } else {
-                            toast.error('You are not authorized', {
-                              position: 'top-center',
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              transition: Zoom
-                            });
-                          }
-                        }
-                        }
-                        // className="whitespace-no-wrap normal-case"
-                        variant="contained"
-                        color="secondary">
-                        <span className="hidden sm:flex">ADD NEW</span>
-                        <span className="flex sm:hidden">ADD</span>
-                      </Button>
-                    </div>
-                  </div>
                 </div>
               </div>
-              <ResultStats />
-              <TableContainer
-                stickyHeader
-                className="flex flex-col w-full overflow-scroll">
-                <CustomHits props={props} />
-              </TableContainer>
-              <div className="flex flex-row justify-center">
-                <div className="flex flex-1"></div>
-                <div className="flex flex-1 justify-center mt-8"><Pagination showLast={true} /></div>
-                <div className="flex flex-1"></div>
+              <div className="flex flex-col w-1/3 border-1 headerSearch">
+                <SearchBox
+                  translations={{
+                    placeholder: 'Search for customers...'
+                  }}
+                  submit={
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 18 18">
+                      <g
+                        fill="none"
+                        fillRule="evenodd"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.67"
+                        transform="translate(1 1)">
+                        <circle cx="7.11" cy="7.11" r="7.11" />
+                        <path d="M16 16l-3.87-3.87" />
+                      </g>
+                    </svg>
+                  }
+                  reset={false}
+                />
+              </div>
+              <div className="flex flex-row w-1/3 justify-around items-center">
+                <div className="flex flex-col w-1/3 ">
+                  <div className="flex flex-1 justify-center">
+                    <HitsPerPage
+                      defaultRefinement={50}
+                      items={[
+                        { value: 50, label: 'Show 50' },
+                        { value: 100, label: 'Show 100' },
+                        { value: 200, label: 'Show 200' }
+                      ]}
+                    />
+                  </div>
+                </div>
+                <div className="">
+                  <Button
+                    className={classes.button}
+                    onClick={() => {
+                      if (userData.userRole === 'admin' || userData?.customersCreate) {
+                        props.history.push('/apps/e-commerce/create-customer')
+                      } else {
+                        toast.error('You are not authorized', {
+                          position: 'top-center',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          transition: Zoom
+                        });
+                      }
+                    }
+                    }
+                    // className="whitespace-no-wrap normal-case"
+                    variant="contained"
+                    color="secondary">
+                    <span className="hidden sm:flex">ADD NEW</span>
+                    <span className="flex sm:hidden">ADD</span>
+                  </Button>
+                </div>
               </div>
             </div>
-          </InstantSearch>
+          </div>
+          <ResultStats />
+          <TableContainer
+            stickyHeader
+            className="flex flex-col w-full overflow-scroll">
+            <CustomHits props={props} />
+          </TableContainer>
+          <div className="flex flex-row justify-center">
+            <div className="flex flex-1"></div>
+            <div className="flex flex-1 justify-center mt-8"><Pagination showLast={true} /></div>
+            <div className="flex flex-1"></div>
+          </div>
         </div>
+      </InstantSearch>
+    </div>
   );
 }
 

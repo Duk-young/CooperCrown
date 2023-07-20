@@ -1,8 +1,13 @@
+import { IconButton } from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
+import CachedIcon from '@material-ui/icons/Cached';
 import clsx from 'clsx';
-import React from 'react';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
+import React, { useState } from 'react';
 import reducer from '../store/reducers';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -20,7 +25,6 @@ import {
   HitsPerPage,
   connectStateResults
 } from 'react-instantsearch-dom';
-import LoadingDialog from '../ReusableComponents/LoadingDialog';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -40,17 +44,33 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
+const CustomHits = connectHits(({ hits, props, setSortCriteria, sortCriteria }) => {
 
-const CustomHits = connectHits(({ hits, props }) => {
+  const setSortOrder = (columnName, currentSort) => {
+    const ascendingSortKey = `contacts${columnName}Asc`;
+    const descendingSortKey = `contacts${columnName}Desc`;
+
+    // If the current sort is ascending, switch to descending
+    if (currentSort === ascendingSortKey) {
+      setSortCriteria(descendingSortKey)
+      return true;
+    }
+
+    // If the current sort is descending or not set, switch to ascending
+    setSortCriteria(ascendingSortKey)
+    return true;
+  }
 
   return (
     <Table stickyHeader aria-label="customized table">
       <TableHead>
-        <TableRow className='truncate'>
-          <StyledTableCell>STYLE</StyledTableCell>
-          <StyledTableCell>BRAND</StyledTableCell>
-          <StyledTableCell>MODEL</StyledTableCell>
+        <TableRow className='truncate cursor-pointer'>
+          <StyledTableCell onClick={() => setSortOrder('Style', sortCriteria)}>STYLE {sortCriteria === 'contactsStyleAsc' && <ExpandMoreIcon />}
+            {sortCriteria === 'contactsStyleDesc' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell onClick={() => setSortOrder('Brand', sortCriteria)}>BRAND {sortCriteria === 'contactsBrandAsc' && <ExpandMoreIcon />}
+            {sortCriteria === 'contactsBrandDesc' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell onClick={() => setSortOrder('Model', sortCriteria)}>MODEL {sortCriteria === 'contactsModelAsc' && <ExpandMoreIcon />}
+            {sortCriteria === 'contactsModelDesc' && <ExpandLessIcon />}</StyledTableCell>
           <StyledTableCell>BASE CURVE</StyledTableCell>
           <StyledTableCell>PACK Qty</StyledTableCell>
           <StyledTableCell>PRICE</StyledTableCell>
@@ -102,6 +122,8 @@ const StyledTableRow = withStyles((theme) => ({
 
 function Contacts(props) {
   const classes = useStyles(props);
+  const [sortCriteria, setSortCriteria] = useState('contactsStyleAsc')
+  const [searchClient, setsearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
 
   const ResultStats = connectStateResults(
     ({ searching }) =>
@@ -112,17 +134,22 @@ function Contacts(props) {
     <div className="flex w-full overflow-hidden">
       <InstantSearch
         searchClient={searchClient}
-        indexName="contacts"
+        indexName={sortCriteria}
         refresh>
         <div className="flex flex-col w-full">
           <div className={clsx(classes.header)}>
-            <div className="flex flex-row p-4 w-full justify-center">
+            <div className="flex flex-row p-4 w-full justify-center items-center">
               <Typography
                 className="hidden sm:flex mx-0 sm:mx-12 uppercase"
                 style={{ fontSize: '3rem', fontWeight: 600 }}
                 variant="h6">
                 CONTACT LENS
               </Typography>
+              <IconButton color='secondary' onClick={() => {
+                setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+              }}>
+                <CachedIcon />
+              </IconButton>
             </div>
             <div className="flex pt-32 pb-16 pl-8 items-center">
               <div className="flex flex-col w-1/3 mt-0 px-12"></div>
@@ -166,7 +193,7 @@ function Contacts(props) {
                     />
                   </div>
                 </div>
-                <div className="">
+                <div>
                   <Button
                     className={classes.button}
                     onClick={() => { props.history.push('/apps/e-commerce/contact/new') }}
@@ -183,7 +210,7 @@ function Contacts(props) {
           <TableContainer
             stickyHeader
             className="flex flex-col w-full overflow-scroll">
-            <CustomHits props={props} />
+            <CustomHits props={props} setSortCriteria={setSortCriteria} sortCriteria={sortCriteria} />
           </TableContainer>
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>

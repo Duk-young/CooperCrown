@@ -16,7 +16,6 @@ import { toast, Zoom } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import Dialog from '@material-ui/core/Dialog';
@@ -24,6 +23,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import LoadingDialog from '../../ReusableComponents/LoadingDialog';
 import MenuItem from '@material-ui/core/MenuItem';
 import React, { useState, useEffect } from 'react';
 import Select from '@material-ui/core/Select';
@@ -33,9 +33,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import LoadingDialog from '../../ReusableComponents/LoadingDialog';
-
-const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const VirtualRefinementList = connectRefinementList(() => null);
 
@@ -211,7 +208,7 @@ const ShowRoomInventory = (props) => {
   return (
     <div className="flex flex-col w-full ">
       <InstantSearch
-        searchClient={searchClient}
+        searchClient={props?.searchClient}
         indexName="showRoomInventory"
         onSearchStateChange={(state) => {
           if (

@@ -15,12 +15,12 @@ import { toast, Zoom } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import LoadingDialog from '../../ReusableComponents/LoadingDialog';
 import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -28,9 +28,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import LoadingDialog from '../../ReusableComponents/LoadingDialog';
-
-const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 const VirtualRefinementList = connectRefinementList(() => null);
 
@@ -191,7 +188,7 @@ const Other = (props) => {
   return (
     <div className="flex flex-col w-full ">
       <InstantSearch
-        searchClient={searchClient}
+        searchClient={props?.searchClient}
         indexName="other"
         onSearchStateChange={(state) => {
           if (

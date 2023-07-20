@@ -12,6 +12,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import algoliasearch from 'algoliasearch/lite';
 import Button from '@material-ui/core/Button';
+import CachedIcon from '@material-ui/icons/Cached';
 import Checkbox from '@material-ui/core/Checkbox';
 import clsx from 'clsx';
 import FuseAnimate from '@fuse/core/FuseAnimate';
@@ -72,7 +73,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY);
 
 function a11yProps(index) {
   return {
@@ -522,6 +522,7 @@ function Orders(props) {
   const [isLoading, setisLoading] = React.useState(false);
   const [openOrderTickets, setOpenOrderTickets] = useState(false)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
+  const [searchClient, setsearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
 
   const updateStatus = async (order, status) => {
     const uuid = order[0]; // add loader then update the page with the new data
@@ -572,13 +573,18 @@ function Orders(props) {
       <div className='flex flex-col w-full'>
         <InstantSearch searchClient={searchClient} indexName="orders">
           <div className={clsx(classes.tabHeader)}>
-            <div className="p-4 flex justify-center">
+            <div className="p-4 flex justify-center items-center">
               <Typography
                 className="hidden sm:flex mx-0 sm:mx-12 text-center uppercase"
                 variant="h6"
                 style={{ fontSize: '3rem', fontWeight: 600 }}>
                 ORDERS
               </Typography>
+              <IconButton color='secondary' onClick={() => {
+                setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+              }}>
+                <CachedIcon />
+              </IconButton>
             </div>
           </div>
           <div className={clsx(classes.tabHeader)}>

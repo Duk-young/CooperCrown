@@ -1,6 +1,9 @@
 import './Inventory.css';
+import { IconButton } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
+import algoliasearch from 'algoliasearch/lite';
+import CachedIcon from '@material-ui/icons/Cached';
 import clsx from 'clsx';
 import Frames from './Frames/Frames';
 import FusePageSimple from '@fuse/core/FusePageSimple';
@@ -40,6 +43,7 @@ const StyledTab = withStyles((theme) => ({
 function Inventory() {
   const classes = useStyles();
   const [selectedTab, setSelectedTab] = useState(0);
+  const [searchClient, setsearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
 
   const handleTabChange = (event, value) => {
     setSelectedTab(value);
@@ -52,6 +56,11 @@ function Inventory() {
           <div className={clsx(classes.tabHeader)}>
             <div className="flex flex-row w-full items-center justify-center">
               <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h4">INVENTORY</Typography>
+              <IconButton color='secondary' onClick={() => {
+                setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+              }}>
+                <CachedIcon />
+              </IconButton>
             </div>
             <Tabs
               value={selectedTab}
@@ -69,11 +78,11 @@ function Inventory() {
             </Tabs>
           </div>
           <div>
-            {selectedTab === 0 && (<Frames />)}
-            {selectedTab === 1 && (<Lens />)}
-            {selectedTab === 2 && (<Other />)}
+            {selectedTab === 0 && (<Frames searchClient={searchClient} />)}
+            {selectedTab === 1 && (<Lens searchClient={searchClient} />)}
+            {selectedTab === 2 && (<Other searchClient={searchClient} />)}
             {selectedTab === 3 && (<OutOfStock />)}
-            {selectedTab === 4 && (<ShowRoomInventory />)}
+            {selectedTab === 4 && (<ShowRoomInventory searchClient={searchClient} />)}
           </div>
         </div>
 
