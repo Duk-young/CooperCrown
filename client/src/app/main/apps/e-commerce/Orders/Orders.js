@@ -616,7 +616,7 @@ function Orders(props) {
           />
           <div className={classes.header}>
             <div className="flex flex-col w-1/3">
-              <div className="date-picker w-full flex flex-row gap-10">
+              <div className="date-picker w-full flex flex-row gap-10 date-input justify-around">
                 <StyledDatePicker
                   id="date"
                   label="Start Date"

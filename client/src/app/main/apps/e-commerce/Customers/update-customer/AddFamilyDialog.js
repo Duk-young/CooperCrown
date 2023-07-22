@@ -136,7 +136,7 @@ export default function AddFamilyDialog(props) {
           className="flex flex-col w-full p-20 rounded-32 shadow-20">
           <InstantSearch searchClient={searchClient} indexName="customers">
             <div className="flex flex-row">
-              <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12">
+              <div className="flex flex-col flex-1 mb-10 shadow-10 rounded-12 inventorySearch">
                 <SearchBox
                   translations={{
                     placeholder: 'Searh for customers...'
