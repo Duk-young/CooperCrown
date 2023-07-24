@@ -188,7 +188,7 @@ const Frames = (props) => {
   );
 
   return (
-    <div className="flex flex-col w-full ">
+    <div className="flex flex-col w-full h-full">
       <InstantSearch
         searchClient={props?.searchClient}
         indexName="frames"

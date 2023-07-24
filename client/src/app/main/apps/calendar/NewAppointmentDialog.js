@@ -5,7 +5,7 @@ import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { InstantSearch, SearchBox } from 'react-instantsearch-dom';
-import { sortAlphabetically } from '../e-commerce/ReusableComponents/HelperFunctions';
+import { getNextCustomerId, sortAlphabetically } from '../e-commerce/ReusableComponents/HelperFunctions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { useHistory } from 'react-router-dom';
@@ -214,7 +214,8 @@ export default function NewAppointmentDialog() {
           medicalHistory: form?.medicalHistory ? form?.medicalHistory : '',
           customerId: dbConfig?.customerId + 1,
           recentUpdated: dbConfig?.recentUpdated + 1,
-          creationDate: firestore.Timestamp.fromDate(new Date())
+          creationDate: firestore.Timestamp.fromDate(new Date()),
+          customCustomerId: dbConfig?.customCustomerId
         });
 
       await firestore()
@@ -243,7 +244,8 @@ export default function NewAppointmentDialog() {
         .update({
           customerId: dbConfig?.customerId + 1,
           recentUpdated: dbConfig?.recentUpdated + 1,
-          appointmentId: dbConfig?.appointmentId + 1
+          appointmentId: dbConfig?.appointmentId + 1,
+          customCustomerId: getNextCustomerId(dbConfig?.customCustomerId)
         });
 
       closeComposeDialog();

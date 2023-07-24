@@ -20,6 +20,7 @@ import reducer from '../../store/reducers';
 import Typography from '@material-ui/core/Typography';
 import UpdateCustomerForm from './UpdateCustomerForm';
 import withReducer from 'app/store/withReducer';
+import { getNextCustomerId } from '../../ReusableComponents/HelperFunctions';
 
 function UpdateCustomer(props) {
 
@@ -132,7 +133,7 @@ function UpdateCustomer(props) {
       setisLoading(true);
 
       try {
-        const customerNo = (
+        const dbConfig = (
           await firestore().collection('dbConfig').doc('dbConfig').get()
         ).data();
 
@@ -142,21 +143,23 @@ function UpdateCustomer(props) {
           .collection('customers')
           .add({
             ...form,
-            family: form?.family ? form?.family : customerNo?.customerId + 1,
+            family: form?.family ? form?.family : dbConfig?.customerId + 1,
             dob: dateOfBirth,
             dobString: moment(form?.dob).format('MM/DD/YYYY'),
-            customerId: customerNo?.customerId + 1,
-            recentUpdated: customerNo?.recentUpdated + 1,
+            customerId: dbConfig?.customerId + 1,
+            recentUpdated: dbConfig?.recentUpdated + 1,
             creationDate: firestore.Timestamp.fromDate(new Date()),
-            editDate: firestore.Timestamp.fromDate(new Date())
+            editDate: firestore.Timestamp.fromDate(new Date()),
+            customCustomerId: dbConfig?.customCustomerId
           });
 
         await firestore()
           .collection('dbConfig')
           .doc('dbConfig')
           .update({
-            customerId: customerNo?.customerId + 1,
-            recentUpdated: customerNo?.recentUpdated + 1
+            customerId: dbConfig?.customerId + 1,
+            recentUpdated: dbConfig?.recentUpdated + 1,
+            customCustomerId: getNextCustomerId(dbConfig?.customCustomerId)
           });
         dispatch(
           MessageActions.showMessage({
@@ -184,7 +187,7 @@ function UpdateCustomer(props) {
         }
 
         props.history.push(
-          `/apps/e-commerce/customers/profile/${customerNo?.customerId + 1}`
+          `/apps/e-commerce/customers/profile/${dbConfig?.customerId + 1}`
         );
       } catch (error) {
         console.log(error);

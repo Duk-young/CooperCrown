@@ -87,7 +87,7 @@ export default function MultipleOrderTickets(props) {
                                         <p className='flex-1 pt-4 font-14pt text-right font-700'>{mainForm?.rushFrameOrder ? 'RUSH' : ''}</p>
                                     </div>
                                     <div className='flex flex-row justify-between items-center'>
-                                        <p className='pt-4 font-9pt text-left font-700'>{mainForm?.customer?.customerId}</p>
+                                        <p className='pt-4 font-9pt text-left font-700'>{mainForm?.customer?.customCustomerId}</p>
                                         <p className='pt-4 font-9pt text-right font-700'>{mainForm?.customer?.firstName} {mainForm?.customer?.lastName}</p>
                                     </div>
                                     <div className='w-full h-2 bg-black my-4'></div>

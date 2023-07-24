@@ -94,19 +94,20 @@ const CustomHits = connectHits(({ hits, payments, props, sortCriteria, setSortCr
     <Table stickyHeader aria-label="customized table">
       <TableHead>
         <TableRow className='truncate'>
-          <StyledTableCell>DATE</StyledTableCell>
-          <StyledTableCell className='cursor-pointer'  onClick={() => setSortOrder('Location', sortCriteria)}>LOCATION
-          {sortCriteria === 'insuranceClaimsLocationAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsLocationDesc' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell className='cursor-pointer' onClick={() => setSortOrder('Order', sortCriteria)}>DATE
+            {sortCriteria === 'insuranceClaimsOrderAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsOrderDesc' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell className='cursor-pointer' onClick={() => setSortOrder('Location', sortCriteria)}>LOCATION
+            {sortCriteria === 'insuranceClaimsLocationAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsLocationDesc' && <ExpandLessIcon />}</StyledTableCell>
           <StyledTableCell>ID</StyledTableCell>
-          <StyledTableCell className='cursor-pointer'  onClick={() => setSortOrder('Order', sortCriteria)}>ORDER No. 
-          {sortCriteria === 'insuranceClaimsOrderAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsOrderDesc' && <ExpandLessIcon />}</StyledTableCell>
-          <StyledTableCell className='cursor-pointer'  onClick={() => setSortOrder('Name', sortCriteria)}>NAME
-          {sortCriteria === 'insuranceClaimsNameAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsNameDesc' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell className='cursor-pointer' onClick={() => setSortOrder('Order', sortCriteria)}>ORDER No.
+            {sortCriteria === 'insuranceClaimsOrderAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsOrderDesc' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell className='cursor-pointer' onClick={() => setSortOrder('Name', sortCriteria)}>NAME
+            {sortCriteria === 'insuranceClaimsNameAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsNameDesc' && <ExpandLessIcon />}</StyledTableCell>
           <StyledTableCell>DOB</StyledTableCell>
           <StyledTableCell>INSURANCE</StyledTableCell>
           <StyledTableCell>POLICY No.</StyledTableCell>
           <StyledTableCell className='cursor-pointer' onClick={() => setSortOrder('Amount', sortCriteria)}>CLAIM AMOUNT
-          {sortCriteria === 'insuranceClaimsAmountAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsAmountDesc' && <ExpandLessIcon />}</StyledTableCell>
+            {sortCriteria === 'insuranceClaimsAmountAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsAmountDesc' && <ExpandLessIcon />}</StyledTableCell>
           <StyledTableCell>RECEIVED AMOUNT</StyledTableCell>
           <StyledTableCell>STATUS</StyledTableCell>
         </TableRow>
@@ -134,12 +135,12 @@ const CustomHits = connectHits(({ hits, payments, props, sortCriteria, setSortCr
             </StyledTableCell>
             <StyledTableCell>
               <Link to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
-                <h3 className="text-black">{hit?.customerId}</h3>
+                <h3 className="text-black">{hit?.customCustomerId}</h3>
               </Link>
             </StyledTableCell>
             <StyledTableCell>
               <Link to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}>
-                <h3 className="text-black">{hit?.orderId}</h3>
+                <h3 className="text-black">{hit?.customOrderId}</h3>
               </Link>
             </StyledTableCell>
 
@@ -293,52 +294,50 @@ function Insurance(props) {
                 <CachedIcon />
               </IconButton>
             </div>
-            <div className="flex pt-32 pb-16 pl-8 items-center">
-              <div className="flex flex-col w-1/3 mt-0 px-12">
-                <div className="flex flex-row justify-around gap-8">
-                  <div className="w-full flex gap-10">
-                    <StyledDatePicker
-                      id="date"
-                      label="Start Date"
-                      type="date"
-                      value={form?.start}
-                      variant="outlined"
-                      style={{ border: 'none' }}
-                      name='start'
-                      InputLabelProps={{
-                        shrink: true,
-                        style: { color: 'white' }
-                      }}
-                      InputProps={{
-                        inputProps: {
-                          style: { color: 'white', fontSize: '10px' }
-                        }
-                      }}
-                      onChange={(e) => {
-                        handleChange(e)
-                        console.log(new Date(form?.start).setHours(0, 0, 0, 0))
-                      }}
-                    />
-                    <StyledDatePicker
-                      id="date" 
-                      label="End Date"
-                      type="date"
-                      value={form?.end}
-                      name='end'
-                      variant="outlined"
-                      style={{ border: 'none' }}
-                      InputLabelProps={{
-                        shrink: true,
-                        style: { color: 'white' }
-                      }}
-                      InputProps={{
-                        inputProps: {
-                          style: { color: 'white', fontSize: '10px' }
-                        }
-                      }}
-                      onChange={handleChange}
-                    />
-                  </div>
+            <div className="flex pt-32 pb-16 items-center">
+              <div className="flex flex-col w-1/3 mt-0">
+                <div className="flex flex-row justify-around w-full gap-6 date-input px-6">
+                  <StyledDatePicker
+                    id="date"
+                    label="Start Date"
+                    type="date"
+                    value={form?.start}
+                    variant="outlined"
+                    style={{ border: 'none' }}
+                    name='start'
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { color: 'white' }
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        style: { color: 'white', fontSize: '10px' }
+                      }
+                    }}
+                    onChange={(e) => {
+                      handleChange(e)
+                      console.log(new Date(form?.start).setHours(0, 0, 0, 0))
+                    }}
+                  />
+                  <StyledDatePicker
+                    id="date"
+                    label="End Date"
+                    type="date"
+                    value={form?.end}
+                    name='end'
+                    variant="outlined"
+                    style={{ border: 'none' }}
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { color: 'white' }
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        style: { color: 'white', fontSize: '10px' }
+                      }
+                    }}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
               <div className="flex flex-col w-1/3 border-1 headerSearch">

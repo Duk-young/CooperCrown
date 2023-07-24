@@ -52,7 +52,7 @@ const CustomerInfo = (props) => {
           </div>
           <div className="flex flex-col md:w-3/4 w-2/3 border-black border-t-1 border-b-1">
             <h3 className="pl-6 ">
-              {customer ? customer.customerId : ''}
+              {customer ? customer?.customCustomerId : ''}
             </h3>
           </div>
         </div>

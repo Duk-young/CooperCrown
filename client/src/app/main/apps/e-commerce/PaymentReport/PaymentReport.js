@@ -222,8 +222,8 @@ function PaymentReport(props) {
                         </Typography>
                     </div>
                     <div className='flex flex-row w-full justify-between px-16 pt-32 pb-16 items-center'>
-                        <div className='flex flex-row w-3/4 pt-16'>
-                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128'>
+                        <div className='flex flex-row w-3/4 pt-6'>
+                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128 gap-4'>
                                 <p className='font-8pt truncate'>Cash Total</p>
                                 <p className='font-12pt pl-12 truncate'>
                                     {`$ ${filteredPayments.reduce((accumulator, currentValue) => {
@@ -235,7 +235,7 @@ function PaymentReport(props) {
                                     }, 0)}`}
                                 </p>
                             </div>
-                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128'>
+                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128 gap-4'>
                                 <p className='font-8pt truncate'>Credit Total</p>
                                 <p className='font-12pt pl-12 truncate'>
                                     {`$ ${filteredPayments.reduce((accumulator, currentValue) => {
@@ -247,7 +247,7 @@ function PaymentReport(props) {
                                     }, 0)}`}
                                 </p>
                             </div>
-                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128'>
+                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128 gap-4'>
                                 <p className='font-8pt truncate'>Check Total</p>
                                 <p className='font-12pt pl-12 truncate'>
                                     {`$ ${filteredPayments.reduce((accumulator, currentValue) => {
@@ -259,7 +259,7 @@ function PaymentReport(props) {
                                     }, 0)}`}
                                 </p>
                             </div>
-                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128'>
+                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128 gap-4'>
                                 <p className='font-8pt truncate'>Insurance Total</p>
                                 <p className='font-12pt pl-12 truncate'>
                                     {`$ ${filteredPayments.reduce((accumulator, currentValue) => {
@@ -271,7 +271,7 @@ function PaymentReport(props) {
                                     }, 0)}`}
                                 </p>
                             </div>
-                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128'>
+                            <div className='flex flex-col mx-8 border-b-1 border-white border-solid w-128 gap-4'>
                                 <p className='font-8pt truncate'>Gift Total</p>
                                 <p className='font-12pt pl-12 truncate'>
                                     {`$ ${filteredPayments.reduce((accumulator, currentValue) => {
@@ -306,7 +306,7 @@ function PaymentReport(props) {
                     </div>
                     <div className='flex flex-row w-full'>
                         <div className='flex flex-col items-center w-1/3'>
-                            <div className="date-picker w-full flex flex-row gap-10 px-10 justify-around">
+                            <div className="date-picker w-full flex flex-row gap-6 px-6 justify-around date-input">
                                 <StyledDatePicker
                                     id="date"
                                     label="Start Date"
@@ -436,7 +436,7 @@ function PaymentReport(props) {
                     <TableHead>
                         <TableRow className='truncate'>
                             <StyledTableCell>PAYMENT DATE</StyledTableCell>
-                            <StyledTableCell>ORDER NO.</StyledTableCell>
+                            <StyledTableCell>ORDER No.</StyledTableCell>
                             <StyledTableCell>NAME</StyledTableCell>
                             <StyledTableCell>AMOUNT</StyledTableCell>
                             <StyledTableCell>METHOD</StyledTableCell>

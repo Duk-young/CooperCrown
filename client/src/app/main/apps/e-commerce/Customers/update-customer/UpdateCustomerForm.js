@@ -101,7 +101,7 @@ function UpdateCustomerForm(props) {
   }
 
   return (
-    <div>
+    <div className='flex flex-col gap-16 h-auto'>
       <div className="flex md:flex-row flex-col">
         <div className="p-10 md:w-3/5 w-full">
           <div className="py-4 border-1 border-black border-solid rounded-6">
@@ -422,7 +422,7 @@ function UpdateCustomerForm(props) {
                     stickyHeader
                     aria-label="customized table">
                     <TableHead>
-                      <TableRow style={{ height: 10 }}>
+                      <TableRow style={{ height: 10 }} className='truncate'>
                         <StyledTableCell>ID</StyledTableCell>
                         <StyledTableCell>FIRST NAME</StyledTableCell>
                         <StyledTableCell>LAST NAME</StyledTableCell>
@@ -440,7 +440,7 @@ function UpdateCustomerForm(props) {
                           <StyledTableRow
                             key={row.customerId}
                             style={{ height: 10 }}>
-                            <StyledTableCell>{row?.customerId}</StyledTableCell>
+                            <StyledTableCell>{row?.customCustomerId}</StyledTableCell>
                             <StyledTableCell>{row?.firstName}</StyledTableCell>
                             <StyledTableCell>{row?.lastName}</StyledTableCell>
                             <StyledTableCell>
@@ -462,50 +462,48 @@ function UpdateCustomerForm(props) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col p-10 mt-40">
-        <FuseAnimate animation="transition.slideRightIn" delay={300}>
-          <Button
-            className={classes.button}
-            variant="contained"
-            color="secondary"
-            onClick={() => {
-              if (!form?.customerId) {
-                let count = 0;
-                customers.map((row) => {
-                  if (
-                    row?.firstName === form?.firstName &&
-                    row?.lastName === form?.lastName &&
-                    row?.dob.toDate().getDate() === form?.dob.getDate() &&
-                    row?.dob.toDate().getMonth() === form?.dob.getMonth() &&
-                    row?.dob.toDate().getYear() === form?.dob.getYear()
-                  ) {
-                    count++;
-                  }
-                  return null;
-                });
-                if (count > 0) {
-                  setOpenAlertOnSave(true);
-                  toast.error('Customer already exists!', {
-                    position: 'top-center',
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    transition: Zoom
-                  });
-                } else {
-                  setOpenAlertOnSave(true);
+      <div className="flex flex-col px-10 md:my-0 mt-44 mb-20">
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            if (!form?.customerId) {
+              let count = 0;
+              customers.map((row) => {
+                if (
+                  row?.firstName === form?.firstName &&
+                  row?.lastName === form?.lastName &&
+                  row?.dob.toDate().getDate() === form?.dob.getDate() &&
+                  row?.dob.toDate().getMonth() === form?.dob.getMonth() &&
+                  row?.dob.toDate().getYear() === form?.dob.getYear()
+                ) {
+                  count++;
                 }
+                return null;
+              });
+              if (count > 0) {
+                setOpenAlertOnSave(true);
+                toast.error('Customer already exists!', {
+                  position: 'top-center',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  transition: Zoom
+                });
               } else {
                 setOpenAlertOnSave(true);
-                return;
               }
-            }}>
-            Save
-          </Button>
-        </FuseAnimate>
+            } else {
+              setOpenAlertOnSave(true);
+              return;
+            }
+          }}>
+          Save
+        </Button>
       </div>
     </div>
   );

@@ -375,7 +375,7 @@ const CustomHits = connectHits(
                   <StyledTableCell>
                     <Link
                       to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
-                      <h3 className="text-black">{hit?.customerId}</h3>
+                      <h3 className="text-black">{hit?.customCustomerId}</h3>
                     </Link>
                   </StyledTableCell>
                   <StyledTableCell
@@ -401,10 +401,10 @@ const CustomHits = connectHits(
                   </StyledTableCell>
                   <StyledTableCell>
                     {balances[hit?.objectID]}
-                    {!balances[hit?.objectID] && (
+                    {balances[hit?.objectID] === undefined ? (
                       <IconButton onClick={async () => await checkBalance(hit)}>
                         <GetAppIcon />
-                      </IconButton>)}
+                      </IconButton>) : ''}
                   </StyledTableCell>
                   <StyledTableCell
                     className="capitalize"
@@ -616,7 +616,7 @@ function Orders(props) {
           />
           <div className={classes.header}>
             <div className="flex flex-col w-1/3">
-              <div className="date-picker w-full flex flex-row gap-10">
+              <div className="date-picker w-full flex flex-row gap-10 date-input justify-around">
                 <StyledDatePicker
                   id="date"
                   label="Start Date"

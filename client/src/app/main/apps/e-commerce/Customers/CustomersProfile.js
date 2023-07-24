@@ -237,7 +237,7 @@ const CustomerProfile = (props) => {
           <div className="flex flex-row w-full px-10 justify-center">
             <div className="flex flex-row">
               <Typography className="text-16 pl-8 sm:text-20 truncate">
-                CUSTOMER ID: {customer?.customerId}
+                CUSTOMER ID: {customer?.customCustomerId}
               </Typography>
             </div>
           </div>
@@ -296,7 +296,7 @@ const CustomerProfile = (props) => {
                     <h3 className="pl-6 font-700 bg-grey-200">Customer ID:</h3>
                   </div>
                   <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
-                    <h3 className="pl-6 bg-grey-200">{customer.customerId}</h3>
+                    <h3 className="pl-6 bg-grey-200">{customer.customCustomerId}</h3>
                   </div>
                 </div>
                 <div className="flex flex-row w-full">
@@ -525,7 +525,7 @@ const CustomerProfile = (props) => {
                             key={row.customerId}
                             style={{ height: 10 }}>
                             <StyledTableCell onClick={() => props.history.push(`/apps/e-commerce/customers/profile/${row?.customerId}`)}>
-                              {row?.customerId}
+                              {row?.customCustomerId}
                             </StyledTableCell>
                             <StyledTableCell onClick={() => props.history.push(`/apps/e-commerce/customers/profile/${row?.customerId}`)}>
                               {row?.firstName}

@@ -451,7 +451,7 @@ const InsuranceClaim = (props) => {
                 fullWidth
                 id="outlined-multiline-static"
                 label="ID"
-                value={form?.customerId}
+                value={form?.customCustomerId}
                 variant="outlined"
               />
               <TextField

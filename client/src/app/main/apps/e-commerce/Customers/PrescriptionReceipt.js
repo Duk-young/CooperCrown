@@ -133,7 +133,7 @@ export default function PrescriptionReceipt(props) {
                               <h3 className="pl-6 font-700 ">ID:</h3>
                             </div>
                             <div className="flex flex-col md:w-3/4 w-2/3 border-black border-b-1">
-                              <h3 className="pl-6 ">{customer.customerId}</h3>
+                              <h3 className="pl-6 ">{customer.customCustomerId}</h3>
                             </div>
                           </div>
                           <div className="flex flex-row w-full">

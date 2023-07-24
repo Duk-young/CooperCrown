@@ -12,7 +12,7 @@ import CachedIcon from '@material-ui/icons/Cached';
 import clsx from 'clsx';
 import LoadingDialog from '../ReusableComponents/LoadingDialog';
 import moment from 'moment';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import reducer from '../store/reducers';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -105,7 +105,7 @@ const CustomHits = connectHits(({ hits, props }) => {
               }
             }}>
             <StyledTableCell component="th" scope="row">
-              {hit.customerId}
+              {hit?.customCustomerId}
             </StyledTableCell>
             <StyledTableCell>{hit.firstName}</StyledTableCell>
             <StyledTableCell>{hit.lastName}</StyledTableCell>
@@ -211,10 +211,10 @@ function Customers(props) {
                 <CachedIcon />
               </IconButton>
             </div>
-            <div className="flex pt-32 pb-16 pl-8 items-center">
-              <div className="flex flex-col w-1/3 mt-0 px-12">
+            <div className="flex pt-32 pb-16 items-center">
+              <div className="flex flex-col w-1/3 mt-0 px-6">
                 <div className="flex flex-row justify-around gap-8">
-                  <div className="w-full flex gap-10">
+                  <div className="w-full flex gap-10 date-input justify-around">
                     <StyledDatePicker
                       id="date"
                       label="Start Date"

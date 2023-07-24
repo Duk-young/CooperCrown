@@ -44,6 +44,11 @@ body {
   bottom: 0px;
 }
 
+.date-input .MuiOutlinedInput-input {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
 @media (min-width: 1024px) {
   .custom-height-lg {
     height: 650px;
