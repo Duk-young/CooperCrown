@@ -94,7 +94,8 @@ const CustomHits = connectHits(({ hits, payments, props, sortCriteria, setSortCr
     <Table stickyHeader aria-label="customized table">
       <TableHead>
         <TableRow className='truncate'>
-          <StyledTableCell>DATE</StyledTableCell>
+          <StyledTableCell className='cursor-pointer' onClick={() => setSortOrder('Order', sortCriteria)}>DATE
+            {sortCriteria === 'insuranceClaimsOrderAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsOrderDesc' && <ExpandLessIcon />}</StyledTableCell>
           <StyledTableCell className='cursor-pointer' onClick={() => setSortOrder('Location', sortCriteria)}>LOCATION
             {sortCriteria === 'insuranceClaimsLocationAsc' && <ExpandMoreIcon />}{sortCriteria === 'insuranceClaimsLocationDesc' && <ExpandLessIcon />}</StyledTableCell>
           <StyledTableCell>ID</StyledTableCell>
@@ -134,12 +135,12 @@ const CustomHits = connectHits(({ hits, payments, props, sortCriteria, setSortCr
             </StyledTableCell>
             <StyledTableCell>
               <Link to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
-                <h3 className="text-black">{hit?.customerId}</h3>
+                <h3 className="text-black">{hit?.customCustomerId}</h3>
               </Link>
             </StyledTableCell>
             <StyledTableCell>
               <Link to={`/apps/e-commerce/orders/vieworder/${hit.orderId}`}>
-                <h3 className="text-black">{hit?.orderId}</h3>
+                <h3 className="text-black">{hit?.customOrderId}</h3>
               </Link>
             </StyledTableCell>
 

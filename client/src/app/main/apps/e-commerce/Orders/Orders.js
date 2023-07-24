@@ -375,7 +375,7 @@ const CustomHits = connectHits(
                   <StyledTableCell>
                     <Link
                       to={`/apps/e-commerce/customers/profile/${hit.customerId}`}>
-                      <h3 className="text-black">{hit?.customerId}</h3>
+                      <h3 className="text-black">{hit?.customCustomerId}</h3>
                     </Link>
                   </StyledTableCell>
                   <StyledTableCell

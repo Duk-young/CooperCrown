@@ -2,7 +2,7 @@ import _ from '@lodash';
 import 'react-toastify/dist/ReactToastify.css';
 import { firestore } from 'firebase';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { toast, Zoom } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { withRouter } from 'react-router';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -19,7 +19,7 @@ import moment from 'moment'
 import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import SearchFrameDialouge from '../SearchFrameDialouge';
 import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
@@ -29,6 +29,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
+import { toastAttributes } from '../../ReusableComponents/HelperFunctions';
+import CustomAlert from '../../ReusableComponents/CustomAlert';
 
 const useStyles = makeStyles({
   button: {
@@ -76,7 +78,18 @@ const StyledTableRow = withStyles((theme) => ({
 const EyeglassessOrder = (props) => {
   const classes = useStyles();
   const [selectedFrame, setSelectedFrame] = useState({});
+  const [lensPrices, setLensPrices] = useState([])
+  const [openOutOfRangeAlert, setOpenOutOfRangeAlert] = useState(false)
   const { form, handleChange, disabledState, prescription, lensTypeNames, eyeglasses, setEyeglasses } = props;
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      const lensPrices = (await firestore().collection('lensPrice').doc('lensPrice').get()).data();
+      setLensPrices(lensPrices)
+    }
+    fetchDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleSelectedFrameChange = useCallback((event) => {
     event?.persist && event.persist();
@@ -93,84 +106,14 @@ const EyeglassessOrder = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchLensRate = async () => {
-    const lensPrices = (
-      await firestore().collection('lensPrice').doc('lensPrice').get()
-    ).data();
-    let lensRate
+  const handleAddFrameToOrder = async (lensRate) => {
+
     if (selectedFrame?.lensTypeName) {
-      if (
-        selectedFrame?.eyeglassesSphereOd &&
-        selectedFrame?.eyeglassesCylinderOd
-      ) {
-        lensPrices[selectedFrame?.lensTypeName].rows.map((row) => {
-          if (row?.id === Number(selectedFrame?.eyeglassesSphereOd).toFixed(2)) {
-            if (row[Number(selectedFrame?.eyeglassesCylinderOd).toFixed(2)]) {
-              lensRate = +row[Number(selectedFrame?.eyeglassesCylinderOd).toFixed(2)]
-            } else {
-              toast.error('Selected Lens Rate is not available...', {
-                position: 'top-center',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                transition: Zoom
-              });
-              return null;
-            }
-          }
-          return null;
-        });
-        return lensRate
-      } else {
-        toast.error('Please enter Sphere & Cylinder Values...', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          transition: Zoom
-        });
-        return null;
+      if (selectedFrame?.eyeglassesPrismOd || selectedFrame?.eyeglassesPrismOs) {
+        lensRate = +lensPrices[selectedFrame?.lensTypeName]?.prismPrice
       }
-    } else {
-      toast.error('Please select Lens Type...', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Zoom
-      });
-      return null;
-    }
-  };
-
-  const handleAddFrameToOrder = async () => {
-
-    let lensRate
-    if (selectedFrame?.lensTypeName) {
-      lensRate = await fetchLensRate();
       if (!lensRate) {
-        toast.error(
-          'Lens price is unavailable for selected sphere and cylinder values.',
-          {
-            position: 'top-center',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            transition: Zoom
-          }
-        );
+        toast.error('Out of range price is not specified.', toastAttributes);
         return
       }
     }
@@ -183,16 +126,7 @@ const EyeglassessOrder = (props) => {
       return null
     });
     if (selectedFrame?.frameQuantity < count) {
-      toast.error('Required quantity is not available!', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Zoom
-      });
+      toast.error('Required quantity is not available!', toastAttributes);
       return
     }
 
@@ -201,16 +135,7 @@ const EyeglassessOrder = (props) => {
     ) {
       setEyeglasses([...eyeglasses, { ...selectedFrame, lensRate: lensRate ? lensRate : 0 }]);
     } else {
-      toast.error('Please Fill Required Fields!', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Zoom
-      });
+      toast.error('Please Fill Required Fields!', toastAttributes);
     }
   };
 
@@ -1096,13 +1021,41 @@ const EyeglassessOrder = (props) => {
               <Button
                 className={classes.button}
                 variant="contained"
+                disabled={(!selectedFrame?.frameId && !selectedFrame?.lensTypeName) || disabledState}
                 color="secondary"
-                onClick={handleAddFrameToOrder}
-                disabled={disabledState}
+                onClick={() => {
+                  if (selectedFrame?.lensTypeName && (!selectedFrame?.eyeglassesSphereOd || !selectedFrame?.eyeglassesCylinderOd)) {
+                    toast.error('Please enter Sphere & Cylinder Values...', toastAttributes);
+                    return null;
+                  }
+                  if (selectedFrame?.lensTypeName) {
+                    lensPrices[selectedFrame?.lensTypeName].rows.map((row) => {
+                      if (row?.id === Number(selectedFrame?.eyeglassesSphereOd).toFixed(2)) {
+                        if (row[Number(selectedFrame?.eyeglassesCylinderOd).toFixed(2)]) {
+                          handleAddFrameToOrder(+row[Number(selectedFrame?.eyeglassesCylinderOd).toFixed(2)])
+                        } else {
+                          setOpenOutOfRangeAlert(true)
+                          toast.error('Selected Lens Rate is not available...', toastAttributes);
+                          return null;
+                        }
+                      }
+                      return null;
+                    });
+                  } else handleAddFrameToOrder()
+                }}
                 aria-label="add">
                 <AddIcon />
                 Add to Order
               </Button>
+              <CustomAlert
+                open={openOutOfRangeAlert}
+                setOpen={setOpenOutOfRangeAlert}
+                text1="Lens rate unavailable for selected values."
+                text2="Use out of range price instead?"
+                customFunction={() => {
+                  handleAddFrameToOrder(+lensPrices[selectedFrame?.lensTypeName]?.outOfRangePrice)
+                }}
+              />
               <div className='pl-4'>
                 <Button
                   variant="contained"

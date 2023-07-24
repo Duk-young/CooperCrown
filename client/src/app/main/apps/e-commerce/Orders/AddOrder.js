@@ -268,6 +268,7 @@ function AddOrder(props) {
               insuranceId: form?.insuranceId,
               customOrderId: orders.length > 0 ? moment(new Date()).format('YYMMDD') +
                 _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
+              customCustomerId: customer?.customCustomerId
             });
 
           if (form?.insuranceCostTwo > 0) {
@@ -290,6 +291,7 @@ function AddOrder(props) {
                 insuranceId: form?.insuranceId2,
                 customOrderId: orders.length > 0 ? moment(new Date()).format('YYMMDD') +
                   _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
+                customCustomerId: customer?.customCustomerId
               });
           }
         }

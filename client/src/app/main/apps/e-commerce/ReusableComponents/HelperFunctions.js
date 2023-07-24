@@ -1,3 +1,5 @@
+import { Zoom } from 'react-toastify';
+
 export const sortAlphabetically = (array, attribute) => {
     if (array?.length > 0) {
         array.sort((a, b) => {
@@ -47,4 +49,15 @@ export const getNextCustomerId = (previousCustomerId) => {
     const nextCustomerId = nextCharacterPart + paddedNumericPart;
 
     return nextCustomerId;
+}
+
+export const toastAttributes = {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    transition: Zoom
 }

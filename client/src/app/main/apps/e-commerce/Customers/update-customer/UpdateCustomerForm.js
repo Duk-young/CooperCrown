@@ -440,7 +440,7 @@ function UpdateCustomerForm(props) {
                           <StyledTableRow
                             key={row.customerId}
                             style={{ height: 10 }}>
-                            <StyledTableCell>{row?.customerId}</StyledTableCell>
+                            <StyledTableCell>{row?.customCustomerId}</StyledTableCell>
                             <StyledTableCell>{row?.firstName}</StyledTableCell>
                             <StyledTableCell>{row?.lastName}</StyledTableCell>
                             <StyledTableCell>
