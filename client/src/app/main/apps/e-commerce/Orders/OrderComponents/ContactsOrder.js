@@ -117,10 +117,9 @@ const ContactsOrder = (props) => {
   };
 
   const handleAddContactsLensToOrder = () => {
-    console.log('formmmm', selectedContactLens)
     let res = fetchContactLensRate();
 
-    if (res?.clOdRate && res?.clOsRate) {
+    if (res?.clOdRate !== undefined && res?.clOsRate !== undefined) {
       setContactLenses([...contactLenses, { ...selectedContactLens, contactLensRate: (res?.clOdRate * selectedContactLens?.contactLensQtyOd || 0) + (res?.clOsRate * selectedContactLens?.contactLensQtyOs || 0), clOdRate: res?.clOdRate, clOsRate: res?.clOsRate }]);
     } else {
       toast.error(

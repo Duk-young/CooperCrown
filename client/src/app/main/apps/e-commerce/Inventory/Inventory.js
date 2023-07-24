@@ -50,44 +50,39 @@ function Inventory() {
   };
 
   return (
-    <FusePageSimple
-      content={
-        <div>
-          <div className={clsx(classes.tabHeader)}>
-            <div className="flex flex-row w-full items-center justify-center">
-              <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h4">INVENTORY</Typography>
-              <IconButton color='secondary' onClick={() => {
-                setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
-              }}>
-                <CachedIcon />
-              </IconButton>
-            </div>
-            <Tabs
-              value={selectedTab}
-              onChange={handleTabChange}
-              indicatorColor="transparent"
-              textColor="white"
-              variant="fullwidth"
-              scrollButtons="off"
-              centered>
-              <StyledTab className="h-64" label="FRAMES" />
-              <StyledTab className="h-64" label="LENS" />
-              <StyledTab className="h-64" label="OTHER" />
-              <StyledTab className="h-64" label="OUT OF STOCK" />
-              <StyledTab className="h-64" label="SHOWROOM" />
-            </Tabs>
-          </div>
-          <div>
-            {selectedTab === 0 && (<Frames searchClient={searchClient} />)}
-            {selectedTab === 1 && (<Lens searchClient={searchClient} />)}
-            {selectedTab === 2 && (<Other searchClient={searchClient} />)}
-            {selectedTab === 3 && (<OutOfStock />)}
-            {selectedTab === 4 && (<ShowRoomInventory searchClient={searchClient} />)}
-          </div>
+    <div className='flex flex-col overflow-hidden'>
+      <div className={clsx(classes.tabHeader)}>
+        <div className="flex flex-row w-full items-center justify-center">
+          <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h4">INVENTORY</Typography>
+          <IconButton color='secondary' onClick={() => {
+            setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+          }}>
+            <CachedIcon />
+          </IconButton>
         </div>
-
-      }
-    />
+        <Tabs
+          value={selectedTab}
+          onChange={handleTabChange}
+          indicatorColor="transparent"
+          textColor="white"
+          variant="fullwidth"
+          scrollButtons="off"
+          centered>
+          <StyledTab className="h-64" label="FRAMES" />
+          <StyledTab className="h-64" label="LENS" />
+          <StyledTab className="h-64" label="OTHER" />
+          <StyledTab className="h-64" label="OUT OF STOCK" />
+          <StyledTab className="h-64" label="SHOWROOM" />
+        </Tabs>
+      </div>
+      <div className='flex flex-col overflow-hidden'>
+        {selectedTab === 0 && (<Frames searchClient={searchClient} />)}
+        {selectedTab === 1 && (<Lens searchClient={searchClient} />)}
+        {selectedTab === 2 && (<Other searchClient={searchClient} />)}
+        {selectedTab === 3 && (<OutOfStock />)}
+        {selectedTab === 4 && (<ShowRoomInventory searchClient={searchClient} />)}
+      </div>
+    </div>
   );
 }
 

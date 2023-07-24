@@ -401,10 +401,10 @@ const CustomHits = connectHits(
                   </StyledTableCell>
                   <StyledTableCell>
                     {balances[hit?.objectID]}
-                    {!balances[hit?.objectID] && (
+                    {balances[hit?.objectID] === undefined ? (
                       <IconButton onClick={async () => await checkBalance(hit)}>
                         <GetAppIcon />
-                      </IconButton>)}
+                      </IconButton>) : ''}
                   </StyledTableCell>
                   <StyledTableCell
                     className="capitalize"

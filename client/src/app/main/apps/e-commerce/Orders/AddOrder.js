@@ -235,8 +235,8 @@ function AddOrder(props) {
               moment(new Date()).format('YYMMDD') +
               _.padStart(dbConfig?.customOrderId + 1, 4, '0') : moment(new Date()).format('YYMMDD') + _.padStart(1, 4, '0'),
             customerId: customer?.customerId,
-            firstName: customer?.firstName,
-            lastName: customer?.lastName,
+            firstName: customer?.firstName ?? '',
+            lastName: customer?.lastName ?? '',
             dob: customer?.dob ? customer?.dob : '',
             gender: customer?.gender ? customer?.gender : '',
             ethnicity: customer?.ethnicity ? customer?.ethnicity : '',
@@ -245,7 +245,8 @@ function AddOrder(props) {
             eyeglasses: eyeglasses,
             contactLenses: contactLenses,
             medication: medication,
-            otherProductInfo: otherProductInfo
+            otherProductInfo: otherProductInfo,
+            customCustomerId: customer?.customCustomerId
           });
 
         if (form?.insuranceCostOne > 0) {
@@ -261,9 +262,9 @@ function AddOrder(props) {
               dob: customer?.dob ?? '',
               firstName: customer?.firstName ?? '',
               lastName: customer?.lastName ?? '',
-              insuranceCompany: insuranceComp1?.insuranceCompany,
-              policyNo: insuranceComp1?.policyNo,
-              insuranceCost: Number(form?.insuranceCostOne),
+              insuranceCompany: insuranceComp1?.insuranceCompany ?? '',
+              policyNo: insuranceComp1?.policyNo ?? '',
+              insuranceCost: Number(form?.insuranceCostOne) ?? 0,
               claimStatus: 'Unclaimed',
               insuranceId: form?.insuranceId,
               customOrderId: orders.length > 0 ? moment(new Date()).format('YYMMDD') +
@@ -284,8 +285,8 @@ function AddOrder(props) {
                 dob: customer?.dob ?? '',
                 firstName: customer?.firstName ?? '',
                 lastName: customer?.lastName ?? '',
-                insuranceCompany: insuranceComp2?.insuranceCompany,
-                policyNo: insuranceComp2?.policyNo,
+                insuranceCompany: insuranceComp2?.insuranceCompany ?? '',
+                policyNo: insuranceComp2?.policyNo ?? '',
                 insuranceCost: Number(form?.insuranceCostTwo),
                 claimStatus: 'Unclaimed',
                 insuranceId: form?.insuranceId2,

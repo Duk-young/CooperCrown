@@ -64,13 +64,13 @@ const CustomHits = connectHits(({ hits, form, setForm, handleClose }) => {
                     setForm({
                       ...form,
                       frameId: hit?.frameId,
-                      frameBrand: hit?.brand,
-                      frameModel: hit?.productDescription,
-                      frameColour: hit?.colour,
-                      frameRate: hit?.retailRate,
-                      frameWsRate: hit?.ws,
-                      frameQuantity: hit?.quantity,
-                      frameShape: hit?.shape
+                      frameBrand: hit?.brand ?? '',
+                      frameModel: hit?.productDescription ?? '',
+                      frameColour: hit?.colour ?? '',
+                      frameRate: hit?.retailRate ?? '',
+                      frameWsRate: hit?.ws ?? '',
+                      frameQuantity: hit?.quantity ?? '',
+                      frameShape: hit?.shape ?? ''
                     });
                     handleClose();
                   } else {
@@ -132,15 +132,15 @@ const CustomProductHits = connectHits(
                     if (hit?.quantity > 0) {
                       setForm({
                         ...form,
-                        otherProductBrand: hit?.brand,
-                        otherProductModel: hit?.productDescription,
-                        otherProductColour: hit?.colour,
-                        otherProductMaterial: hit?.material,
-                        otherProductSize: hit?.retailRate,
-                        otherProductQty: hit?.quantity,
-                        otherProductPrice: hit?.retailRate,
-                        otherProductWS: hit?.ws,
-                        otherProductSKU: hit?.sku
+                        otherProductBrand: hit?.brand ?? '',
+                        otherProductModel: hit?.productDescription ?? '',
+                        otherProductColour: hit?.colour ?? '',
+                        otherProductMaterial: hit?.material ?? '',
+                        otherProductSize: hit?.retailRate ?? '',
+                        otherProductQty: hit?.quantity ?? '',
+                        otherProductPrice: hit?.retailRate ?? '',
+                        otherProductWS: hit?.ws ?? '',
+                        otherProductSKU: hit?.sku ?? ''
                       });
                       handleClose();
                     } else {

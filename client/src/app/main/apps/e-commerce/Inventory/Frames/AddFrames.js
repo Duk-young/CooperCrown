@@ -102,7 +102,7 @@ function AddFrames(props) {
       resultFrame.date = resultFrame.date && resultFrame.date.toDate();
       resultFrame.id = queryFrame.docs[0].id;
       setForm(resultFrame);
-      setImages(resultFrame.images.urls);
+      setImages(resultFrame?.images?.urls);
 
       setisLoading(false);
     };
@@ -144,7 +144,8 @@ function AddFrames(props) {
         let data = {
           ...form,
           images: { urls },
-          initialQuantity: form.quantity
+          initialQuantity: form.quantity,
+          date: form?.date ?? firestore.Timestamp.fromDate(new Date()),
         };
 
         await ref.set(data);
@@ -163,7 +164,7 @@ function AddFrames(props) {
     } else {
       setisLoading(true);
 
-      const queryFrames = await firestore().collection('frames').get();
+      const queryFrames = await firestore().collection('frames').where('sku', '==', form?.sku).get()
       let resultFrames = [];
       queryFrames.forEach((doc) => {
         resultFrames.push(doc.data());
@@ -259,7 +260,7 @@ function AddFrames(props) {
               </IconButton>
             </div>
             <div className='flex flex-row w-1/3 justify-center'>
-              <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h6">NEW FRAME</Typography>
+              <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h6">{form?.frameId ? 'EDIT FRAME' : 'NEW FRAME'}</Typography>
             </div>
             <div className='flex flex-row w-1/3'>
               <Dialog
@@ -573,7 +574,7 @@ function AddFrames(props) {
                       </div>
                     </div>
                     <div className="flex flex-row w-full overflow-scroll flex-wrap mt-10 p-6">
-                      {images.map((img, index) => (
+                      {images?.length > 0 && images.map((img, index) => (
                         <div className="mb-8 w-224 mr-6 object-contain">
                           <img
                             className="w-224 h-128 shadow-1 rounded-4"

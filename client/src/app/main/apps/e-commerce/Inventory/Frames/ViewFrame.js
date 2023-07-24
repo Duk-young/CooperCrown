@@ -313,7 +313,7 @@ function ViewFrame(props) {
       resultFrame.date = resultFrame.date && resultFrame.date.toDate();
       resultFrame.id = queryFrame.docs[0].id;
       setForm(resultFrame);
-      setImages(resultFrame.images.urls);
+      setImages(resultFrame?.images?.urls);
 
       const queryRestocks = await firestore()
         .collection('restocks')
@@ -576,7 +576,7 @@ function ViewFrame(props) {
                     <ImageSlider open={openImageSlider} handleClose={() => setOpenImageSlider(false)}
                       images={images?.length > 0 ? images.map((img) => img.url) : []} imageIndex={imageIndex} />
                     <div className="flex flex-row w-full overflow-scroll flex-wrap mt-10 p-6">
-                      {images.map((img, index) => (
+                      {images?.length > 0 && images.map((img, index) => (
                         <div className="mb-8 w-224 mr-6 object-contain">
                           <img
                             className="w-224 h-128 shadow-1 rounded-4"
