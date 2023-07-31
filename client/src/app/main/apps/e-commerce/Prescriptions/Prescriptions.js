@@ -377,10 +377,7 @@ function Prescriptions(props) {
         <div className="p-10">
           <div className="py-4 border-1 border-black border-solid rounded-6">
             <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-              <h1 className="font-700" style={{ color: '#f15a25' }}>
-                {`RX: ${form?.prescriptionType ? '' : 'Select Prescription'} ${form?.prescriptionType === 'eyeglassesRx' ? 'Eyeglasses' : ''}
-                ${form?.prescriptionType === 'contactLensRx' ? 'Contact Lens' : ''} ${form?.prescriptionType === 'medicationRx' ? 'Medication' : ''}`}
-              </h1>
+              <h1 className="font-700" style={{ color: '#f15a25' }}>RX TYPE</h1>
             </div>
             <div className="flex flex-col w-full">
               <div className="flex flex-row p-16 sm:p-24 w-full">

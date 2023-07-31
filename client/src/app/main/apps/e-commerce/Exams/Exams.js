@@ -609,8 +609,8 @@ function Exams(props) {
               {form?.examId ? 'VIEW EXAM' : 'NEW EXAM'}
             </Typography>
           </div>
-          <div className='flex flex-row w-1/3 justify-end pr-8 gap-10'>
-            <div className='flex flex-col self-center'>
+          <div className='flex flex-row w-1/3 justify-end pr-8 gap-10 items-end mb-36'>
+            <div className='flex flex-col items-end'>
               {!disabledState &&
                 <Button
                   variant="contained"
@@ -648,7 +648,7 @@ function Exams(props) {
                 </Button>}
             </div>
             {disabledState &&
-              <div className='flex flex-col self-center'>
+              <div className='flex flex-col items-end'>
                 <Button
                   variant="contained"
                   className={classes.button}

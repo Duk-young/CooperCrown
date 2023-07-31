@@ -597,7 +597,7 @@ const CustomerProfile = (props) => {
                             <StyledTableCell>DATE</StyledTableCell>
                             <StyledTableCell>COMPANY</StyledTableCell>
                             <StyledTableCell>PRIMARY HOLDER</StyledTableCell>
-                            <StyledTableCell>POLICY No</StyledTableCell>
+                            <StyledTableCell>POLICY No.</StyledTableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>

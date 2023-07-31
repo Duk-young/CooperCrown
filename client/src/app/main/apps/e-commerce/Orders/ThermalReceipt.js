@@ -67,7 +67,7 @@ export default function ThermalReceipt(props) {
       aria-labelledby="simple-dialog-title"
       open={open}>
       <div className='flex flex-col w-full'>
-        <div className='flex flex-row justify-center'>
+        <div className='flex flex-row justify-center my-10'>
           <Fab
             onClick={handlePrint}
             variant="extended"
@@ -81,7 +81,7 @@ export default function ThermalReceipt(props) {
         <div ref={componentRef}>
           <div class="flex justify-center items-center">
             <div class="thermal-paper p-2">
-              <div className='flex flex-col w-full border-1 border-black justify-center p-10'>
+              <div className='flex flex-col w-full justify-center p-10'>
                 <div className="mx-auto w-128 flex flex-row justify-center py-16">
                   <img className="w-128" src="assets/images/logos/logoblack.svg" alt="logossss" />
                 </div>
@@ -141,7 +141,7 @@ export default function ThermalReceipt(props) {
                     </div>
                   </div>
                 ))}
-                <div className='w-full h-2 border-b-1 border-black border-dotted my-8'></div>
+                <div className='w-full h-2 border-b-1 border-black border-solid my-8'></div>
                 <div className='flex flex-row w-full justify-between px-10 pb-6'>
                   <p className='pl-6 font-9pt font-700'>Sub Total</p>
                   <p className='font-7pt font-700'>${handleTotal().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>

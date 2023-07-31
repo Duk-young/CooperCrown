@@ -797,7 +797,7 @@ function AddShowRoomInventory(props) {
                       });
                     }
                   }}>
-                  <Icon>save</Icon> SAVE
+                  SAVE
                 </Button>
               </div>
             </div>

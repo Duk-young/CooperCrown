@@ -137,7 +137,7 @@ export default function OrderReceipt(props) {
                         </div>
                       </div>
                     ))}
-                    <div className='w-full h-2 border-b-1 border-black border-dotted my-8'></div>
+                    <div className='w-full h-2 border-b-1 border-black border-solid my-8'></div>
 
                     <div className='flex flex-row w-full'>
                       <div className='flex flex-row w-2/3'></div>

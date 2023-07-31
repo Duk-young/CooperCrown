@@ -539,7 +539,7 @@ function AddLens(props) {
                       });
                     }
                   }}>
-                  <Icon>save</Icon> SAVE
+                  SAVE
                 </Button>
               </div>
             </div>

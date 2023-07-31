@@ -606,7 +606,7 @@ function NewShowRoom(props) {
                 {form?.userRole === 'staff' && (
                   <div className="flex flex-col h-full py-4 border-1 border-black border-solid rounded-6">
                     <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                      <h1 className="font-700" style={{ color: '#f15a25' }}>
+                      <h1 className="font-700 uppercase" style={{ color: '#f15a25' }}>
                         Priviliges
                       </h1>
                     </div>

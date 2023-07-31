@@ -133,7 +133,7 @@ const OrderHistory = (props) => {
           stickyHeader>
           <TableHead>
             <TableRow>
-              <StyledTableCell>ORDER No</StyledTableCell>
+              <StyledTableCell>ORDER No.</StyledTableCell>
               <StyledTableCell>DATE</StyledTableCell>
               <StyledTableCell>AMOUNT</StyledTableCell>
               <StyledTableCell>INSURANCE</StyledTableCell>

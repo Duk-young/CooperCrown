@@ -78,6 +78,28 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
+const StyledDatePicker = withStyles((theme) => ({
+  root: {
+    '& label.Mui-focused': {
+      color: 'white'
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'yellow'
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white'
+      },
+      '&:hover fieldset': {
+        borderColor: 'white'
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'yellow'
+      }
+    }
+  }
+}))(TextField);
+
 const useStyles = makeStyles({
   button: {
     backgroundColor: '#f15a25',
@@ -162,6 +184,7 @@ function AddOrder(props) {
         const ref = firestore().collection('orders').doc(form?.id);
         let data = {
           ...form,
+          editDate: firestore.Timestamp.fromDate(new Date()),
           eyeglasses: eyeglasses,
           contactLenses: contactLenses,
           medication: medication,
@@ -697,39 +720,41 @@ function AddOrder(props) {
             </div>
             <div className="order-header-content flex justify-between items-center p-10">
               <div className="date-picker w-1/3 flex gap-10">
-                <TextField
+                <StyledDatePicker
                   id="date"
                   label="Enter Date"
                   type="date"
-                  defaultValue={
-                    moment(form?.orderDate).format('YYYY-MM-DD') ?? currentDate
-                  } // Update with info from customer
-                  value={
-                    moment(form?.orderDate).format('YYYY-MM-DD') ?? currentDate
-                  }
+                  disabled
+                  value={form?.orderDate ? moment(form?.orderDate).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')}
                   variant="outlined"
+                  style={{ border: 'none' }}
                   InputLabelProps={{
                     shrink: true,
-                    readOnly: true
+                    style: { color: 'white' }
+                  }}
+                  InputProps={{
+                    inputProps: {
+                      style: { color: 'white', fontSize: '10px' }
+                    }
                   }}
                 />
                 {routeParams.orderId && (
-                  <TextField
+                  <StyledDatePicker
                     id="date"
                     label="Last Edited"
                     type="date"
-                    defaultValue={
-                      moment(form?.orderDate).format('YYYY-MM-DD') ??
-                      currentDate
-                    } // Update with info from customer
-                    value={
-                      moment(form?.orderDate).format('YYYY-MM-DD') ??
-                      currentDate
-                    }
+                    disabled
+                    value={form?.editDate ? moment(form?.editDate.toDate()).format('YYYY-MM-DD') : ''}
                     variant="outlined"
+                    style={{ border: 'none' }}
                     InputLabelProps={{
                       shrink: true,
-                      readOnly: true
+                      style: { color: 'white' }
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        style: { color: 'white', fontSize: '10px' }
+                      }
                     }}
                   />
                 )}
@@ -753,8 +778,9 @@ function AddOrder(props) {
                 )}
               </div>
               {routeParams.orderId && (
-                <div className='flex flex-col w-1/3'>
-                  <FormControl className='w-2/3' variant="outlined">
+                <div className='flex flex-row w-1/3 justify-end'>
+                <div className='flex flex-col w-192'>
+                  <FormControl variant="outlined">
                     <InputLabel id="demo-simple-select-autowidth-label" color='white'>
                       Select an option:
                     </InputLabel>
@@ -787,6 +813,7 @@ function AddOrder(props) {
 
                     </Select>
                   </FormControl>
+                </div>
                 </div>
               )}
             </div>
@@ -843,7 +870,7 @@ function AddOrder(props) {
                   <OtherProductsOrder disabledState={disabledState} form={form} handleChange={handleChange} otherProductInfo={otherProductInfo}
                     setOtherProductInfo={setOtherProductInfo} />
 
-                  <div className="order-list flex flex-col p-16 sm:px-24">
+                  <div className="order-list flex flex-col px-16 sm:px-24">
                     <FuseAnimate
                       animation="transition.slideRightIn"
                       delay={500}>
@@ -1164,7 +1191,7 @@ function AddOrder(props) {
                   </div>
 
                   {routeParams?.orderId && (
-                    <div className="payment-history flex flex-col p-16 sm:px-24">
+                    <div className="payment-history flex flex-col px-16 sm:px-24 pt-16">
                       <FuseAnimate
                         animation="transition.slideRightIn"
                         delay={500}>
@@ -1306,80 +1333,45 @@ function AddOrder(props) {
                       </FuseAnimate>
                     </div>
                   )}
-                  {disabledState === false && (
-                    <Button
-                      className={classes.button}
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => {
-                        if (form?.locationName) { onSubmit() }
-                        else {
-                          toast.error(
-                            'Showroom is mandatory.',
-                            {
-                              position: 'top-center',
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              transition: Zoom
-                            }
-                          );
-                        }
-                      }}
-                      aria-label="add">
-                      {routeParams?.customerId === 'new'
-                        ? 'Submit Order'
-                        : 'SAVE'}
-                    </Button>
-                  )}
-                  {disabledState === true && (
-                    <Button
-                      className={classes.button}
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => {
-                        if (userData.userRole === 'admin' || userData?.ordersEdit) {
-                          setDisabledState(false)
-                        } else {
-                          toast.error('You are not authorized', {
-                            position: 'top-center',
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            transition: Zoom
-                          });
-                        }
-                      }}
-                      aria-label="add">
-                      EDIT
-                    </Button>
-                  )}
 
-                  {routeParams?.orderId && (
-                    <>
-                      <CustomAlert open={openDelete} setOpen={setOpenDelete} text1='Are you sure?'
-                        text2='Selected order, its insurance claim as well as payments will be deleted.' customFunction={handleDelete} />
+                  <div className='flex flex-col p-16 sm:px-24 gap-8'>
+                    {disabledState === false && (
                       <Button
-                        style={{
-                          backgroundColor: 'transparent',
-                          color: '#f47b51',
-                          width: 'unset'
-                        }}
+                        className={classes.button}
                         variant="contained"
                         color="secondary"
                         onClick={() => {
-                          if (userData.userRole === 'admin' || userData?.ordersDelete) {
-                            if (routeParams.customerId === 'new') {
-                              alert('No Data to delete');
-                            } else {
-                              setOpenDelete(true);
-                            }
+                          if (form?.locationName) { onSubmit() }
+                          else {
+                            toast.error(
+                              'Showroom is mandatory.',
+                              {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              }
+                            );
+                          }
+                        }}
+                        aria-label="add">
+                        {routeParams?.customerId === 'new'
+                          ? 'Submit Order'
+                          : 'SAVE'}
+                      </Button>
+                    )}
+                    {disabledState === true && (
+                      <Button
+                        className={classes.button}
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => {
+                          if (userData.userRole === 'admin' || userData?.ordersEdit) {
+                            setDisabledState(false)
                           } else {
                             toast.error('You are not authorized', {
                               position: 'top-center',
@@ -1392,12 +1384,49 @@ function AddOrder(props) {
                               transition: Zoom
                             });
                           }
-
-                        }}>
-                        delete
+                        }}
+                        aria-label="add">
+                        EDIT
                       </Button>
-                    </>
-                  )}
+                    )}
+                    {routeParams?.orderId && (
+                      <>
+                        <CustomAlert open={openDelete} setOpen={setOpenDelete} text1='Are you sure?'
+                          text2='Selected order, its insurance claim as well as payments will be deleted.' customFunction={handleDelete} />
+                        <Button
+                          style={{
+                            backgroundColor: 'transparent',
+                            color: '#f47b51',
+                            width: 'unset'
+                          }}
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => {
+                            if (userData.userRole === 'admin' || userData?.ordersDelete) {
+                              if (routeParams.customerId === 'new') {
+                                alert('No Data to delete');
+                              } else {
+                                setOpenDelete(true);
+                              }
+                            } else {
+                              toast.error('You are not authorized', {
+                                position: 'top-center',
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                transition: Zoom
+                              });
+                            }
+
+                          }}>
+                          delete
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </>
               )}
             </div>
