@@ -55,7 +55,7 @@ function FuseNavVerticalItem(props) {
   });
   const { t } = useTranslation('navigation');
 
-  const restrictedLinkIds = ['Showroom-Managment','Doctor-Management', 'user-management', 'emailTemplates', 'priceSetting', 'lens-price', 'contact-price', 'service-price', 'dicount-price']
+  const restrictedLinkIds = ['Showroom-Managment','Doctor-Management', 'user-management', 'emailTemplates', 'priceSetting', 'lens-price', 'contact-price', 'service-price', 'dicount-price', 'Terms-And-Conditions']
 
   const hasPermission = useMemo(
     () => (restrictedLinkIds.includes(item?.id) && userData?.userRole === 'staff') ? false : true,

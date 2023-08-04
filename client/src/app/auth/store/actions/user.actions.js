@@ -71,7 +71,7 @@ export function createUserSettingsFirebase(authUser) {
     firebase
       .auth()
       .currentUser.getIdTokenResult()
-      .then(async(idTokenResult) => {
+      .then(async (idTokenResult) => {
 
         if (idTokenResult.claims.Admin) {
           role = 'admin';
@@ -106,7 +106,7 @@ export function createUserSettingsFirebase(authUser) {
             from: 'firebase',
             role: [role],
             data: {
-              displayName: authUser?.user?.displayName || authUser.displayName,
+              displayName: `${firestoreDetails?.fname} ${firestoreDetails?.lname}`,
               email: authUser?.user?.email || authUser.email,
               settings: {
                 ...fuseDefaultSettings
@@ -142,7 +142,7 @@ export function setUserData(user) {
         Set User Settings
          */
     dispatch(FuseActions.setDefaultSettings(user.data.settings));
-    
+
     dispatch(
       Actions.updateNavigationItem('Account-Setting', {
         title: 'Account Setting',
