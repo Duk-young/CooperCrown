@@ -1,4 +1,4 @@
-import { firestore } from 'firebase';
+import firebase, { firestore } from 'firebase';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
@@ -40,11 +40,12 @@ for (let i = -15; i <= 15; i += 0.25) {
 return newTable
   }
   const onSubmit = async () => {
+    const sanitizedLensType = form?.lensType.replace('.', '-')
     try {
       await firestore()
         .collection('lensPrice')
         .doc('lensPrice')
-        .update({ [form?.lensType]: {
+        .update({ [sanitizedLensType]: {
           prismPrice: form?.prismPrice,
           outOfRangePrice: form?.outOfRangePrice,
           rows: generateNewTableValues()
