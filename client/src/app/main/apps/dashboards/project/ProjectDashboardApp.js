@@ -22,7 +22,7 @@ import Widget11 from './widgets/Widget11';
 import Widget2 from './widgets/Widget2';
 import Widget3 from './widgets/Widget3';
 import Widget4 from './widgets/Widget4';
-import Widget5 from './widgets/Widget5';
+// import Widget5 from './widgets/Widget5';
 import Widget6 from './widgets/Widget6';
 import Widget7 from './widgets/Widget7';
 import Widget8 from './widgets/Widget8';
@@ -190,9 +190,9 @@ function ProjectDashboardApp(props) {
 							<div className="widget flex w-full sm:w-1/2 md:w-1/4 p-12">
 								<Widget4 widget={widgets.widget4} />
 							</div>
-							<div className="widget flex w-full p-12">
+							{/* <div className="widget flex w-full p-12">
 								<Widget5 widget={widgets.widget5} />
-							</div>
+							</div> */}
 							<div className="widget flex w-full sm:w-1/2 p-12">
 								<Widget6 widget={widgets.widget6} />
 							</div>

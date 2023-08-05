@@ -1,15 +1,13 @@
-import _ from '@lodash';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import { useTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import { useTheme } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import React from 'react';
+import Typography from '@material-ui/core/Typography';
 
 function Widget5(props) {
   const theme = useTheme();
-  const data = _.merge({}, props.data);
-  const [dataset, setDataset] = useState(`${Object.keys(data.datasets)[0]}`);
+
+  if (!props?.data) return null
 
   return (
     <Card className="w-full rounded-8 shadow-none border-1">
@@ -19,26 +17,13 @@ function Widget5(props) {
             {props?.title || 'Visitors'}
           </Typography>
         </div>
-
-        <div className="flex flex-row items-center">
-          {Object.keys(data.datasets).map((key) => (
-            <Button
-              key={key}
-              className="py-8 px-8"
-              size="small"
-              onClick={() => setDataset(key)}
-              disabled={key === dataset}>
-              {key}
-            </Button>
-          ))}
-        </div>
       </div>
 
       <Typography className="relative h-200 sm:h-320 sm:pb-16">
         <Line
           data={{
-            labels: data.labels,
-            datasets: data.datasets[dataset].map((obj, index) => {
+            labels: props?.data.labels,
+            datasets: props?.data.datasets['ALL'].map((obj, index) => {
               const palette =
                 theme.palette[index === 0 ? 'primary' : 'secondary'];
               return {
@@ -52,7 +37,7 @@ function Widget5(props) {
               };
             })
           }}
-          options={data.options}
+          options={props?.data.options}
         />
       </Typography>
     </Card>

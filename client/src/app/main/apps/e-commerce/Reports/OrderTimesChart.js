@@ -22,7 +22,7 @@ const OrderTimesChart = (props) => {
     let newData = JSON.parse(JSON.stringify(widget5));
 
     newData.datasets = {
-      all: [{
+      ALL: [{
         label: 'Orders',
         data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         fill: 'start'
@@ -31,7 +31,7 @@ const OrderTimesChart = (props) => {
 
     orders.forEach((order) => {
       const timeIndex = getTimeIndex(order?.orderDate.toDate())
-      newData.datasets.all[0].data[timeIndex] += 1
+      newData.datasets.ALL[0].data[timeIndex] += 1
     });
     setData(newData)
     // eslint-disable-next-line react-hooks/exhaustive-deps

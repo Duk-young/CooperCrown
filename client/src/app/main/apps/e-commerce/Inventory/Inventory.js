@@ -6,7 +6,6 @@ import algoliasearch from 'algoliasearch/lite';
 import CachedIcon from '@material-ui/icons/Cached';
 import clsx from 'clsx';
 import Frames from './Frames/Frames';
-import FusePageSimple from '@fuse/core/FusePageSimple';
 import Lens from './Lens/Lens';
 import Other from './Other/Other';
 import OutOfStock from './Out Of Stock/OutOfStock';

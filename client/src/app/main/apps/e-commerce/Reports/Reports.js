@@ -60,13 +60,17 @@ function Reports() {
   const dispatch = useDispatch();
   const [exams, setExams] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [orderPayments, setOrderPayments] = useState([]);
+  const [insurancePayments, setInsurancePayments] = useState([]);
+  const [filteredOrderPayments, setFilteredOrderPayments] = useState([]);
+  const [filteredInsurancePayments, setFilteredInsurancePayments] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filteredExams, setFilteredExams] = useState([]);
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [showrooms, setShowrooms] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { form, handleChange, setForm } = useForm(null);
+  const { form, handleChange, setForm } = useForm({ startDate: new Date(), endDate: new Date() });
 
   const widgets = useSelector(({ analyticsDashboardApp }) => analyticsDashboardApp.widgets.data);
 
@@ -75,24 +79,39 @@ function Reports() {
     dispatch(Actions.getWidgets());
   }, [dispatch])
 
-  const filterData = () => {
+  const filterData = (start, end) => {
+
+    const startDate = form?.startDate ? form?.startDate.setHours(0, 0, 0, 0) : undefined
+    const endDate = form?.endDate ? form?.endDate.setHours(23, 59, 59, 999) : undefined
     let newOrders = orders.filter((order) => {
       const orderDate = order?.orderDate.toDate()
-      return orderDate >= form?.startDate && orderDate <= form?.endDate;
+      return orderDate >= (start || startDate) && orderDate <= (end || endDate);
     })
     setFilteredOrders(newOrders)
 
     let newExams = exams.filter((exam) => {
       const examTime = exam?.examTime.toDate()
-      return examTime >= form?.startDate && examTime <= form?.endDate;
+      return examTime >= (start || startDate) && examTime <= (end || endDate);
     })
     setFilteredExams(newExams)
 
     let newCustomers = customers.filter((customer) => {
       const creationDate = customer?.creationDate && customer?.creationDate.toDate()
-      return creationDate >= form?.startDate && creationDate <= form?.endDate;
+      return creationDate >= (start || startDate) && creationDate <= (end || endDate);
     })
     setFilteredCustomers(newCustomers)
+
+    let newOrderPayments = orderPayments.filter((pay) => {
+      const creationDate = pay?.paymentDate && pay?.paymentDate.toDate()
+      return creationDate >= (start || startDate) && creationDate <= (end || endDate);
+    })
+    setFilteredOrderPayments(newOrderPayments)
+
+    let newInsurancePayments = insurancePayments.filter((pay) => {
+      const creationDate = pay?.paymentDate && pay?.paymentDate.toDate()
+      return creationDate >= (start || startDate) && creationDate <= (end || endDate);
+    })
+    setFilteredInsurancePayments(newInsurancePayments)
   }
 
   useEffect(() => {
@@ -114,9 +133,9 @@ function Reports() {
       queryCustomers.forEach((doc) => {
         resultCustomers.push(doc.data());
       });
-      
+
       resultCustomers.forEach((doc) => {
-        resultCustomerswithDob.push({...doc, dob: doc?.dob && doc.dob.toDate()});
+        resultCustomerswithDob.push({ ...doc, dob: doc?.dob && doc.dob.toDate() });
       });
 
       setCustomers(resultCustomerswithDob);
@@ -137,19 +156,73 @@ function Reports() {
       });
       setShowrooms(sortAlphabetically(showroomsData, 'locationName'))
 
+      const queryOrderPayments = await firestore().collection('orderPayments').get();
+
+      let resultOrderPayments = [];
+      queryOrderPayments.forEach((doc) => {
+        resultOrderPayments.push(doc.data());
+      });
+      setOrderPayments(resultOrderPayments)
+      setFilteredOrderPayments(resultOrderPayments)
+
+      const queryInsurancePayments = await firestore().collection('insurancePayments').get();
+      let resultInsurancePayments = [];
+      queryInsurancePayments.forEach((doc) => {
+        resultInsurancePayments.push(doc.data());
+      });
+      setInsurancePayments(resultInsurancePayments)
+      setFilteredInsurancePayments(resultInsurancePayments)
       setIsLoading(false)
     };
     fetchDetails();
   }, []);
+
+  const standardFilters = ['Today', 'Yesterday', 'This Week', 'This Month', 'This Year', 'ALL']
+
+  const setDateRangeAndFilterData = option => {
+    const now = new Date();
+    let start = new Date(now);
+    let end = new Date(now);
+
+    start.setHours(0, 0, 0, 0);
+    end.setHours(23, 59, 59, 999);
+
+    switch (option) {
+      case 'Today':
+        // Already set to today's date
+        break;
+      case 'Yesterday':
+        start.setDate(start.getDate() - 1);
+        end.setDate(end.getDate() - 1);
+        break;
+      case 'This Week':
+        start.setDate(start.getDate() - start.getDay());
+        end.setDate(end.getDate() + (6 - end.getDay()));
+        break;
+      case 'This Month':
+        start.setDate(1);
+        end.setMonth(end.getMonth() + 1, 0);
+        break;
+      case 'This Year':
+        start.setMonth(0, 1);
+        end.setMonth(11, 31);
+        break;
+      case 'ALL':
+        start = new Date(2000, 0, 1);
+        break;
+      default:
+        throw new Error('Invalid option');
+    }
+
+    setForm({ startDate: start, endDate: end })
+    filterData(start, end)
+  };
 
   if (!widgets || isLoading) {
     return <FuseLoading />
   }
   return (
     <div className="w-full">
-      <SalesChartYearWise orders={orders} />
-      <PaymentsChart />
-      <OrderTimesChart widget5={widgets?.widget5} orders={filteredOrders}/>
       <div className='flex flex-row justify-between items-center px-20'>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justifyContent="center">
@@ -212,6 +285,21 @@ function Reports() {
           </Button>
         </div>
       </div>
+      <div className="flex flex-row items-center justify-center">
+        {standardFilters.map((key) => (
+          <Button
+            key={key}
+            className="py-8 px-8"
+            size="small"
+            onClick={() => setDateRangeAndFilterData(key)}
+            disabled={key === 'dataset'}>
+            {key}
+          </Button>
+        ))}
+      </div>
+      <SalesChartYearWise orders={filteredOrders} />
+      <PaymentsChart orderPayments={filteredOrderPayments} insurancePayments={filteredInsurancePayments} />
+      <OrderTimesChart widget5={widgets?.widget5} orders={filteredOrders} />
       <div className='flex flex-row w-full'>
         <div className='flex flex-row w-1/3'>
           <CCFrameChart orders={filteredOrders} widget2={widgets?.widget2} />
@@ -271,7 +359,7 @@ function Reports() {
         <div className='flex flex-col w-2/3'>
           <CustomersChart orders={filteredOrders} />
           <div className='flex flex-row'>
-          <GenderGraph customers={customers} />
+            <GenderGraph customers={customers} />
           </div>
           <SalesRatioPieChart orders={filteredOrders} />
           <LensTypePieChart orders={filteredOrders} />
@@ -284,7 +372,7 @@ function Reports() {
         </div>
       </div>
       <div className='flex flex-row w-full'>
-        <CustomData orders={orders} customers={customers} showrooms={showrooms} exams ={exams}/>
+        <CustomData orders={orders} customers={customers} showrooms={showrooms} exams={exams} />
       </div>
     </div>
   );

@@ -682,10 +682,6 @@ function AddOrder(props) {
     }
   }
 
-  const date = moment();
-
-  const currentDate = date.format('YYYY-MM-DD');
-
   const sumPrice = (value1, value2) => {
     const sum = value1 + value2;
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Widget1 from '../../dashboards/analytics/widgets/Widget1';
 
-function SalesChartYearWise(orders) {
+function SalesChartYearWise(props) {
   const widgets = useSelector(
     ({ analyticsDashboardApp }) => analyticsDashboardApp.widgets.data
   );
@@ -11,7 +11,13 @@ function SalesChartYearWise(orders) {
 
   useEffect(() => {
     function groupDatesByYearAndMonth(orders) {
-      if (!orders.length || !widgets?.widget1) return;
+      if (!widgets?.widget1) return;
+      if (!orders?.length > 0) {
+        let finalData = JSON.parse(JSON.stringify(widgets?.widget1));
+        finalData.datasets = { 2023: [{ label: "Sales", data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], fill: "start" }] }
+        setChartData(finalData);
+        return
+      }
       const yearMonthData = {};
       orders.forEach((order) => {
         const date = order?.orderDate.toDate();
@@ -31,13 +37,13 @@ function SalesChartYearWise(orders) {
       });
       return yearMonthData;
     }
-    const result = groupDatesByYearAndMonth(orders?.orders);
-    let finalData = widgets?.widget1;
-    finalData.datasets = result;
+    const result = groupDatesByYearAndMonth(props?.orders);
+    let finalData = JSON.parse(JSON.stringify(widgets?.widget1));
+    finalData.datasets = result
     if (finalData.datasets) {
-      setChartData(widgets?.widget1);
+      setChartData(finalData);
     }
-  }, [orders, widgets]);
+  }, [props, widgets]);
 
   if (chartData) {
     return (
