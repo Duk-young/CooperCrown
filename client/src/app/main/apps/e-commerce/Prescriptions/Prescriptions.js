@@ -1,3 +1,4 @@
+import { customValuesArrayGenerator, sortAlphabetically } from '../ReusableComponents/HelperFunctions';
 import { firestore, storage } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
@@ -17,16 +18,19 @@ import DateFnsUtils from '@date-io/date-fns';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import ImageSlider from '../ReusableComponents/ImageSlider';
+import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useEffect, useState } from 'react';
 import reducer from '../store/reducers';
+import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
@@ -60,6 +64,7 @@ function Prescriptions(props) {
   const [fetchedId, setFetchedId] = useState(0);
   const [imageIndex, setImageIndex] = useState(0)
   const [isLoading, setisLoading] = useState(true);
+  const [contactLens, setContactLens] = useState([])
   const [prescription, setPrescription] = useState([]);
   const { form, handleChange, setForm } = useForm(null);
   const [changeOccured, setChangeOccured] = useState(false);
@@ -67,6 +72,17 @@ function Prescriptions(props) {
   const [openAlertOnSave, setOpenAlertOnSave] = useState(false);
   const [openAlertOnBack, setOpenAlertOnBack] = useState(false);
   const [filteredPrescription, setFilteredPrescription] = useState([]);
+  const [filteredContactLensOd, setFilteredContactLensOd] = useState(contactLens)
+  const [filteredContactLensOs, setFilteredContactLensOs] = useState(contactLens)
+
+  const filterOdContacts = (value, attribute) => {
+    let newContacts = filteredContactLensOd.filter((contact) => contact?.[attribute] === value)
+    setFilteredContactLensOd(newContacts)
+  }
+  const filterOsContacts = (value, attribute) => {
+    let newContacts2 = filteredContactLensOs.filter((contact) => contact?.[attribute] === value)
+    setFilteredContactLensOs(newContacts2)
+  }
 
   useEffect(() => {
     if (routeParams.prescriptionId) {
@@ -114,6 +130,17 @@ function Prescriptions(props) {
         );
 
         setPrescription(rX);
+
+        const queryContactLens = await firestore().collection('contacts').get();
+
+        let resultContacts = [];
+        queryContactLens.forEach((doc) => {
+          resultContacts.push(doc.data());
+        });
+        setContactLens(resultContacts);
+        setFilteredContactLensOd(resultContacts);
+        setFilteredContactLensOs(resultContacts);
+
         setisLoading(false);
       };
       fetchDetails();
@@ -142,6 +169,16 @@ function Prescriptions(props) {
           resultPrescription.push(doc.data());
         });
         setFilteredPrescription(resultPrescription);
+
+        const queryContactLens = await firestore().collection('contacts').get();
+
+        let resultContacts = [];
+        queryContactLens.forEach((doc) => {
+          resultContacts.push(doc.data());
+        });
+        setContactLens(resultContacts);
+        setFilteredContactLensOd(resultContacts);
+        setFilteredContactLensOs(resultContacts);
 
         setisLoading(false);
       };
@@ -493,17 +530,41 @@ function Prescriptions(props) {
                             <div className=" w-44 h-auto border-black border-solid border-1 justify-between">
                               <h3 className="mt-20 text-center font-700">OD</h3>
                             </div>
-                            <div className="flex-1 h-auto border-black border-solid border-1 justify-between">
-                              <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesSphereOd" freeSolo={true} variant='standard' />
+                            <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                              <Select
+                                value={form?.eyeglassesSphereOd ?? ''}
+                                name="eyeglassesSphereOd"
+                                onChange={handleChange}
+                              >
+                                {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                                  <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                                ))}
+                              </Select>
                             </div>
-                            <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                              <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesCylinderOd" freeSolo={true} variant='standard' />
+                            <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                              <Select
+                                value={form?.eyeglassesCylinderOd ?? ''}
+                                name="eyeglassesCylinderOd"
+                                onChange={handleChange}
+                              >
+                                {customValuesArrayGenerator(-10, -0.25, 0.25).map((row) => (
+                                  <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                                ))}
+                              </Select>
                             </div>
                             <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                               <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesAxisOd" freeSolo={true} variant='standard' />
                             </div>
-                            <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                              <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesAddOd" freeSolo={true} variant='standard' />
+                            <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                              <Select
+                                value={form?.eyeglassesAddOd ?? ''}
+                                name="eyeglassesAddOd"
+                                onChange={handleChange}
+                              >
+                                {customValuesArrayGenerator(0.25, 5, 0.25).map((row) => (
+                                  <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                                ))}
+                              </Select>
                             </div>
                             <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                               <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesPrismOd" freeSolo={true} variant='standard' />
@@ -517,17 +578,41 @@ function Prescriptions(props) {
                             <div className=" w-44 h-auto border-black border-solid border-1 justify-between">
                               <h3 className="mt-20 text-center font-700">OS</h3>
                             </div>
-                            <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                              <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesSphereOs" freeSolo={true} variant='standard' />
+                            <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                              <Select
+                                value={form?.eyeglassesSphereOs ?? ''}
+                                name="eyeglassesSphereOs"
+                                onChange={handleChange}
+                              >
+                                {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                                  <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                                ))}
+                              </Select>
                             </div>
-                            <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                              <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesCylinderOs" freeSolo={true} variant='standard' />
+                            <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                              <Select
+                                value={form?.eyeglassesCylinderOs ?? ''}
+                                name="eyeglassesCylinderOs"
+                                onChange={handleChange}
+                              >
+                                {customValuesArrayGenerator(-10, -0.25, 0.25).map((row) => (
+                                  <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                                ))}
+                              </Select>
                             </div>
                             <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                               <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesAxisOs" freeSolo={true} variant='standard' />
                             </div>
-                            <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                              <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesAddOs" freeSolo={true} variant='standard' />
+                            <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                              <Select
+                                value={form?.eyeglassesAddOs ?? ''}
+                                name="eyeglassesAddOs"
+                                onChange={handleChange}
+                              >
+                                {customValuesArrayGenerator(0.25, 5, 0.25).map((row) => (
+                                  <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                                ))}
+                              </Select>
                             </div>
                             <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                               <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesPrismOs" freeSolo={true} variant='standard' />
@@ -651,7 +736,18 @@ function Prescriptions(props) {
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-col p-6">
+                      <div className='flex flex-col justify-around my-16 w-full px-60'>
+                        <TextField
+                          size="medium"
+                          id="outlined-multiline-static"
+                          label="Memo"
+                          value={form?.eyeglassesmemo}
+                          onChange={handleChange}
+                          name={'eyeglassesmemo'}
+                          variant="outlined"
+                        />
+                      </div>
+                      <div className="flex flex-col p-6 mv-16">
                         <Button
                           className={classes.button}
                           style={{
@@ -714,16 +810,38 @@ function Prescriptions(props) {
                         <div className=" h-auto flex-1">
                           <h3 className="text-center font-700">ADD</h3>
                         </div>
+                        <div className=" h-auto flex-1">
+                          <h3 className="text-center font-700">BC</h3>
+                        </div>
+                        <div className=" h-auto flex-1">
+                          <h3 className="text-center font-700">DIA</h3>
+                        </div>
                       </div>
                       <div className="flex flex-row">
                         <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                           <h3 className="mt-20 text-center font-700">OD</h3>
                         </div>
-                        <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                          <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensSphereOd" freeSolo={true} variant='standard' />
+                        <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                          <Select
+                            value={form?.contactLensSphereOd ?? ''}
+                            name="contactLensSphereOd"
+                            onChange={handleChange}
+                          >
+                            {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            ))}
+                          </Select>
                         </div>
-                        <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                          <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensCylinderOd" freeSolo={true} variant='standard' />
+                        <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                          <Select
+                            value={form?.contactLensCylinderOd ?? ''}
+                            name="contactLensCylinderOd"
+                            onChange={handleChange}
+                          >
+                            {customValuesArrayGenerator(-10, -0.25, 0.25).map((row) => (
+                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            ))}
+                          </Select>
                         </div>
                         <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                           <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensAxisOd" freeSolo={true} variant='standard' />
@@ -731,17 +849,39 @@ function Prescriptions(props) {
                         <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                           <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensAddOd" freeSolo={true} variant='standard' />
                         </div>
+                        <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
+                          <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensBcOd" freeSolo={true} variant='standard' />
+                        </div>
+                        <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
+                          <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensDiaOd" freeSolo={true} variant='standard' />
+                        </div>
                       </div>
 
                       <div className="flex flex-row">
                         <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                           <h3 className="mt-20 text-center font-700">OS</h3>
                         </div>
-                        <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                          <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensSphereOs" freeSolo={true} variant='standard' />
+                        <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                          <Select
+                            value={form?.contactLensSphereOs ?? ''}
+                            name="contactLensSphereOs"
+                            onChange={handleChange}
+                          >
+                            {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            ))}
+                          </Select>
                         </div>
-                        <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                          <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensCylinderOs" freeSolo={true} variant='standard' />
+                        <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                          <Select
+                            value={form?.contactLensCylinderOs ?? ''}
+                            name="contactLensCylinderOs"
+                            onChange={handleChange}
+                          >
+                            {customValuesArrayGenerator(-10, -0.25, 0.25).map((row) => (
+                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            ))}
+                          </Select>
                         </div>
                         <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                           <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensAxisOs" freeSolo={true} variant='standard' />
@@ -749,41 +889,109 @@ function Prescriptions(props) {
                         <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                           <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensAddOs" freeSolo={true} variant='standard' />
                         </div>
+                        <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
+                          <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensBcOs" freeSolo={true} variant='standard' />
+                        </div>
+                        <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
+                          <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="contactLensDiaOs" freeSolo={true} variant='standard' />
+                        </div>
                       </div>
-                      <div className="flex flex-row p-8 w-2/3 mt-10 justify-around">
-                        <div className=" flex-1">
-                          <CustomAutocomplete
-                            list={prescription}
-                            form={form}
-                            setForm={setForm}
-                            handleChange={handleChange}
-                            id="contactLensCompany"
-                            freeSolo={true}
-                            label="Company"
-                          />
+                      <div className='flex flex-col w-full lg:flex-row'>
+                        <div className='flex flex-row w-full p-8 gap-10 lg:gap-16 mt-16 lg:w-1/2 items-end'>
+                          <div className='flex flex-col w-1/3 lg:w-1/2'>
+                            <FormControl>
+                              <FormHelperText>Brand OD</FormHelperText>
+                              <Select
+                                className='truncate'
+                                value={form?.contactLensBrandOd ?? ''}
+                                name="contactLensBrandOd"
+                                onChange={(e) => {
+                                  handleChange(e)
+                                  filterOdContacts(e.target.value, 'brand')
+                                }}>
+                                {[...new Set(sortAlphabetically(filteredContactLensOd, 'brand')?.map((item) => (item?.brand ?? '')))].map((row) => (
+                                  <MenuItem value={row}>
+                                    {row}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </div>
+                          <div className='flex flex-col w-2/3 lg:w-1/2'>
+                            <FormControl>
+                              <FormHelperText>Model OD</FormHelperText>
+                              <Select
+                                className='truncate'
+                                value={form?.contactLensModelOd ?? ''}
+                                name="contactLensModelOd"
+                                onChange={(e) => {
+                                  handleChange(e)
+                                  filterOdContacts(e.target.value, 'model')
+                                }}>
+                                {[...new Set(sortAlphabetically(filteredContactLensOd, 'model')?.map((item) => (item?.model ?? '')))].map((row) => (<MenuItem value={row}>{row}</MenuItem>))}
+                              </Select>
+                            </FormControl>
+                          </div>
+                          <IconButton onClick={() => {
+                          setFilteredContactLensOd(contactLens)
+                          setForm({ ...form, contactLensBrandOd: undefined, contactLensModelOd: undefined })
+                        }}>
+                            <Icon>delete</Icon>
+                          </IconButton>
                         </div>
-                        <div className="pl-8 flex-1">
-                          <CustomAutocomplete
-                            list={prescription}
-                            form={form}
-                            setForm={setForm}
-                            handleChange={handleChange}
-                            id="contactLensModel"
-                            freeSolo={true}
-                            label="Model"
-                          />
+                        <div className='flex flex-row w-full p-8 gap-10 lg:gap-16 mt-16 lg:w-1/2 items-end'>
+                          <div className='flex flex-col w-1/3 lg:w-1/2'>
+                            <FormControl>
+                              <FormHelperText>Brand OS</FormHelperText>
+                              <Select
+                                className='truncate'
+                                value={form?.contactLensBrandOs ?? ''}
+                                name="contactLensBrandOs"
+                                onChange={(e) => {
+                                  handleChange(e)
+                                  filterOsContacts(e.target.value, 'brand')
+                                }}>
+                                {[...new Set(sortAlphabetically(filteredContactLensOs, 'brand')?.map((item) => (item?.brand ?? '')))].map((row) => (
+                                  <MenuItem value={row}>
+                                    {row}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </div>
+                          <div className='flex flex-col w-2/3 lg:w-1/2'>
+                            <FormControl>
+                              <FormHelperText>Model OS</FormHelperText>
+                              <Select
+                                className='truncate'
+                                value={form?.contactLensModelOs ?? ''}
+                                name="contactLensModelOs"
+                                onChange={(e) => {
+                                  handleChange(e)
+                                  filterOsContacts(e.target.value, 'model')
+                                }}>
+                                {[...new Set(sortAlphabetically(filteredContactLensOs, 'model')?.map((item) => (item?.model ?? '')))].map((row) => (<MenuItem value={row}>{row}</MenuItem>))}
+                              </Select>
+                            </FormControl>
+                          </div>
+                          <IconButton onClick={() => {
+                          setFilteredContactLensOs(contactLens)
+                          setForm({ ...form, contactLensBrandOs: undefined, contactLensModelOs: undefined })
+                        }}>
+                            <Icon>delete</Icon>
+                          </IconButton>
                         </div>
-                        <div className="pl-8 flex-1">
-                          <CustomAutocomplete
-                            list={prescription}
-                            form={form}
-                            setForm={setForm}
-                            handleChange={handleChange}
-                            id="contactLensModality"
-                            freeSolo={true}
-                            label="Modality"
-                          />
-                        </div>
+                      </div>
+                      <div className='flex flex-col justify-around my-16 w-full px-60'>
+                        <TextField
+                          size="medium"
+                          id="outlined-multiline-static"
+                          label="Memo"
+                          value={form?.contactLensMemo}
+                          onChange={handleChange}
+                          name={'contactLensMemo'}
+                          variant="outlined"
+                        />
                       </div>
                       <div className="flex flex-col p-6">
                         <Button

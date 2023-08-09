@@ -446,6 +446,7 @@ function AddOrder(props) {
       queryDiscounts.forEach((doc) => {
         resultDiscounts.push(doc.data());
       });
+      resultDiscounts.sort((a, b) => a.code.localeCompare(b.code))
       setDiscounts(sortAlphabetically(resultDiscounts, 'code'));
 
       const queryContactLens = await firestore().collection('contacts').get();
@@ -462,6 +463,7 @@ function AddOrder(props) {
       queryServices.forEach((doc) => {
         resultServices.push(doc.data());
       });
+      resultServices.sort((a, b) => a.name.localeCompare(b.name))
       setServices(resultServices);
 
       const lensPrice = (
@@ -472,6 +474,7 @@ function AddOrder(props) {
       keys.forEach((row) => {
         lensTypeNames.push({ lensTypeName: row.replace(/"/g, '') });
       });
+      await lensTypeNames.sort((a, b) => a.lensTypeName.localeCompare(b.lensTypeName))
       setLensTypeNames(lensTypeNames);
     }
     fetchDelayedData()
@@ -620,15 +623,7 @@ function AddOrder(props) {
         queryInsurance.forEach((doc) => {
           resultInsurance.push(doc.data());
         });
-        setInsurances(resultInsurance);
-
-        const queryServices = await firestore().collection('services').get();
-
-        let resultServices = [];
-        queryServices.forEach((doc) => {
-          resultServices.push(doc.data());
-        });
-        setServices(resultServices);
+        setInsurances(sortAlphabetically(resultInsurance, 'insuranceCompany'));
 
         setisLoading(false);
       };

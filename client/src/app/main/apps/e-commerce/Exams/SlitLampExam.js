@@ -1,10 +1,21 @@
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { slitLampAngleValues } from '../ReusableComponents/HelperFunctions';
+import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import React from 'react';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+
+const useStyles = makeStyles({
+  centerText: {
+    textAlign: 'center',
+  },
+});
 
 const SlitLampExam = (props) => {
+  const classes = useStyles();
   const { form, handleChange, disabledState, setForm } = props;
 
   return (
@@ -463,37 +474,37 @@ const SlitLampExam = (props) => {
 
         <div className='flex flex-row w-full items-end py-8'>
           <div className='flex flex-row w-1/3 justify-center'>
-            <TextField
-              size="small"
-              id="standard-basic"
-              value={form?.odAngleEstimate}
-              disabled={disabledState}
-              onChange={handleChange}
-              name={'odAngleEstimate'}
-              InputProps={{
-                inputProps: {
-                  style: { textAlign: 'center' }
-                }
-              }}
-            />
+            <div className='flex flex-col w-160'>
+              <Select
+                className={classes.centerText}
+                disabled={disabledState}
+                value={form?.odAngleEstimate ?? ''}
+                name="odAngleEstimate"
+                onChange={handleChange}
+              >
+                {slitLampAngleValues.map((row) => (
+                  <MenuItem key={row} value={row}>{row}</MenuItem>
+                ))}
+              </Select>
+            </div>
           </div>
           <div className='flex flex-row w-1/3 justify-center'>
             <h3 className="font-700 text-center">Angle Estimate</h3>
           </div>
           <div className='flex flex-row w-1/3 justify-center'>
-            <TextField
-              size="small"
-              id="standard-basic"
-              disabled={disabledState}
-              value={form?.osAngleEstimate}
-              onChange={handleChange}
-              name={'osAngleEstimate'}
-              InputProps={{
-                inputProps: {
-                  style: { textAlign: 'center' }
-                }
-              }}
-            />
+            <div className='flex flex-col w-160'>
+              <Select
+                className={classes.centerText}
+                disabled={disabledState}
+                value={form?.osAngleEstimate ?? ''}
+                name="osAngleEstimate"
+                onChange={handleChange}
+              >
+                {slitLampAngleValues.map((row) => (
+                  <MenuItem key={row} value={row}>{row}</MenuItem>
+                ))}
+              </Select>
+            </div>
           </div>
         </div>
 

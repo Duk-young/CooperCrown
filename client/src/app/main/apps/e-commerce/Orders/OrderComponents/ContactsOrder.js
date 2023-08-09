@@ -183,11 +183,12 @@ const ContactsOrder = (props) => {
                           )
                         }}
                       >
-                        {[...prescription.filter((word) => word.prescriptionType === 'contactLensRx')].map((row) => (
-                          <MenuItem value={row?.prescriptionId}>
-                            {row?.prescriptionDate ? moment(row?.prescriptionDate.toDate()).format('MM/DD/YYYY') : ''}
-                          </MenuItem>
-                        ))}
+                        {[...prescription.filter((word) => word.prescriptionType === 'contactLensRx')].sort((a, b) => (a.prescriptionId > b.prescriptionId ? -1 : 1))
+                          .map((row) => (
+                            <MenuItem value={row?.prescriptionId}>
+                              {row?.prescriptionDate ? moment(row?.prescriptionDate.toDate()).format('MM/DD/YYYY') : ''}
+                            </MenuItem>
+                          ))}
                       </Select>
                     </FormControl>
                   </div>
@@ -208,6 +209,9 @@ const ContactsOrder = (props) => {
                   </div>
                   <div className="p-8 h-auto w-80">
                     <h3 className="text-center font-700">Add</h3>
+                  </div>
+                  <div className="p-8 h-auto w-1/4">
+                    <h3 className="text-center font-700">Brand</h3>
                   </div>
                   <div className="p-8 h-auto w-1/4">
                     <h3 className="text-center font-700">Model</h3>
@@ -277,7 +281,27 @@ const ContactsOrder = (props) => {
                       value={selectedContactLens?.contactLensAddOd ?? ''}
                       onChange={handleSelectedContactLensChange}
                       name={'contactLensAddOd'}
-                      type='number'
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: 'center' }
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                    <TextField
+                      size="small"
+                      fullWidth
+                      id="standard-basic"
+                      disabled={disabledState}
+                      value={selectedContactLens?.contactLensBrandOd ?? ''}
+                      onChange={(e) => handleSelectedContactLensChange({
+                        target: {
+                          name: 'contactLensBrandOd',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
+                      name={'contactLensBrandOd'}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -298,7 +322,7 @@ const ContactsOrder = (props) => {
                           value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
                         }
                       })}
-                      name={'contactLensModelOd'} 
+                      name={'contactLensModelOd'}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }
@@ -371,7 +395,27 @@ const ContactsOrder = (props) => {
                       value={selectedContactLens?.contactLensAddOs ?? ''}
                       onChange={handleSelectedContactLensChange}
                       name={'contactLensAddOs'}
-                      type='number'
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: 'center' }
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="p-8 w-1/4 h-auto border-grey-400 border-solid border-1 justify-between">
+                    <TextField
+                      size="small"
+                      fullWidth
+                      id="standard-basic"
+                      disabled={disabledState}
+                      value={selectedContactLens?.contactLensBrandOs ?? ''}
+                      onChange={(e) => handleSelectedContactLensChange({
+                        target: {
+                          name: 'contactLensBrandOs',
+                          value: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+                        }
+                      })}
+                      name={'contactLensBrandOs'}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: 'center' }

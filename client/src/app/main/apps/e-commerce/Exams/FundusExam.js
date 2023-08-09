@@ -1,10 +1,21 @@
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { customValuesArrayGenerator } from '../ReusableComponents/HelperFunctions';
+import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import React from 'react';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+
+const useStyles = makeStyles({
+  centerText: {
+    textAlign: 'center',
+  },
+});
 
 const FundusExam = (props) => {
+  const classes = useStyles();
   const { form, handleChange, disabledState, setForm } = props;
 
   return (
@@ -21,7 +32,7 @@ const FundusExam = (props) => {
           <div className='flex flex-row w-full items-end'>
             <div className='flex flex-row w-1/3 justify-center'></div>
             <div className='flex flex-row w-1/3 justify-between'>
-            <FormControlLabel
+              <FormControlLabel
                 control={
                   <Checkbox
                     checked={form?.fundusBio}
@@ -436,41 +447,68 @@ const FundusExam = (props) => {
           </div>
 
           <div className='flex flex-row w-full items-end py-8'>
-            <div className='flex flex-row w-1/3 justify-center'>
-              <TextField
-                size="small"
-                id="standard-basic"
-                value={form?.odCDRatio}
-                disabled={disabledState}
-                onChange={handleChange}
-                name={'odCDRatio'}
-                InputProps={{
-                  inputProps: {
-                    style: { textAlign: 'center' }
-                  }
-                }}
-              />
+            <div className='flex flex-row w-1/3 justify-center items-center gap-6'>
+              <div className='flex flex-col w-72'>
+                <Select
+                  className={classes.centerText}
+                  disabled={disabledState}
+                  value={form?.odCDRatio1 ?? ''}
+                  name="odCDRatio1"
+                  onChange={handleChange}
+                >
+                  {customValuesArrayGenerator(0.05, 1, 0.05).map((row) => (
+                    <MenuItem key={row?.value} value={row?.value}>{row?.label}</MenuItem>
+                  ))}
+                </Select>
+              </div>
+              <h3 className='font-700'> / </h3>
+              <div className='flex flex-col w-72'>
+                <Select
+                  className={classes.centerText}
+                  disabled={disabledState}
+                  value={form?.odCDRatio2 ?? ''}
+                  name="odCDRatio2"
+                  onChange={handleChange}
+                >
+                  {customValuesArrayGenerator(0.05, 1, 0.05).map((row) => (
+                    <MenuItem key={row?.value} value={row?.value}>{row?.label}</MenuItem>
+                  ))}
+                </Select>
+              </div>
             </div>
             <div className='flex flex-row w-1/3 justify-center'>
               <h3 className="font-700 text-center">C/D Ratio</h3>
             </div>
-            <div className='flex flex-row w-1/3 justify-center'>
-              <TextField
-                size="small"
-                id="standard-basic"
-                disabled={disabledState}
-                value={form?.osCDRatio}
-                onChange={handleChange}
-                name={'osCDRatio'}
-                InputProps={{
-                  inputProps: {
-                    style: { textAlign: 'center' }
-                  }
-                }}
-              />
+            <div className='flex flex-row w-1/3 justify-center items-center gap-6'>
+              <div className='flex flex-col w-72'>
+                <Select
+                  className={classes.centerText}
+                  disabled={disabledState}
+                  value={form?.osCDRatio1 ?? ''}
+                  name="osCDRatio1"
+                  onChange={handleChange}
+                >
+                  {customValuesArrayGenerator(0.05, 1, 0.05).map((row) => (
+                    <MenuItem key={row?.value} value={row?.value}>{row?.label}</MenuItem>
+                  ))}
+                </Select>
+              </div>
+              <h3 className='font-700'> / </h3>
+              <div className='flex flex-col w-72'>
+                <Select
+                  className={classes.centerText}
+                  disabled={disabledState}
+                  value={form?.osCDRatio2 ?? ''}
+                  name="osCDRatio2"
+                  onChange={handleChange}
+                >
+                  {customValuesArrayGenerator(0.05, 1, 0.05).map((row) => (
+                    <MenuItem key={row?.value} value={row?.value}>{row?.label}</MenuItem>
+                  ))}
+                </Select>
+              </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

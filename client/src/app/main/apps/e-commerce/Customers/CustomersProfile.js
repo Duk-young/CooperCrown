@@ -1,8 +1,9 @@
+import { addTwoDecimalPlaces } from '../ReusableComponents/HelperFunctions';
 import { firestore } from 'firebase';
 import { toast, Zoom } from 'react-toastify';
-import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
@@ -505,7 +506,7 @@ const CustomerProfile = (props) => {
                   component={Paper}>
                   <Table stickyHeader aria-label="customized table">
                     <TableHead>
-                      <TableRow style={{ height: 10 }}>
+                      <TableRow style={{ height: 10 }} className='truncate'>
                         <StyledTableCell>ID</StyledTableCell>
                         <StyledTableCell>FIRST NAME</StyledTableCell>
                         <StyledTableCell>LAST NAME</StyledTableCell>
@@ -521,7 +522,7 @@ const CustomerProfile = (props) => {
                         .sort((a, b) => (a.customerId > b.customerId ? -1 : 1))
                         .map((row) => (
                           <StyledTableRow
-                            className=' cursor-pointer'
+                            className='truncate cursor-pointer'
                             key={row.customerId}
                             style={{ height: 10 }}>
                             <StyledTableCell onClick={() => props.history.push(`/apps/e-commerce/customers/profile/${row?.customerId}`)}>
@@ -770,8 +771,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.eyeglassesSphereOd}</div>
-                                      <div>{row.eyeglassesSphereOs}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesSphereOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesSphereOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -781,8 +782,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.eyeglassesCylinderOd}</div>
-                                      <div>{row.eyeglassesCylinderOs}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesCylinderOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesCylinderOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -792,8 +793,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.eyeglassesAxisOd}</div>
-                                      <div>{row.eyeglassesAxisOs}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesAxisOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesAxisOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -803,8 +804,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.eyeglassesAddOd}</div>
-                                      <div>{row.eyeglassesAddOs}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesAddOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesAddOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -814,8 +815,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.eyeglassesPrismOd}</div>
-                                      <div>{row.eyeglassesPrismOs}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesPrismOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row?.eyeglassesPrismOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                 </StyledTableRow>
@@ -836,7 +837,7 @@ const CustomerProfile = (props) => {
                           stickyHeader
                           aria-label="customized table">
                           <TableHead>
-                            <TableRow style={{ height: 10 }}>
+                            <TableRow style={{ height: 10 }} className='truncate'>
                               <StyledTableCell>DATE</StyledTableCell>
                               <StyledTableCell>SPHERE</StyledTableCell>
                               <StyledTableCell>CYLINDER</StyledTableCell>
@@ -854,6 +855,7 @@ const CustomerProfile = (props) => {
                               )
                               .map((row) => (
                                 <StyledTableRow
+                                  className='truncate'
                                   onClick={() => {
                                     setSelectedPrescription(row);
                                     setOpenPrescriptionReceipt(true);
@@ -861,6 +863,7 @@ const CustomerProfile = (props) => {
                                   key={row.prescriptionId}
                                   style={{ height: 10 }}>
                                   <StyledTableCell
+                                    className='cursor-pointer'
                                     style={row?.onRx ? { color: 'red' } : { color: 'black' }}
                                     onClick={() => { props.history.push(`/apps/e-commerce/customers/editRx/${row?.prescriptionId}`) }}>
                                     {row?.onRx ? (
@@ -879,8 +882,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.contactLensSphereOd}</div>
-                                      <div>{row.contactLensSphereOs}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensSphereOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensSphereOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -890,8 +893,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.contactLensCylinderOd}</div>
-                                      <div>{row.contactLensCylinderOs}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensCylinderOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensCylinderOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -901,8 +904,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.contactLensAxisOd}</div>
-                                      <div>{row.contactLensAxisOs}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensAxisOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensAxisOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -912,8 +915,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.contactLensAddOd}</div>
-                                      <div>{row.contactLensAddOs}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensAddOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensAddOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -923,8 +926,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.contactLensBcOd}</div>
-                                      <div>{row.contactLensBcOs}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensBcOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensBcOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -934,8 +937,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.contactLensBrandOd}</div>
-                                      <div>{row.contactLensBrandOs}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensBrandOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensBrandOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                   <StyledTableCell
@@ -945,8 +948,8 @@ const CustomerProfile = (props) => {
                                         : { color: 'black' }
                                     }>
                                     <div className="flex flex-col">
-                                      <div>{row.contactLensModelOd}</div>
-                                      <div>{row.contactLensModelOs}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensModelOd)}</div>
+                                      <div>{addTwoDecimalPlaces(row.contactLensModelOs)}</div>
                                     </div>
                                   </StyledTableCell>
                                 </StyledTableRow>

@@ -354,6 +354,7 @@ function Exams(props) {
             eyeglassesPrismOs: form?.egRxOsPrismBase ? form?.egRxOsPrismBase : '',
             eyeglassesVaOs: form?.egRxOsVa1 ? form?.egRxOsVa1 : '',
             eyeglassesVaOs2: form?.egRxOsVa2 ? form?.egRxOsVa2 : '',
+            eyeglassesmemo: form?.egrxMemo ? form?.egrxMemo : '',
             prescriptionId: dbConfig?.prescriptionId + 1,
             customerId: customer.customerId,
             prescriptionDate: firestore.Timestamp.fromDate(new Date()),
@@ -384,6 +385,7 @@ function Exams(props) {
             contactLensModelOs: form?.clrxOsModel ? form?.clrxOsModel : '',
             contactLensBrandOd: form?.clrxOdBrand ? form?.clrxOdBrand : '',
             contactLensBrandOs: form?.clrxOsBrand ? form?.clrxOsBrand : '',
+            contactLensMemo: form?.clrxMemo ? form?.clrxMemo : '',
             prescriptionId: dbConfig?.prescriptionId + 2,
             customerId: customer.customerId,
             prescriptionDate: firestore.Timestamp.fromDate(new Date()),
@@ -420,7 +422,7 @@ function Exams(props) {
 
     if (!queryEgPrescription.empty) {
       const egPrescriptionId = queryEgPrescription.docs[0].id
-      firestore().collection('prescriptions').doc(egPrescriptionId).update({
+      await firestore().collection('prescriptions').doc(egPrescriptionId).update({
         eyeglassesSphereOd: form?.egRxOdSphere ? form?.egRxOdSphere : '',
         eyeglassesCylinderOd: form?.egRxOdCylinder ? form?.egRxOdCylinder : '',
         eyeglassesAxisOd: form?.egRxOdAxis ? form?.egRxOdAxis : '',
@@ -435,6 +437,7 @@ function Exams(props) {
         eyeglassesPrismOs: form?.egRxOsPrismBase ? form?.egRxOsPrismBase : '',
         eyeglassesVaOs: form?.egRxOsVa1 ? form?.egRxOsVa1 : '',
         eyeglassesVaOs2: form?.egRxOsVa2 ? form?.egRxOsVa2 : '',
+        eyeglassesmemo: form?.egrxMemo ? form?.egrxMemo : '',
         prescriptionDate: firestore.Timestamp.fromDate(new Date()),
         showRoomId: checkShowroomId(form?.locationName),
         doctorId: checkDoctorId(form?.fullName),
@@ -449,7 +452,7 @@ function Exams(props) {
 
     if (!queryClPrescription.empty) {
       const clPrescriptionId = queryClPrescription.docs[0].id
-      firestore().collection('prescriptions').doc(clPrescriptionId).update({
+      await firestore().collection('prescriptions').doc(clPrescriptionId).update({
         contactLensSphereOd: form?.clrxOdSphere ? form?.clrxOdSphere : '',
         contactLensCylinderOd: form?.clrxOdCylinder ? form?.clrxOdCylinder : '',
         contactLensAxisOd: form?.clrxOdAxis ? form?.clrxOdAxis : '',
@@ -466,6 +469,7 @@ function Exams(props) {
         contactLensModelOs: form?.clrxOsModel ? form?.clrxOsModel : '',
         contactLensBrandOd: form?.clrxOdBrand ? form?.clrxOdBrand : '',
         contactLensBrandOs: form?.clrxOsBrand ? form?.clrxOsBrand : '',
+        contactLensMemo: form?.clrxMemo ? form?.clrxMemo : '',
         prescriptionDate: firestore.Timestamp.fromDate(new Date()),
         showRoomId: checkShowroomId(form?.locationName),
         doctorId: checkDoctorId(form?.fullName),

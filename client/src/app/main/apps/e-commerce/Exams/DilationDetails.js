@@ -17,7 +17,7 @@ const DilationDetails = (props) => {
             </h1>
           </div>
           <br></br>
-          <div className="flex flex-row justify-start pl-10">
+          <div className="flex flex-row justify-start gap-10">
             <h3>@</h3>
             <TextField
               size="small"
@@ -27,7 +27,17 @@ const DilationDetails = (props) => {
               onChange={handleChange}
               name={'dilation'}
             />
-            <h3>Patient Refused</h3>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={form?.patientRefusedDilation}
+                  disabled={disabledState}
+                  onChange={handleChange}
+                  name="patientRefusedDilation"
+                />
+              }
+              label="Patient Refused"
+            />
           </div>
 
           <div className="flex flex-row w-full px-10">
