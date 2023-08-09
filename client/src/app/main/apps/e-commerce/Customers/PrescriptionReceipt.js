@@ -1,22 +1,21 @@
 import '../Customers/Themes.css';
+import { addTwoDecimalPlaces } from '../ReusableComponents/HelperFunctions';
 import { firestore } from 'firebase';
 import { useReactToPrint } from 'react-to-print';
 import AddIcon from '@material-ui/icons/Add';
+import CanvasDraw from 'react-canvas-draw';
 import Dialog from '@material-ui/core/Dialog';
+import DocSig from '../Exams/DocSig.PNG'
 import Fab from '@material-ui/core/Fab';
 import moment from 'moment'
-import CanvasDraw from 'react-canvas-draw';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef } from 'react';
-import DocSig from '../Exams/DocSig.PNG'
 
 export default function PrescriptionReceipt(props) {
-  const { mainForm, open, handleClose, customer } = props;
-
-  // const [templates, setTemplates] = useState([]);
-  const [showroom, setShowroom] = useState(false);
   const [doctor, setDoctor] = useState(false);
+  const [showroom, setShowroom] = useState(false);
   const [saveableCanvas, setSaveableCanvas] = useState();
+  const { mainForm, open, handleClose, customer } = props;
 
   const prescriptionReceipt = useRef();
   const handlePrint = useReactToPrint({
@@ -35,16 +34,6 @@ export default function PrescriptionReceipt(props) {
 
   useEffect(() => {
     const fetchDetails = async () => {
-      // const queryTemplates = (
-      //   await firestore()
-      //     .collection('emailTemplates')
-      //     .doc('emailTemplates')
-      //     .get()
-      // ).data();
-      // const terms = queryTemplates?.templates?.terms
-      //   ? queryTemplates?.templates?.terms.split('<br>')
-      //   : '';
-      // setTemplates(terms.length ? terms : []);
 
       if (!mainForm?.showRoomId || !mainForm?.doctorId) {
         setShowroom(null)
@@ -281,37 +270,37 @@ export default function PrescriptionReceipt(props) {
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesSphereOd}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesSphereOd)}
                             </h3>{' '}
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesCylinderOd}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesCylinderOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesAxisOd}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesAxisOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesPrismOd}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesPrismOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              20 / {mainForm?.eyeglassesVaOd}
+                              20 / {addTwoDecimalPlaces(mainForm?.eyeglassesVaOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesAddOd}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesAddOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              20 / {mainForm?.eyeglassesVaOd2}
+                              20 / {addTwoDecimalPlaces(mainForm?.eyeglassesVaOd2)}
                             </h3>
                           </div>
                         </div>
@@ -322,37 +311,37 @@ export default function PrescriptionReceipt(props) {
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesSphereOs}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesSphereOs)}
                             </h3>{' '}
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesCylinderOs}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesCylinderOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesAxisOs}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesAxisOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesPrismOs}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesPrismOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              20 / {mainForm?.eyeglassesVaOs}
+                              20 / {addTwoDecimalPlaces(mainForm?.eyeglassesVaOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.eyeglassesAddOs}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesAddOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              20 / {mainForm?.eyeglassesVaOs2}
+                              20 / {addTwoDecimalPlaces(mainForm?.eyeglassesVaOs2)}
                             </h3>
                           </div>
                         </div>
@@ -396,42 +385,42 @@ export default function PrescriptionReceipt(props) {
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensSphereOd}
+                              {addTwoDecimalPlaces(mainForm?.contactLensSphereOd)}
                             </h3>{' '}
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensCylinderOd}
+                              {addTwoDecimalPlaces(mainForm?.contactLensCylinderOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensAxisOd}
+                              {addTwoDecimalPlaces(mainForm?.contactLensAxisOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensAddOd}
+                              {addTwoDecimalPlaces(mainForm?.contactLensAddOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensBcOd}
+                              {addTwoDecimalPlaces(mainForm?.contactLensBcOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensDiaOd}
+                              {addTwoDecimalPlaces(mainForm?.contactLensDiaOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensBrandOd}
+                              {addTwoDecimalPlaces(mainForm?.contactLensBrandOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensModelOd}
+                              {addTwoDecimalPlaces(mainForm?.contactLensModelOd)}
                             </h3>
                           </div>
                         </div>
@@ -442,42 +431,42 @@ export default function PrescriptionReceipt(props) {
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensSphereOs}
+                              {addTwoDecimalPlaces(mainForm?.contactLensSphereOs)}
                             </h3>{' '}
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensCylinderOs}
+                              {addTwoDecimalPlaces(mainForm?.contactLensCylinderOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensAxisOs}
+                              {addTwoDecimalPlaces(mainForm?.contactLensAxisOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensAddOs}
+                              {addTwoDecimalPlaces(mainForm?.contactLensAddOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensBcOs}
+                              {addTwoDecimalPlaces(mainForm?.contactLensBcOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensDiaOs}
+                              {addTwoDecimalPlaces(mainForm?.contactLensDiaOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensBrandOs}
+                              {addTwoDecimalPlaces(mainForm?.contactLensBrandOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              {mainForm?.contactLensModelOs}
+                              {addTwoDecimalPlaces(mainForm?.contactLensModelOs)}
                             </h3>
                           </div>
                         </div>

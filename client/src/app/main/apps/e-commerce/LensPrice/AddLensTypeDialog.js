@@ -1,16 +1,17 @@
 import { firestore } from 'firebase';
+import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import AppBar from '@material-ui/core/AppBar';
-import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+
 const useStyles = makeStyles({
   table: {
     minWidth: 450
@@ -40,11 +41,12 @@ for (let i = -15; i <= 15; i += 0.25) {
 return newTable
   }
   const onSubmit = async () => {
+    const sanitizedLensType = form?.lensType.replace('.', '-')
     try {
       await firestore()
         .collection('lensPrice')
         .doc('lensPrice')
-        .update({ [form?.lensType]: {
+        .update({ [sanitizedLensType]: {
           prismPrice: form?.prismPrice,
           outOfRangePrice: form?.outOfRangePrice,
           rows: generateNewTableValues()

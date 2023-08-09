@@ -61,3 +61,24 @@ export const toastAttributes = {
     progress: undefined,
     transition: Zoom
 }
+
+export const customValuesArrayGenerator = (start, end, increment) => {
+    const dataArray = [];
+
+    for (let value = start; value <= end; value += increment) {
+        const label = value.toFixed(2);
+        dataArray.push({ label, value });
+    }
+
+    return dataArray
+
+}
+
+export const visualAquityDropDownValues = [15, 20, 25, 30, 40, 50, 60, 70, 80, 100, 120, 150, 200, 300, 350, 400, '> 400']
+export const slitLampAngleValues = ['< 1', 1, 2, 3, 4]
+
+export const addTwoDecimalPlaces = (value) => {
+    if (!value) return value
+    let changedNumber = Number(value);
+    return !isNaN(changedNumber) ? changedNumber.toFixed(2) : value;
+}

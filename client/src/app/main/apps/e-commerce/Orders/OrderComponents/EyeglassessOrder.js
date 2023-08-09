@@ -175,7 +175,7 @@ const EyeglassessOrder = (props) => {
                             )
                           }}
                         >
-                          {[...prescription.filter((word) => word.prescriptionType === 'eyeglassesRx')].map((row) => (
+                          {[...prescription.filter((word) => word.prescriptionType === 'eyeglassesRx')].sort((a, b) => (a.prescriptionId > b.prescriptionId ? -1 : 1)).map((row) => (
                             <MenuItem value={row?.prescriptionId}>
                               {row?.prescriptionDate ? moment(row?.prescriptionDate.toDate()).format('MM/DD/YYYY') : ''}
                             </MenuItem>

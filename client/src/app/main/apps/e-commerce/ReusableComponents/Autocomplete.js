@@ -30,7 +30,7 @@ const CustomAutocomplete = (props) => {
   return (
     <div className={classes.root}>
       <Autocomplete
-        options={[...new Set(list?.map((item) => (item[id] ? String(item[id]) : '')))]}
+        options={[...new Set(list?.length > 0 ? list?.map((item) => (item[id] ? String(item[id]) : '')) : [])]}
         getOptionLabel={(option) => option[id] || option}
         id={id}
         disabled={disabled}

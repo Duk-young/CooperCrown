@@ -9,7 +9,7 @@ const CustomerInfo = (props) => {
     <div className="flex p-16 flex-row w-full">
       <div className=" w-1/2 h-auto">
         <div className="py-8  border-1 border-black border-solid rounded-6">
-          <div className="flex flex-row justify-center border-b-1 border-black border-solid">
+          <div className="flex flex-row justify-center">
               <h1 className="font-700 truncate" style={{ color: '#f15a25' }}>
               CUSTOMER INFO
             </h1>
@@ -140,7 +140,7 @@ const CustomerInfo = (props) => {
 
         <div className=" p-8 py-6 my-10 border-1 border-black border-solid rounded-6">
           <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-            <h1 className="font-700 truncate" style={{ color: '#f15a25' }}>
+            <h1 className="font-700 truncate uppercase" style={{ color: '#f15a25' }}>
               Occupation
             </h1>
           </div>
@@ -163,7 +163,7 @@ const CustomerInfo = (props) => {
           <div className="flex flex-col h-auto">
             <div className="flex flex-col h-auto py-8 border-1 border-black border-solid rounded-6">
               <div className="flex flex-row justify-center border-b-1 border-black border-solid">
-                <h1 className="font-700" style={{ color: '#f15a25' }}>
+                <h1 className="font-700 uppercase" style={{ color: '#f15a25' }}>
                   Note
                 </h1>
               </div>

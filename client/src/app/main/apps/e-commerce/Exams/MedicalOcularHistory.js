@@ -130,7 +130,7 @@ const MedicalOcularHistory = (props) => {
           <div className=" border-b-1 border-black border-solid px-11">
             <div className="flex flex-row justify-center">
               <div className="flex-1 pl-30">
-                <h3 className="ml-40 font-700  ">Cholestrol</h3>
+                <h3 className="ml-40 font-700  ">Cholesterol</h3>
 
               </div>
               <div className="flex-1">
@@ -271,7 +271,7 @@ const MedicalOcularHistory = (props) => {
           <div className=" border-b-1 border-black border-solid px-11">
             <div className="flex flex-row justify-center">
               <div className="flex-1 pl-30">
-                <h3 className=" font-700 ml-40 ">{`Retincal Detachment`}</h3>
+                <h3 className=" font-700 ml-40 ">{`Retinal Detachment`}</h3>
               </div>
               <div className="flex-1">
                 <h3 className="hidden font-700 text-center">Hidden</h3>

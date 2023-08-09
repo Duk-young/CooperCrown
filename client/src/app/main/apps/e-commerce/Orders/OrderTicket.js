@@ -52,7 +52,7 @@ export default function OrderTicket(props) {
       aria-labelledby="simple-dialog-title"
       open={open}>
       <div className='flex flex-col w-full'>
-        <div className='flex flex-row justify-center'>
+        <div className='flex flex-row justify-center my-10'>
           <Fab
             onClick={handlePrint}
             variant="extended"
@@ -66,7 +66,7 @@ export default function OrderTicket(props) {
         <div ref={componentRef}>
           <div class="flex justify-center items-center">
             <div class="thermal-paper p-2">
-              <div className='flex flex-col w-full border-1 border-black justify-center p-10'>
+              <div className='flex flex-col w-full justify-center p-10'>
                 <p className='font-12pt text-center font-700'>{showroom?.locationName}</p>
                 <p className='font-12pt text-center font-700'>{showroom?.State}</p>
                 <div className='flex flex-row justify-between items-center'>
@@ -78,7 +78,7 @@ export default function OrderTicket(props) {
                   <p className='pt-4 font-9pt text-left font-700'>{customer?.customCustomerId}</p>
                   <p className='pt-4 font-9pt text-right font-700'>{customer?.firstName} {customer?.lastName}</p>
                 </div>
-                <div className='w-full h-2 bg-black my-4'></div>
+                <div className='w-full div-3px bg-black my-4'></div>
                 {customer?.memos && (
                   <div>
                     <p className='pt-4 font-9pt text-center font-700'>NOTE</p>
@@ -125,27 +125,27 @@ export default function OrderTicket(props) {
                       <div className="w-1/6 border-box">
                         <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesAddOd)) ? Number(eyeglasses[0]?.eyeglassesAddOd).toFixed(2) : eyeglasses[0]?.eyeglassesAddOd}</p>
                       </div>
-                      <div className="w-2/6 border-box">
+                      <div className="w-2/6 border-box border-r-1">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesPrismOd}</p>
                       </div>
                     </div>
                     <div className="flex flex-row w-full border-collapse">
-                      <div className="w-20 border-box">
+                      <div className="w-20 border-box border-b-1">
                         <p className='font-7pt text-center'>OD</p>
                       </div>
-                      <div className="w-1/6 border-box">
+                      <div className="w-1/6 border-box border-b-1">
                         <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesSphereOs)) ? Number(eyeglasses[0]?.eyeglassesSphereOs).toFixed(2) : eyeglasses[0]?.eyeglassesSphereOs}</p>
                       </div>
-                      <div className="w-1/6 border-box">
+                      <div className="w-1/6 border-box border-b-1">
                         <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesCylinderOs)) ? Number(eyeglasses[0]?.eyeglassesCylinderOs).toFixed(2) : eyeglasses[0]?.eyeglassesCylinderOs}</p>
                       </div>
-                      <div className="w-1/6 border-box">
+                      <div className="w-1/6 border-box border-b-1">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesAxisOs}</p>
                       </div>
-                      <div className="w-1/6 border-box">
+                      <div className="w-1/6 border-box border-b-1">
                         <p className='font-7pt text-center'>{!isNaN(Number(eyeglasses[0]?.eyeglassesAddOs)) ? Number(eyeglasses[0]?.eyeglassesAddOs).toFixed(2) : eyeglasses[0]?.eyeglassesAddOs}</p>
                       </div>
-                      <div className="w-2/6 border-box">
+                      <div className="w-2/6 border-box border-r-1 border-b-1">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.eyeglassesPrismOs}</p>
                       </div>
                     </div>
@@ -174,21 +174,21 @@ export default function OrderTicket(props) {
                       <div className="w-1/4 border-box">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.pdOdDistance}</p>
                       </div>
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-r-1">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.pdOsDistance}</p>
                       </div>
                     </div>
                     <div className="flex flex-row w-full border-collapse px-32 pb-6">
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-b-1">
                         <p className='font-7pt text-center'>Near</p>
                       </div>
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-b-1">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.pdOuNear}</p>
                       </div>
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-b-1">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.pdOdNear}</p>
                       </div>
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-r-1 border-b-1">
                         <p className='font-7pt text-center'>{eyeglasses[0]?.pdOsNear}</p>
                       </div>
                     </div>
@@ -199,7 +199,7 @@ export default function OrderTicket(props) {
                   <div>
                     <p className='pt-4 font-9pt text-center font-700'>EYEGLASSES ORDER {mainForm?.customOrderId}-E{index + 1}</p>
                     <div className='flex flex-row w-full'>
-                      <div className='flex flex-col w-1/2 border-box my-8'>
+                      <div className='flex flex-col w-1/2 border-box my-8 border-b-1'>
                         <p className='pt-4 font-9pt text-center font-700'>Frame</p>
                         <p className='pl-4 font-9pt text-left'>Brand: {row?.frameBrand}</p>
                         <p className='pl-4 font-9pt text-left'>Model: {row?.frameModel}</p>
@@ -207,7 +207,7 @@ export default function OrderTicket(props) {
                         <p className='pl-4 font-9pt text-left'>Seg Ht OD: {row?.segHtOd}</p>
                         <p className='pl-4 font-9pt text-left'>Seg Ht OS: {row?.segHtOs}</p>
                       </div>
-                      <div className='flex flex-col w-1/2 border-box my-8'>
+                      <div className='flex flex-col w-1/2 border-box my-8 border-b-1 border-r-1'>
                         <p className='pt-4 font-9pt text-center font-700'>Lens</p>
                         <p className='pl-4 font-9pt text-left'>{row?.lensType}</p>
                         <p className='pl-4 font-9pt text-left'>Lens Type: {row?.lensTypeName}</p>
@@ -229,7 +229,7 @@ export default function OrderTicket(props) {
                 {contactLenses?.length > 0 && (
                   <div>
                     <p className='py-6 font-9pt text-center font-700'>CONTACT LENS PRESCRIPTION</p>
-                    <div className="flex flex-row w-full px-20">
+                    <div className="flex flex-row w-full">
                       <div className="w-20">
                         <p className='font-7pt text-center font-700'>Rx</p>
                       </div>
@@ -246,7 +246,7 @@ export default function OrderTicket(props) {
                         <p className='font-7pt text-center font-700'>Add</p>
                       </div>
                     </div>
-                    <div className="flex flex-row w-full border-collapse px-20">
+                    <div className="flex flex-row w-full border-collapse">
                       <div className="w-20 border-box">
                         <p className='font-7pt text-center'>OD</p>
                       </div>
@@ -259,24 +259,24 @@ export default function OrderTicket(props) {
                       <div className="w-1/4 border-box">
                         <p className='font-7pt text-center'>{contactLenses[0]?.contactLensAxisOd}</p>
                       </div>
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-r-1">
                         <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensAddOd)) ? Number(contactLenses[0]?.contactLensAddOd).toFixed(2) : contactLenses[0]?.contactLensAddOd}</p>
                       </div>
                     </div>
-                    <div className="flex flex-row w-full border-collapse px-20">
-                      <div className="w-20 border-box">
+                    <div className="flex flex-row w-full border-collapse">
+                      <div className="w-20 border-box border-b-1">
                         <p className='font-7pt text-center'>OS</p>
                       </div>
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-b-1">
                         <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensSphereOs)) ? Number(contactLenses[0]?.contactLensSphereOs).toFixed(2) : contactLenses[0]?.contactLensSphereOs}</p>
                       </div>
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-b-1">
                         <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensCylinderOs)) ? Number(contactLenses[0]?.contactLensCylinderOs).toFixed(2) : contactLenses[0]?.contactLensCylinderOs}</p>
                       </div>
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-b-1">
                         <p className='font-7pt text-center'>{contactLenses[0]?.contactLensAxisOs}</p>
                       </div>
-                      <div className="w-1/4 border-box">
+                      <div className="w-1/4 border-box border-b-1 border-r-1">
                         <p className='font-7pt text-center'>{!isNaN(Number(contactLenses[0]?.contactLensAddOs)) ? Number(contactLenses[0]?.contactLensAddOs).toFixed(2) : contactLenses[0]?.contactLensAddOs}</p>
                       </div>
                     </div>
@@ -288,14 +288,14 @@ export default function OrderTicket(props) {
                   <div>
                     <p className='pt-4 font-9pt text-center font-700'>CONTACT LENS ORDER {mainForm?.customOrderId}-CL{index + 1}</p>
                     <div className='flex flex-row w-full'>
-                      <div className='flex flex-col w-1/2 border-box my-8'>
+                      <div className='flex flex-col w-1/2 border-box my-8 border-b-1'>
                         <p className='pt-4 font-9pt text-center font-700'>OD</p>
                         <p className='pl-4 font-9pt text-left'>Style: {row?.contactLensStyleOd}</p>
                         <p className='pl-4 font-9pt text-left'>Brand: {row?.contactLensBrandOd}</p>
                         <p className='pl-4 font-9pt text-left'>Model: {row?.contactLensNameOd}</p>
                         <p className='pl-4 font-9pt text-left'>Base Curve: {row?.contactLensBaseCurveOd}</p>
                       </div>
-                      <div className='flex flex-col w-1/2 border-box my-8'>
+                      <div className='flex flex-col w-1/2 border-box my-8 border-b-1 border-r-1'>
                         <p className='pt-4 font-9pt text-center font-700'>OS</p>
                         <p className='pl-4 font-9pt text-left'>Style: {row?.contactLensStyleOs}</p>
                         <p className='pl-4 font-9pt text-left'>Brand: {row?.contactLensBrandOs}</p>
@@ -316,17 +316,17 @@ export default function OrderTicket(props) {
                   <div className='flex flex-row w-2/3 justify-center border-box'>
                     <BarcodeGenerator text={mainForm?.customOrderId} />
                   </div>
-                  <div className='flex flex-col w-1/3 justify-center border-box'>
+                  <div className='flex flex-col w-1/3 justify-center border-box border-r-1'>
                     <p className='font-9pt text-center font-700'>{showroom?.locationName}</p>
                     <p className='font-9pt text-center font-700'>{showroom?.State}</p>
                     <p className='font-9pt text-center'>{moment(mainForm?.orderDate).format('MM/DD/YYYY')}</p>
                   </div>
                 </div>
                 <div className='flex flex-row w-full mb-60'>
-                  <div className='flex flex-row w-2/3 justify-center border-box'>
+                  <div className='flex flex-row w-2/3 justify-center border-box border-b-1'>
                     <p className='font-12pt text-center font-700'>{`${customer?.firstName} ${customer?.lastName}`}</p>
                   </div>
-                  <div className='flex flex-col w-1/3 justify-center border-box'>
+                  <div className='flex flex-col w-1/3 justify-center border-box border-r-1 border-b-1'>
                     <p className='font-12pt text-center font-700'>{mainForm?.rushFrameOrder ? 'RUSH' : ''}</p>
                   </div>
                 </div>

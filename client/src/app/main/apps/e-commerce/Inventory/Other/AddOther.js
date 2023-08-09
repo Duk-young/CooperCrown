@@ -600,9 +600,9 @@ function AddOther(props) {
                     </div>
                     <div className="flex flex-row w-full overflow-scroll flex-wrap mt-10 p-6">
                       {images.map((img, index) => (
-                        <div className="mb-8 w-224 mr-6 object-contain">
+                        <div className="mb-8 w-224 mr-6 ">
                           <img
-                            className="w-224 h-128 shadow-1 rounded-4"
+                            className="w-full h-128 shadow-1 rounded-4 object-cover"
                             src={img.url}
                             key={img.name}
                             alt={''}
@@ -802,7 +802,7 @@ function AddOther(props) {
                       });
                     }
                   }}>
-                  <Icon>save</Icon> SAVE
+                  SAVE
                 </Button>
               </div>
             </div>
