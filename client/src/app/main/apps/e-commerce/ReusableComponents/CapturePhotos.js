@@ -17,7 +17,7 @@ const CapturePhotos = (props) => {
   const config = useMemo(() => (
     {
       video: true,
-      facingMode: cameraFacingMode,
+      facingMode: { exact: cameraFacingMode },
     }
   ), [cameraFacingMode]);
 
