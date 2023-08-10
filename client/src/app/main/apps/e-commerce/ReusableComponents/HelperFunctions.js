@@ -76,6 +76,7 @@ export const customValuesArrayGenerator = (start, end, increment) => {
 
 export const visualAquityDropDownValues = [15, 20, 25, 30, 40, 50, 60, 70, 80, 100, 120, 150, 200, 300, 350, 400, '> 400']
 export const slitLampAngleValues = ['< 1', 1, 2, 3, 4]
+export const algoliaDefaultRanking = ['typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom']
 
 export const addTwoDecimalPlaces = (value) => {
     if (!value) return value

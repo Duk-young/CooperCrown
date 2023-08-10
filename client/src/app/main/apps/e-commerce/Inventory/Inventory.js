@@ -42,7 +42,7 @@ const StyledTab = withStyles((theme) => ({
 function Inventory() {
   const classes = useStyles();
   const [selectedTab, setSelectedTab] = useState(0);
-  const [searchClient, setsearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+  const [searchClient, setSearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
 
   const handleTabChange = (event, value) => {
     setSelectedTab(value);
@@ -54,7 +54,7 @@ function Inventory() {
         <div className="flex flex-row w-full items-center justify-center">
           <Typography style={{ fontSize: '3rem', fontWeight: 600 }} variant="h4">INVENTORY</Typography>
           <IconButton color='secondary' onClick={() => {
-            setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+            setSearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
           }}>
             <CachedIcon />
           </IconButton>
@@ -75,7 +75,7 @@ function Inventory() {
         </Tabs>
       </div>
       <div className='flex flex-col overflow-hidden'>
-        {selectedTab === 0 && (<Frames searchClient={searchClient} />)}
+        {selectedTab === 0 && (<Frames searchClient={searchClient} setSearchClient={setSearchClient}/>)}
         {selectedTab === 1 && (<Lens searchClient={searchClient} />)}
         {selectedTab === 2 && (<Other searchClient={searchClient} />)}
         {selectedTab === 3 && (<OutOfStock />)}

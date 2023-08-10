@@ -1,15 +1,19 @@
 import './App.mobile.css';
 import './Search.css';
 import './Themes.css';
+import { algoliaDefaultRanking, toastAttributes } from '../ReusableComponents/HelperFunctions';
+import { connectHits, Pagination, InstantSearch, SearchBox, HitsPerPage, Configure, connectStateResults } from 'react-instantsearch-dom';
 import { IconButton } from '@material-ui/core';
-import { toast, Zoom } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useForm } from '@fuse/hooks';
 import { useSelector } from 'react-redux';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import algoliasearch from 'algoliasearch/lite';
+import algoliasearch from 'algoliasearch';
 import Button from '@material-ui/core/Button';
 import CachedIcon from '@material-ui/icons/Cached';
 import clsx from 'clsx';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LoadingDialog from '../ReusableComponents/LoadingDialog';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -23,15 +27,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import {
-  connectHits,
-  Pagination,
-  InstantSearch,
-  SearchBox,
-  HitsPerPage,
-  Configure,
-  connectStateResults
-} from 'react-instantsearch-dom';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -51,8 +46,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const CustomHits = connectHits(({ hits, props }) => {
+const CustomHits = connectHits(({ hits, props, setisLoading, setSearchClient }) => {
 
+  const [currentSort, setCurrentSort] = useState(null)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
 
   function formatPhoneNumber(phoneNumberString) {
@@ -65,19 +61,51 @@ const CustomHits = connectHits(({ hits, props }) => {
     return phoneNumberString;
   }
 
+  const changeSort = async (columnName, currentSort) => {
+
+    let attributeToSet = currentSort === `asc(${columnName})` ? `desc(${columnName})` : `asc(${columnName})`
+
+    try {
+      setisLoading(true)
+      const client = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_UPDATE_SETTINGS_KEY)
+      const index = client.initIndex('customers')
+
+      index.setSettings({ ranking: [attributeToSet, ...algoliaDefaultRanking] }).then(() => {
+        setCurrentSort(attributeToSet);
+
+        setTimeout(() => {
+          setSearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+          setisLoading(false)
+        }, 1000);
+      }).catch((err) => {
+        console.error('Error updating index settings:', err);
+        setisLoading(false);
+      })
+
+    } catch (error) {
+      console.error('Error updating index settings:', error);
+    }
+  }
+
   return (
     <Table stickyHeader aria-label="customized table">
       <TableHead>
-        <TableRow className='truncate'>
+        <TableRow className='truncate cursor-pointer'>
           <StyledTableCell>ID</StyledTableCell>
-          <StyledTableCell>FIRST NAME</StyledTableCell>
-          <StyledTableCell>LAST NAME</StyledTableCell>
-          <StyledTableCell>D.O.B</StyledTableCell>
-          {/* <StyledTableCell>LAST EXAM</StyledTableCell> */}
-          <StyledTableCell>GENDER</StyledTableCell>
-          <StyledTableCell>STATE</StyledTableCell>
-          <StyledTableCell>ZIP CODE</StyledTableCell>
-          <StyledTableCell>PHONE</StyledTableCell>
+          <StyledTableCell onClick={() => changeSort('firstName', currentSort)}>FIRST NAME {currentSort === 'asc(firstName)' && <ExpandMoreIcon />}
+            {currentSort === 'desc(firstName)' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell onClick={() => changeSort('lastName', currentSort)}>LAST NAME {currentSort === 'asc(lastName)' && <ExpandMoreIcon />}
+            {currentSort === 'desc(lastName)' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell onClick={() => changeSort('dob', currentSort)}>D.O.B {currentSort === 'asc(dob)' && <ExpandMoreIcon />}
+            {currentSort === 'desc(dob)' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell onClick={() => changeSort('gender', currentSort)}>GENDER {currentSort === 'asc(gender)' && <ExpandMoreIcon />}
+            {currentSort === 'desc(gender)' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell onClick={() => changeSort('state', currentSort)}>STATE {currentSort === 'asc(state)' && <ExpandMoreIcon />}
+            {currentSort === 'desc(state)' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell onClick={() => changeSort('zipCode', currentSort)}>ZIP CODE {currentSort === 'asc(zipCode)' && <ExpandMoreIcon />}
+            {currentSort === 'desc(zipCode)' && <ExpandLessIcon />}</StyledTableCell>
+          <StyledTableCell onClick={() => changeSort('phone1', currentSort)}>PHONE {currentSort === 'asc(phone1)' && <ExpandMoreIcon />}
+            {currentSort === 'desc(phone1)' && <ExpandLessIcon />}</StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -92,16 +120,7 @@ const CustomHits = connectHits(({ hits, props }) => {
                   `/apps/e-commerce/customers/profile/${hit.customerId}`
                 );
               } else {
-                toast.error('You are not authorized', {
-                  position: 'top-center',
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  transition: Zoom
-                });
+                toast.error('You are not authorized', toastAttributes);
               }
             }}>
             <StyledTableCell component="th" scope="row">
@@ -178,11 +197,12 @@ function Customers(props) {
   const classes = useStyles(props);
   const { form, handleChange } = useForm(null);
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
-  const [searchClient, setsearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+  const [isLoading, setisLoading] = useState(false)
+  const [searchClient, setSearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
 
   const ResultStats = connectStateResults(
     ({ searching }) =>
-      searching ? (<LoadingDialog />) : (<div></div>)
+      (searching || isLoading) ? (<LoadingDialog />) : (<div></div>)
   );
 
   return (
@@ -206,7 +226,7 @@ function Customers(props) {
                 Customer
               </Typography>
               <IconButton color='secondary' onClick={() => {
-                setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+                setSearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
               }}>
                 <CachedIcon />
               </IconButton>
@@ -315,16 +335,7 @@ function Customers(props) {
                       if (userData.userRole === 'admin' || userData?.customersCreate) {
                         props.history.push('/apps/e-commerce/create-customer')
                       } else {
-                        toast.error('You are not authorized', {
-                          position: 'top-center',
-                          autoClose: 5000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          transition: Zoom
-                        });
+                        toast.error('You are not authorized', toastAttributes);
                       }
                     }
                     }
@@ -342,7 +353,7 @@ function Customers(props) {
           <TableContainer
             stickyHeader
             className="flex flex-col w-full overflow-scroll">
-            <CustomHits props={props} />
+            <CustomHits props={props} setSearchClient={setSearchClient} setisLoading={setisLoading} />
           </TableContainer>
           <div className="flex flex-row justify-center">
             <div className="flex flex-1"></div>

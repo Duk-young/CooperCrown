@@ -1,6 +1,7 @@
 import '../Customers/App.mobile.css';
 import '../Customers/Search.css';
 import '../Customers/Themes.css';
+import { algoliaDefaultRanking } from '../ReusableComponents/HelperFunctions';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
 import { IconButton } from '@material-ui/core';
@@ -9,17 +10,21 @@ import { toast, Zoom } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@fuse/hooks';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { InstantSearch, SearchBox, Pagination, HitsPerPage, Configure, connectStateResults } from 'react-instantsearch-dom';
 import * as MessageActions from 'app/store/actions/fuse/message.actions';
-import algoliasearch from 'algoliasearch/lite';
+import algoliasearch from 'algoliasearch';
 import Button from '@material-ui/core/Button';
 import CachedIcon from '@material-ui/icons/Cached';
 import Checkbox from '@material-ui/core/Checkbox';
 import clsx from 'clsx';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FuseAnimate from '@fuse/core/FuseAnimate';
-import FuseLoading from '@fuse/core/FuseLoading';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
+import LoadingDialog from '../ReusableComponents/LoadingDialog';
 import moment from 'moment';
+import MultipleOrderTickets from './MultipleOrderTickets';
 import React, { useState } from 'react';
 import reducer from '../store/reducers';
 import Tab from '@material-ui/core/Tab';
@@ -33,16 +38,6 @@ import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import {
-  InstantSearch,
-  SearchBox,
-  Pagination,
-  HitsPerPage,
-  Configure,
-  connectStateResults
-} from 'react-instantsearch-dom';
-import LoadingDialog from '../ReusableComponents/LoadingDialog';
-import MultipleOrderTickets from './MultipleOrderTickets';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -102,10 +97,13 @@ const CustomHits = connectHits(
     setSelected,
     setSelectAllData,
     userData,
-    history
+    history,
+    setSearchClient,
+    setisLoading
   }) => {
     const isSelected = (name) => selected.indexOf(name) !== -1;
     const [balances, setBalances] = useState({})
+    const [currentSort, setCurrentSort] = useState(null)
 
     const handleSelectAllClick = (event) => {
       if (event.target.checked) {
@@ -115,6 +113,32 @@ const CustomHits = connectHits(
       }
       setSelected([]);
     };
+
+    const changeSort = async (columnName, currentSort) => {
+
+      let attributeToSet = currentSort === `asc(${columnName})` ? `desc(${columnName})` : `asc(${columnName})`
+
+      try {
+        setisLoading(true)
+        const client = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_UPDATE_SETTINGS_KEY)
+        const index = client.initIndex('orders')
+
+        index.setSettings({ ranking: [attributeToSet, ...algoliaDefaultRanking]}).then(() => {
+          setCurrentSort(attributeToSet);
+
+            setTimeout(() => {
+              setSearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+              setisLoading(false)
+            }, 1000);
+        }).catch((err) => {
+          console.error('Error updating index settings:', err);
+          setisLoading(false);
+        })
+
+      } catch (error) {
+        console.error('Error updating index settings:', error);
+      }
+    }
 
     const handleTotal = (row) => {
       const mainSum =
@@ -206,7 +230,7 @@ const CustomHits = connectHits(
     return (
       <Table stickyHeader aria-label="customized table">
         <TableHead>
-          <TableRow className='truncate'>
+          <TableRow className='truncate cursor-pointer'>
             <StyledTableCell> </StyledTableCell>
             {value !== 0 && (
               <StyledTableCell padding="checkbox">
@@ -220,19 +244,23 @@ const CustomHits = connectHits(
                 />
               </StyledTableCell>
             )}
-            <StyledTableCell>ORDER No.</StyledTableCell>
+            <StyledTableCell onClick={() => changeSort('orderId', currentSort)}>ORDER No. {currentSort === 'asc(orderId)' && <ExpandMoreIcon />}
+              {currentSort === 'desc(orderId)' && <ExpandLessIcon />}</StyledTableCell>
             <StyledTableCell>DATE</StyledTableCell>
-            <StyledTableCell>FIRST NAME</StyledTableCell>
-            <StyledTableCell>LAST NAME</StyledTableCell>
+            <StyledTableCell onClick={() => changeSort('firstName', currentSort)}>FIRST NAME {currentSort === 'asc(firstName)' && <ExpandMoreIcon />}
+              {currentSort === 'desc(firstName)' && <ExpandLessIcon />}</StyledTableCell>
+            <StyledTableCell onClick={() => changeSort('lastName', currentSort)}>LAST NAME {currentSort === 'asc(lastName)' && <ExpandMoreIcon />}
+              {currentSort === 'desc(lastName)' && <ExpandLessIcon />}</StyledTableCell>
             <StyledTableCell>ID</StyledTableCell>
-            <StyledTableCell>LOCATION</StyledTableCell>
+            <StyledTableCell onClick={() => changeSort('locationName', currentSort)}>LOCATION {currentSort === 'asc(locationName)' && <ExpandMoreIcon />}
+              {currentSort === 'desc(locationName)' && <ExpandLessIcon />}</StyledTableCell>
             <StyledTableCell>BALANCE</StyledTableCell>
-            <StyledTableCell>STATUS</StyledTableCell>
+            <StyledTableCell onClick={() => changeSort('orderStatus', currentSort)}>STATUS {currentSort === 'asc(orderStatus)' && <ExpandMoreIcon />}
+              {currentSort === 'desc(orderStatus)' && <ExpandLessIcon />}</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {hits
-            .sort((a, b) => (a.orderId > b.orderId ? -1 : 1))
             .map((hit) => {
               const isItemSelected = isSelected(hit.orderId);
               return (
@@ -522,7 +550,7 @@ function Orders(props) {
   const [isLoading, setisLoading] = React.useState(false);
   const [openOrderTickets, setOpenOrderTickets] = useState(false)
   const userData = useSelector(state => state.auth.user.data.firestoreDetails);
-  const [searchClient, setsearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+  const [searchClient, setSearchClient] = useState(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
 
   const updateStatus = async (order, status) => {
     const uuid = order[0]; // add loader then update the page with the new data
@@ -563,10 +591,8 @@ function Orders(props) {
 
   const ResultStats = connectStateResults(
     ({ searching }) =>
-      searching ? (<LoadingDialog />) : (<div></div>)
+      (searching || isLoading) ? (<LoadingDialog />) : (<div></div>)
   );
-
-  if (isLoading) return <FuseLoading />;
 
   return (
     <div className="flex w-full overflow-hidden">
@@ -581,7 +607,7 @@ function Orders(props) {
                 ORDERS
               </Typography>
               <IconButton color='secondary' onClick={() => {
-                setsearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+                setSearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
               }}>
                 <CachedIcon />
               </IconButton>
@@ -754,6 +780,8 @@ function Orders(props) {
                   setSelectAllData={setSelectAllData}
                   userData={userData}
                   history={props?.history}
+                  setSearchClient={setSearchClient}
+                  setisLoading={setisLoading}
                 />
               </TabPanel>
             ))}
