@@ -1,13 +1,24 @@
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { makeStyles } from '@material-ui/core/styles';
+import { slitLampAngleValues } from '../ReusableComponents/HelperFunctions';
+import { withRouter } from 'react-router';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { withRouter } from 'react-router';
 import React from 'react';
+import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
+
+const useStyles = makeStyles({
+  centerText: {
+    textAlign: 'center',
+  },
+});
 
 const PupilsDetails = (props) => {
+  const classes = useStyles();
   const { form, handleChange, disabledState } = props;
 
   return (
@@ -61,22 +72,19 @@ const PupilsDetails = (props) => {
               type="number"
             />
             <h3 className="font-700 pt-10">{`\u00A0PERRLA\u00A0`}</h3>
-            <TextField
-              size="small"
-              style={{ width: 80 }}
-              id="standard-basic"
-              disabled={disabledState}
-              value={form?.odreaction}
-              onChange={handleChange}
-              name={'odreaction'}
-              InputProps={{
-                inputProps: {
-                  style: { textAlign: 'center' }
-                }
-              }}
-              type="number"
-            />
-
+            <div className='flex flex-col w-160'>
+              <Select
+                className={classes.centerText}
+                disabled={disabledState}
+                value={form?.odreaction ?? ''}
+                name="odreaction"
+                onChange={handleChange}
+              >
+                {slitLampAngleValues.map((row) => (
+                  <MenuItem key={row} value={row}>{row}</MenuItem>
+                ))}
+              </Select>
+            </div>
           </div>
 
           <div className="flex flex-row justify-center">
@@ -113,22 +121,19 @@ const PupilsDetails = (props) => {
               type="number"
             />
             <h3 className="font-700 pt-10">{`\u00A0PERRLA\u00A0`}</h3>
-            <TextField
-              size="small"
-              style={{ width: 80 }}
-              id="standard-basic"
-              disabled={disabledState}
-              value={form?.osreaction}
-              onChange={handleChange}
-              name={'osreaction'}
-              InputProps={{
-                inputProps: {
-                  style: { textAlign: 'center' }
-                }
-              }}
-              type="number"
-            />
-            <br></br>
+            <div className='flex flex-col w-160'>
+              <Select
+                className={classes.centerText}
+                disabled={disabledState}
+                value={form?.osreaction ?? ''}
+                name="osreaction"
+                onChange={handleChange}
+              >
+                {slitLampAngleValues.map((row) => (
+                  <MenuItem key={row} value={row}>{row}</MenuItem>
+                ))}
+              </Select>
+            </div>
           </div>
 
           <div className='flex flex-row w-full'>

@@ -1,4 +1,4 @@
-import { customValuesArrayGenerator, sortAlphabetically } from '../ReusableComponents/HelperFunctions';
+import { customValuesArrayGenerator, sortAlphabetically, visualAquityDropDownValues } from '../ReusableComponents/HelperFunctions';
 import { firestore, storage } from 'firebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
@@ -532,7 +532,7 @@ function Prescriptions(props) {
                             </div>
                             <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
                               <Select
-                                value={form?.eyeglassesSphereOd ?? ''}
+                                value={form?.eyeglassesSphereOd ?? 0}
                                 name="eyeglassesSphereOd"
                                 onChange={handleChange}
                               >
@@ -569,8 +569,16 @@ function Prescriptions(props) {
                             <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                               <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesPrismOd" freeSolo={true} variant='standard' />
                             </div>
-                            <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                              <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesVaOd" freeSolo={true} variant='standard' />
+                            <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                              <Select
+                                value={form?.eyeglassesVaOd ?? ''}
+                                name="eyeglassesVaOd"
+                                onChange={handleChange}
+                              >
+                                {visualAquityDropDownValues.map((row) => (
+                                  <MenuItem key={row} value={row}>{row}</MenuItem>
+                                ))}
+                              </Select>
                             </div>
                           </div>
 
@@ -580,7 +588,7 @@ function Prescriptions(props) {
                             </div>
                             <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
                               <Select
-                                value={form?.eyeglassesSphereOs ?? ''}
+                                value={form?.eyeglassesSphereOs ?? 0}
                                 name="eyeglassesSphereOs"
                                 onChange={handleChange}
                               >
@@ -617,8 +625,16 @@ function Prescriptions(props) {
                             <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
                               <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesPrismOs" freeSolo={true} variant='standard' />
                             </div>
-                            <div className=" flex-1 h-auto border-black border-solid border-1 justify-between">
-                              <CustomAutocomplete list={prescription} form={form} setForm={setForm} handleChange={handleChange} id="eyeglassesVaOs" freeSolo={true} variant='standard' />
+                            <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
+                              <Select
+                                value={form?.eyeglassesVaOs ?? ''}
+                                name="eyeglassesVaOs"
+                                onChange={handleChange}
+                              >
+                                {visualAquityDropDownValues.map((row) => (
+                                  <MenuItem key={row} value={row}>{row}</MenuItem>
+                                ))}
+                              </Select>
                             </div>
                           </div>
                         </div>
@@ -933,9 +949,9 @@ function Prescriptions(props) {
                             </FormControl>
                           </div>
                           <IconButton onClick={() => {
-                          setFilteredContactLensOd(contactLens)
-                          setForm({ ...form, contactLensBrandOd: undefined, contactLensModelOd: undefined })
-                        }}>
+                            setFilteredContactLensOd(contactLens)
+                            setForm({ ...form, contactLensBrandOd: undefined, contactLensModelOd: undefined })
+                          }}>
                             <Icon>delete</Icon>
                           </IconButton>
                         </div>
@@ -975,9 +991,9 @@ function Prescriptions(props) {
                             </FormControl>
                           </div>
                           <IconButton onClick={() => {
-                          setFilteredContactLensOs(contactLens)
-                          setForm({ ...form, contactLensBrandOs: undefined, contactLensModelOs: undefined })
-                        }}>
+                            setFilteredContactLensOs(contactLens)
+                            setForm({ ...form, contactLensBrandOs: undefined, contactLensModelOs: undefined })
+                          }}>
                             <Icon>delete</Icon>
                           </IconButton>
                         </div>

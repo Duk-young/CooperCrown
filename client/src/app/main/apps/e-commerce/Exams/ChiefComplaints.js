@@ -44,7 +44,7 @@ const ChiefComplaints = (props) => {
                     name="burn"
                   />
                 }
-                label="Burn"
+                label="Burning"
               />
 
             </div>
