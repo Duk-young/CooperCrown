@@ -290,7 +290,7 @@ export default function PrescriptionReceipt(props) {
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              20 / {addTwoDecimalPlaces(mainForm?.eyeglassesVaOd)}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesVaOd)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -300,7 +300,7 @@ export default function PrescriptionReceipt(props) {
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              20 / {addTwoDecimalPlaces(mainForm?.eyeglassesVaOd2)}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesVaOd2)}
                             </h3>
                           </div>
                         </div>
@@ -331,7 +331,7 @@ export default function PrescriptionReceipt(props) {
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              20 / {addTwoDecimalPlaces(mainForm?.eyeglassesVaOs)}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesVaOs)}
                             </h3>
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
@@ -341,7 +341,7 @@ export default function PrescriptionReceipt(props) {
                           </div>
                           <div className="p-8 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                             <h3 className="text-center">
-                              20 / {addTwoDecimalPlaces(mainForm?.eyeglassesVaOs2)}
+                              {addTwoDecimalPlaces(mainForm?.eyeglassesVaOs2)}
                             </h3>
                           </div>
                         </div>

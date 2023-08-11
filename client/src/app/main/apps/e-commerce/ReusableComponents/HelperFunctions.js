@@ -66,7 +66,7 @@ export const customValuesArrayGenerator = (start, end, increment) => {
     const dataArray = [];
 
     for (let value = start; value <= end; value += increment) {
-        const label = value.toFixed(2);
+        const label = value > 0 ? `+${value.toFixed(2)}` : value.toFixed(2);
         dataArray.push({ label, value });
     }
 
@@ -74,11 +74,13 @@ export const customValuesArrayGenerator = (start, end, increment) => {
 
 }
 
-export const visualAquityDropDownValues = [15, 20, 25, 30, 40, 50, 60, 70, 80, 100, 120, 150, 200, 300, 350, 400, '> 400']
+export const visualAquityDropDownValues = ['20 / 15', '20 / 20', '20 / 25', '20 / 30', '20 / 40', '20 / 50', '20 / 60', '20 / 70', '20 / 80', '20 / 100',
+    '20 / 120', '20 / 150', '20 / 200', '20 / 300', '20 / 350', '20 / 400', '20 / > 400']
 export const slitLampAngleValues = ['< 1', 1, 2, 3, 4]
+export const algoliaDefaultRanking = ['typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom']
 
 export const addTwoDecimalPlaces = (value) => {
     if (!value) return value
     let changedNumber = Number(value);
-    return !isNaN(changedNumber) ? changedNumber.toFixed(2) : value;
+    return !isNaN(changedNumber) ? changedNumber > 0 ? `+${changedNumber.toFixed(2)}` : changedNumber.toFixed(2) : value;
 }

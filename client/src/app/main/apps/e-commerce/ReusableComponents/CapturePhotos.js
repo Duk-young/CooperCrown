@@ -1,7 +1,7 @@
 import { IconButton } from '@material-ui/core';
+import ImageCapture from 'react-image-data-capture';
 import React, { useCallback, useMemo, useState } from 'react';
 import SwitchCameraIcon from '@material-ui/icons/SwitchCamera';
-import ImageCapture from 'react-image-data-capture';
 
 const CapturePhotos = (props) => {
   const { onCapture, showImgCapture } = props;
@@ -16,7 +16,7 @@ const CapturePhotos = (props) => {
 
   const config = useMemo(() => (
     {
-      video: cameraFacingMode === 'environment' ? true : { facingMode: cameraFacingMode }
+      video: { facingMode: cameraFacingMode },
     }
   ), [cameraFacingMode]);
 

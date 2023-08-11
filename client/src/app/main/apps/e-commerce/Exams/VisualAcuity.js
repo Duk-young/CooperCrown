@@ -76,17 +76,12 @@ const VisualAcuity = (props) => {
                   </div>
                   <div className="flex flex-row w-full">
                     <div className="px-6 py-12 w-1/2 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row w-full">
-                        <div className='flex flex-row w-1/3 justify-center'>
-                          <h3>Unaided</h3>
-                        </div>
-                        <div className='flex flex-row w-2/3 justify-center'>
-                          <h3>Aided</h3>
-                        </div>
+                      <div className="flex flex-row w-full justify-around gap-10">
+                        <h3>Unaided</h3>
+                        <h3>Aided</h3>
                       </div>
-                      <div className="flex flex-row gap-10 justify-around">
-                        <h3 className="font-700">OD: 20 / </h3>
-                        <div className='flex flex-col w-96'>
+                      <div className="flex flex-row w-full justify-around gap-10">
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -99,7 +94,7 @@ const VisualAcuity = (props) => {
                             ))}
                           </Select>
                         </div>
-                        <div className='flex flex-col w-96'>
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -107,15 +102,14 @@ const VisualAcuity = (props) => {
                             name="farOd2"
                             onChange={handleChange}
                           >
-                            {customValuesArrayGenerator(-2, 2, 1).map((row) => (
-                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            {visualAquityDropDownValues.map((row) => (
+                              <MenuItem key={row} value={row}>{row}</MenuItem>
                             ))}
                           </Select>
                         </div>
                       </div>
-                      <div className="flex flex-row gap-10 justify-around">
-                        <h3 className="font-700">OS: 20 / </h3>
-                        <div className='flex flex-col w-96'>
+                      <div className="flex flex-row w-full justify-around gap-10">
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -128,7 +122,7 @@ const VisualAcuity = (props) => {
                             ))}
                           </Select>
                         </div>
-                        <div className='flex flex-col w-96'>
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -136,15 +130,14 @@ const VisualAcuity = (props) => {
                             name="farOs2"
                             onChange={handleChange}
                           >
-                            {customValuesArrayGenerator(-2, 2, 1).map((row) => (
-                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            {visualAquityDropDownValues.map((row) => (
+                              <MenuItem key={row} value={row}>{row}</MenuItem>
                             ))}
                           </Select>
                         </div>
                       </div>
-                      <div className="flex flex-row gap-10 justify-around">
-                        <h3 className="font-700">OU: 20 / </h3>
-                        <div className='flex flex-col w-96'>
+                      <div className="flex flex-row w-full justify-around gap-10">
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -157,7 +150,7 @@ const VisualAcuity = (props) => {
                             ))}
                           </Select>
                         </div>
-                        <div className='flex flex-col w-96'>
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -165,25 +158,20 @@ const VisualAcuity = (props) => {
                             name="farOu2"
                             onChange={handleChange}
                           >
-                            {customValuesArrayGenerator(-2, 2, 1).map((row) => (
-                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            {visualAquityDropDownValues.map((row) => (
+                              <MenuItem key={row} value={row}>{row}</MenuItem>
                             ))}
                           </Select>
                         </div>
                       </div>
                     </div>
                     <div className="px-6 py-12 w-1/2 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row w-full">
-                        <div className='flex flex-row w-1/3 justify-center'>
-                          <h3>Unaided</h3>
-                        </div>
-                        <div className='flex flex-row w-2/3 justify-center'>
-                          <h3>Aided</h3>
-                        </div>
+                      <div className="flex flex-row w-full justify-around gap-10">
+                        <h3>Unaided</h3>
+                        <h3>Aided</h3>
                       </div>
-                      <div className="flex flex-row gap-10 justify-around">
-                        <h3 className="font-700">OD: 20 / </h3>
-                        <div className='flex flex-col w-96'>
+                      <div className="flex flex-row w-full justify-around gap-10">
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -196,7 +184,7 @@ const VisualAcuity = (props) => {
                             ))}
                           </Select>
                         </div>
-                        <div className='flex flex-col w-96'>
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -204,15 +192,14 @@ const VisualAcuity = (props) => {
                             name="nearOd2"
                             onChange={handleChange}
                           >
-                            {customValuesArrayGenerator(-2, 2, 1).map((row) => (
-                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            {visualAquityDropDownValues.map((row) => (
+                              <MenuItem key={row} value={row}>{row}</MenuItem>
                             ))}
                           </Select>
                         </div>
                       </div>
-                      <div className="flex flex-row gap-10 justify-around">
-                        <h3 className="font-700">OS: 20 / </h3>
-                        <div className='flex flex-col w-96'>
+                      <div className="flex flex-row w-full justify-around gap-10">
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -225,7 +212,7 @@ const VisualAcuity = (props) => {
                             ))}
                           </Select>
                         </div>
-                        <div className='flex flex-col w-96'>
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -233,15 +220,14 @@ const VisualAcuity = (props) => {
                             name="nearOs2"
                             onChange={handleChange}
                           >
-                            {customValuesArrayGenerator(-2, 2, 1).map((row) => (
-                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            {visualAquityDropDownValues.map((row) => (
+                              <MenuItem key={row} value={row}>{row}</MenuItem>
                             ))}
                           </Select>
                         </div>
                       </div>
-                      <div className="flex flex-row gap-10 justify-around">
-                        <h3 className="font-700">OU: 20 / </h3>
-                        <div className='flex flex-col w-96'>
+                      <div className="flex flex-row w-full justify-around gap-10">
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -254,7 +240,7 @@ const VisualAcuity = (props) => {
                             ))}
                           </Select>
                         </div>
-                        <div className='flex flex-col w-96'>
+                        <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
                             disabled={disabledState}
@@ -262,8 +248,8 @@ const VisualAcuity = (props) => {
                             name="nearOu2"
                             onChange={handleChange}
                           >
-                            {customValuesArrayGenerator(-2, 2, 1).map((row) => (
-                              <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                            {visualAquityDropDownValues.map((row) => (
+                              <MenuItem key={row} value={row}>{row}</MenuItem>
                             ))}
                           </Select>
                         </div>
@@ -316,7 +302,7 @@ const VisualAcuity = (props) => {
                     }}
                     type="number"
                   />
-                  <h3 className="font-700">mm/Hg</h3>
+                  <h3 className="font-700">mmHg</h3>
                 </div>
               </div>
               <div className='flex flex-row w-full gap-10'>
@@ -357,7 +343,7 @@ const VisualAcuity = (props) => {
                     }}
                     type="number"
                   />
-                  <h3 className="font-700">mm/Hg</h3>
+                  <h3 className="font-700">mmHg</h3>
                 </div>
               </div>
               <div className='flex flex-row w-full gap-10'>
@@ -422,7 +408,7 @@ const VisualAcuity = (props) => {
                   <h3 className="font-700">sec</h3>
                 </div>
                 <div className='flex flex-row w-1/2 justify-start gap-10 items-center'>
-                  <h3 className="text-center font-700">Binoular:</h3>
+                  <h3 className="text-center font-700">Binocular:</h3>
                   <FormControl component="fieldset">
                     <RadioGroup
                       row
@@ -531,7 +517,7 @@ const VisualAcuity = (props) => {
                   <h3 className="font-700 truncate">{`Blood Pressure: `}</h3>
                   <TextField
                     size="small"
-                    style={{ width: 85 }}
+                    style={{ width: 70 }}
                     id="standard-basic"
                     disabled={disabledState}
                     value={form?.bpUp}
@@ -547,7 +533,7 @@ const VisualAcuity = (props) => {
                   <h3 className="font-700">/</h3>
                   <TextField
                     size="small"
-                    style={{ width: 85 }}
+                    style={{ width: 70 }}
                     id="standard-basic"
                     disabled={disabledState}
                     value={form?.bpDown}
@@ -584,7 +570,6 @@ const VisualAcuity = (props) => {
             </div>
           </div>
           <div className="p-6 sm:p-10 w-full">
-
             <div className="flex flex-row px-20">
               <div className="p-1 h-auto flex-1">
                 <h3 className="text-center font-700">EG RX</h3>
@@ -611,7 +596,7 @@ const VisualAcuity = (props) => {
                 <Select
                   className={classes.centerText}
                   disabled={disabledState}
-                  value={form?.odSphere ?? ''}
+                  value={form?.odSphere ?? 0}
                   name="odSphere"
                   onChange={handleChange}
                 >
@@ -672,7 +657,7 @@ const VisualAcuity = (props) => {
                 <Select
                   className={classes.centerText}
                   disabled={disabledState}
-                  value={form?.osSphere ?? ''}
+                  value={form?.osSphere ?? 0}
                   name="osSphere"
                   onChange={handleChange}
                 >
@@ -867,7 +852,7 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.clrxOdSphere ?? ''}
+                        value={form?.clrxOdSphere ?? 0}
                         name="clrxOdSphere"
                         onChange={handleChange}
                       >
@@ -1007,7 +992,7 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.clrxOsSphere ?? ''}
+                        value={form?.clrxOsSphere ?? 0}
                         name="clrxOsSphere"
                         onChange={handleChange}
                       >
@@ -1179,39 +1164,31 @@ const VisualAcuity = (props) => {
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                       <h3 className="text-center font-700">OD</h3>
                     </div>
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.subjRxOdSphere}
+                    <div className="flex flex-col flex-1 border-grey-400 border-solid border-1">
+                      <Select
+                        className={classes.centerText}
                         disabled={disabledState}
+                        value={form?.subjRxOdSphere ?? 0}
+                        name="subjRxOdSphere"
                         onChange={handleChange}
-                        name={'subjRxOdSphere'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
+                      >
+                        {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                          <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                        ))}
+                      </Select>
                     </div>
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.subjRxOdCylinder}
+                    <div className="flex flex-col flex-1 border-grey-400 border-solid border-1">
+                      <Select
+                        className={classes.centerText}
                         disabled={disabledState}
+                        value={form?.subjRxOdCylinder ?? ''}
+                        name="subjRxOdCylinder"
                         onChange={handleChange}
-                        name={'subjRxOdCylinder'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
+                      >
+                        {customValuesArrayGenerator(-10, -0.25, 0.25).map((row) => (
+                          <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                        ))}
+                      </Select>
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                       <TextField
@@ -1247,60 +1224,46 @@ const VisualAcuity = (props) => {
                       />
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row justify-center">
-                        <h3 className="text-center font-700">20/</h3>
-                        <TextField
-                          size="small"
-                          style={{ width: 50 }}
-                          id="standard-basic"
+                      <div className="flex flex-col">
+                        <Select
+                          className={classes.centerText}
                           disabled={disabledState}
-                          value={form?.subjRxOdVa1}
+                          value={form?.subjRxOdVa1 ?? ''}
+                          name="subjRxOdVa1"
                           onChange={handleChange}
-                          name={'subjRxOdVa1'}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: 'center' }
-                            }
-                          }}
-                          type="number"
-                        />
+                        >
+                          {visualAquityDropDownValues.map((row) => (
+                            <MenuItem key={row} value={row}>{row}</MenuItem>
+                          ))}
+                        </Select>
                       </div>
                     </div>
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.subjRxOdAdd}
+                    <div className="flex flex-col flex-1 border-grey-400 border-solid border-1">
+                      <Select
+                        className={classes.centerText}
                         disabled={disabledState}
+                        value={form?.subjRxOdAdd ?? ''}
+                        name="subjRxOdAdd"
                         onChange={handleChange}
-                        name={'subjRxOdAdd'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
+                      >
+                        {customValuesArrayGenerator(0.25, 5, 0.25).map((row) => (
+                          <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                        ))}
+                      </Select>
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row justify-center">
-                        <h3 className="text-center font-700">20/</h3>
-                        <TextField
-                          size="small"
-                          style={{ width: 50 }}
-                          id="standard-basic"
+                      <div className="flex flex-col">
+                        <Select
+                          className={classes.centerText}
                           disabled={disabledState}
-                          value={form?.subjRxOdVa2}
+                          value={form?.subjRxOdVa2 ?? ''}
+                          name="subjRxOdVa2"
                           onChange={handleChange}
-                          name={'subjRxOdVa2'}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: 'center' }
-                            }
-                          }}
-                          type="number"
-                        />
+                        >
+                          {visualAquityDropDownValues.map((row) => (
+                            <MenuItem key={row} value={row}>{row}</MenuItem>
+                          ))}
+                        </Select>
                       </div>
                     </div>
                   </div>
@@ -1309,39 +1272,31 @@ const VisualAcuity = (props) => {
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                       <h3 className="text-center font-700">OS</h3>
                     </div>
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
+                    <div className="flex flex-col flex-1 border-grey-400 border-solid border-1">
+                      <Select
+                        className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.subjRxOsSphere}
+                        value={form?.subjRxOsSphere ?? 0}
+                        name="subjRxOsSphere"
                         onChange={handleChange}
-                        name={'subjRxOsSphere'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
+                      >
+                        {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                          <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                        ))}
+                      </Select>
                     </div>
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
+                    <div className="flex flex-col flex-1 border-grey-400 border-solid border-1">
+                      <Select
+                        className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.subjRxOsCylinder}
+                        value={form?.subjRxOsCylinder ?? ''}
+                        name="subjRxOsCylinder"
                         onChange={handleChange}
-                        name={'subjRxOsCylinder'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
+                      >
+                        {customValuesArrayGenerator(-10, -0.25, 0.25).map((row) => (
+                          <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                        ))}
+                      </Select>
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
                       <TextField
@@ -1377,60 +1332,46 @@ const VisualAcuity = (props) => {
                       />
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row justify-center">
-                        <h3 className="text-center font-700">20/</h3>
-                        <TextField
-                          size="small"
-                          style={{ width: 50 }}
-                          id="standard-basic"
+                      <div className="flex flex-col">
+                        <Select
+                          className={classes.centerText}
                           disabled={disabledState}
-                          value={form?.subjRxOsVa1}
+                          value={form?.subjRxOsVa1 ?? ''}
+                          name="subjRxOsVa1"
                           onChange={handleChange}
-                          name={'subjRxOsVa1'}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: 'center' }
-                            }
-                          }}
-                          type="number"
-                        />
+                        >
+                          {visualAquityDropDownValues.map((row) => (
+                            <MenuItem key={row} value={row}>{row}</MenuItem>
+                          ))}
+                        </Select>
                       </div>
                     </div>
-                    <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <TextField
-                        size="small"
-                        fullWidth
-                        id="standard-basic"
-                        value={form?.subjRxOsAdd}
+                    <div className="flex flex-col flex-1 border-grey-400 border-solid border-1">
+                      <Select
+                        className={classes.centerText}
                         disabled={disabledState}
+                        value={form?.subjRxOsAdd ?? ''}
+                        name="subjRxOsAdd"
                         onChange={handleChange}
-                        name={'subjRxOsAdd'}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: 'center' }
-                          }
-                        }}
-                        type="number"
-                      />
+                      >
+                        {customValuesArrayGenerator(0.25, 5, 0.25).map((row) => (
+                          <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
+                        ))}
+                      </Select>
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row justify-center">
-                        <h3 className="text-center font-700">20/</h3>
-                        <TextField
-                          size="small"
-                          style={{ width: 50 }}
-                          id="standard-basic"
+                      <div className="flex flex-col">
+                        <Select
+                          className={classes.centerText}
                           disabled={disabledState}
-                          value={form?.subjRxOsVa2}
+                          value={form?.subjRxOsVa2 ?? ''}
+                          name="subjRxOsVa2"
                           onChange={handleChange}
-                          name={'subjRxOsVa2'}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: 'center' }
-                            }
-                          }}
-                          type="number"
-                        />
+                        >
+                          {visualAquityDropDownValues.map((row) => (
+                            <MenuItem key={row} value={row}>{row}</MenuItem>
+                          ))}
+                        </Select>
                       </div>
                     </div>
                   </div>
@@ -1471,7 +1412,7 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.egRxOdSphere ?? ''}
+                        value={form?.egRxOdSphere ?? 0}
                         name="egRxOdSphere"
                         onChange={handleChange}
                       >
@@ -1527,23 +1468,18 @@ const VisualAcuity = (props) => {
                       />
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row justify-center">
-                        <h3 className="text-center font-700">20/</h3>
-                        <TextField
-                          size="small"
-                          style={{ width: 50 }}
-                          id="standard-basic"
+                      <div className="flex flex-col">
+                        <Select
+                          className={classes.centerText}
                           disabled={disabledState}
-                          value={form?.egRxOdVa1}
+                          value={form?.egRxOdVa1 ?? ''}
+                          name="egRxOdVa1"
                           onChange={handleChange}
-                          name={'egRxOdVa1'}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: 'center' }
-                            }
-                          }}
-                          type="number"
-                        />
+                        >
+                          {visualAquityDropDownValues.map((row) => (
+                            <MenuItem key={row} value={row}>{row}</MenuItem>
+                          ))}
+                        </Select>
                       </div>
                     </div>
                     <div className="flex flex-col flex-1 border-grey-400 border-solid border-1">
@@ -1560,23 +1496,18 @@ const VisualAcuity = (props) => {
                       </Select>
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row justify-center">
-                        <h3 className="text-center font-700">20/</h3>
-                        <TextField
-                          size="small"
-                          style={{ width: 50 }}
-                          id="standard-basic"
+                      <div className="flex flex-col">
+                        <Select
+                          className={classes.centerText}
                           disabled={disabledState}
-                          value={form?.egRxOdVa2}
+                          value={form?.egRxOdVa2 ?? ''}
+                          name="egRxOdVa2"
                           onChange={handleChange}
-                          name={'egRxOdVa2'}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: 'center' }
-                            }
-                          }}
-                          type="number"
-                        />
+                        >
+                          {visualAquityDropDownValues.map((row) => (
+                            <MenuItem key={row} value={row}>{row}</MenuItem>
+                          ))}
+                        </Select>
                       </div>
                     </div>
                   </div>
@@ -1588,7 +1519,7 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.egRxOsSphere ?? ''}
+                        value={form?.egRxOsSphere ?? 0}
                         name="egRxOsSphere"
                         onChange={handleChange}
                       >
@@ -1644,23 +1575,18 @@ const VisualAcuity = (props) => {
                       />
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row justify-center">
-                        <h3 className="text-center font-700">20/</h3>
-                        <TextField
-                          size="small"
-                          style={{ width: 50 }}
+                      <div className="flex flex-col">
+                        <Select
+                          className={classes.centerText}
                           disabled={disabledState}
-                          id="standard-basic"
-                          value={form?.egRxOsVa1}
+                          value={form?.egRxOsVa1 ?? ''}
+                          name="egRxOsVa1"
                           onChange={handleChange}
-                          name={'egRxOsVa1'}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: 'center' }
-                            }
-                          }}
-                          type="number"
-                        />
+                        >
+                          {visualAquityDropDownValues.map((row) => (
+                            <MenuItem key={row} value={row}>{row}</MenuItem>
+                          ))}
+                        </Select>
                       </div>
                     </div>
                     <div className="flex flex-col flex-1 border-grey-400 border-solid border-1">
@@ -1677,23 +1603,18 @@ const VisualAcuity = (props) => {
                       </Select>
                     </div>
                     <div className="p-1 flex-1 h-auto border-grey-400 border-solid border-1 justify-between">
-                      <div className="flex flex-row justify-center">
-                        <h3 className="text-center font-700">20/</h3>
-                        <TextField
-                          size="small"
-                          style={{ width: 50 }}
+                      <div className="flex flex-col">
+                        <Select
+                          className={classes.centerText}
                           disabled={disabledState}
-                          id="standard-basic"
-                          value={form?.egRxOsVa2}
+                          value={form?.egRxOsVa2 ?? ''}
+                          name="egRxOsVa2"
                           onChange={handleChange}
-                          name={'egRxOsVa2'}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: 'center' }
-                            }
-                          }}
-                          type="number"
-                        />
+                        >
+                          {visualAquityDropDownValues.map((row) => (
+                            <MenuItem key={row} value={row}>{row}</MenuItem>
+                          ))}
+                        </Select>
                       </div>
                     </div>
                   </div>
@@ -1759,7 +1680,7 @@ const VisualAcuity = (props) => {
           </div>
           <br></br>
         </div>
-        <div className='flex flex-row w-full lg:justify-start justify-center py-4 px-10 items-center h-auto gap-10'>
+        <div className='flex flex-row w-full justify-center py-4 px-10 items-center h-auto gap-10'>
           <TextField
             size="small"
             style={{ width: 150 }}
@@ -1818,33 +1739,10 @@ const VisualAcuity = (props) => {
             />
           )}
         </div>
-        <div className='flex flex-row w-full lg:justify-start justify-center py-4 px-10 items-center h-auto gap-10'>
-          <FormControl component="fieldset">
-            <RadioGroup
-              row
-              aria-label="act"
-              name="act"
-              value={form?.act}
-              onChange={handleChange}>
-              <FormControlLabel
-                value="C"
-                disabled={disabledState}
-                control={<Radio />}
-                label="C"
-              />
-
-              <FormControlLabel
-                classname="ml-3"
-                value="SC"
-                disabled={disabledState}
-                control={<Radio />}
-                label="SC"
-              />
-            </RadioGroup>
-          </FormControl>
+        <div className='flex flex-row w-full justify-center py-4 px-10 items-center h-auto gap-10'>
           <TextField
             size="small"
-            style={{ width: 110 }}
+            style={{ width: 150 }}
             id="outlined-multiline-static"
             disabled={disabledState}
             value={form?.cscAct}
@@ -1855,7 +1753,7 @@ const VisualAcuity = (props) => {
           />
           <TextField
             size="small"
-            style={{ width: 110 }}
+            style={{ width: 150 }}
             label="CF: OS"
             id="outlined-multiline-static"
             disabled={disabledState}
@@ -1888,7 +1786,7 @@ const VisualAcuity = (props) => {
           {form?.cfOs === 'other' && (
             <TextField
               size="small"
-              style={{ width: 110 }}
+              style={{ width: 150 }}
               disabled={disabledState}
               id="outlined-multiline-static"
               label="Other"
@@ -1899,7 +1797,31 @@ const VisualAcuity = (props) => {
             />
           )}
         </div>
+        <div className='flex flex-row w-full justify-center py-4 px-10 items-center h-auto gap-10'>
+          <FormControl component="fieldset">
+            <RadioGroup
+              row
+              aria-label="act"
+              name="act"
+              value={form?.act}
+              onChange={handleChange}>
+              <FormControlLabel
+                value="C"
+                disabled={disabledState}
+                control={<Radio />}
+                label="C"
+              />
 
+              <FormControlLabel
+                classname="ml-3"
+                value="SC"
+                disabled={disabledState}
+                control={<Radio />}
+                label="SC"
+              />
+            </RadioGroup>
+          </FormControl>
+        </div>
         <div className="p-16 sm:p-24 w-full">
 
           <div className="flex flex-row justify-center ">
@@ -1919,7 +1841,7 @@ const VisualAcuity = (props) => {
                         value="From"
                         disabled={disabledState}
                         control={<Radio />}
-                        label="From"
+                        label="Full"
                       />
                       <FormControlLabel
                         value="other"
@@ -1960,7 +1882,7 @@ const VisualAcuity = (props) => {
                         value="From"
                         disabled={disabledState}
                         control={<Radio />}
-                        label="From"
+                        label="Full"
                       />
                       <FormControlLabel
                         value="other"

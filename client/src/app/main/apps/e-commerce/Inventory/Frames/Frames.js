@@ -1,25 +1,21 @@
-import {
-  InstantSearch,
-  Panel,
-  SearchBox,
-  HitsPerPage,
-  Pagination,
-  connectRefinementList,
-  ClearRefinements,
-  connectStateResults
-} from 'react-instantsearch-dom';
+import { algoliaDefaultRanking, toastAttributes } from '../../ReusableComponents/HelperFunctions';
 import { connectHits } from 'react-instantsearch-dom';
 import { firestore } from 'firebase';
+import { InstantSearch, Panel, SearchBox, HitsPerPage, Pagination, connectRefinementList, ClearRefinements, connectStateResults } from 'react-instantsearch-dom';
 import { RefinementList } from 'react-instantsearch-dom';
 import { toast, Zoom } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import algoliasearch from 'algoliasearch';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LoadingDialog from '../../ReusableComponents/LoadingDialog';
 import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -27,14 +23,42 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import LoadingDialog from '../../ReusableComponents/LoadingDialog';
 
 const VirtualRefinementList = connectRefinementList(() => null);
 
 const CustomHits = connectHits((props) => {
-  const { hits, userData, history } = props;
-  const [images, setImages] = useState([]);
+
   const classes = useStyles();
+  const [images, setImages] = useState([]);
+  const [currentSort, setCurrentSort] = useState(null)
+  const { hits, userData, history, setisLoading, setSearchClient } = props;
+
+  const changeSort = async (columnName, currentSort) => {
+
+    let attributeToSet = currentSort === `asc(${columnName})` ? `desc(${columnName})` : `asc(${columnName})`
+
+    try {
+      setisLoading(true)
+      const client = algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_UPDATE_SETTINGS_KEY)
+      const index = client.initIndex('frames')
+
+      index.setSettings({ ranking: [attributeToSet, ...algoliaDefaultRanking] }).then(() => {
+        setCurrentSort(attributeToSet);
+
+        setTimeout(() => {
+          setSearchClient(algoliasearch(process.env.REACT_APP_ALGOLIA_APPLICATION_ID, process.env.REACT_APP_ALGOLIA_SEARCH_ONLY_KEY))
+          setisLoading(false)
+        }, 1000);
+      }).catch((err) => {
+        console.error('Error updating index settings:', err);
+        setisLoading(false);
+      })
+
+    } catch (error) {
+      console.error('Error updating index settings:', error);
+    }
+  }
+
   const handleClick = async (item) => {
     const query = await firestore()
       .collection('frames')
@@ -45,6 +69,7 @@ const CustomHits = connectHits((props) => {
     let result = query.docs[0].data();
     setImages(result?.images?.urls);
   };
+
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-row">
@@ -68,20 +93,25 @@ const CustomHits = connectHits((props) => {
           stickyHeader
           aria-label="customized table">
           <TableHead>
-            <TableRow style={{ height: 10 }}>
-              <StyledTableCell>SKU</StyledTableCell>
-              <StyledTableCell>BRAND</StyledTableCell>
-              <StyledTableCell>MODEL</StyledTableCell>
-              <StyledTableCell>COLOR</StyledTableCell>
-              <StyledTableCell>MATERIAL</StyledTableCell>
+            <TableRow style={{ height: 10 }} className='truncate cursor-pointer'>
+              <StyledTableCell onClick={() => changeSort('sku', currentSort)}>SKU {currentSort === 'asc(sku)' && <ExpandMoreIcon />}
+                {currentSort === 'desc(sku)' && <ExpandLessIcon />}</StyledTableCell>
+              <StyledTableCell onClick={() => changeSort('brand', currentSort)}>BRAND {currentSort === 'asc(brand)' && <ExpandMoreIcon />}
+                {currentSort === 'desc(brand)' && <ExpandLessIcon />}</StyledTableCell>
+              <StyledTableCell onClick={() => changeSort('productDescription', currentSort)}>MODEL {currentSort === 'asc(productDescription)' && <ExpandMoreIcon />}
+                {currentSort === 'desc(productDescription)' && <ExpandLessIcon />}</StyledTableCell>
+              <StyledTableCell onClick={() => changeSort('colour', currentSort)}>COLOR {currentSort === 'asc(colour)' && <ExpandMoreIcon />}
+                {currentSort === 'desc(colour)' && <ExpandLessIcon />}</StyledTableCell>
+              <StyledTableCell onClick={() => changeSort('material', currentSort)}>MATERIAL {currentSort === 'asc(material)' && <ExpandMoreIcon />}
+                {currentSort === 'desc(material)' && <ExpandLessIcon />}</StyledTableCell>
               <StyledTableCell>SHAPE</StyledTableCell>
               <StyledTableCell>SIZE</StyledTableCell>
-              <StyledTableCell>QTY</StyledTableCell>
+              <StyledTableCell onClick={() => changeSort('quantity', currentSort)}>QTY {currentSort === 'asc(quantity)' && <ExpandMoreIcon />}
+                {currentSort === 'desc(quantity)' && <ExpandLessIcon />}</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {hits
-              .sort((a, b) => (a.frameId < b.frameId ? -1 : 1))
               .map((hit) => (
                 <StyledTableRow
                   style={{ height: 10 }}
@@ -177,6 +207,7 @@ const Frames = (props) => {
   const classes = useStyles();
   const [openFiltersDialog, setOpenFiltersDialog] = useState(false);
   const [searchState, setSearchState] = useState({});
+  const [isLoading, setisLoading] = useState(false);
   const handleCloseFiltersDialog = () => {
     setOpenFiltersDialog(false);
   };
@@ -184,7 +215,7 @@ const Frames = (props) => {
 
   const ResultStats = connectStateResults(
     ({ searching }) =>
-      searching ? (<LoadingDialog />) : (<div></div>)
+      (searching || isLoading) ? (<LoadingDialog />) : (<div></div>)
   );
 
   return (
@@ -289,16 +320,7 @@ const Frames = (props) => {
                   if (userData.userRole === 'admin' || userData?.inventoryCreate) {
                     props.history.push('/apps/inventory/addframes');
                   } else {
-                    toast.error('You are not authorized', {
-                      position: 'top-center',
-                      autoClose: 5000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      transition: Zoom
-                    });
+                    toast.error('You are not authorized', toastAttributes);
                   }
                 }}>
                 ADD NEW
@@ -373,7 +395,7 @@ const Frames = (props) => {
         </div>
         <ResultStats />
         <TableContainer className="flex flex-col w-full ">
-          <CustomHits props={props} userData={userData} history={props?.history} />
+          <CustomHits props={props} userData={userData} history={props?.history} setisLoading={setisLoading} setSearchClient={props?.setSearchClient} />
         </TableContainer>
         <div className="flex flex-row justify-center">
           <Pagination showLast={true} />
