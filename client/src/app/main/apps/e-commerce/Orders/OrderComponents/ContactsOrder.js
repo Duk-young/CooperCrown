@@ -727,6 +727,17 @@ const ContactsOrder = (props) => {
                     }}
                   />
                 </div>
+                <div className='flex flex-col w-full p-20'>
+                  <TextField
+                    fullWidth
+                    value={selectedContactLens?.contactLensMemo ?? ''}
+                    onChange={handleSelectedContactLensChange}
+                    disabled={disabledState}
+                    name={'contactLensMemo'}
+                    variant='outlined'
+                    label="Memo"
+                  />
+                </div>
                 <div className="flex flex-col px-20 gap-10">
                   <FormControlLabel
                     className="m-0"

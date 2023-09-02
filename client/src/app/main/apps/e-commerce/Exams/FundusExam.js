@@ -104,7 +104,7 @@ const FundusExam = (props) => {
                     name="fundusOdNormal"
                   />
                 }
-                label="None"
+                label="WNL"
               />
             </div>
             <div className='flex flex-row w-1/3 justify-center'></div>
@@ -143,7 +143,7 @@ const FundusExam = (props) => {
                     name="fundusOsNormal"
                   />
                 }
-                label="None"
+                label="WNL"
               />
             </div>
           </div>

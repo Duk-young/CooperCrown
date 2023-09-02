@@ -80,7 +80,8 @@ const VisualAcuity = (props) => {
                         <h3>Unaided</h3>
                         <h3>Aided</h3>
                       </div>
-                      <div className="flex flex-row w-full justify-around gap-10">
+                      <div className="flex flex-row w-full justify-around items-end gap-10">
+                        <h3 className="font-700">OD:</h3>
                         <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
@@ -108,7 +109,8 @@ const VisualAcuity = (props) => {
                           </Select>
                         </div>
                       </div>
-                      <div className="flex flex-row w-full justify-around gap-10">
+                      <div className="flex flex-row w-full justify-around items-end gap-10">
+                        <h3 className="font-700">OS:</h3>
                         <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
@@ -136,7 +138,8 @@ const VisualAcuity = (props) => {
                           </Select>
                         </div>
                       </div>
-                      <div className="flex flex-row w-full justify-around gap-10">
+                      <div className="flex flex-row w-full justify-around items-end gap-10">
+                        <h3 className="font-700">OS:</h3>
                         <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
@@ -170,7 +173,8 @@ const VisualAcuity = (props) => {
                         <h3>Unaided</h3>
                         <h3>Aided</h3>
                       </div>
-                      <div className="flex flex-row w-full justify-around gap-10">
+                      <div className="flex flex-row w-full justify-around items-end gap-10">
+                        <h3 className="font-700">OD:</h3>
                         <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
@@ -198,7 +202,8 @@ const VisualAcuity = (props) => {
                           </Select>
                         </div>
                       </div>
-                      <div className="flex flex-row w-full justify-around gap-10">
+                      <div className="flex flex-row w-full justify-around items-end gap-10">
+                        <h3 className="font-700">OS:</h3>
                         <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
@@ -226,7 +231,8 @@ const VisualAcuity = (props) => {
                           </Select>
                         </div>
                       </div>
-                      <div className="flex flex-row w-full justify-around gap-10">
+                      <div className="flex flex-row w-full justify-around items-end gap-10">
+                        <h3 className="font-700">OU:</h3>
                         <div className='flex flex-col w-1/2'>
                           <Select
                             className={classes.centerText}
@@ -514,7 +520,10 @@ const VisualAcuity = (props) => {
               </div>
               <div className='flex flex-row w-full gap-10'>
                 <div className='flex flex-row w-1/2 justify-start gap-10 items-center'>
-                  <h3 className="font-700 truncate">{`Blood Pressure: `}</h3>
+                  <div>
+                    <h3 className="font-700 truncate">{`Blood Pressure: `}</h3>
+                    <h3 className="font-400 truncate text-center">{`(mmHg)`}</h3>
+                  </div>
                   <TextField
                     size="small"
                     style={{ width: 70 }}
@@ -596,11 +605,11 @@ const VisualAcuity = (props) => {
                 <Select
                   className={classes.centerText}
                   disabled={disabledState}
-                  value={form?.odSphere ?? 0}
+                  value={form?.odSphere ?? 'blank'}
                   name="odSphere"
                   onChange={handleChange}
                 >
-                  {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                  {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                     <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                   ))}
                 </Select>
@@ -657,11 +666,11 @@ const VisualAcuity = (props) => {
                 <Select
                   className={classes.centerText}
                   disabled={disabledState}
-                  value={form?.osSphere ?? 0}
+                  value={form?.osSphere ?? 'blank'}
                   name="osSphere"
                   onChange={handleChange}
                 >
-                  {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                  {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                     <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                   ))}
                 </Select>
@@ -852,11 +861,11 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.clrxOdSphere ?? 0}
+                        value={form?.clrxOdSphere ?? 'blank'}
                         name="clrxOdSphere"
                         onChange={handleChange}
                       >
-                        {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                        {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                           <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                         ))}
                       </Select>
@@ -992,11 +1001,11 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.clrxOsSphere ?? 0}
+                        value={form?.clrxOsSphere ?? 'blank'}
                         name="clrxOsSphere"
                         onChange={handleChange}
                       >
-                        {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                        {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                           <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                         ))}
                       </Select>
@@ -1168,11 +1177,11 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.subjRxOdSphere ?? 0}
+                        value={form?.subjRxOdSphere ?? 'blank'}
                         name="subjRxOdSphere"
                         onChange={handleChange}
                       >
-                        {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                        {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                           <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                         ))}
                       </Select>
@@ -1276,11 +1285,11 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.subjRxOsSphere ?? 0}
+                        value={form?.subjRxOsSphere ?? 'blank'}
                         name="subjRxOsSphere"
                         onChange={handleChange}
                       >
-                        {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                        {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                           <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                         ))}
                       </Select>
@@ -1412,11 +1421,11 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.egRxOdSphere ?? 0}
+                        value={form?.egRxOdSphere ?? 'blank'}
                         name="egRxOdSphere"
                         onChange={handleChange}
                       >
-                        {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                        {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                           <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                         ))}
                       </Select>
@@ -1519,11 +1528,11 @@ const VisualAcuity = (props) => {
                       <Select
                         className={classes.centerText}
                         disabled={disabledState}
-                        value={form?.egRxOsSphere ?? 0}
+                        value={form?.egRxOsSphere ?? 'blank'}
                         name="egRxOsSphere"
                         onChange={handleChange}
                       >
-                        {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                        {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                           <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                         ))}
                       </Select>
