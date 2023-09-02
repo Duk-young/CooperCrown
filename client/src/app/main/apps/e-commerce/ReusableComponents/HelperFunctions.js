@@ -62,11 +62,12 @@ export const toastAttributes = {
     transition: Zoom
 }
 
-export const customValuesArrayGenerator = (start, end, increment) => {
+export const customValuesArrayGenerator = (start, end, increment, addBlankValue) => {
     const dataArray = [];
 
     for (let value = start; value <= end; value += increment) {
         const label = value > 0 ? `+${value.toFixed(2)}` : value.toFixed(2);
+        if (addBlankValue && value === 0) dataArray.push({ label: '', value: 'blank' })
         dataArray.push({ label, value });
     }
 

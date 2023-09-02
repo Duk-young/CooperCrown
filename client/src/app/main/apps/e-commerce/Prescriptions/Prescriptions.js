@@ -532,11 +532,11 @@ function Prescriptions(props) {
                             </div>
                             <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
                               <Select
-                                value={form?.eyeglassesSphereOd ?? 0}
+                                value={form?.eyeglassesSphereOd ?? 'blank'}
                                 name="eyeglassesSphereOd"
                                 onChange={handleChange}
                               >
-                                {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                                {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                                   <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                                 ))}
                               </Select>
@@ -588,11 +588,11 @@ function Prescriptions(props) {
                             </div>
                             <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
                               <Select
-                                value={form?.eyeglassesSphereOs ?? 0}
+                                value={form?.eyeglassesSphereOs ?? 'blank'}
                                 name="eyeglassesSphereOs"
                                 onChange={handleChange}
                               >
-                                {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                                {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                                   <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                                 ))}
                               </Select>
@@ -839,11 +839,11 @@ function Prescriptions(props) {
                         </div>
                         <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
                           <Select
-                            value={form?.contactLensSphereOd ?? ''}
+                            value={form?.contactLensSphereOd ?? 'blank'}
                             name="contactLensSphereOd"
                             onChange={handleChange}
                           >
-                            {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                            {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                               <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                             ))}
                           </Select>
@@ -879,11 +879,11 @@ function Prescriptions(props) {
                         </div>
                         <div className="flex-1 h-auto border-black border-solid border-1 justify-between flex flex-col pt-16">
                           <Select
-                            value={form?.contactLensSphereOs ?? ''}
+                            value={form?.contactLensSphereOs ?? 'blank'}
                             name="contactLensSphereOs"
                             onChange={handleChange}
                           >
-                            {customValuesArrayGenerator(-30, 30, 0.25).map((row) => (
+                            {customValuesArrayGenerator(-30, 30, 0.25, true).map((row) => (
                               <MenuItem key={row.value} value={row?.value}>{row?.label}</MenuItem>
                             ))}
                           </Select>

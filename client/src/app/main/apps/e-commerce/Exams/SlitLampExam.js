@@ -80,7 +80,7 @@ const SlitLampExam = (props) => {
                   name="slitOdNormal"
                 />
               }
-              label="None"
+              label="WNL"
             />
           </div>
           <div className='w-1/3'></div>
@@ -125,7 +125,7 @@ const SlitLampExam = (props) => {
                   name="slitOsNormal"
                 />
               }
-              label="None"
+              label="WNL"
             />
           </div>
         </div>
