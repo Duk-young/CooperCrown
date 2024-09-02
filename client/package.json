@@ -105,6 +105,7 @@
     "uuid": "^8.3.2",
     "velocity-animate": "1.5.2",
     "velocity-react": "1.4.3",
+    "webpack": "^4.42.0",
     "xlsx": "^0.18.5"
   },
   "resolutions": {
@@ -163,5 +164,6 @@
       "last 1 safari version",
       "ie 11"
     ]
-  }
+  },
+  "packageManager": "yarn@1.22.15"
 }

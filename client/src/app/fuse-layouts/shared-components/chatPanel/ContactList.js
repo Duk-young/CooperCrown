@@ -78,16 +78,11 @@ const useStyles = makeStyles(theme => ({
 
 function ContactList(props) {
 	const dispatch = useDispatch();
-	const contacts = useSelector(({ chatPanel }) => chatPanel.contacts.entities);
-	const selectedContactId = useSelector(({ chatPanel }) => chatPanel.contacts.selectedContactId);
-	const user = useSelector(({ chatPanel }) => chatPanel.user);
 
 	const classes = useStyles();
 	const contactListScroll = useRef(null);
 
 	const handleContactClick = contactId => {
-		dispatch(Actions.openChatPanel());
-		dispatch(Actions.getChat(contactId));
 		scrollToTop();
 	};
 
